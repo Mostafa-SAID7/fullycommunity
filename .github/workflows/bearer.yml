@@ -1,0 +1,35 @@
+name: Bearer Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  bearer-scan:
+    name: Data Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Bearer
+        uses: bearer/bearer-action@v2
+        with:
+          format: sarif
+          output: bearer-results.sarif
+          exit-code: 0
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: bearer-results.sarif
+          category: bearer
+        if: always()
