@@ -1,10 +1,16 @@
 <div align="center">
 
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=24,6,12&height=180&section=header&text=Security%20Policy&fontSize=70&fontAlignY=35&animation=fadeIn&fontColor=fff" width="100%"/>
+
 # 🔒 Security Policy
 
-We take security seriously at Fully Community.
+<p align="center">
+  <strong>We take security seriously at Fully Community.</strong>
+</p>
 
-This document outlines our security practices and how to report vulnerabilities.
+<p align="center">
+  This document outlines our security practices and how to report vulnerabilities.
+</p>
 
 </div>
 
@@ -22,36 +28,103 @@ This document outlines our security practices and how to report vulnerabilities.
 
 ## ✅ Supported Versions
 
-| Version | Supported | Notes |
-|---------|-----------|-------|
-| 1.x.x | ✅ Yes | Current release |
-| 0.x.x | ⚠️ Limited | Critical fixes only |
-| < 0.1.0 | ❌ No | End of life |
+> [!IMPORTANT]
+> We actively maintain and provide security updates for the following versions.
+
+<table>
+<tr>
+<th>📦 Version</th>
+<th>✅ Supported</th>
+<th>📝 Notes</th>
+<th>🛡️ Security Updates</th>
+</tr>
+<tr>
+<td><strong>1.x.x</strong></td>
+<td>✅ Yes</td>
+<td>Current release</td>
+<td>All security patches</td>
+</tr>
+<tr>
+<td><strong>0.x.x</strong></td>
+<td>⚠️ Limited</td>
+<td>Previous release</td>
+<td>Critical fixes only</td>
+</tr>
+<tr>
+<td><strong>&lt; 0.1.0</strong></td>
+<td>❌ No</td>
+<td>End of life</td>
+<td>No updates</td>
+</tr>
+</table>
 
 ---
 
 ## 🚨 Reporting a Vulnerability
 
-### ⚠️ Please DO NOT open public issues for security vulnerabilities
+> [!CAUTION]
+> **Please DO NOT open public issues for security vulnerabilities!**
+> 
+> Public disclosure of security issues can put all users at risk. Always report security vulnerabilities privately.
 
 ### How to Report
 
-1. **Email**: Send details to `security@fullycommunity.com`
+> [!IMPORTANT]
+> Send security reports to our dedicated security email with detailed information.
+
+**Contact Information:**
+
+1. **Email**: `security@fullycommunity.com`
 2. **Subject**: `[SECURITY] Brief description`
 3. **Include**:
    - Description of the vulnerability
    - Steps to reproduce
    - Potential impact
    - Suggested fix (if any)
+   - Your contact information (optional, for follow-up)
 
 ### What to Expect
 
-| Timeline | Action |
-|----------|--------|
-| **24 hours** | Acknowledgment of your report |
-| **72 hours** | Initial assessment |
-| **7 days** | Detailed response with plan |
-| **30-90 days** | Fix deployed (depending on severity) |
+```mermaid
+gantt
+    title Security Response Timeline
+    dateFormat  HH:mm
+    axisFormat %H:%M
+    
+    section Response
+    Acknowledgment (24h)           :done, ack, 00:00, 24h
+    Initial Assessment (72h)       :active, assess, after ack, 48h
+    Detailed Response (7d)         :crit, response, after assess, 120h
+    Fix Development (30-90d)       :fix, after response, 720h
+```
+
+<table>
+<tr>
+<th>⏱️ Timeline</th>
+<th>🎯 Action</th>
+<th>📋 Details</th>
+</tr>
+<tr>
+<td><strong>24 hours</strong></td>
+<td>Acknowledgment</td>
+<td>We confirm receipt of your report</td>
+</tr>
+<tr>
+<td><strong>72 hours</strong></td>
+<td>Initial Assessment</td>
+<td>Severity evaluation and triage</td>
+</tr>
+<tr>
+<td><strong>7 days</strong></td>
+<td>Detailed Response</td>
+<td>Action plan and timeline</td>
+</tr>
+<tr>
+<td><strong>30-90 days</strong></td>
+<td>Fix Deployed</td>
+<td>Depending on severity level</td>
+</tr>
+</table>
 
 ### Severity Levels
 
@@ -64,11 +137,15 @@ This document outlines our security practices and how to report vulnerabilities.
 
 ### Recognition
 
-We appreciate responsible disclosure! Contributors who report valid security issues will be:
+> [!TIP]
+> We appreciate responsible disclosure! Contributors who report valid security issues will be recognized.
+
+**Benefits for Security Researchers:**
 
 - 🏆 Credited in our security acknowledgments (if desired)
 - 📜 Added to our Hall of Fame
-- 🎁 Eligible for swag (for critical/high severity)
+- 🎁 Eligible for swag (for critical/high severity issues)
+- 💼 Professional reference available upon request
 
 ---
 
@@ -178,6 +255,11 @@ services.AddHttpsRedirection(options => options.HttpsPort = 443);
 
 ### Secure Coding Checklist
 
+> [!NOTE]
+> Use this checklist to ensure your code follows security best practices before submitting a PR.
+
+**Security Requirements:**
+
 - [ ] 🔐 Authentication required for sensitive endpoints
 - [ ] 🎭 Authorization checks in place
 - [ ] ✅ Input validation on all user inputs
@@ -186,6 +268,9 @@ services.AddHttpsRedirection(options => options.HttpsPort = 443);
 - [ ] 🔑 Secrets stored securely (not in code)
 - [ ] 🔒 HTTPS enforced
 - [ ] 🚦 Rate limiting configured
+
+> [!WARNING]
+> Failing to implement these security measures can lead to serious vulnerabilities. When in doubt, ask for a security review!
 
 ---
 
@@ -217,20 +302,69 @@ services.AddHttpsRedirection(options => options.HttpsPort = 443);
 
 ### Checking for Vulnerabilities
 
+<details>
+<summary><strong>🔷 .NET Backend</strong></summary>
+
 ```bash
-# .NET
+# Check for vulnerable packages
 dotnet list package --vulnerable
 
-# Node.js
+# Check for outdated packages
+dotnet list package --outdated
+
+# Update packages
+dotnet add package <PackageName>
+```
+
+</details>
+
+<details>
+<summary><strong>🌐 Node.js Frontend</strong></summary>
+
+```bash
+# Audit dependencies
 npm audit
 
-# Python
+# Fix vulnerabilities automatically
+npm audit fix
+
+# Force fix (may introduce breaking changes)
+npm audit fix --force
+```
+
+</details>
+
+<details>
+<summary><strong>🐍 Python AI Agent</strong></summary>
+
+```bash
+# Install safety
 pip install safety
+
+# Check for vulnerabilities
 safety check -r requirements.txt
 
-# Flutter
-flutter pub outdated
+# Generate detailed report
+safety check -r requirements.txt --json
 ```
+
+</details>
+
+<details>
+<summary><strong>📱 Flutter Mobile</strong></summary>
+
+```bash
+# Check for outdated packages
+flutter pub outdated
+
+# Update dependencies
+flutter pub upgrade
+
+# Analyze project
+flutter analyze
+```
+
+</details>
 
 ---
 
@@ -269,19 +403,39 @@ Permissions-Policy: geolocation=(), microphone=(), camera=()
 
 ---
 
-## 📞 Contact
+<div align="center">
 
-| Channel | Contact |
-|---------|---------|
-| **Security Email** | security@fullycommunity.com |
-| **General Issues** | [GitHub Issues](https://github.com/Mostafa-SAID7/fullycommunity/issues) |
+### 🛡️ Security is Everyone's Responsibility
+
+<table>
+<tr>
+<td align="center" width="50%">
+
+📧 **Security Email**
+
+`security@fullycommunity.com`
+
+For private vulnerability reports
+
+</td>
+<td align="center" width="50%">
+
+🐛 **General Issues**
+
+[GitHub Issues](https://github.com/Mostafa-SAID7/fullycommunity/issues)
+
+For non-security bugs
+
+</td>
+</tr>
+</table>
 
 ---
 
-<div align="center">
+**Thank you for helping keep Fully Community secure!** 🙏
 
-**Security is everyone's responsibility** 🛡️
+<sub>© 2025 Community Car Platform. All rights reserved.</sub>
 
-Thank you for helping keep Fully Community secure!
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=24,6,12&height=100&section=footer" width="100%"/>
 
 </div>

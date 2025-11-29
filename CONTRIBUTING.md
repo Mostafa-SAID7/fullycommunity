@@ -1,10 +1,16 @@
 <div align="center">
 
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,20,6&height=180&section=header&text=Contributing%20Guide&fontSize=70&fontAlignY=35&animation=fadeIn&fontColor=fff" width="100%"/>
+
 # 🤝 Contributing to Fully Community
 
-First off, thank you for considering contributing! 🎉
+<p align="center">
+  <strong>First off, thank you for considering contributing! 🎉</strong>
+</p>
 
-Every contribution helps make this project better for everyone.
+<p align="center">
+  Every contribution helps make this project better for everyone.
+</p>
 
 </div>
 
@@ -25,7 +31,10 @@ Every contribution helps make this project better for everyone.
 
 ## 📜 Code of Conduct
 
-This project adheres to a Code of Conduct. By participating, you are expected to:
+> [!IMPORTANT]
+> This project adheres to a Code of Conduct. By participating, you are expected to uphold these standards.
+
+**Our Standards:**
 
 - 🤝 Be respectful and inclusive
 - 💬 Use welcoming and inclusive language
@@ -132,38 +141,96 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/) specifica
 
 ### Scopes
 
-| Scope | Description |
-|-------|-------------|
-| `api` | Backend API |
-| `web` | Angular frontend |
-| `mobile` | Flutter app |
-| `ai` | AI Agent |
-| `auth` | Authentication |
-| `db` | Database |
-| `ci` | CI/CD pipelines |
-| `docs` | Documentation |
+<table>
+<tr>
+<th>🏷️ Scope</th>
+<th>📝 Description</th>
+<th>💡 Example</th>
+</tr>
+<tr>
+<td><code>api</code></td>
+<td>Backend API</td>
+<td><code>fix(api): resolve null reference</code></td>
+</tr>
+<tr>
+<td><code>web</code></td>
+<td>Angular frontend</td>
+<td><code>feat(web): add dark mode</code></td>
+</tr>
+<tr>
+<td><code>mobile</code></td>
+<td>Flutter app</td>
+<td><code>fix(mobile): resolve login issue</code></td>
+</tr>
+<tr>
+<td><code>ai</code></td>
+<td>AI Agent</td>
+<td><code>feat(ai): improve response quality</code></td>
+</tr>
+<tr>
+<td><code>auth</code></td>
+<td>Authentication</td>
+<td><code>feat(auth): add 2FA support</code></td>
+</tr>
+<tr>
+<td><code>db</code></td>
+<td>Database</td>
+<td><code>perf(db): optimize queries</code></td>
+</tr>
+<tr>
+<td><code>ci</code></td>
+<td>CI/CD pipelines</td>
+<td><code>ci: add coverage reports</code></td>
+</tr>
+<tr>
+<td><code>docs</code></td>
+<td>Documentation</td>
+<td><code>docs: update setup guide</code></td>
+</tr>
+</table>
 
 ### Examples
 
+<details>
+<summary><strong>✅ Good Commit Examples</strong></summary>
+
 ```bash
-# ✅ Good commits
 feat(auth): implement JWT refresh token
 fix(web): resolve routing issue on profile page
 docs(api): add authentication endpoints
 test(auth): add unit tests for AuthService
 chore(deps): update Angular to v19
+perf(db): optimize user query with indexing
+```
 
-# ❌ Bad commits
+</details>
+
+<details>
+<summary><strong>❌ Bad Commit Examples</strong></summary>
+
+```bash
 fixed stuff
 WIP
 update
+changes
+asdf
 ```
+
+> [!WARNING]
+> Commits like these will be rejected during code review. Please follow the conventional commits format.
+
+</details>
 
 ---
 
 ## 🔀 Pull Request Process
 
+> [!NOTE]
+> Before submitting a PR, please ensure all checks pass and your code follows our guidelines.
+
 ### Before Submitting
+
+**Quality Checklist:**
 
 - [ ] 🧪 All tests pass locally
 - [ ] 📝 Code follows style guidelines
@@ -205,11 +272,30 @@ Add screenshots for UI changes.
 
 ### Review Process
 
-1. 🤖 **Automated checks** run (CI, linting, tests)
-2. 👀 **Code review** by maintainers
-3. 💬 **Address feedback** if any
+```mermaid
+graph LR
+    A[📝 Submit PR] --> B{🤖 CI Checks}
+    B -->|✅ Pass| C[👀 Code Review]
+    B -->|❌ Fail| D[🔧 Fix Issues]
+    D --> B
+    C -->|💬 Changes Requested| E[📝 Address Feedback]
+    E --> C
+    C -->|✅ Approved| F[🎉 Merge to Main]
+    F --> G[🚀 Deploy]
+    
+    style A fill:#e1f5ff
+    style F fill:#d4edda
+    style G fill:#d4edda
+    style D fill:#f8d7da
+```
+
+**Timeline:**
+
+1. 🤖 **Automated checks** run (CI, linting, tests) - *~5 minutes*
+2. 👀 **Code review** by maintainers - *1-3 days*
+3. 💬 **Address feedback** if any - *As needed*
 4. ✅ **Approval** from at least 1 maintainer
-5. 🚀 **Merge** to main branch
+5. 🚀 **Merge** to main branch and deploy
 
 ---
 
@@ -364,30 +450,87 @@ flutter test --coverage
 
 ## 🏷️ Issue Labels
 
-| Label | Description |
-|-------|-------------|
-| `bug` | Something isn't working |
-| `enhancement` | New feature request |
-| `documentation` | Documentation improvements |
-| `good first issue` | Good for newcomers |
-| `help wanted` | Extra attention needed |
-| `priority: high` | High priority |
-| `priority: low` | Low priority |
-
----
-
-## 💬 Getting Help
-
-- 💡 **Questions?** Open a [Discussion](https://github.com/Mostafa-SAID7/fullycommunity/discussions)
-- 🐛 **Found a bug?** Open an [Issue](https://github.com/Mostafa-SAID7/fullycommunity/issues)
-- 🔒 **Security issue?** See [SECURITY.md](SECURITY.md)
+<table>
+<tr>
+<th>🏷️ Label</th>
+<th>📝 Description</th>
+<th>🎯 Use Case</th>
+</tr>
+<tr>
+<td><code>bug</code> 🐛</td>
+<td>Something isn't working</td>
+<td>Report broken functionality</td>
+</tr>
+<tr>
+<td><code>enhancement</code> ✨</td>
+<td>New feature request</td>
+<td>Suggest new features</td>
+</tr>
+<tr>
+<td><code>documentation</code> 📚</td>
+<td>Documentation improvements</td>
+<td>Improve docs clarity</td>
+</tr>
+<tr>
+<td><code>good first issue</code> 🌱</td>
+<td>Good for newcomers</td>
+<td>Start contributing here</td>
+</tr>
+<tr>
+<td><code>help wanted</code> 🆘</td>
+<td>Extra attention needed</td>
+<td>Community help requested</td>
+</tr>
+<tr>
+<td><code>priority: high</code> 🔴</td>
+<td>High priority</td>
+<td>Urgent issues</td>
+</tr>
+<tr>
+<td><code>priority: low</code> 🟢</td>
+<td>Low priority</td>
+<td>Nice to have</td>
+</tr>
+</table>
 
 ---
 
 <div align="center">
 
-**Thank you for contributing! 🙏**
+### 💖 Thank You for Contributing!
 
-Your efforts help make Fully Community better for everyone.
+<table>
+<tr>
+<td align="center" width="33%">
+
+💡 **Questions?**
+
+[Open a Discussion](https://github.com/Mostafa-SAID7/fullycommunity/discussions)
+
+</td>
+<td align="center" width="33%">
+
+🐛 **Found a bug?**
+
+[Open an Issue](https://github.com/Mostafa-SAID7/fullycommunity/issues)
+
+</td>
+<td align="center" width="33%">
+
+🔒 **Security issue?**
+
+[See SECURITY.md](SECURITY.md)
+
+</td>
+</tr>
+</table>
+
+---
+
+**Your efforts help make Fully Community better for everyone.** 🙏
+
+<sub>© 2025 Community Car Platform. All rights reserved.</sub>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,20,6&height=100&section=footer" width="100%"/>
 
 </div>
