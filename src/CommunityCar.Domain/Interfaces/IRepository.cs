@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using CommunityCar.Domain.Common;
 using CommunityCar.Domain.Entities;
 
 namespace CommunityCar.Domain.Interfaces;

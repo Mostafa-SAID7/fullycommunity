@@ -1,0 +1,11 @@
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+global using MediatR;
+global using FluentValidation;
+global using CommunityCar.Domain.Common;
+global using CommunityCar.Domain.Common.Enums;
+global using CommunityCar.Domain.Entities.Identity;
+global using CommunityCar.Application.Common.Interfaces;
