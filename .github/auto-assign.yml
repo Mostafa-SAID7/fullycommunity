@@ -1,0 +1,14 @@
+# Auto-assign reviewers
+addReviewers: true
+addAssignees: author
+
+reviewers:
+  - team-lead
+
+numberOfReviewers: 1
+
+filterLabels:
+  include: []
+  exclude:
+    - wip
+    - draft

@@ -1,0 +1,35 @@
+# Labels for PR automation
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: 'ClientApp/**'
+
+backend:
+  - changed-files:
+      - any-glob-to-any-file: 'src/**'
+
+ai-agent:
+  - changed-files:
+      - any-glob-to-any-file: 'AiAgent/**'
+
+mobile:
+  - changed-files:
+      - any-glob-to-any-file: 'Mobile/**'
+
+devops:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.devops/**'
+          - '.github/**'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/**'
+          - '*.md'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*test*'
+          - '**/*spec*'
+          - '**/tests/**'

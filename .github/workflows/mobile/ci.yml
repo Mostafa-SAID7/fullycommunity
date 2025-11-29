@@ -1,0 +1,117 @@
+name: Mobile CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'Mobile/**'
+      - '.github/workflows/mobile/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'Mobile/**'
+
+env:
+  FLUTTER_VERSION: '3.24.0'
+  WORKING_DIR: 'Mobile'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          
+      - name: Get dependencies
+        run: flutter pub get
+        working-directory: ${{ env.WORKING_DIR }}
+        
+      - name: Analyze code
+        run: flutter analyze
+        working-directory: ${{ env.WORKING_DIR }}
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          
+      - name: Get dependencies
+        run: flutter pub get
+        working-directory: ${{ env.WORKING_DIR }}
+        
+      - name: Run tests
+        run: flutter test --coverage
+        working-directory: ${{ env.WORKING_DIR }}
+        continue-on-error: true
+        
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-coverage
+          path: ${{ env.WORKING_DIR }}/coverage/
+          retention-days: 5
+        continue-on-error: true
+
+  build-android:
+    needs: [analyze, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          
+      - name: Get dependencies
+        run: flutter pub get
+        working-directory: ${{ env.WORKING_DIR }}
+        
+      - name: Build APK
+        run: flutter build apk --debug
+        working-directory: ${{ env.WORKING_DIR }}
+        
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          path: ${{ env.WORKING_DIR }}/build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 5
+
+  build-ios:
+    needs: [analyze, test]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          
+      - name: Get dependencies
+        run: flutter pub get
+        working-directory: ${{ env.WORKING_DIR }}
+        
+      - name: Build iOS (no codesign)
+        run: flutter build ios --debug --no-codesign
+        working-directory: ${{ env.WORKING_DIR }}
