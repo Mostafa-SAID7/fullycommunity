@@ -1,0 +1,134 @@
+name: Auto Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  pr-review-checklist:
+    name: PR Review Checklist
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add review checklist
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+            
+            const botComment = comments.find(c => 
+              c.user.type === 'Bot' && c.body.includes('## 📋 Review Checklist')
+            );
+            
+            if (!botComment) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `## 📋 Review Checklist
+                
+            Please ensure the following before merging:
+
+            ### Code Quality
+            - [ ] Code follows project style guidelines
+            - [ ] No unnecessary code or comments
+            - [ ] Proper error handling implemented
+
+            ### Testing
+            - [ ] Unit tests added/updated
+            - [ ] All tests pass locally
+            - [ ] Integration tests pass (if applicable)
+
+            ### Documentation
+            - [ ] Code is self-documenting or has comments
+            - [ ] README updated (if needed)
+            - [ ] API docs updated (if needed)
+
+            ### Security
+            - [ ] No sensitive data exposed
+            - [ ] Input validation in place
+            - [ ] Security scan passed
+
+            ---
+            *This checklist was auto-generated. Please check applicable items.*`
+              });
+            }
+
+  code-review-suggestions:
+    name: Code Review Suggestions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for common issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            let suggestions = [];
+            
+            for (const file of files) {
+              // Check for large files
+              if (file.changes > 500) {
+                suggestions.push(`⚠️ \`${file.filename}\` has ${file.changes} changes. Consider breaking into smaller PRs.`);
+              }
+              
+              // Check for test files
+              if (file.filename.includes('src/') && !files.some(f => f.filename.includes('test') || f.filename.includes('spec'))) {
+                if (!suggestions.includes('🧪 Consider adding tests for new code.')) {
+                  suggestions.push('🧪 Consider adding tests for new code.');
+                }
+              }
+            }
+            
+            if (suggestions.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `## 💡 Suggestions\n\n${suggestions.join('\n')}`
+              });
+            }
+
+  assign-reviewers:
+    name: Assign Reviewers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign reviewers based on files
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const reviewers = new Set();
+            
+            for (const file of files) {
+              if (file.filename.startsWith('src/')) reviewers.add('backend-team');
+              if (file.filename.startsWith('ClientApp/')) reviewers.add('frontend-team');
+              if (file.filename.startsWith('Mobile/')) reviewers.add('mobile-team');
+              if (file.filename.startsWith('AiAgent/')) reviewers.add('ai-team');
+            }
+            
+            // Note: Replace with actual team slugs or usernames
+            console.log('Would assign reviewers:', Array.from(reviewers));

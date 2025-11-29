@@ -1,4 +1,4 @@
-name: Trivy Security Scan
+name: Bearer Security Scan
 
 on:
   push:
@@ -13,24 +13,23 @@ permissions:
   security-events: write
 
 jobs:
-  trivy-scan:
+  bearer-scan:
+    name: Data Security Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+      - name: Run Bearer
+        uses: bearer/bearer-action@v2
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH,MEDIUM'
+          format: sarif
+          output: bearer-results.sarif
+          exit-code: 0
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: trivy-results.sarif
-          category: trivy
+          sarif_file: bearer-results.sarif
+          category: bearer
         if: always()

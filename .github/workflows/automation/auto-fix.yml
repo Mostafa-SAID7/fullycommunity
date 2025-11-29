@@ -1,0 +1,106 @@
+name: Auto Fix
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-fix-dotnet:
+    name: Auto Fix .NET
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Format code
+        run: dotnet format src/CommunityCar.sln --verbosity diagnostic
+        continue-on-error: true
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'style: Auto-format .NET code'
+          file_pattern: '*.cs'
+
+  auto-fix-frontend:
+    name: Auto Fix Frontend
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ClientApp
+
+      - name: Fix lint issues
+        run: npm run lint -- --fix
+        working-directory: ClientApp
+        continue-on-error: true
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'style: Auto-fix frontend lint issues'
+          file_pattern: 'ClientApp/**/*.ts'
+
+  auto-fix-python:
+    name: Auto Fix Python
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install formatters
+        run: pip install ruff black isort
+
+      - name: Format with Ruff
+        run: ruff check --fix AiAgent/
+        continue-on-error: true
+
+      - name: Format with Black
+        run: black AiAgent/
+        continue-on-error: true
+
+      - name: Sort imports
+        run: isort AiAgent/
+        continue-on-error: true
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'style: Auto-format Python code'
+          file_pattern: 'AiAgent/**/*.py'

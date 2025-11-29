@@ -1,4 +1,4 @@
-name: CodeQL
+name: CodeQL Analysis
 
 on:
   push:
@@ -16,7 +16,7 @@ permissions:
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
-    runs-on: ${{ matrix.language == 'swift' && 'macos-latest' || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:

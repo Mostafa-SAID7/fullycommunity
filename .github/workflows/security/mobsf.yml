@@ -1,0 +1,37 @@
+name: MobSF Mobile Security
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'Mobile/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'Mobile/**'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  mobsf-source-scan:
+    name: Source Code Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run MobSF Source Scan
+        uses: MobSF/mobsfscan@main
+        with:
+          args: ./Mobile --sarif --output mobsf-results.sarif
+        continue-on-error: true
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: mobsf-results.sarif
+          category: mobsf
+        if: always()
+        continue-on-error: true

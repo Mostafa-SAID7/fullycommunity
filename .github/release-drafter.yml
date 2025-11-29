@@ -1,0 +1,114 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'enhancement'
+      - 'feature'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'bug'
+      - 'fix'
+  - title: '🔒 Security'
+    labels:
+      - 'security'
+  - title: '📚 Documentation'
+    labels:
+      - 'documentation'
+      - 'docs'
+  - title: '🧪 Tests'
+    labels:
+      - 'tests'
+      - 'testing'
+  - title: '🔧 Maintenance'
+    labels:
+      - 'chore'
+      - 'dependencies'
+      - 'refactor'
+  - title: '⚡ Performance'
+    labels:
+      - 'performance'
+  - title: '🏗️ CI/CD'
+    labels:
+      - 'ci/cd'
+      - 'ci'
+
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&'
+
+version-resolver:
+  major:
+    labels:
+      - 'major'
+      - 'breaking'
+  minor:
+    labels:
+      - 'minor'
+      - 'enhancement'
+      - 'feature'
+  patch:
+    labels:
+      - 'patch'
+      - 'bug'
+      - 'fix'
+  default: patch
+
+autolabeler:
+  - label: 'enhancement'
+    title:
+      - '/^feat/i'
+  - label: 'bug'
+    title:
+      - '/^fix/i'
+  - label: 'documentation'
+    title:
+      - '/^docs/i'
+    files:
+      - '*.md'
+      - 'docs/**'
+  - label: 'chore'
+    title:
+      - '/^chore/i'
+  - label: 'ci/cd'
+    title:
+      - '/^ci/i'
+    files:
+      - '.github/**'
+  - label: 'tests'
+    title:
+      - '/^test/i'
+    files:
+      - '**/*test*'
+      - '**/*spec*'
+  - label: 'refactor'
+    title:
+      - '/^refactor/i'
+  - label: 'performance'
+    title:
+      - '/^perf/i'
+  - label: 'backend'
+    files:
+      - 'src/**'
+  - label: 'frontend'
+    files:
+      - 'ClientApp/**'
+  - label: 'mobile'
+    files:
+      - 'Mobile/**'
+  - label: 'ai-agent'
+    files:
+      - 'AiAgent/**'
+
+template: |
+  ## 📦 What's Changed
+
+  $CHANGES
+
+  ## 👥 Contributors
+
+  $CONTRIBUTORS
+
+  ---
+  
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
