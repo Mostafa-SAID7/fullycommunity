@@ -1,0 +1,18 @@
+# Default owners
+* @team-lead
+
+# Frontend
+/ClientApp/ @frontend-team
+
+# Backend
+/src/ @backend-team
+
+# AI/ML
+/AiAgent/ @ai-team
+
+# Mobile
+/Mobile/ @mobile-team
+
+# DevOps
+/.devops/ @devops-team
+/.github/ @devops-team

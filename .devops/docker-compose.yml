@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ../src
+      dockerfile: ../devops/Dockerfile.api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=CommunityCar;User=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=true
+    depends_on:
+      - db
+
+  web:
+    build:
+      context: ../ClientApp
+      dockerfile: ../devops/Dockerfile.web
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+
+  ai-agent:
+    build:
+      context: ../AiAgent
+      dockerfile: ../devops/Dockerfile.ai
+    ports:
+      - "8000:8000"
+    environment:
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+
+volumes:
+  sqldata:

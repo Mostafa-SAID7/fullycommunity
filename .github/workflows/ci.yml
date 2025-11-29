@@ -1,0 +1,75 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Restore
+        run: dotnet restore src/CommunityCar.sln
+      - name: Build
+        run: dotnet build src/CommunityCar.sln --no-restore
+      - name: Test
+        run: dotnet test src/CommunityCar.sln --no-build
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: ClientApp/package-lock.json
+      - name: Install
+        run: npm ci
+        working-directory: ClientApp
+      - name: Lint
+        run: npm run lint
+        working-directory: ClientApp
+      - name: Build
+        run: npm run build
+        working-directory: ClientApp
+
+  ai-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
+        working-directory: AiAgent
+      - name: Test
+        run: pytest
+        working-directory: AiAgent
+
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: Mobile
+      - name: Analyze
+        run: flutter analyze
+        working-directory: Mobile
