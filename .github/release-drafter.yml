@@ -1,47 +1,100 @@
-name-template: 'v$RESOLVED_VERSION'
+# ╔══════════════════════════════════════════════════════════════════════════════╗
+# ║                                                                              ║
+# ║   📦 RELEASE DRAFTER CONFIGURATION - Fully Community Platform                ║
+# ║                                                                              ║
+# ║   Automatically generates beautiful release notes from merged PRs            ║
+# ║                                                                              ║
+# ╚══════════════════════════════════════════════════════════════════════════════╝
+
+name-template: 'v$RESOLVED_VERSION 🚀'
 tag-template: 'v$RESOLVED_VERSION'
 
+# ─────────────────────────────────────────────────────────────────────────────────
+# 📂 CATEGORIES - Organize changes by type
+# ─────────────────────────────────────────────────────────────────────────────────
 categories:
-  - title: '🚀 Features'
+  - title: '🚀 New Features'
     labels:
       - 'enhancement'
       - 'feature'
+    collapse-after: 5
+    
   - title: '🐛 Bug Fixes'
     labels:
       - 'bug'
       - 'fix'
-  - title: '🔒 Security'
+      - 'bugfix'
+    collapse-after: 5
+    
+  - title: '🔒 Security Updates'
     labels:
       - 'security'
+      - 'vulnerability'
+      
+  - title: '⚡ Performance Improvements'
+    labels:
+      - 'performance'
+      - 'optimization'
+      
   - title: '📚 Documentation'
     labels:
       - 'documentation'
       - 'docs'
+      
   - title: '🧪 Tests'
     labels:
       - 'tests'
       - 'testing'
+      
   - title: '🔧 Maintenance'
     labels:
       - 'chore'
-      - 'dependencies'
+      - 'maintenance'
       - 'refactor'
-  - title: '⚡ Performance'
+    collapse-after: 5
+    
+  - title: '📦 Dependencies'
     labels:
-      - 'performance'
+      - 'dependencies'
+      - 'deps'
+    collapse-after: 3
+    
   - title: '🏗️ CI/CD'
     labels:
       - 'ci/cd'
       - 'ci'
+      - 'automation'
+      
+  - title: '🎨 Styling'
+    labels:
+      - 'style'
+      - 'ui'
+      - 'ux'
 
-change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+# ─────────────────────────────────────────────────────────────────────────────────
+# 🏷️ EXCLUDE LABELS - Skip these from release notes
+# ─────────────────────────────────────────────────────────────────────────────────
+exclude-labels:
+  - 'skip-changelog'
+  - 'duplicate'
+  - 'invalid'
+  - 'wontfix'
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# 📝 CHANGE TEMPLATE - Format for each change entry
+# ─────────────────────────────────────────────────────────────────────────────────
+change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
 change-title-escapes: '\<*_&'
 
+# ─────────────────────────────────────────────────────────────────────────────────
+# 🔢 VERSION RESOLVER - Determine version bump
+# ─────────────────────────────────────────────────────────────────────────────────
 version-resolver:
   major:
     labels:
       - 'major'
       - 'breaking'
+      - 'breaking-change'
   minor:
     labels:
       - 'minor'
@@ -52,63 +105,137 @@ version-resolver:
       - 'patch'
       - 'bug'
       - 'fix'
+      - 'bugfix'
   default: patch
 
+# ─────────────────────────────────────────────────────────────────────────────────
+# 🤖 AUTO LABELER - Automatically label PRs
+# ─────────────────────────────────────────────────────────────────────────────────
 autolabeler:
+  # By PR title prefix
   - label: 'enhancement'
     title:
-      - '/^feat/i'
+      - '/^feat(\(.+\))?:/i'
+      - '/^feature(\(.+\))?:/i'
   - label: 'bug'
     title:
-      - '/^fix/i'
+      - '/^fix(\(.+\))?:/i'
+      - '/^bugfix(\(.+\))?:/i'
   - label: 'documentation'
     title:
-      - '/^docs/i'
-    files:
-      - '*.md'
-      - 'docs/**'
+      - '/^docs(\(.+\))?:/i'
   - label: 'chore'
     title:
-      - '/^chore/i'
+      - '/^chore(\(.+\))?:/i'
   - label: 'ci/cd'
     title:
-      - '/^ci/i'
-    files:
-      - '.github/**'
+      - '/^ci(\(.+\))?:/i'
   - label: 'tests'
     title:
-      - '/^test/i'
-    files:
-      - '**/*test*'
-      - '**/*spec*'
+      - '/^test(\(.+\))?:/i'
   - label: 'refactor'
     title:
-      - '/^refactor/i'
+      - '/^refactor(\(.+\))?:/i'
   - label: 'performance'
     title:
-      - '/^perf/i'
+      - '/^perf(\(.+\))?:/i'
+  - label: 'style'
+    title:
+      - '/^style(\(.+\))?:/i'
+      
+  # By files changed
   - label: 'backend'
     files:
-      - 'src/**'
+      - 'src/**/*'
   - label: 'frontend'
     files:
-      - 'ClientApp/**'
+      - 'ClientApp/**/*'
   - label: 'mobile'
     files:
-      - 'Mobile/**'
+      - 'Mobile/**/*'
   - label: 'ai-agent'
     files:
-      - 'AiAgent/**'
+      - 'AiAgent/**/*'
+  - label: 'documentation'
+    files:
+      - '**/*.md'
+      - 'docs/**/*'
+  - label: 'ci/cd'
+    files:
+      - '.github/**/*'
+  - label: 'devops'
+    files:
+      - '.devops/**/*'
+      - 'Dockerfile*'
+      - 'docker-compose*'
 
+# ─────────────────────────────────────────────────────────────────────────────────
+# 📄 RELEASE TEMPLATE - The final release notes format
+# ─────────────────────────────────────────────────────────────────────────────────
 template: |
-  ## 📦 What's Changed
-
-  $CHANGES
-
-  ## 👥 Contributors
-
-  $CONTRIBUTORS
-
+  <div align="center">
+  
+  # 🚀 Release $RESOLVED_VERSION
+  
+  [![Release](https://img.shields.io/badge/Release-$RESOLVED_VERSION-blue?style=for-the-badge)](https://github.com/$OWNER/$REPOSITORY/releases/tag/v$RESOLVED_VERSION)
+  [![Downloads](https://img.shields.io/github/downloads/$OWNER/$REPOSITORY/v$RESOLVED_VERSION/total?style=for-the-badge)]()
+  
+  **Fully Community Platform** - A modern full-stack community platform
+  
+  </div>
+  
   ---
   
-  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+  ## 📋 What's Changed
+  
+  $CHANGES
+  
+  ---
+  
+  ## 👥 Contributors
+  
+  Thanks to all the amazing contributors! 🎉
+  
+  $CONTRIBUTORS
+  
+  ---
+  
+  ## 📦 Quick Install
+  
+  ```bash
+  # Docker
+  docker pull ghcr.io/$OWNER/$REPOSITORY:v$RESOLVED_VERSION
+  
+  # Or clone specific version
+  git clone https://github.com/$OWNER/$REPOSITORY.git
+  git checkout v$RESOLVED_VERSION
+  ```
+  
+  ---
+  
+  ## 🔗 Links
+  
+  | Resource | Link |
+  |----------|------|
+  | 📖 Documentation | [View Docs](https://github.com/$OWNER/$REPOSITORY/tree/main/docs) |
+  | 🐛 Report Bug | [Open Issue](https://github.com/$OWNER/$REPOSITORY/issues/new?template=bug_report.md) |
+  | 💡 Request Feature | [Open Issue](https://github.com/$OWNER/$REPOSITORY/issues/new?template=feature_request.md) |
+  | 💖 Sponsor | [Support Us](https://github.com/sponsors/$OWNER) |
+  
+  ---
+  
+  <div align="center">
+  
+  **Full Changelog**: [`$PREVIOUS_TAG...v$RESOLVED_VERSION`](https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION)
+  
+  ---
+  
+  ⭐ **Star us on GitHub** — it motivates us a lot!
+  
+  Made with ❤️ by the **Fully Community Team**
+  
+  </div>
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#                    Release Drafter Configuration Complete! 🎉
+# ═══════════════════════════════════════════════════════════════════════════════
