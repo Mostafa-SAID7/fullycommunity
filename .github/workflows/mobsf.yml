@@ -1,0 +1,105 @@
+name: MobSF Mobile Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'Mobile/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'Mobile/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+env:
+  FLUTTER_VERSION: '3.24.0'
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    outputs:
+      apk-path: ${{ steps.build.outputs.apk-path }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+        working-directory: Mobile
+
+      - name: Build APK
+        id: build
+        run: |
+          flutter build apk --debug
+          echo "apk-path=Mobile/build/app/outputs/flutter-apk/app-debug.apk" >> $GITHUB_OUTPUT
+        working-directory: Mobile
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: Mobile/build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 1
+
+  mobsf-scan:
+    needs: build-apk
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download APK
+        uses: actions/download-artifact@v4
+        with:
+          name: debug-apk
+          path: ./apk
+
+      - name: Run MobSF Scan
+        uses: MobSF/mobsfscan@main
+        with:
+          args: ./apk --sarif --output mobsf-results.sarif
+        continue-on-error: true
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: mobsf-results.sarif
+          category: mobsf
+        if: always()
+        continue-on-error: true
+
+  mobsf-source-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run MobSF Source Scan
+        uses: MobSF/mobsfscan@main
+        with:
+          args: ./Mobile --sarif --output mobsf-source-results.sarif
+        continue-on-error: true
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: mobsf-source-results.sarif
+          category: mobsf-source
+        if: always()
+        continue-on-error: true
