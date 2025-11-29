@@ -32,6 +32,13 @@ public class UserDevice
     public string? PushToken { get; set; }
     public bool PushEnabled { get; set; } = true;
     
+    // Trust
+    public DateTime? TrustedAt { get; set; }
+    
+    // Fingerprint
+    public string? Fingerprint { get; set; }
+    public string? UserAgent { get; set; }
+    
     // Timestamps
     public DateTime FirstSeenAt { get; set; } = DateTime.UtcNow;
     public DateTime LastSeenAt { get; set; } = DateTime.UtcNow;

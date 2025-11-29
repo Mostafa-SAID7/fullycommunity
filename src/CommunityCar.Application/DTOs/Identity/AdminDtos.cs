@@ -90,13 +90,13 @@ public record CreatePermissionRequest(
 
 public record UserLoginHistoryDto(
     Guid Id,
-    string LoginType,
-    string Status,
-    string? FailureReason,
     string? IpAddress,
     string? Country,
     string? City,
-    DateTime AttemptedAt
+    string? Browser,
+    string? Platform,
+    bool IsSuccessful,
+    DateTime LoginAt
 );
 
 public record UserDeviceDto(
@@ -106,8 +106,6 @@ public record UserDeviceDto(
     string? DeviceType,
     string? Platform,
     bool IsTrusted,
-    bool IsActive,
-    DateTime FirstSeenAt,
     DateTime LastSeenAt
 );
 

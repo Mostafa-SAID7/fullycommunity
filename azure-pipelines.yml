@@ -1,0 +1,247 @@
+# ╔══════════════════════════════════════════════════════════════════════════════╗
+# ║                                                                              ║
+# ║   🚀 AZURE DEVOPS PIPELINE - Fully Community Platform                        ║
+# ║                                                                              ║
+# ║   Multi-stage CI/CD pipeline for all components                              ║
+# ║                                                                              ║
+# ╚══════════════════════════════════════════════════════════════════════════════╝
+
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+  paths:
+    exclude:
+      - '*.md'
+      - 'docs/**'
+
+pr:
+  branches:
+    include:
+      - main
+      - develop
+
+variables:
+  - group: fullycommunity-secrets
+  - name: DOTNET_VERSION
+    value: '9.0.x'
+  - name: NODE_VERSION
+    value: '20.x'
+  - name: PYTHON_VERSION
+    value: '3.11'
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# STAGES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+stages:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # BUILD STAGE
+  # ─────────────────────────────────────────────────────────────────────────────
+  - stage: Build
+    displayName: '🔨 Build'
+    jobs:
+      - job: Backend
+        displayName: 'Build Backend (.NET)'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: UseDotNet@2
+            displayName: 'Setup .NET'
+            inputs:
+              version: $(DOTNET_VERSION)
+
+          - task: DotNetCoreCLI@2
+            displayName: 'Restore'
+            inputs:
+              command: 'restore'
+              projects: 'src/CommunityCar.sln'
+
+          - task: DotNetCoreCLI@2
+            displayName: 'Build'
+            inputs:
+              command: 'build'
+              projects: 'src/CommunityCar.sln'
+              arguments: '--configuration Release --no-restore'
+
+          - task: DotNetCoreCLI@2
+            displayName: 'Publish'
+            inputs:
+              command: 'publish'
+              projects: 'src/CommunityCar.API/CommunityCar.API.csproj'
+              arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/api'
+
+          - publish: $(Build.ArtifactStagingDirectory)/api
+            artifact: api
+            displayName: 'Publish API Artifact'
+
+      - job: Frontend
+        displayName: 'Build Frontend (Angular)'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: NodeTool@0
+            displayName: 'Setup Node.js'
+            inputs:
+              versionSpec: $(NODE_VERSION)
+
+          - script: npm ci
+            displayName: 'Install Dependencies'
+            workingDirectory: 'ClientApp'
+
+          - script: npm run build -- --configuration production
+            displayName: 'Build'
+            workingDirectory: 'ClientApp'
+
+          - publish: ClientApp/dist
+            artifact: web
+            displayName: 'Publish Web Artifact'
+
+      - job: AiAgent
+        displayName: 'Build AI Agent (Python)'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: UsePythonVersion@0
+            displayName: 'Setup Python'
+            inputs:
+              versionSpec: $(PYTHON_VERSION)
+
+          - script: |
+              pip install -r requirements.txt
+            displayName: 'Install Dependencies'
+            workingDirectory: 'AiAgent'
+
+          - publish: AiAgent
+            artifact: ai-agent
+            displayName: 'Publish AI Agent Artifact'
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # TEST STAGE
+  # ─────────────────────────────────────────────────────────────────────────────
+  - stage: Test
+    displayName: '🧪 Test'
+    dependsOn: Build
+    jobs:
+      - job: BackendTests
+        displayName: 'Backend Tests'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: UseDotNet@2
+            inputs:
+              version: $(DOTNET_VERSION)
+
+          - task: DotNetCoreCLI@2
+            displayName: 'Run Tests'
+            inputs:
+              command: 'test'
+              projects: 'src/CommunityCar.Tests/CommunityCar.Tests.csproj'
+              arguments: '--configuration Release --collect:"XPlat Code Coverage"'
+
+          - task: PublishCodeCoverageResults@1
+            displayName: 'Publish Coverage'
+            inputs:
+              codeCoverageTool: 'Cobertura'
+              summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+
+      - job: AiAgentTests
+        displayName: 'AI Agent Tests'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(PYTHON_VERSION)
+
+          - script: |
+              pip install -r requirements.txt
+              pip install pytest pytest-cov
+              pytest --cov=. --cov-report=xml
+            displayName: 'Run Tests'
+            workingDirectory: 'AiAgent'
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # SECURITY STAGE
+  # ─────────────────────────────────────────────────────────────────────────────
+  - stage: Security
+    displayName: '🔒 Security'
+    dependsOn: Build
+    jobs:
+      - job: SecurityScan
+        displayName: 'Security Scan'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: CredScan@3
+            displayName: 'Credential Scan'
+
+          - task: Trivy@0
+            displayName: 'Trivy Scan'
+            inputs:
+              scanType: 'fs'
+              scanPath: '.'
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # DEPLOY STAGING
+  # ─────────────────────────────────────────────────────────────────────────────
+  - stage: DeployStaging
+    displayName: '🚀 Deploy Staging'
+    dependsOn: [Test, Security]
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    jobs:
+      - deployment: DeployAPI
+        displayName: 'Deploy API'
+        environment: 'staging'
+        pool:
+          vmImage: 'ubuntu-latest'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: api
+
+                - task: AzureWebApp@1
+                  displayName: 'Deploy to Azure App Service'
+                  inputs:
+                    azureSubscription: 'Azure-Subscription'
+                    appType: 'webApp'
+                    appName: 'fullycommunity-api-staging'
+                    package: '$(Pipeline.Workspace)/api/**/*.zip'
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # DEPLOY PRODUCTION
+  # ─────────────────────────────────────────────────────────────────────────────
+  - stage: DeployProduction
+    displayName: '🌟 Deploy Production'
+    dependsOn: [Test, Security]
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: DeployAPI
+        displayName: 'Deploy API'
+        environment: 'production'
+        pool:
+          vmImage: 'ubuntu-latest'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: api
+
+                - task: AzureKeyVault@2
+                  displayName: 'Get Secrets from Key Vault'
+                  inputs:
+                    azureSubscription: 'Azure-Subscription'
+                    KeyVaultName: 'fullycommunity-kv'
+                    SecretsFilter: '*'
+
+                - task: AzureWebApp@1
+                  displayName: 'Deploy to Azure App Service'
+                  inputs:
+                    azureSubscription: 'Azure-Subscription'
+                    appType: 'webApp'
+                    appName: 'fullycommunity-api'
+                    package: '$(Pipeline.Workspace)/api/**/*.zip'

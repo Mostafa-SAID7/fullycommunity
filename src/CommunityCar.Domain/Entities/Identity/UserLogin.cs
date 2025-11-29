@@ -13,17 +13,20 @@ public class UserLogin
     // Login Details
     public LoginType LoginType { get; set; }
     public LoginStatus Status { get; set; }
+    public bool IsSuccessful { get; set; }
     public string? FailureReason { get; set; }
     
     // Device Info
     public string? DeviceId { get; set; }
     public string? IpAddress { get; set; }
     public string? UserAgent { get; set; }
+    public string? Browser { get; set; }
+    public string? Platform { get; set; }
     public string? Country { get; set; }
     public string? City { get; set; }
     
     // Timestamps
-    public DateTime AttemptedAt { get; set; } = DateTime.UtcNow;
+    public DateTime LoginAt { get; set; } = DateTime.UtcNow;
     public DateTime? LoggedOutAt { get; set; }
 }
 

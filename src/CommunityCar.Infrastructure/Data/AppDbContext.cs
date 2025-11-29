@@ -17,6 +17,15 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<OtpCode> OtpCodes => Set<OtpCode>();
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    
+    // Security & Audit
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<SecurityAlert> SecurityAlerts => Set<SecurityAlert>();
+    public DbSet<LoginAttempt> LoginAttempts => Set<LoginAttempt>();
+    public DbSet<UserSession> UserSessions => Set<UserSession>();
+    public DbSet<UserActivity> UserActivities => Set<UserActivity>();
+    public DbSet<TwoFactorBackupCode> TwoFactorBackupCodes => Set<TwoFactorBackupCode>();
+    public DbSet<BlockedIp> BlockedIps => Set<BlockedIp>();
 
     // Profiles
     public DbSet<AdminProfile> AdminProfiles => Set<AdminProfile>();
@@ -106,6 +115,62 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
             entity.HasOne(e => e.Permission)
                   .WithMany(p => p.RolePermissions)
                   .HasForeignKey(e => e.PermissionId);
+        });
+
+        builder.Entity<AuditLog>(entity =>
+        {
+            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => e.Timestamp);
+            entity.Property(e => e.Action).HasMaxLength(100);
+            entity.Property(e => e.EntityType).HasMaxLength(100);
+        });
+
+        builder.Entity<SecurityAlert>(entity =>
+        {
+            entity.HasOne(e => e.User)
+                  .WithMany(u => u.SecurityAlerts)
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<LoginAttempt>(entity =>
+        {
+            entity.HasIndex(e => new { e.UserId, e.CreatedAt });
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<UserSession>(entity =>
+        {
+            entity.HasIndex(e => e.SessionToken).IsUnique();
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<UserActivity>(entity =>
+        {
+            entity.HasIndex(e => new { e.UserId, e.CreatedAt });
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<TwoFactorBackupCode>(entity =>
+        {
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<BlockedIp>(entity =>
+        {
+            entity.HasIndex(e => e.IpAddress).IsUnique();
         });
 
         // ═══════════════════════════════════════════════════════════════════════

@@ -8,6 +8,7 @@ public record LoginRequest(
     string Email,
     string Password,
     string? DeviceId = null,
+    string? IpAddress = null,
     bool RememberMe = false
 );
 
@@ -37,7 +38,7 @@ public record RegisterRequest(
 // PASSWORD
 // ═══════════════════════════════════════════════════════════════════════════════
 
-public record ForgotPasswordRequest(string Email);
+public record ForgotPasswordRequest(string Email, string? ResetUrl = null);
 
 public record ResetPasswordRequest(
     string Email,
@@ -55,14 +56,12 @@ public record ChangePasswordRequest(
 // ═══════════════════════════════════════════════════════════════════════════════
 
 public record SendOtpRequest(
-    string Target, // Email or Phone
-    string Purpose // EmailVerification, PhoneVerification, PasswordReset, TwoFactor
+    string Type // email or sms
 );
 
 public record VerifyOtpRequest(
-    string Target,
     string Code,
-    string Purpose
+    string Type // email or sms
 );
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -71,7 +70,8 @@ public record VerifyOtpRequest(
 
 public record Enable2FaResponse(
     string SharedKey,
-    string QrCodeUri
+    string QrCodeBase64,
+    string ManualEntryKey
 );
 
 public record Verify2FaRequest(string Code);
@@ -80,7 +80,8 @@ public record TwoFactorLoginRequest(
     string Email,
     string Code,
     string? DeviceId = null,
-    bool RememberDevice = false
+    bool RememberDevice = false,
+    bool UseRecoveryCode = false
 );
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -89,7 +90,10 @@ public record TwoFactorLoginRequest(
 
 public record ExternalLoginRequest(
     string Provider, // Google, Facebook, Apple, etc.
-    string IdToken,
+    string ProviderKey,
+    string? Email = null,
+    string? FirstName = null,
+    string? LastName = null,
     string? DeviceId = null
 );
 
@@ -118,12 +122,9 @@ public record UserDto(
     string Email,
     string FirstName,
     string LastName,
-    string? PhoneNumber,
     string? AvatarUrl,
-    string? BackgroundImageUrl,
     string UserType,
     bool IsVerified,
-    bool IsActive,
     IEnumerable<string> Roles
 );
 
