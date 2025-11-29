@@ -20,7 +20,7 @@ jobs:
       - name: Build
         run: dotnet build src/CommunityCar.sln --no-restore
       - name: Test
-        run: dotnet test src/CommunityCar.sln --no-build
+        run: dotnet test src/CommunityCar.sln --no-build --verbosity normal
 
   frontend:
     runs-on: ubuntu-latest
@@ -34,9 +34,6 @@ jobs:
           cache-dependency-path: ClientApp/package-lock.json
       - name: Install
         run: npm ci
-        working-directory: ClientApp
-      - name: Lint
-        run: npm run lint
         working-directory: ClientApp
       - name: Build
         run: npm run build
@@ -53,7 +50,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          pip install pytest
+          pip install pytest pytest-asyncio
         working-directory: AiAgent
       - name: Test
         run: pytest

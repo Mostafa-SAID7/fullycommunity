@@ -1,14 +1,16 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace CommunityCar.Domain.Entities;
 
-public class User : BaseEntity
+public class User : IdentityUser<Guid>
 {
-    public string Email { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
-    public string? PhoneNumber { get; set; }
+    public string? AvatarUrl { get; set; }
+    public string? Bio { get; set; }
     public bool IsActive { get; set; } = true;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
     
-    public ICollection<Car> Cars { get; set; } = new List<Car>();
-    public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+    public string FullName => $"{FirstName} {LastName}";
 }

@@ -3,7 +3,7 @@
 ## Base URL
 ```
 Development: http://localhost:5000/api
-Production: https://api.communitycar.com/api
+Production: https://api.fullycommunity.com/api
 ```
 
 ## Authentication
@@ -15,20 +15,9 @@ JWT Bearer token required for protected endpoints.
 - `POST /auth/register` - Register new user
 - `POST /auth/login` - Login
 - `POST /auth/refresh` - Refresh token
+- `GET /auth/me` - Get current user (auth required)
+- `PUT /auth/me` - Update current user (auth required)
 
-### Cars
-- `GET /cars` - List all cars
-- `GET /cars/{id}` - Get car details
-- `POST /cars` - Create car (auth required)
-- `PUT /cars/{id}` - Update car (auth required)
-- `DELETE /cars/{id}` - Delete car (auth required)
-
-### Bookings
-- `GET /bookings` - List user bookings
-- `POST /bookings` - Create booking
-- `PUT /bookings/{id}` - Update booking
-- `DELETE /bookings/{id}` - Cancel booking
-
-### AI
-- `POST /ai/recommend` - Get car recommendations
-- `POST /ai/predict-price` - Predict car price
+### AI Agent
+- `POST /api/agents/chat` - Chat with AI assistant
+- `GET /api/agents/insights/{userId}` - Get user insights

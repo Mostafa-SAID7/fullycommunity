@@ -7,9 +7,9 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   template: `
     <section class="hero">
-      <h1>Share Your Car, Share the Journey</h1>
-      <p>Community Car connects car owners with people who need a ride.</p>
-      <a routerLink="/cars" class="btn btn-primary">Browse Cars</a>
+      <h1>Welcome to Fully Community</h1>
+      <p>Connect, share, and grow with your community.</p>
+      <a routerLink="/register" class="btn btn-primary">Get Started</a>
     </section>
   `,
   styles: [`

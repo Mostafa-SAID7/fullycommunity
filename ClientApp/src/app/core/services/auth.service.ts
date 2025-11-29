@@ -8,6 +8,7 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
+  phoneNumber?: string;
 }
 
 export interface AuthResponse {
@@ -34,6 +35,19 @@ export class AuthService {
   register(data: { email: string; password: string; firstName: string; lastName: string }) {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data)
       .pipe(tap(res => this.setSession(res)));
+  }
+
+  updateProfile(data: { firstName?: string; lastName?: string; phoneNumber?: string }) {
+    return this.http.put<void>(`${this.apiUrl}/me`, data).pipe(
+      tap(() => {
+        const user = this.currentUser();
+        if (user) {
+          const updated = { ...user, ...data };
+          localStorage.setItem('user', JSON.stringify(updated));
+          this.currentUser.set(updated);
+        }
+      })
+    );
   }
 
   logout() {

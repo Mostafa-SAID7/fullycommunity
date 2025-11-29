@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from routers import recommendations, predictions, agents
+from routers import agents
 
 load_dotenv()
 
 app = FastAPI(
-    title="Community Car AI Agent",
-    description="AI-powered recommendations and predictions for Community Car",
+    title="Fully Community AI Agent",
+    description="AI-powered assistant for Fully Community platform",
     version="1.0.0"
 )
 
@@ -19,8 +19,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(recommendations.router, prefix="/api/recommend", tags=["Recommendations"])
-app.include_router(predictions.router, prefix="/api/predict", tags=["Predictions"])
 app.include_router(agents.router, prefix="/api/agents", tags=["Agents"])
 
 @app.get("/health")

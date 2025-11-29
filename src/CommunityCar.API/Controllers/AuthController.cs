@@ -1,6 +1,8 @@
 using CommunityCar.Application.DTOs;
 using CommunityCar.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CommunityCar.API.Controllers;
 
@@ -55,5 +57,23 @@ public class AuthController : ControllerBase
         {
             return Unauthorized("Invalid refresh token");
         }
+    }
+
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<ActionResult<UserDto>> GetCurrentUser()
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var user = await _authService.GetUserByIdAsync(userId);
+        return user is null ? NotFound() : Ok(user);
+    }
+
+    [HttpPut("me")]
+    [Authorize]
+    public async Task<IActionResult> UpdateCurrentUser(UpdateUserDto dto)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _authService.UpdateUserAsync(userId, dto);
+        return result ? NoContent() : NotFound();
     }
 }

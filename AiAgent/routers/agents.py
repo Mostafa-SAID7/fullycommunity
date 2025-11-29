@@ -1,13 +1,14 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from agents.car_assistant import CarAssistantAgent
+from agents.assistant import CommunityAssistant
 
 router = APIRouter()
-agent = CarAssistantAgent()
+agent = CommunityAssistant()
 
 class ChatRequest(BaseModel):
     message: str
     conversation_id: str | None = None
+    user_id: str | None = None
 
 class ChatResponse(BaseModel):
     response: str
@@ -16,10 +17,10 @@ class ChatResponse(BaseModel):
 
 @router.post("/chat", response_model=ChatResponse)
 async def chat_with_agent(request: ChatRequest):
-    """Chat with the AI car assistant."""
-    return await agent.chat(request.message, request.conversation_id)
+    """Chat with the AI community assistant."""
+    return await agent.chat(request.message, request.conversation_id, request.user_id)
 
-@router.post("/analyze-listing")
-async def analyze_listing(listing_text: str):
-    """Analyze a car listing for quality and suggestions."""
-    return await agent.analyze_listing(listing_text)
+@router.get("/insights/{user_id}")
+async def get_user_insights(user_id: str):
+    """Get AI-powered insights for a user."""
+    return await agent.get_user_insights(user_id)

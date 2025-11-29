@@ -1,1 +1,1 @@
-from .car_assistant import CarAssistantAgent
+from .assistant import CommunityAssistant

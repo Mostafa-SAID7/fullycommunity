@@ -24,3 +24,10 @@ public record UserDto(
     string LastName,
     string? PhoneNumber
 );
+
+public record UpdateUserDto(
+    string? FirstName,
+    string? LastName,
+    string? PhoneNumber,
+    string? Bio
+);

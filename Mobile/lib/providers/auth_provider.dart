@@ -55,6 +55,35 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> updateProfile({String? firstName, String? lastName, String? phoneNumber}) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await _api.put('/auth/me', {
+        if (firstName != null) 'firstName': firstName,
+        if (lastName != null) 'lastName': lastName,
+        if (phoneNumber != null) 'phoneNumber': phoneNumber,
+      });
+      if (_user != null) {
+        _user = User(
+          id: _user!.id,
+          email: _user!.email,
+          firstName: firstName ?? _user!.firstName,
+          lastName: lastName ?? _user!.lastName,
+          phoneNumber: phoneNumber ?? _user!.phoneNumber,
+        );
+      }
+      notifyListeners();
+      return true;
+    } catch (e) {
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> logout() async {
     await _api.clearToken();
     _user = null;

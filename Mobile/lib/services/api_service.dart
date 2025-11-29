@@ -33,8 +33,18 @@ class ApiService {
     return _handleResponse(response);
   }
 
+  Future<dynamic> put(String endpoint, Map<String, dynamic> data) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl$endpoint'),
+      headers: await _headers,
+      body: jsonEncode(data),
+    );
+    return _handleResponse(response);
+  }
+
   dynamic _handleResponse(http.Response response) {
     if (response.statusCode >= 200 && response.statusCode < 300) {
+      if (response.body.isEmpty) return null;
       return jsonDecode(response.body);
     }
     throw Exception('API Error: ${response.statusCode}');

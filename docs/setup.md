@@ -19,6 +19,12 @@ dotnet ef database update --project CommunityCar.Infrastructure
 dotnet run --project CommunityCar.API
 ```
 
+### Run Tests
+```bash
+cd src
+dotnet test
+```
+
 ### Frontend (Angular)
 ```bash
 cd ClientApp
@@ -49,8 +55,6 @@ docker-compose up -d
 ```
 
 ## Environment Variables
-
-Create `.env` files in respective directories:
 
 ### Backend
 ```

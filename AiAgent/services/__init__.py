@@ -1,2 +1,1 @@
-from .recommendation_service import RecommendationService
-from .prediction_service import PredictionService
+# Services module

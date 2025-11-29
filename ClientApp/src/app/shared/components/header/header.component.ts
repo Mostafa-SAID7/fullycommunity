@@ -9,11 +9,11 @@ import { AuthService } from '../../../core/services/auth.service';
   template: `
     <header>
       <nav class="container">
-        <a routerLink="/" class="logo">Community Car</a>
+        <a routerLink="/" class="logo">Fully Community</a>
         <div class="nav-links">
-          <a routerLink="/cars">Cars</a>
           @if (authService.currentUser()) {
-            <a routerLink="/bookings">My Bookings</a>
+            <a routerLink="/profile">Profile</a>
+            <span>{{ authService.currentUser()?.firstName }}</span>
             <button (click)="authService.logout()">Logout</button>
           } @else {
             <a routerLink="/login">Login</a>
@@ -28,7 +28,7 @@ import { AuthService } from '../../../core/services/auth.service';
     nav { display: flex; justify-content: space-between; align-items: center; }
     .logo { color: white; font-size: 1.5rem; font-weight: bold; text-decoration: none; }
     .nav-links { display: flex; gap: 1rem; align-items: center; }
-    .nav-links a, .nav-links button { color: white; text-decoration: none; background: none; border: none; cursor: pointer; font-size: 1rem; }
+    .nav-links a, .nav-links button, .nav-links span { color: white; text-decoration: none; background: none; border: none; cursor: pointer; font-size: 1rem; }
   `]
 })
 export class HeaderComponent {
