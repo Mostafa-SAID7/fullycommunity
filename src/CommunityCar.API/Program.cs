@@ -1,6 +1,4 @@
-using CommunityCar.Application.Interfaces;
-using CommunityCar.Application.Services;
-using CommunityCar.Domain.Entities;
+using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +8,10 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services
+// ═══════════════════════════════════════════════════════════════════════════════
+// SERVICES
+// ═══════════════════════════════════════════════════════════════════════════════
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -20,14 +21,26 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Identity
-builder.Services.AddIdentity<User, Role>(options =>
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
+    // Password
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 8;
+    
+    // User
     options.User.RequireUniqueEmail = true;
+    
+    // Lockout
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+    
+    // SignIn
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
@@ -49,12 +62,15 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!))
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!)),
+        ClockSkew = TimeSpan.Zero
     };
 });
 
-// Services
-builder.Services.AddScoped<IAuthService, AuthService>();
+// Authorization Policies
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("AdminOnly", policy => policy.RequireRole("Admin", "SuperAdmin"))
+    .AddPolicy("ModeratorOrAbove", policy => policy.RequireRole("Moderator", "Admin", "SuperAdmin"));
 
 // CORS
 builder.Services.AddCors(options =>
@@ -65,17 +81,33 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Seed roles
+// ═══════════════════════════════════════════════════════════════════════════════
+// SEED DATA
+// ═══════════════════════════════════════════════════════════════════════════════
+
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-    string[] roles = ["Admin", "User"];
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+    
+    string[] roles = ["SuperAdmin", "Admin", "Moderator", "User", "Expert", "Author", "Reviewer", "Vendor", "Mechanic", "GarageOwner", "Instructor", "Student", "Affiliate"];
+    
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))
-            await roleManager.CreateAsync(new Role { Name = role });
+        {
+            await roleManager.CreateAsync(new ApplicationRole 
+            { 
+                Name = role,
+                DisplayName = role,
+                IsSystemRole = role is "SuperAdmin" or "Admin" or "User"
+            });
+        }
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MIDDLEWARE
+// ═══════════════════════════════════════════════════════════════════════════════
 
 if (app.Environment.IsDevelopment())
 {
