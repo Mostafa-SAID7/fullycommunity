@@ -43,6 +43,14 @@
     <!-- HTTP Client -->
     <PackageReference Include="Polly" Version="8.5.0" />
     <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.0" />
+    
+    <!-- 2FA / TOTP -->
+    <PackageReference Include="Otp.NET" Version="1.4.0" />
+    <PackageReference Include="QRCoder" Version="1.6.0" />
+    
+    <!-- Azure Communication Services -->
+    <PackageReference Include="Azure.Communication.Email" Version="1.0.1" />
+    <PackageReference Include="Azure.Communication.Sms" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommunityCar.Domain\CommunityCar.Domain.csproj" />

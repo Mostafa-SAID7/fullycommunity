@@ -19,7 +19,7 @@
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.3.0" />
     
     <!-- 2FA TOTP -->
-    <PackageReference Include="OtpNet" Version="1.4.0" />
+    <PackageReference Include="Otp.NET" Version="1.4.0" />
     <PackageReference Include="QRCoder" Version="1.6.0" />
     
     <!-- Azure Services -->
@@ -33,7 +33,7 @@
     
     <!-- Security -->
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-    <PackageReference Include="Zxcvbn-core" Version="8.0.0" />
+    <PackageReference Include="zxcvbn-core" Version="7.0.92" />
     
     <!-- Logging & Monitoring -->
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
