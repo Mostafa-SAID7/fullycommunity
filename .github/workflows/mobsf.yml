@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   mobsf-source-scan:
-    name: Source Code Scan
+    name: Mobile Source Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
