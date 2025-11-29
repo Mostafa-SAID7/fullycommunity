@@ -30,8 +30,8 @@ jobs:
           severity: 'CRITICAL,HIGH,MEDIUM'
 
       - name: Upload SARIF file
+        if: ${{ always() }}
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: trivy-results.sarif
           category: trivy
-        if: always()
