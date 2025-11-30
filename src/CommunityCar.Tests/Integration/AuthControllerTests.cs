@@ -1,13 +1,12 @@
 using System.Net;
 using System.Net.Http.Json;
-using CommunityCar.Application.DTOs;
-using CommunityCar.Domain.Entities;
+using CommunityCar.Application.DTOs.Identity;
 using CommunityCar.Infrastructure.Data;
 using FluentAssertions;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 
 namespace CommunityCar.Tests.Integration;
 
@@ -24,12 +23,15 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
             {
                 // Remove existing DbContext
                 var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
+                    d =>
+                    d.ServiceType == typeof(DbContextOptions<AppDbContext>)
+                );
                 if (descriptor != null) services.Remove(descriptor);
 
                 // Add in-memory database
                 services.AddDbContext<AppDbContext>(options =>
-                    options.UseInMemoryDatabase("TestDb_" + Guid.NewGuid()));
+                    options.UseInMemoryDatabase("TestDb_" + Guid.NewGuid())
+                );
             });
         });
         _client = _factory.CreateClient();
@@ -39,32 +41,31 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task Register_WithValidData_ReturnsSuccess()
     {
         // Arrange
-        var dto = new RegisterDto(
+        var request = new RegisterRequest(
             $"test{Guid.NewGuid()}@test.com",
             "Password123!",
             "Test",
-            "User",
-            null
+            "User"
         );
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/auth/register", dto);
+        var response = await _client.PostAsJsonAsync("/api/admin/auth/register", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var result = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+        var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
         result.Should().NotBeNull();
-        result!.Token.Should().NotBeNullOrEmpty();
+        result!.AccessToken.Should().NotBeNullOrEmpty();
     }
 
     [Fact]
     public async Task Login_WithInvalidCredentials_ReturnsUnauthorized()
     {
         // Arrange
-        var dto = new LoginDto("nonexistent@test.com", "wrongpassword");
+        var request = new LoginRequest("nonexistent@test.com", "WrongPassword123!");
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/auth/login", dto);
+        var response = await _client.PostAsJsonAsync("/api/admin/auth/login", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -74,7 +75,7 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetMe_WithoutToken_ReturnsUnauthorized()
     {
         // Act
-        var response = await _client.GetAsync("/api/auth/me");
+        var response = await _client.GetAsync("/api/admin/auth/me");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -85,14 +86,20 @@ public class AuthControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         // Arrange - Register first
         var email = $"test{Guid.NewGuid()}@test.com";
-        var registerDto = new RegisterDto(email, "Password123!", "Test", "User", null);
-        var registerResponse = await _client.PostAsJsonAsync("/api/auth/register", registerDto);
-        var authResult = await registerResponse.Content.ReadFromJsonAsync<AuthResponseDto>();
+        var registerRequest = new RegisterRequest(email, "Password123!", "Test", "User");
+        var registerResponse = await _client.PostAsJsonAsync(
+            "/api/admin/auth/register",
+            registerRequest
+        );
+        var authResult = await registerResponse.Content.ReadFromJsonAsync<LoginResponse>();
 
         // Act
-        _client.DefaultRequestHeaders.Authorization = 
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authResult!.Token);
-        var response = await _client.GetAsync("/api/auth/me");
+        _client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue(
+                "Bearer",
+                authResult!.AccessToken
+            );
+        var response = await _client.GetAsync("/api/admin/auth/me");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);

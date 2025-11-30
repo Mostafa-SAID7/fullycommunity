@@ -1,6 +1,7 @@
 using Azure.Communication.Email;
 using Azure.Communication.Sms;
 using CommunityCar.Application.Common.Interfaces;
+using AppEmailMessage = CommunityCar.Application.Common.Interfaces.EmailMessage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -31,7 +32,7 @@ public class NotificationService : INotificationService
         _senderPhone = _configuration["Azure:CommunicationServices:SenderPhone"] ?? "";
     }
 
-    public async Task SendEmailAsync(EmailMessage message)
+    public async Task SendEmailAsync(AppEmailMessage message)
     {
         if (_emailClient == null)
         {
@@ -66,7 +67,7 @@ public class NotificationService : INotificationService
     public async Task SendTemplatedEmailAsync(string templateId, string to, Dictionary<string, string> data)
     {
         var template = GetEmailTemplate(templateId, data);
-        await SendEmailAsync(new EmailMessage(to, template.Subject, template.Body, true));
+        await SendEmailAsync(new AppEmailMessage(to, template.Subject, template.Body, true));
     }
 
     public async Task SendSmsAsync(string phoneNumber, string message)

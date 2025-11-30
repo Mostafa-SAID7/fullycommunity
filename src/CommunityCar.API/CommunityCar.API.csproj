@@ -23,7 +23,7 @@
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     
     <!-- Problem Details -->
-    <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.6.0" />
+    <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommunityCar.Application\CommunityCar.Application.csproj" />

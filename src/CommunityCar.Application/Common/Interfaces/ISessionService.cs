@@ -1,3 +1,4 @@
+using CommunityCar.Application.Common.Models;
 using CommunityCar.Domain.Entities.Identity;
 
 namespace CommunityCar.Application.Common.Interfaces;
@@ -11,24 +12,12 @@ public interface ISessionService
     Task UpdateSessionActivityAsync(string sessionToken);
     Task RevokeSessionAsync(string sessionToken, string? reason = null);
     Task RevokeAllSessionsAsync(Guid userId, string? exceptSessionToken = null);
-    
+
     // Session Validation
     Task<bool> ValidateSessionAsync(string sessionToken);
     Task<bool> IsSessionActiveAsync(string sessionToken);
-    
+
     // Session Info
     Task<int> GetActiveSessionCountAsync(Guid userId);
     Task<UserSession?> GetCurrentSessionAsync(Guid userId, string deviceId);
 }
-
-public record SessionInfo(
-    string? DeviceId,
-    string? DeviceName,
-    string? DeviceType,
-    string? Platform,
-    string? Browser,
-    string? IpAddress,
-    string? Country,
-    string? City,
-    TimeSpan? Duration = null
-);

@@ -71,15 +71,18 @@ public static class DependencyInjection
         });
 
         // Core Services
-        services.AddScoped<IJwtService, JwtService>();
-        services.AddScoped<ICurrentUserService, CurrentUserService>();
-        services.AddScoped<IAuditService, AuditService>();
-        services.AddScoped<IDeviceService, DeviceService>();
-        services.AddScoped<ISessionService, SessionService>();
-        services.AddScoped<IActivityService, ActivityService>();
-        services.AddScoped<ISecurityService, SecurityService>();
-        services.AddScoped<ITwoFactorService, TwoFactorService>();
-        services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<IJwtService, Services.Identity.JwtService>();
+        services.AddScoped<ICurrentUserService, Services.Identity.CurrentUserService>();
+        services.AddScoped<IAuditService, Services.Identity.AuditService>();
+        services.AddScoped<IDeviceService, Services.Identity.DeviceService>();
+        services.AddScoped<ISessionService, Services.Identity.SessionService>();
+        services.AddScoped<IActivityService, Services.Identity.ActivityService>();
+        services.AddScoped<ISecurityService, Services.Security.SecurityService>();
+        services.AddScoped<ITwoFactorService, Services.Identity.TwoFactorService>();
+        services.AddScoped<INotificationService, Services.Notification.NotificationService>();
+        services.AddScoped<IGeoLocationService, Services.Security.GeoLocationService>();
+        services.AddScoped<IIpSecurityService, Services.Security.IpSecurityService>();
+        services.AddScoped<IBreachDetectionService, Services.Security.BreachDetectionService>();
 
         // Identity Services
         services.AddScoped<IAuthService, AuthService>();

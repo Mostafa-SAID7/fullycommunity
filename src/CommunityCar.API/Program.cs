@@ -3,6 +3,7 @@ using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);

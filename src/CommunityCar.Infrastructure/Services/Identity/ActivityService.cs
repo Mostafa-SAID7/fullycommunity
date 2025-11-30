@@ -1,6 +1,6 @@
 using System.Text.Json;
 using CommunityCar.Application.Common.Interfaces;
-using CommunityCar.Domain.Common.Enums;
+using CommunityCar.Domain.Enums;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

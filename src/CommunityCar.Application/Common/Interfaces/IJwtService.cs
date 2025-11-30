@@ -1,3 +1,4 @@
+using CommunityCar.Application.Common.Models;
 using CommunityCar.Domain.Entities.Identity;
 
 namespace CommunityCar.Application.Common.Interfaces;
@@ -11,10 +12,3 @@ public interface IJwtService
     Task<bool> ValidateTokenAsync(string token);
     Guid? GetUserIdFromToken(string token);
 }
-
-public record TokenResult(
-    string AccessToken,
-    string RefreshToken,
-    DateTime AccessTokenExpires,
-    DateTime RefreshTokenExpires
-);

@@ -1,131 +1,214 @@
-using CommunityCar.Application.DTOs;
-using CommunityCar.Application.Services;
-using CommunityCar.Domain.Entities;
+using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Models;
+using CommunityCar.Application.DTOs.Identity;
+using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Domain.Enums;
+using CommunityCar.Infrastructure.Services.Identity;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
+using Xunit;
 
 namespace CommunityCar.Tests.Unit;
 
 public class AuthServiceTests
 {
-    private readonly Mock<UserManager<User>> _userManagerMock;
-    private readonly Mock<SignInManager<User>> _signInManagerMock;
-    private readonly Mock<IConfiguration> _configurationMock;
+    private readonly Mock<UserManager<ApplicationUser>> _userManagerMock;
+    private readonly Mock<SignInManager<ApplicationUser>> _signInManagerMock;
+    private readonly Mock<IJwtService> _jwtServiceMock;
+    private readonly Mock<ISecurityService> _securityServiceMock;
+    private readonly Mock<IDeviceService> _deviceServiceMock;
+    private readonly Mock<INotificationService> _notificationServiceMock;
+    private readonly Mock<IAuditService> _auditServiceMock;
+    private readonly Mock<ILogger<AuthService>> _loggerMock;
     private readonly AuthService _authService;
 
     public AuthServiceTests()
     {
-        var userStoreMock = new Mock<IUserStore<User>>();
-        _userManagerMock = new Mock<UserManager<User>>(
-            userStoreMock.Object, null!, null!, null!, null!, null!, null!, null!, null!);
+        var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
+        _userManagerMock = new Mock<UserManager<ApplicationUser>>(
+            userStoreMock.Object,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!
+        );
 
         var contextAccessorMock = new Mock<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
-        var claimsFactoryMock = new Mock<IUserClaimsPrincipalFactory<User>>();
-        _signInManagerMock = new Mock<SignInManager<User>>(
-            _userManagerMock.Object, contextAccessorMock.Object, claimsFactoryMock.Object, null!, null!, null!, null!);
+        var claimsFactoryMock = new Mock<IUserClaimsPrincipalFactory<ApplicationUser>>();
+        _signInManagerMock = new Mock<SignInManager<ApplicationUser>>(
+            _userManagerMock.Object,
+            contextAccessorMock.Object,
+            claimsFactoryMock.Object,
+            null!,
+            null!,
+            null!,
+            null!
+        );
 
-        _configurationMock = new Mock<IConfiguration>();
-        _configurationMock.Setup(c => c["Jwt:Secret"]).Returns("YourSuperSecretKeyHere_MustBeAtLeast32Characters!");
-        _configurationMock.Setup(c => c["Jwt:Issuer"]).Returns("CommunityCar");
-        _configurationMock.Setup(c => c["Jwt:Audience"]).Returns("CommunityCar");
-        _configurationMock.Setup(c => c["Jwt:ExpirationMinutes"]).Returns("60");
+        _jwtServiceMock = new Mock<IJwtService>();
+        _securityServiceMock = new Mock<ISecurityService>();
+        _deviceServiceMock = new Mock<IDeviceService>();
+        _notificationServiceMock = new Mock<INotificationService>();
+        _auditServiceMock = new Mock<IAuditService>();
+        _loggerMock = new Mock<ILogger<AuthService>>();
 
-        _authService = new AuthService(_userManagerMock.Object, _signInManagerMock.Object, _configurationMock.Object);
+        _authService = new AuthService(
+            _userManagerMock.Object,
+            _signInManagerMock.Object,
+            _jwtServiceMock.Object,
+            _securityServiceMock.Object,
+            _deviceServiceMock.Object,
+            _notificationServiceMock.Object,
+            _auditServiceMock.Object,
+            _loggerMock.Object
+        );
     }
 
     [Fact]
-    public async Task LoginAsync_WithValidCredentials_ReturnsAuthResponse()
+    public async Task LoginAsync_WithValidCredentials_ReturnsLoginResponse()
     {
         // Arrange
-        var user = new User { Id = Guid.NewGuid(), Email = "test@test.com", FirstName = "Test", LastName = "User", IsActive = true };
-        _userManagerMock.Setup(x => x.FindByEmailAsync("test@test.com")).ReturnsAsync(user);
-        _signInManagerMock.Setup(x => x.CheckPasswordSignInAsync(user, "Password123", false))
+        var user = new ApplicationUser
+        {
+            Id = Guid.NewGuid(),
+            Email = "test@test.com",
+            FirstName = "Test",
+            LastName = "User",
+            AccountStatus = AccountStatus.Active,
+            UserType = UserType.User
+        };
+
+        _userManagerMock
+            .Setup(x => x.FindByEmailAsync("test@test.com"))
+            .ReturnsAsync(user);
+
+        _signInManagerMock
+            .Setup(x => x.CheckPasswordSignInAsync(user, "Password123!", true))
             .ReturnsAsync(SignInResult.Success);
-        _userManagerMock.Setup(x => x.GetRolesAsync(user)).ReturnsAsync(new List<string> { "User" });
+
+        _userManagerMock
+            .Setup(x => x.GetRolesAsync(user))
+            .ReturnsAsync(["User"]);
+
+        _jwtServiceMock
+            .Setup(x => x.GenerateTokensAsync(user, null))
+            .ReturnsAsync(new TokenResult("access-token", "refresh-token", DateTime.UtcNow.AddHours(1), DateTime.UtcNow.AddDays(7)));
+
+        _userManagerMock
+            .Setup(x => x.UpdateAsync(user))
+            .ReturnsAsync(IdentityResult.Success);
 
         // Act
-        var result = await _authService.LoginAsync(new LoginDto("test@test.com", "Password123"));
+        var result = await _authService.LoginAsync(new LoginRequest("test@test.com", "Password123!"));
 
         // Assert
         result.Should().NotBeNull();
-        result.Token.Should().NotBeNullOrEmpty();
-        result.User.Email.Should().Be("test@test.com");
+        result.AccessToken.Should().Be("access-token");
     }
 
     [Fact]
     public async Task LoginAsync_WithInvalidCredentials_ThrowsUnauthorized()
     {
         // Arrange
-        _userManagerMock.Setup(x => x.FindByEmailAsync("test@test.com")).ReturnsAsync((User?)null);
+        _userManagerMock
+            .Setup(x => x.FindByEmailAsync("test@test.com"))
+            .ReturnsAsync((ApplicationUser?)null);
 
         // Act & Assert
         await Assert.ThrowsAsync<UnauthorizedAccessException>(
-            () => _authService.LoginAsync(new LoginDto("test@test.com", "wrong")));
+            () => _authService.LoginAsync(new LoginRequest("test@test.com", "wrong"))
+        );
     }
 
     [Fact]
     public async Task RegisterAsync_WithNewEmail_CreatesUser()
     {
         // Arrange
-        _userManagerMock.Setup(x => x.FindByEmailAsync("new@test.com")).ReturnsAsync((User?)null);
-        _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<User>(), "Password123!"))
-            .ReturnsAsync(IdentityResult.Success);
-        _userManagerMock.Setup(x => x.AddToRoleAsync(It.IsAny<User>(), "User"))
-            .ReturnsAsync(IdentityResult.Success);
-        _userManagerMock.Setup(x => x.GetRolesAsync(It.IsAny<User>()))
-            .ReturnsAsync(new List<string> { "User" });
+        _userManagerMock
+            .Setup(x => x.FindByEmailAsync("new@test.com"))
+            .ReturnsAsync((ApplicationUser?)null);
 
-        var dto = new RegisterDto("new@test.com", "Password123!", "New", "User", null);
+        _userManagerMock
+            .Setup(x => x.CreateAsync(It.IsAny<ApplicationUser>(), "Password123!"))
+            .ReturnsAsync(IdentityResult.Success);
+
+        _userManagerMock
+            .Setup(x => x.AddToRoleAsync(It.IsAny<ApplicationUser>(), "User"))
+            .ReturnsAsync(IdentityResult.Success);
+
+        _userManagerMock
+            .Setup(x => x.GenerateEmailConfirmationTokenAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync("confirmation-token");
+
+        var request = new RegisterRequest("new@test.com", "Password123!", "New", "User");
 
         // Act
-        var result = await _authService.RegisterAsync(dto);
+        var result = await _authService.RegisterAsync(request);
 
         // Assert
         result.Should().NotBeNull();
-        result.Token.Should().NotBeNullOrEmpty();
+        result.RequiresVerification.Should().BeTrue();
+        _userManagerMock.Verify(x => x.CreateAsync(It.IsAny<ApplicationUser>(), "Password123!"), Times.Once);
     }
 
     [Fact]
     public async Task RegisterAsync_WithExistingEmail_ThrowsInvalidOperation()
     {
         // Arrange
-        var existingUser = new User { Email = "existing@test.com" };
-        _userManagerMock.Setup(x => x.FindByEmailAsync("existing@test.com")).ReturnsAsync(existingUser);
+        var existingUser = new ApplicationUser { Email = "existing@test.com" };
+        _userManagerMock
+            .Setup(x => x.FindByEmailAsync("existing@test.com"))
+            .ReturnsAsync(existingUser);
 
-        var dto = new RegisterDto("existing@test.com", "Password123!", "Test", "User", null);
+        var request = new RegisterRequest("existing@test.com", "Password123!", "Test", "User");
 
         // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _authService.RegisterAsync(dto));
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            () => _authService.RegisterAsync(request)
+        );
     }
 
     [Fact]
-    public async Task GetUserByIdAsync_WithValidId_ReturnsUser()
+    public async Task LogoutAsync_CallsRevokeAllTokens()
     {
         // Arrange
         var userId = Guid.NewGuid();
-        var user = new User { Id = userId, Email = "test@test.com", FirstName = "Test", LastName = "User" };
-        _userManagerMock.Setup(x => x.FindByIdAsync(userId.ToString())).ReturnsAsync(user);
 
         // Act
-        var result = await _authService.GetUserByIdAsync(userId);
+        await _authService.LogoutAsync(userId);
 
         // Assert
-        result.Should().NotBeNull();
-        result!.Id.Should().Be(userId);
+        _jwtServiceMock.Verify(x => x.RevokeAllUserTokensAsync(userId), Times.Once);
     }
 
     [Fact]
-    public async Task GetUserByIdAsync_WithInvalidId_ReturnsNull()
+    public async Task ChangePasswordAsync_WithValidData_ChangesPassword()
     {
         // Arrange
-        _userManagerMock.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync((User?)null);
+        var userId = Guid.NewGuid();
+        var user = new ApplicationUser { Id = userId, Email = "test@test.com" };
+
+        _userManagerMock
+            .Setup(x => x.FindByIdAsync(userId.ToString()))
+            .ReturnsAsync(user);
+
+        _userManagerMock
+            .Setup(x => x.ChangePasswordAsync(user, "OldPassword123!", "NewPassword123!"))
+            .ReturnsAsync(IdentityResult.Success);
+
+        var request = new ChangePasswordRequest("OldPassword123!", "NewPassword123!");
 
         // Act
-        var result = await _authService.GetUserByIdAsync(Guid.NewGuid());
+        await _authService.ChangePasswordAsync(userId, request);
 
         // Assert
-        result.Should().BeNull();
+        _userManagerMock.Verify(x => x.ChangePasswordAsync(user, "OldPassword123!", "NewPassword123!"), Times.Once);
+        _jwtServiceMock.Verify(x => x.RevokeAllUserTokensAsync(userId), Times.Once);
     }
 }

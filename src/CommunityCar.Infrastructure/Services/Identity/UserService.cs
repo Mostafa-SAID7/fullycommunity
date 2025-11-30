@@ -136,7 +136,7 @@ public class UserService : IUserService
     {
         var user = await _userManager.FindByIdAsync(userId.ToString())
             ?? throw new InvalidOperationException("User not found");
-        user.AccountStatus = Domain.Common.Enums.AccountStatus.Inactive;
+        user.AccountStatus = AccountStatus.Inactive;
         await _userManager.UpdateAsync(user);
         await _jwtService.RevokeAllUserTokensAsync(userId);
     }

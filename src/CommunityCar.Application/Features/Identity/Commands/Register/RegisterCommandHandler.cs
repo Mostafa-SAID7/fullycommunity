@@ -1,6 +1,6 @@
 using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Features.Identity.Commands.Login;
-using CommunityCar.Domain.Common.Enums;
+using CommunityCar.Domain.Enums;
 using CommunityCar.Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

@@ -4,4 +4,4 @@ global using System.Linq;
 global using System.Threading;
 global using System.Threading.Tasks;
 global using CommunityCar.Domain.Common;
-global using CommunityCar.Domain.Common.Enums;
+global using CommunityCar.Domain.Enums;

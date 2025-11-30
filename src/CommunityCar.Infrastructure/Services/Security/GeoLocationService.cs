@@ -1,4 +1,7 @@
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Models;
+using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Domain.Enums;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -44,7 +47,7 @@ public class GeoLocationService : IGeoLocationService
             // Use ip-api.com (free tier) or MaxMind GeoIP2
             var client = _httpClientFactory.CreateClient("GeoLocation");
             var response = await client.GetAsync($"http://ip-api.com/json/{ipAddress}?fields=status,country,countryCode,region,city,zip,lat,lon,timezone,isp,proxy");
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
@@ -106,13 +109,13 @@ public class GeoLocationService : IGeoLocationService
 
     public Task<double> CalculateDistanceAsync(GeoLocation from, GeoLocation to)
     {
-        if (from.Latitude == null || from.Longitude == null || 
+        if (from.Latitude == null || from.Longitude == null ||
             to.Latitude == null || to.Longitude == null)
             return Task.FromResult(0.0);
 
         // Haversine formula
         const double R = 6371; // Earth's radius in km
-        
+
         var lat1 = from.Latitude.Value * Math.PI / 180;
         var lat2 = to.Latitude.Value * Math.PI / 180;
         var deltaLat = (to.Latitude.Value - from.Latitude.Value) * Math.PI / 180;
@@ -121,9 +124,9 @@ public class GeoLocationService : IGeoLocationService
         var a = Math.Sin(deltaLat / 2) * Math.Sin(deltaLat / 2) +
                 Math.Cos(lat1) * Math.Cos(lat2) *
                 Math.Sin(deltaLon / 2) * Math.Sin(deltaLon / 2);
-        
+
         var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-        
+
         return Task.FromResult(R * c);
     }
 
@@ -133,9 +136,9 @@ public class GeoLocationService : IGeoLocationService
         if (currentLocation == null) return false;
 
         // Get user's typical locations from login history
-        var recentLogins = await _context.Set<Domain.Entities.Identity.UserLogin>()
-            .Where(l => l.UserId == userId && l.Status == Domain.Entities.Identity.LoginStatus.Success)
-            .OrderByDescending(l => l.AttemptedAt)
+        var recentLogins = await _context.Set<UserLogin>()
+            .Where(l => l.UserId == userId && l.Status == LoginStatus.Success)
+            .OrderByDescending(l => l.LoginAt)
             .Take(10)
             .Select(l => l.Country)
             .Distinct()

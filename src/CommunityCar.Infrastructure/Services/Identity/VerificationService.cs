@@ -1,6 +1,5 @@
 using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.DTOs.Identity;
-using CommunityCar.Application.Interfaces.Identity;
 using CommunityCar.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 
@@ -88,7 +87,7 @@ public class VerificationService : IVerificationService
     {
         var isValid = await _twoFactorService.VerifyAuthenticatorSetupAsync(userId, request.Code);
         if (isValid)
-            await _twoFactorService.EnableTwoFactorAsync(userId, Domain.Common.Enums.TwoFactorType.Authenticator);
+            await _twoFactorService.EnableTwoFactorAsync(userId, TwoFactorType.Authenticator);
         return isValid;
     }
 

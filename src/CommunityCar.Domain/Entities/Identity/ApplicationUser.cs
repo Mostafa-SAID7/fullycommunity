@@ -1,5 +1,5 @@
 using CommunityCar.Domain.Common;
-using CommunityCar.Domain.Common.Enums;
+using CommunityCar.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace CommunityCar.Domain.Entities.Identity;

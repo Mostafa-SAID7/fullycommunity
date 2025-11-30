@@ -1,7 +1,6 @@
 using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.DTOs.Identity;
-using CommunityCar.Application.Interfaces.Identity;
-using CommunityCar.Domain.Common.Enums;
+using CommunityCar.Domain.Enums;
 using CommunityCar.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;

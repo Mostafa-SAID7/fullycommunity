@@ -7,7 +7,7 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.Logging;
 global using CommunityCar.Domain.Common;
-global using CommunityCar.Domain.Common.Enums;
+global using CommunityCar.Domain.Enums;
 global using CommunityCar.Domain.Entities.Identity;
 global using CommunityCar.Application.Common.Interfaces;
 global using CommunityCar.Infrastructure.Data;
