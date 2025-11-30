@@ -10,18 +10,14 @@ public class GetVideosQueryHandler : IRequestHandler<GetVideosQuery, PagedResult
 {
     private readonly IAppDbContext _context;
 
-    public GetVideosQueryHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    public GetVideosQueryHandler(IAppDbContext context) => _context = context;
 
     public async Task<PagedResult<VideoListDto>> Handle(GetVideosQuery request, CancellationToken cancellationToken)
     {
         var query = _context.Videos
-            .Include(v => v.Author)
+            .Include(v => v.Channel)
             .AsQueryable();
 
-        // Apply filters
         if (request.Type.HasValue)
             query = query.Where(v => v.Type == request.Type.Value);
 
@@ -29,12 +25,10 @@ public class GetVideosQueryHandler : IRequestHandler<GetVideosQuery, PagedResult
             query = query.Where(v => v.CategoryId == request.CategoryId.Value);
 
         if (request.AuthorId.HasValue)
-            query = query.Where(v => v.AuthorId == request.AuthorId.Value);
+            query = query.Where(v => v.ChannelId == request.AuthorId.Value);
 
-        // Get total count
         var totalCount = await query.CountAsync(cancellationToken);
 
-        // Get paginated results
         var videos = await query
             .OrderByDescending(v => v.CreatedAt)
             .Skip((request.Page - 1) * request.PageSize)
@@ -45,11 +39,11 @@ public class GetVideosQueryHandler : IRequestHandler<GetVideosQuery, PagedResult
                 v.ThumbnailUrl,
                 v.Duration,
                 v.Type,
-                v.IsLive,
-                v.ViewCount,
+                v.Type == Domain.Entities.Videos.Common.VideoType.LiveStream,
+                (int)v.ViewCount,
                 v.LikeCount,
-                v.AuthorId,
-                v.Author.UserName ?? "",
+                v.ChannelId,
+                v.Channel.DisplayName,
                 v.CreatedAt
             ))
             .ToListAsync(cancellationToken);

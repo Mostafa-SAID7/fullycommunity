@@ -9,41 +9,25 @@ public class GetPlaylistQueryHandler : IRequestHandler<GetPlaylistQuery, Playlis
 {
     private readonly IAppDbContext _context;
 
-    public GetPlaylistQueryHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    public GetPlaylistQueryHandler(IAppDbContext context) => _context = context;
 
     public async Task<PlaylistDto?> Handle(GetPlaylistQuery request, CancellationToken cancellationToken)
     {
         var playlist = await _context.Playlists
-            .Include(p => p.Creator)
-            .Include(p => p.Videos)
-                .ThenInclude(v => v.Author)
+            .Include(p => p.Channel)
+            .Include(p => p.Items)
             .Where(p => p.Id == request.PlaylistId)
             .Select(p => new PlaylistDto(
                 p.Id,
                 p.Title,
-                p.Description,
-                p.CoverImageUrl,
-                p.IsPublic,
-                p.CreatorId,
-                p.Creator.UserName ?? "",
-                p.Videos.Count,
+                p.Description ?? string.Empty,
+                p.ThumbnailUrl,
+                p.Visibility == Domain.Entities.Videos.Common.VideoVisibility.Public,
+                p.ChannelId,
+                p.Channel.DisplayName,
+                p.VideoCount,
                 p.CreatedAt,
-                p.Videos.OrderBy(v => v.CreatedAt).Select(v => new VideoListDto(
-                    v.Id,
-                    v.Title,
-                    v.ThumbnailUrl,
-                    v.Duration,
-                    v.Type,
-                    v.IsLive,
-                    v.ViewCount,
-                    v.LikeCount,
-                    v.AuthorId,
-                    v.Author.UserName ?? "",
-                    v.CreatedAt
-                )).ToList()
+                new List<VideoListDto>()
             ))
             .FirstOrDefaultAsync(cancellationToken);
 

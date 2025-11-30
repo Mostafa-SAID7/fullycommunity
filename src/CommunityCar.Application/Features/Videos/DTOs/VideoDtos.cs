@@ -1,4 +1,4 @@
-using CommunityCar.Domain.Entities.Videos;
+using CommunityCar.Domain.Entities.Videos.Common;
 
 namespace CommunityCar.Application.Features.Videos.DTOs;
 

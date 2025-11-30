@@ -6,5 +6,9 @@ export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent) },
   { path: 'register', loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent) },
   { path: 'profile', loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent), canActivate: [authGuard] },
+  { 
+    path: 'podcasts', 
+    loadChildren: () => import('./features/podcasts/podcasts.routes').then(m => m.podcastRoutes) 
+  },
   { path: '**', redirectTo: '' }
 ];

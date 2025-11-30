@@ -8,6 +8,7 @@ namespace CommunityCar.API.Controllers.Community;
 
 [ApiController]
 [Route("api/community/posts")]
+[ApiExplorerSettings(GroupName = "community")]
 public class PostsController : ControllerBase
 {
     private readonly IPostService _postService;

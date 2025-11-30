@@ -1,4 +1,5 @@
-using CommunityCar.Domain.Entities.Videos;
+using CommunityCar.Domain.Entities.Videos.Content;
+using CommunityCar.Domain.Entities.Videos.Playlists;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommunityCar.Application.Common.Interfaces;

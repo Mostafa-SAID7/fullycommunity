@@ -1,0 +1,102 @@
+{
+  "common": {
+    "welcome": "مرحباً",
+    "home": "الرئيسية",
+    "search": "بحث",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "register": "إنشاء حساب",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "submit": "إرسال",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "loading": "جاري التحميل...",
+    "noResults": "لا توجد نتائج",
+    "viewAll": "عرض الكل",
+    "readMore": "اقرأ المزيد",
+    "showMore": "عرض المزيد",
+    "showLess": "عرض أقل"
+  },
+  "navigation": {
+    "community": "المجتمع",
+    "marketplace": "السوق",
+    "services": "الخدمات",
+    "podcasts": "البودكاست",
+    "videos": "الفيديوهات",
+    "news": "الأخبار",
+    "events": "الفعاليات",
+    "groups": "المجموعات",
+    "guides": "الأدلة",
+    "qa": "الأسئلة والأجوبة"
+  },
+  "auth": {
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "rememberMe": "تذكرني",
+    "loginSuccess": "تم تسجيل الدخول بنجاح",
+    "logoutSuccess": "تم تسجيل الخروج بنجاح",
+    "registerSuccess": "تم التسجيل بنجاح",
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+    "accountLocked": "الحساب مقفل",
+    "emailNotVerified": "يرجى تأكيد بريدك الإلكتروني"
+  },
+  "validation": {
+    "required": "هذا الحقل مطلوب",
+    "email": "يرجى إدخال بريد إلكتروني صحيح",
+    "minLength": "الحد الأدنى {0} حرف",
+    "maxLength": "الحد الأقصى {0} حرف",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
+    "invalidFormat": "صيغة غير صحيحة"
+  },
+  "errors": {
+    "notFound": "غير موجود",
+    "unauthorized": "غير مصرح",
+    "forbidden": "الوصول مرفوض",
+    "serverError": "حدث خطأ في الخادم",
+    "networkError": "خطأ في الشبكة",
+    "tryAgain": "يرجى المحاولة مرة أخرى"
+  },
+  "notifications": {
+    "success": "نجاح",
+    "error": "خطأ",
+    "warning": "تحذير",
+    "info": "معلومات",
+    "saved": "تم الحفظ بنجاح",
+    "deleted": "تم الحذف بنجاح",
+    "updated": "تم التحديث بنجاح"
+  },
+  "community": {
+    "posts": "المنشورات",
+    "createPost": "إنشاء منشور",
+    "likes": "إعجابات",
+    "comments": "تعليقات",
+    "shares": "مشاركات",
+    "views": "مشاهدات",
+    "followers": "المتابعون",
+    "following": "يتابع",
+    "follow": "متابعة",
+    "unfollow": "إلغاء المتابعة"
+  },
+  "marketplace": {
+    "products": "المنتجات",
+    "addToCart": "أضف إلى السلة",
+    "buyNow": "اشتر الآن",
+    "price": "السعر",
+    "quantity": "الكمية",
+    "inStock": "متوفر",
+    "outOfStock": "غير متوفر",
+    "shipping": "الشحن",
+    "checkout": "إتمام الشراء"
+  }
+}

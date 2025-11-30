@@ -1,5 +1,5 @@
 using MediatR;
-using CommunityCar.Domain.Entities.Videos;
+using CommunityCar.Domain.Entities.Videos.Common;
 
 namespace CommunityCar.Application.Features.Videos.Commands.CreateVideo;
 

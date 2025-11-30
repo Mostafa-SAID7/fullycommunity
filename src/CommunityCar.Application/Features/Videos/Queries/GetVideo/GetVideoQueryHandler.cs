@@ -9,34 +9,31 @@ public class GetVideoQueryHandler : IRequestHandler<GetVideoQuery, VideoDto?>
 {
     private readonly IAppDbContext _context;
 
-    public GetVideoQueryHandler(IAppDbContext context)
-    {
-        _context = context;
-    }
+    public GetVideoQueryHandler(IAppDbContext context) => _context = context;
 
     public async Task<VideoDto?> Handle(GetVideoQuery request, CancellationToken cancellationToken)
     {
         var video = await _context.Videos
-            .Include(v => v.Author)
+            .Include(v => v.Channel)
             .Include(v => v.Category)
             .Where(v => v.Id == request.VideoId)
             .Select(v => new VideoDto(
                 v.Id,
                 v.Title,
-                v.Description,
+                v.Description ?? string.Empty,
                 v.VideoUrl,
                 v.ThumbnailUrl,
                 v.Duration,
                 v.Type,
-                v.IsLive,
-                v.ViewCount,
+                v.Type == Domain.Entities.Videos.Common.VideoType.LiveStream,
+                (int)v.ViewCount,
                 v.LikeCount,
                 v.CommentCount,
-                v.AuthorId,
-                v.Author.UserName ?? "",
+                v.ChannelId,
+                v.Channel.DisplayName,
                 v.CategoryId,
                 v.Category != null ? v.Category.Name : null,
-                v.PlaylistId,
+                null,
                 v.CreatedAt
             ))
             .FirstOrDefaultAsync(cancellationToken);

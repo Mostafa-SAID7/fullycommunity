@@ -1,6 +1,6 @@
 using CommunityCar.Application.Common.Pagination;
 using CommunityCar.Application.Features.Videos.DTOs;
-using CommunityCar.Domain.Entities.Videos;
+using CommunityCar.Domain.Entities.Videos.Common;
 using MediatR;
 
 namespace CommunityCar.Application.Features.Videos.Queries.GetVideos;

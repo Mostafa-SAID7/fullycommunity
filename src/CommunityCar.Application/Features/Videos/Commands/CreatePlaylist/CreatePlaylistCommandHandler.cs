@@ -1,4 +1,5 @@
-using CommunityCar.Domain.Entities.Videos;
+using CommunityCar.Domain.Entities.Videos.Playlists;
+using CommunityCar.Domain.Entities.Videos.Common;
 using CommunityCar.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -26,9 +27,9 @@ public class CreatePlaylistCommandHandler : IRequestHandler<CreatePlaylistComman
         {
             Title = request.Title,
             Description = request.Description,
-            CoverImageUrl = request.CoverImageUrl,
-            IsPublic = request.IsPublic,
-            CreatorId = Guid.Parse(userId)
+            ThumbnailUrl = request.CoverImageUrl,
+            Visibility = request.IsPublic ? VideoVisibility.Public : VideoVisibility.Private,
+            ChannelId = Guid.Parse(userId) // Simplified - should get actual channel
         };
 
         _context.Playlists.Add(playlist);

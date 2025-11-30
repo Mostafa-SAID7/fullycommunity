@@ -95,6 +95,19 @@ public static class DependencyInjection
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IAdminUserService, AdminUserService>();
 
+        // Localization
+        services.AddScoped<ILocalizationService, Services.Localization.LocalizationService>();
+
+        // File Storage
+        services.Configure<FileStorageOptions>(configuration.GetSection("FileStorage"));
+        services.AddScoped<IFileStorageService, Services.Storage.FileStorageService>();
+
+        // Search
+        services.AddScoped<ISearchService, Services.Search.SearchService>();
+
+        // Messaging
+        services.AddScoped<Application.Common.Interfaces.Messaging.IChatService, Services.Messaging.ChatService>();
+
         return services;
     }
 }

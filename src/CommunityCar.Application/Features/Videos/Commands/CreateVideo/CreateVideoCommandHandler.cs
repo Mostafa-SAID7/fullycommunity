@@ -1,4 +1,5 @@
-using CommunityCar.Domain.Entities.Videos;
+using CommunityCar.Domain.Entities.Videos.Content;
+using CommunityCar.Domain.Entities.Videos.Common;
 using CommunityCar.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -22,6 +23,7 @@ public class CreateVideoCommandHandler : IRequestHandler<CreateVideoCommand, Gui
         var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) throw new UnauthorizedAccessException();
 
+        // For now, use a default channel - in production, get user's channel
         var video = new Video
         {
             Title = request.Title,
@@ -29,11 +31,10 @@ public class CreateVideoCommandHandler : IRequestHandler<CreateVideoCommand, Gui
             VideoUrl = request.VideoUrl,
             ThumbnailUrl = request.ThumbnailUrl,
             Duration = request.Duration,
-            Type = request.Type,
-            IsLive = request.IsLive,
+            Type = request.IsLive ? VideoType.LiveStream : request.Type,
+            Status = VideoStatus.Draft,
             CategoryId = request.CategoryId,
-            PlaylistId = request.PlaylistId,
-            AuthorId = Guid.Parse(userId)
+            ChannelId = Guid.Parse(userId) // Simplified - should get actual channel
         };
 
         _context.Videos.Add(video);

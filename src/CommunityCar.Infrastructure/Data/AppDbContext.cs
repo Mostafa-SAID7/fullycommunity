@@ -1,8 +1,11 @@
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Domain.Entities.Profiles;
+using CommunityCar.Domain.Entities.Localization;
+using CommunityCar.Domain.Entities.Storage;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using CommunityCar.Domain.Entities.Videos;
+using CommunityCar.Domain.Entities.Videos.Content;
+using CommunityCar.Domain.Entities.Videos.Playlists;
 using CommunityCar.Application.Common.Interfaces;
 
 namespace CommunityCar.Infrastructure.Data;
@@ -45,6 +48,14 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<Video> Videos => Set<Video>();
     public DbSet<Playlist> Playlists => Set<Playlist>();
     public DbSet<VideoCategory> VideoCategories => Set<VideoCategory>();
+
+    // Localization
+    public DbSet<Language> Languages => Set<Language>();
+    public DbSet<Translation> Translations => Set<Translation>();
+    public DbSet<EntityTranslation> EntityTranslations => Set<EntityTranslation>();
+
+    // Storage
+    public DbSet<StoredFile> StoredFiles => Set<StoredFile>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
