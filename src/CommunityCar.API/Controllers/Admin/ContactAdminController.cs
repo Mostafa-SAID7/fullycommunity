@@ -10,6 +10,7 @@ namespace CommunityCar.API.Controllers.Admin;
 [ApiController]
 [Route("api/admin/contact")]
 [Authorize(Roles = "Admin")]
+[ApiExplorerSettings(GroupName = "admin")]
 public class ContactAdminController : ControllerBase
 {
     private readonly IContactService _contactService;
@@ -43,7 +44,7 @@ public class ContactAdminController : ControllerBase
     }
 
     [HttpPut("{id:guid}/status")]
-    public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateStatusRequest request, CancellationToken ct)
+    public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateContactStatusRequest request, CancellationToken ct)
     {
         var submission = await _contactService.UpdateStatusAsync(id, request.Status, request.Notes, ct);
         return Ok(submission);
@@ -71,6 +72,6 @@ public class ContactAdminController : ControllerBase
     }
 }
 
-public record UpdateStatusRequest(ContactStatus Status, string? Notes);
+public record UpdateContactStatusRequest(ContactStatus Status, string? Notes);
 public record AssignRequest(Guid AssignedToId);
 public record RespondRequest(string Response);

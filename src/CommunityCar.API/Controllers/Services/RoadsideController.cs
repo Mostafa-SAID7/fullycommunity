@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Services;
 [ApiController]
 [Route("api/services/roadside")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "services")]
 public class RoadsideController : ControllerBase
 {
     private readonly IRoadsideService _roadsideService;

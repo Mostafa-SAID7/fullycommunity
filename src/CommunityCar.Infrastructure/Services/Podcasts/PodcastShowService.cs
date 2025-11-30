@@ -20,6 +20,7 @@ public class PodcastShowService : IPodcastShowService
     public async Task<PodcastShowDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         var podcast = await _context.Set<PodcastShow>()
+            .Include(p => p.Owner)
             .Include(p => p.Hosts)
             .FirstOrDefaultAsync(p => p.Id == id, ct);
 
@@ -29,6 +30,7 @@ public class PodcastShowService : IPodcastShowService
     public async Task<PodcastShowDto?> GetBySlugAsync(string slug, CancellationToken ct = default)
     {
         var podcast = await _context.Set<PodcastShow>()
+            .Include(p => p.Owner)
             .Include(p => p.Hosts)
             .FirstOrDefaultAsync(p => p.Slug == slug, ct);
 
@@ -38,6 +40,7 @@ public class PodcastShowService : IPodcastShowService
     public async Task<PagedResult<PodcastShowListItemDto>> SearchAsync(PodcastSearchRequest request, CancellationToken ct = default)
     {
         var query = _context.Set<PodcastShow>()
+            .Include(p => p.Owner)
             .Where(p => p.Status == PodcastStatus.Published);
 
         if (!string.IsNullOrWhiteSpace(request.Query))
@@ -65,7 +68,7 @@ public class PodcastShowService : IPodcastShowService
 
     public async Task<PagedResult<PodcastShowListItemDto>> GetByOwnerAsync(Guid ownerId, int page, int pageSize, CancellationToken ct = default)
     {
-        var query = _context.Set<PodcastShow>().Where(p => p.OwnerId == ownerId);
+        var query = _context.Set<PodcastShow>().Include(p => p.Owner).Where(p => p.OwnerId == ownerId);
         var total = await query.CountAsync(ct);
         var items = await query.OrderByDescending(p => p.CreatedAt)
             .Skip((page - 1) * pageSize).Take(pageSize)
@@ -76,6 +79,7 @@ public class PodcastShowService : IPodcastShowService
     public async Task<List<PodcastShowListItemDto>> GetTrendingAsync(int count = 20, CancellationToken ct = default)
     {
         return await _context.Set<PodcastShow>()
+            .Include(p => p.Owner)
             .Where(p => p.Status == PodcastStatus.Published)
             .OrderByDescending(p => p.TotalPlays)
             .Take(count)
@@ -86,6 +90,7 @@ public class PodcastShowService : IPodcastShowService
     public async Task<List<PodcastShowListItemDto>> GetRecommendedAsync(Guid? userId, int count = 20, CancellationToken ct = default)
     {
         return await _context.Set<PodcastShow>()
+            .Include(p => p.Owner)
             .Where(p => p.Status == PodcastStatus.Published)
             .OrderByDescending(p => p.AverageRating * p.SubscriberCount)
             .Take(count)
@@ -98,7 +103,7 @@ public class PodcastShowService : IPodcastShowService
         return await _context.Set<PodcastCategoryEntity>()
             .Where(c => c.IsActive && c.ParentCategoryId == null)
             .OrderBy(c => c.SortOrder)
-            .Select(c => new PodcastCategoryDto(c.Id, c.Name, c.Description, c.Slug, c.IconUrl, c.PodcastCount, null))
+            .Select(c => new PodcastCategoryDto(c.Name, c.Description, c.IconUrl, c.PodcastCount))
             .ToListAsync(ct);
     }
 
@@ -171,7 +176,7 @@ public class PodcastShowService : IPodcastShowService
     public async Task<List<PodcastHostDto>> GetHostsAsync(Guid podcastId, CancellationToken ct = default)
     {
         return await _context.Set<PodcastHost>()
-            .Where(h => h.PodcastId == podcastId)
+            .Where(h => h.PodcastShowId == podcastId)
             .OrderBy(h => h.SortOrder)
             .Select(h => new PodcastHostDto(h.Id, h.UserId, h.Name, h.Bio, h.AvatarUrl, h.WebsiteUrl, h.TwitterUrl, h.InstagramUrl, h.IsPrimaryHost))
             .ToListAsync(ct);
@@ -181,7 +186,7 @@ public class PodcastShowService : IPodcastShowService
     {
         var host = new PodcastHost
         {
-            PodcastId = podcastId, UserId = request.UserId, Name = request.Name, Bio = request.Bio,
+            PodcastShowId = podcastId, UserId = request.UserId, Name = request.Name, Bio = request.Bio,
             AvatarUrl = request.AvatarUrl, WebsiteUrl = request.WebsiteUrl, TwitterUrl = request.TwitterUrl,
             InstagramUrl = request.InstagramUrl, IsPrimaryHost = request.IsPrimaryHost
         };
@@ -211,7 +216,7 @@ public class PodcastShowService : IPodcastShowService
     private static string GenerateSlug(string title) => title.ToLower().Replace(" ", "-").Replace("--", "-");
 
     private static PodcastShowDto MapToDto(PodcastShow p) => new(
-        p.Id, p.OwnerId, p.Title, p.Description, p.Slug, p.Summary, p.CoverImageUrl, p.BannerImageUrl,
+        p.Id, p.OwnerId, p.Owner?.UserName ?? "", p.Owner?.AvatarUrl, p.Title, p.Description, p.Slug, p.Summary, p.CoverImageUrl, p.BannerImageUrl,
         p.Type, p.Status, p.Visibility, p.ExplicitContent, p.Category, p.Tags, p.Language,
         p.PublishedAt, p.EpisodeCount, p.SubscriberCount, p.TotalPlays, p.AverageRating, p.RatingCount,
         p.AllowComments, p.AllowDownloads, p.ApplePodcastsUrl, p.SpotifyUrl, p.WebsiteUrl, p.Copyright, p.Author,
@@ -220,7 +225,7 @@ public class PodcastShowService : IPodcastShowService
     );
 
     private static PodcastShowListItemDto MapToListItem(PodcastShow p) => new(
-        p.Id, p.Title, p.Description, p.Slug, p.CoverImageUrl, p.Category,
+        p.Id, p.Title, p.Description, p.Slug, p.CoverImageUrl, p.Owner?.UserName ?? "", p.Owner?.AvatarUrl, p.Category,
         p.EpisodeCount, p.SubscriberCount, p.AverageRating, p.ExplicitContent, p.PublishedAt
     );
 }

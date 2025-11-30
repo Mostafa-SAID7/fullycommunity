@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Community;
 [ApiController]
 [Route("api/community/friendships")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "community")]
 public class FriendshipsController : ControllerBase
 {
     private readonly IFriendshipService _friendshipService;

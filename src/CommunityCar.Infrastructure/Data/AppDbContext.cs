@@ -61,6 +61,9 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     {
         base.OnModelCreating(builder);
 
+        // Apply all configurations from the assembly
+        builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
         // ═══════════════════════════════════════════════════════════════════════
         // IDENTITY
         // ═══════════════════════════════════════════════════════════════════════

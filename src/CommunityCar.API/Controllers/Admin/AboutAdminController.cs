@@ -8,6 +8,7 @@ namespace CommunityCar.API.Controllers.Admin;
 [ApiController]
 [Route("api/admin/about")]
 [Authorize(Roles = "Admin")]
+[ApiExplorerSettings(GroupName = "admin")]
 public class AboutAdminController : ControllerBase
 {
     private readonly IAboutService _aboutService;

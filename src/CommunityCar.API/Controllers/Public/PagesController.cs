@@ -8,6 +8,7 @@ namespace CommunityCar.API.Controllers.Public;
 [ApiController]
 [Route("api/pages")]
 [AllowAnonymous]
+[ApiExplorerSettings(GroupName = "pages")]
 public class PagesController : ControllerBase
 {
     private readonly IPageService _pageService;

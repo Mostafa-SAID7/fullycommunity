@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Community;
 
 [ApiController]
 [Route("api/community/maps")]
+[ApiExplorerSettings(GroupName = "community")]
 public class MapsController : ControllerBase
 {
     private readonly IMapService _mapService;

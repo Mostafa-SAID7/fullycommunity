@@ -61,7 +61,7 @@ public class ChatHub : Hub
     /// <summary>
     /// Join a conversation room
     /// </summary>
-    /// public async Task JoinConversation(string conversationId)
+    public async Task JoinConversation(string conversationId)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, $"conversation_{conversationId}");
     }
@@ -77,7 +77,7 @@ public class ChatHub : Hub
     /// <summary>
     /// Send a message to a conversation
     /// </summary>
-    /// public async Task SendMessage(string conversationId, string content, string messageType = "Text", string? attachmentUrl = null)
+    public async Task SendMessage(string conversationId, string content, string messageType = "Text", string? attachmentUrl = null)
     {
         var userId = GetUserId();
         if (userId == null) return;

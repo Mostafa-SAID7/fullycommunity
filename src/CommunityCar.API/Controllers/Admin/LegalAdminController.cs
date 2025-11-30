@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Admin;
 [ApiController]
 [Route("api/admin/legal")]
 [Authorize(Roles = "Admin")]
+[ApiExplorerSettings(GroupName = "admin")]
 public class LegalAdminController : ControllerBase
 {
     private readonly ILegalService _legalService;

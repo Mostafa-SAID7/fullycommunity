@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Community;
 
 [ApiController]
 [Route("api/community/groups")]
+[ApiExplorerSettings(GroupName = "community")]
 public class GroupsController : ControllerBase
 {
     private readonly IGroupService _groupService;

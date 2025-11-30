@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Services;
 [ApiController]
 [Route("api/services/fuel-charging")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "services")]
 public class FuelChargingController : ControllerBase
 {
     private readonly IFuelChargingService _fuelChargingService;

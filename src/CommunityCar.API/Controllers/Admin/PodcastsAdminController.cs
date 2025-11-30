@@ -27,7 +27,7 @@ public class PodcastsAdminController : ControllerBase
         if (!string.IsNullOrEmpty(status)) query = query.Where(p => p.Status.ToString() == status);
         var total = await query.CountAsync(ct);
         var items = await query.OrderByDescending(p => p.CreatedAt).Skip((page - 1) * pageSize).Take(pageSize)
-            .Select(p => new { p.Id, p.Title, OwnerName = p.Owner.UserName, p.EpisodeCount, p.SubscriberCount, p.TotalPlays, p.Status, p.IsFeatured, p.CreatedAt }).ToListAsync(ct);
+            .Select(p => new { p.Id, p.Title, OwnerName = p.Owner.UserName, p.EpisodeCount, p.SubscriberCount, p.TotalPlays, p.Status, p.CreatedAt }).ToListAsync(ct);
         return Ok(new { items, total, page, pageSize });
     }
 
@@ -37,16 +37,6 @@ public class PodcastsAdminController : ControllerBase
         var show = await _context.Set<PodcastShow>().FindAsync([id], ct);
         if (show is null) return NotFound();
         show.Status = Enum.Parse<PodcastStatus>(request.Status);
-        await _context.SaveChangesAsync(ct);
-        return NoContent();
-    }
-
-    [HttpPut("shows/{id}/feature")]
-    public async Task<IActionResult> FeatureShow(Guid id, [FromBody] FeatureRequest request, CancellationToken ct)
-    {
-        var show = await _context.Set<PodcastShow>().FindAsync([id], ct);
-        if (show is null) return NotFound();
-        show.IsFeatured = request.IsFeatured;
         await _context.SaveChangesAsync(ct);
         return NoContent();
     }
@@ -65,11 +55,11 @@ public class PodcastsAdminController : ControllerBase
     [HttpGet("episodes")]
     public async Task<IActionResult> GetEpisodes([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] Guid? podcastId = null, CancellationToken ct = default)
     {
-        var query = _context.Set<PodcastEpisode>().Include(e => e.Podcast).AsQueryable();
-        if (podcastId.HasValue) query = query.Where(e => e.PodcastId == podcastId.Value);
+        var query = _context.Set<PodcastEpisode>().Include(e => e.PodcastShow).AsQueryable();
+        if (podcastId.HasValue) query = query.Where(e => e.PodcastShowId == podcastId.Value);
         var total = await query.CountAsync(ct);
         var items = await query.OrderByDescending(e => e.CreatedAt).Skip((page - 1) * pageSize).Take(pageSize)
-            .Select(e => new { e.Id, e.Title, PodcastTitle = e.Podcast.Title, e.EpisodeNumber, e.PlayCount, e.Status, e.Duration, e.PublishedAt }).ToListAsync(ct);
+            .Select(e => new { e.Id, e.Title, PodcastTitle = e.PodcastShow.Title, e.EpisodeNumber, e.PlayCount, e.Status, e.Duration, e.PublishedAt }).ToListAsync(ct);
         return Ok(new { items, total, page, pageSize });
     }
 
@@ -97,10 +87,10 @@ public class PodcastsAdminController : ControllerBase
     [HttpGet("live")]
     public async Task<IActionResult> GetLiveRecordings([FromQuery] int page = 1, [FromQuery] int pageSize = 20, CancellationToken ct = default)
     {
-        var query = _context.Set<LiveRecording>().Include(l => l.Podcast);
+        var query = _context.Set<LiveRecording>().Include(l => l.PodcastShow);
         var total = await query.CountAsync(ct);
         var items = await query.OrderByDescending(l => l.ScheduledStartAt).Skip((page - 1) * pageSize).Take(pageSize)
-            .Select(l => new { l.Id, l.Title, PodcastTitle = l.Podcast.Title, l.CurrentViewers, l.PeakViewers, l.Status, l.ScheduledStartAt }).ToListAsync(ct);
+            .Select(l => new { l.Id, l.Title, PodcastTitle = l.PodcastShow.Title, l.CurrentViewers, l.PeakViewers, l.Status, l.ScheduledStartAt }).ToListAsync(ct);
         return Ok(new { items, total, page, pageSize });
     }
 
@@ -197,10 +187,10 @@ public class PodcastsAdminController : ControllerBase
             .ToListAsync(ct);
 
         var topEpisodes = await _context.Set<PodcastEpisode>()
-            .Include(e => e.Podcast)
+            .Include(e => e.PodcastShow)
             .OrderByDescending(e => e.PlayCount)
             .Take(10)
-            .Select(e => new { e.Id, e.Title, PodcastTitle = e.Podcast.Title, e.PlayCount })
+            .Select(e => new { e.Id, e.Title, PodcastTitle = e.PodcastShow.Title, e.PlayCount })
             .ToListAsync(ct);
 
         return Ok(new { EpisodeStats = episodeStats, TopShows = topShows, TopEpisodes = topEpisodes });

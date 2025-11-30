@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Public;
 [ApiController]
 [Route("api/faq")]
 [AllowAnonymous]
+[ApiExplorerSettings(GroupName = "pages")]
 public class FAQController : ControllerBase
 {
     private readonly IFAQService _faqService;

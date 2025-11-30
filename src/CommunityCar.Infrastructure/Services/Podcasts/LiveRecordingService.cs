@@ -17,13 +17,13 @@ public class LiveRecordingService : ILiveRecordingService
 
     public async Task<LiveRecordingDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        var recording = await _context.Set<LiveRecording>().Include(r => r.Podcast).FirstOrDefaultAsync(r => r.Id == id, ct);
+        var recording = await _context.Set<LiveRecording>().Include(r => r.PodcastShow).FirstOrDefaultAsync(r => r.Id == id, ct);
         return recording is null ? null : MapToDto(recording);
     }
 
     public async Task<PagedResult<LiveRecordingListItemDto>> GetByPodcastAsync(Guid podcastId, int page, int pageSize, CancellationToken ct = default)
     {
-        var query = _context.Set<LiveRecording>().Include(r => r.Podcast).Where(r => r.PodcastId == podcastId).OrderByDescending(r => r.ScheduledStartAt);
+        var query = _context.Set<LiveRecording>().Include(r => r.PodcastShow).Where(r => r.PodcastShowId == podcastId).OrderByDescending(r => r.ScheduledStartAt);
         var total = await query.CountAsync(ct);
         var items = await query.Skip((page - 1) * pageSize).Take(pageSize).Select(r => MapToListItem(r)).ToListAsync(ct);
         return new PagedResult<LiveRecordingListItemDto>(items, total, page, pageSize);
@@ -31,14 +31,14 @@ public class LiveRecordingService : ILiveRecordingService
 
     public async Task<List<LiveRecordingListItemDto>> GetUpcomingAsync(int count = 20, CancellationToken ct = default)
     {
-        return await _context.Set<LiveRecording>().Include(r => r.Podcast)
+        return await _context.Set<LiveRecording>().Include(r => r.PodcastShow)
             .Where(r => r.Status == LiveRecordingStatus.Scheduled && r.ScheduledStartAt > DateTime.UtcNow)
             .OrderBy(r => r.ScheduledStartAt).Take(count).Select(r => MapToListItem(r)).ToListAsync(ct);
     }
 
     public async Task<List<LiveRecordingListItemDto>> GetLiveNowAsync(int count = 20, CancellationToken ct = default)
     {
-        return await _context.Set<LiveRecording>().Include(r => r.Podcast)
+        return await _context.Set<LiveRecording>().Include(r => r.PodcastShow)
             .Where(r => r.Status == LiveRecordingStatus.Live).OrderByDescending(r => r.CurrentViewers)
             .Take(count).Select(r => MapToListItem(r)).ToListAsync(ct);
     }
@@ -47,7 +47,7 @@ public class LiveRecordingService : ILiveRecordingService
     {
         var recording = new LiveRecording
         {
-            PodcastId = podcastId, Title = request.Title, Description = request.Description, ThumbnailUrl = request.ThumbnailUrl,
+            PodcastShowId = podcastId, Title = request.Title, Description = request.Description, ThumbnailUrl = request.ThumbnailUrl,
             ScheduledStartAt = request.ScheduledStartAt, AllowChat = request.AllowChat, AllowTips = request.AllowTips,
             RecordForEpisode = request.RecordForEpisode, IsSubscribersOnly = request.IsSubscribersOnly, Status = LiveRecordingStatus.Scheduled
         };
@@ -188,6 +188,6 @@ public class LiveRecordingService : ILiveRecordingService
             .Select(t => new LiveTipDto(t.Id, t.SenderId, t.Sender.UserName ?? "", t.Sender.AvatarUrl, t.Amount, t.Currency, t.Message, t.SentAt, t.IsHighlighted, t.WasReadOnAir)).ToListAsync(ct);
     }
 
-    private static LiveRecordingDto MapToDto(LiveRecording r) => new(r.Id, r.PodcastId, r.Podcast.Title, r.Podcast.CoverImageUrl, r.Title, r.Description, r.ThumbnailUrl, r.Status, r.ScheduledStartAt, r.ActualStartAt, r.EndedAt, r.Duration, r.PlaybackUrl, r.PeakViewers, r.TotalViewers, r.CurrentViewers, r.ChatMessageCount, r.TotalTips, r.AllowChat, r.AllowTips, r.IsSubscribersOnly, r.ResultingEpisodeId, r.CreatedAt);
-    private static LiveRecordingListItemDto MapToListItem(LiveRecording r) => new(r.Id, r.PodcastId, r.Podcast.Title, r.Podcast.CoverImageUrl, r.Title, r.ThumbnailUrl, r.Status, r.ScheduledStartAt, r.CurrentViewers, r.IsSubscribersOnly);
+    private static LiveRecordingDto MapToDto(LiveRecording r) => new(r.Id, r.PodcastShowId, r.PodcastShow.Title, r.PodcastShow.CoverImageUrl, r.Title, r.Description, r.ThumbnailUrl, r.Status, r.ScheduledStartAt, r.ActualStartAt, r.EndedAt, r.Duration, r.PlaybackUrl, r.PeakViewers, r.TotalViewers, r.CurrentViewers, r.ChatMessageCount, r.TotalTips, r.AllowChat, r.AllowTips, r.IsSubscribersOnly, r.ResultingEpisodeId, r.CreatedAt);
+    private static LiveRecordingListItemDto MapToListItem(LiveRecording r) => new(r.Id, r.PodcastShowId, r.PodcastShow.Title, r.PodcastShow.CoverImageUrl, r.Title, r.ThumbnailUrl, r.Status, r.ScheduledStartAt, r.CurrentViewers, r.IsSubscribersOnly);
 }

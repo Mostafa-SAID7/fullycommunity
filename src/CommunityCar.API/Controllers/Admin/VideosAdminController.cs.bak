@@ -172,4 +172,4 @@ public class VideosAdminController : ControllerBase
     }
 }
 
-public record ResolveReportRequest(string Status, string? Notes, string? ActionTaken);
+

@@ -8,6 +8,7 @@ namespace CommunityCar.API.Controllers.Community;
 
 [ApiController]
 [Route("api/community/reviews")]
+[ApiExplorerSettings(GroupName = "community")]
 public class ReviewsController : ControllerBase
 {
     private readonly IReviewService _reviewService;

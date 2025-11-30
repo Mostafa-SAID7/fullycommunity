@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Services;
 [ApiController]
 [Route("api/services/[controller]")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "services")]
 public class MaintenanceController : ControllerBase
 {
     private readonly IMaintenanceService _maintenanceService;

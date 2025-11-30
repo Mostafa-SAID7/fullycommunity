@@ -8,6 +8,7 @@ namespace CommunityCar.API.Controllers.Public;
 
 [ApiController]
 [Route("api/legal")]
+[ApiExplorerSettings(GroupName = "pages")]
 public class LegalController : ControllerBase
 {
     private readonly ILegalService _legalService;

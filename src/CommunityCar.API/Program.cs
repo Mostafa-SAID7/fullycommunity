@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -138,25 +139,24 @@ catch (Exception ex)
 // MIDDLEWARE
 // ═══════════════════════════════════════════════════════════════════════════════
 
-if (app.Environment.IsDevelopment())
+// Enable Swagger in all environments for now
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/admin/swagger.json", "Admin API");
-        c.SwaggerEndpoint("/swagger/identity/swagger.json", "Identity API");
-        c.SwaggerEndpoint("/swagger/community/swagger.json", "Community API");
-        c.SwaggerEndpoint("/swagger/marketplace/swagger.json", "Marketplace API");
-        c.SwaggerEndpoint("/swagger/services/swagger.json", "Services API");
-        c.SwaggerEndpoint("/swagger/podcasts/swagger.json", "Podcasts API");
-        c.SwaggerEndpoint("/swagger/videos/swagger.json", "Videos API");
-        c.SwaggerEndpoint("/swagger/pages/swagger.json", "Pages API");
-        c.SwaggerEndpoint("/swagger/mobile/swagger.json", "Mobile API");
-        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
-    });
-}
+    c.SwaggerEndpoint("/swagger/admin/swagger.json", "Admin API");
+    c.SwaggerEndpoint("/swagger/identity/swagger.json", "Identity API");
+    c.SwaggerEndpoint("/swagger/community/swagger.json", "Community API");
+    c.SwaggerEndpoint("/swagger/marketplace/swagger.json", "Marketplace API");
+    c.SwaggerEndpoint("/swagger/services/swagger.json", "Services API");
+    c.SwaggerEndpoint("/swagger/podcasts/swagger.json", "Podcasts API");
+    c.SwaggerEndpoint("/swagger/videos/swagger.json", "Videos API");
+    c.SwaggerEndpoint("/swagger/pages/swagger.json", "Pages API");
+    c.SwaggerEndpoint("/swagger/mobile/swagger.json", "Mobile API");
+    c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+    c.RoutePrefix = string.Empty; // Serve Swagger UI at root
+});
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Disabled for local development
 app.UseStaticFiles(); // For serving uploaded files
 app.UseCors("AllowAll");
 app.UseAuthentication();

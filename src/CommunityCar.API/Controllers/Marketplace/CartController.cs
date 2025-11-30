@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Marketplace;
 [ApiController]
 [Route("api/marketplace/cart")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "marketplace")]
 public class CartController : ControllerBase
 {
     private readonly ICartService _cartService;

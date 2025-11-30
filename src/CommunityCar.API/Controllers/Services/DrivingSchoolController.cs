@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Services;
 [ApiController]
 [Route("api/services/driving-school")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "services")]
 public class DrivingSchoolController : ControllerBase
 {
     private readonly IDrivingSchoolService _drivingSchoolService;

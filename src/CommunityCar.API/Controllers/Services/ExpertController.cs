@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Services;
 [ApiController]
 [Route("api/services/experts")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "services")]
 public class ExpertController : ControllerBase
 {
     private readonly IExpertService _expertService;

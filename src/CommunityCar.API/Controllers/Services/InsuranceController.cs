@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Services;
 [ApiController]
 [Route("api/services/insurance")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "services")]
 public class InsuranceController : ControllerBase
 {
     private readonly IInsuranceService _insuranceService;

@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Public;
 [ApiController]
 [Route("api/careers")]
 [AllowAnonymous]
+[ApiExplorerSettings(GroupName = "pages")]
 public class CareersController : ControllerBase
 {
     private readonly ICareerService _careerService;

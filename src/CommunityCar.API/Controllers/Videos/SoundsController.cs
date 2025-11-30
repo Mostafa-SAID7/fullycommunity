@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Videos;
 [ApiController]
 [Route("api/videos/sounds")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "videos")]
 public class SoundsController : ControllerBase
 {
     private readonly ISoundService _soundService;

@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Admin;
 [ApiController]
 [Route("api/admin/site")]
 [Authorize(Roles = "Admin")]
+[ApiExplorerSettings(GroupName = "admin")]
 public class SiteAdminController : ControllerBase
 {
     private readonly ISiteSettingsService _siteService;

@@ -8,6 +8,7 @@ namespace CommunityCar.API.Controllers.Admin;
 [ApiController]
 [Route("api/admin/roles")]
 [Authorize(Roles = "Admin,SuperAdmin")]
+[ApiExplorerSettings(GroupName = "admin")]
 public class RolesController : ControllerBase
 {
     private readonly IRoleService _roleService;

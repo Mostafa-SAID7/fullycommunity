@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Marketplace;
 [ApiController]
 [Route("api/marketplace/offers")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "marketplace")]
 public class OffersController : ControllerBase
 {
     private readonly IOfferService _offerService;

@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Services;
 [ApiController]
 [Route("api/services/garages")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "services")]
 public class GarageRentalsController : ControllerBase
 {
     private readonly IGarageRentalService _garageService;

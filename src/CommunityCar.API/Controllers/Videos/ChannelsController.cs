@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Videos;
 [ApiController]
 [Route("api/videos/channels")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "videos")]
 public class ChannelsController : ControllerBase
 {
     private readonly IChannelService _channelService;

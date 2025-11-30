@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "identity")]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;

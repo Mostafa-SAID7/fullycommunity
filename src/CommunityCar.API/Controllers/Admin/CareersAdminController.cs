@@ -10,6 +10,7 @@ namespace CommunityCar.API.Controllers.Admin;
 [ApiController]
 [Route("api/admin/careers")]
 [Authorize(Roles = "Admin")]
+[ApiExplorerSettings(GroupName = "admin")]
 public class CareersAdminController : ControllerBase
 {
     private readonly ICareerService _careerService;

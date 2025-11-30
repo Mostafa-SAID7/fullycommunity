@@ -8,6 +8,7 @@ namespace CommunityCar.API.Controllers.Community;
 
 [ApiController]
 [Route("api/community/news")]
+[ApiExplorerSettings(GroupName = "community")]
 public class NewsController : ControllerBase
 {
     private readonly INewsService _newsService;

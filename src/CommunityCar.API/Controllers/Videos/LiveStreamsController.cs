@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Videos;
 [ApiController]
 [Route("api/videos/live")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "videos")]
 public class LiveStreamsController : ControllerBase
 {
     private readonly ILiveStreamService _liveStreamService;

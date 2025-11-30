@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Videos;
 [ApiController]
 [Route("api/videos")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "videos")]
 public class VideoContentController : ControllerBase
 {
     private readonly IVideoService _videoService;

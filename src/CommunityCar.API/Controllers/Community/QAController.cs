@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Community;
 
 [ApiController]
 [Route("api/community/qa")]
+[ApiExplorerSettings(GroupName = "community")]
 public class QAController : ControllerBase
 {
     private readonly IQAService _qaService;

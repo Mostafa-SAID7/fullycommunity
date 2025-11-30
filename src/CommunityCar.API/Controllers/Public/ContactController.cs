@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Public;
 [ApiController]
 [Route("api/contact")]
 [AllowAnonymous]
+[ApiExplorerSettings(GroupName = "pages")]
 public class ContactController : ControllerBase
 {
     private readonly IContactService _contactService;

@@ -10,6 +10,7 @@ namespace CommunityCar.API.Controllers.Marketplace;
 [ApiController]
 [Route("api/marketplace/auctions")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "marketplace")]
 public class AuctionsController : ControllerBase
 {
     private readonly IAuctionService _auctionService;

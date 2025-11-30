@@ -8,6 +8,7 @@ namespace CommunityCar.API.Controllers.Public;
 [ApiController]
 [Route("api/site")]
 [AllowAnonymous]
+[ApiExplorerSettings(GroupName = "pages")]
 public class SiteController : ControllerBase
 {
     private readonly ISiteSettingsService _siteService;

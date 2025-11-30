@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Community;
 
 [ApiController]
 [Route("api/community/events")]
+[ApiExplorerSettings(GroupName = "community")]
 public class EventsController : ControllerBase
 {
     private readonly IEventService _eventService;

@@ -9,6 +9,7 @@ namespace CommunityCar.API.Controllers.Services;
 [ApiController]
 [Route("api/services/customization")]
 [Authorize]
+[ApiExplorerSettings(GroupName = "services")]
 public class CustomizationController : ControllerBase
 {
     private readonly ICustomizationService _customizationService;
