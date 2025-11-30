@@ -1,5 +1,4 @@
 using CommunityCar.Application.Common.Interfaces;
-using CommunityCar.Application.Interfaces.Identity;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data;
 using CommunityCar.Infrastructure.Services.Identity;
@@ -62,6 +61,9 @@ public static class DependencyInjection
             };
         });
 
+
+        // Caching
+        services.AddDistributedMemoryCache();
 
         // HTTP Clients
         services.AddHttpClient("HaveIBeenPwned", client =>

@@ -1,5 +1,5 @@
+using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.DTOs.Identity;
-using CommunityCar.Application.Interfaces.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

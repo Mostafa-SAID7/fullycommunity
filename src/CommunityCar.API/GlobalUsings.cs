@@ -9,4 +9,4 @@ global using Microsoft.AspNetCore.Authorization;
 global using MediatR;
 global using CommunityCar.Domain.Enums;
 global using CommunityCar.Application.DTOs.Identity;
-global using CommunityCar.Application.Interfaces.Identity;
+global using CommunityCar.Application.Common.Interfaces;

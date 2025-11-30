@@ -1,9 +1,9 @@
 using Azure.Communication.Email;
 using Azure.Communication.Sms;
 using CommunityCar.Application.Common.Interfaces;
-using AppEmailMessage = CommunityCar.Application.Common.Interfaces.EmailMessage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Models = CommunityCar.Application.Common.Models;
 
 namespace CommunityCar.Infrastructure.Services.Notification;
 
@@ -32,7 +32,7 @@ public class NotificationService : INotificationService
         _senderPhone = _configuration["Azure:CommunicationServices:SenderPhone"] ?? "";
     }
 
-    public async Task SendEmailAsync(AppEmailMessage message)
+    public async Task SendEmailAsync(Models.EmailMessage message)
     {
         if (_emailClient == null)
         {
@@ -67,7 +67,7 @@ public class NotificationService : INotificationService
     public async Task SendTemplatedEmailAsync(string templateId, string to, Dictionary<string, string> data)
     {
         var template = GetEmailTemplate(templateId, data);
-        await SendEmailAsync(new AppEmailMessage(to, template.Subject, template.Body, true));
+        await SendEmailAsync(new Models.EmailMessage(to, template.Subject, template.Body, true));
     }
 
     public async Task SendSmsAsync(string phoneNumber, string message)
@@ -95,27 +95,27 @@ public class NotificationService : INotificationService
         await SendSmsAsync(phoneNumber, $"Your CommunityCar verification code is: {otp}. Valid for 5 minutes.");
     }
 
-    public Task SendPushNotificationAsync(Guid userId, PushNotification notification)
+    public Task SendPushNotificationAsync(Guid userId, Models.PushNotification notification)
     {
         _logger.LogInformation("Push notification to user {UserId}: {Title}", userId, notification.Title);
         return Task.CompletedTask;
     }
 
-    public Task SendPushToDeviceAsync(string pushToken, PushNotification notification)
+    public Task SendPushToDeviceAsync(string pushToken, Models.PushNotification notification)
     {
         _logger.LogInformation("Push notification to device: {Title}", notification.Title);
         return Task.CompletedTask;
     }
 
-    public async Task SendSecurityAlertAsync(Guid userId, SecurityNotification notification)
+    public async Task SendSecurityAlertAsync(Guid userId, Models.SecurityNotification notification)
     {
         _logger.LogWarning("Security alert for user {UserId}: {Title} - {Severity}", userId, notification.Title, notification.Severity);
         await Task.CompletedTask;
     }
 
-    public async Task SendLoginAlertAsync(Guid userId, LoginAlertInfo info)
+    public async Task SendLoginAlertAsync(Guid userId, Models.LoginAlertInfo info)
     {
-        await SendSecurityAlertAsync(userId, new SecurityNotification(
+        await SendSecurityAlertAsync(userId, new Models.SecurityNotification(
             "New Login Detected",
             $"Login from {info.DeviceName} ({info.Browser}) at {info.Location}",
             "Medium",
@@ -124,7 +124,7 @@ public class NotificationService : INotificationService
 
     public async Task SendPasswordChangedAlertAsync(Guid userId)
     {
-        await SendSecurityAlertAsync(userId, new SecurityNotification(
+        await SendSecurityAlertAsync(userId, new Models.SecurityNotification(
             "Password Changed",
             "Your password was recently changed. If you didn't make this change, please contact support.",
             "High",
@@ -133,7 +133,7 @@ public class NotificationService : INotificationService
 
     public async Task SendNewDeviceAlertAsync(Guid userId, string deviceName, string location)
     {
-        await SendSecurityAlertAsync(userId, new SecurityNotification(
+        await SendSecurityAlertAsync(userId, new Models.SecurityNotification(
             "New Device Login",
             $"A new device ({deviceName}) logged into your account from {location}.",
             "Medium",

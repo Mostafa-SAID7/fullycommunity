@@ -62,27 +62,42 @@ var app = builder.Build();
 // SEED DATA
 // ═══════════════════════════════════════════════════════════════════════════════
 
-using (var scope = app.Services.CreateScope())
+// Database seeding - only run if database is available
+try
 {
+    using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await context.Database.MigrateAsync();
-
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
     
-    string[] roles = ["SuperAdmin", "Admin", "Moderator", "User", "Expert", "Author", "Reviewer", "Vendor", "Mechanic", "GarageOwner", "Instructor", "Student", "Affiliate"];
-    
-    foreach (var role in roles)
+    // Only migrate if we can connect
+    if (await context.Database.CanConnectAsync())
     {
-        if (!await roleManager.RoleExistsAsync(role))
+        await context.Database.MigrateAsync();
+
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        
+        string[] roles = ["SuperAdmin", "Admin", "Moderator", "User", "Expert", "Author", "Reviewer", "Vendor", "Mechanic", "GarageOwner", "Instructor", "Student", "Affiliate"];
+        
+        foreach (var role in roles)
         {
-            await roleManager.CreateAsync(new ApplicationRole 
-            { 
-                Name = role,
-                DisplayName = role,
-                IsSystemRole = role is "SuperAdmin" or "Admin" or "User"
-            });
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new ApplicationRole 
+                { 
+                    Name = role,
+                    DisplayName = role,
+                    IsSystemRole = role is "SuperAdmin" or "Admin" or "User"
+                });
+            }
         }
     }
+    else
+    {
+        Console.WriteLine("⚠️ Database not available. Skipping migrations and seeding.");
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"⚠️ Database initialization skipped: {ex.Message}");
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════

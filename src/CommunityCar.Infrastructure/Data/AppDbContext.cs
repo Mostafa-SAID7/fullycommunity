@@ -12,7 +12,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     // Identity
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<UserDevice> UserDevices => Set<UserDevice>();
-    public DbSet<UserLogin> UserLogins => Set<UserLogin>();
+    public DbSet<UserLogin> UserLoginHistory => Set<UserLogin>();
     public DbSet<ExternalLogin> ExternalLogins => Set<ExternalLogin>();
     public DbSet<OtpCode> OtpCodes => Set<OtpCode>();
     public DbSet<Permission> Permissions => Set<Permission>();

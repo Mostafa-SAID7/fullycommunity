@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Models;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

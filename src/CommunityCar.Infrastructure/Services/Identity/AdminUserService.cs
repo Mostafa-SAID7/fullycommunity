@@ -1,6 +1,5 @@
 using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.DTOs.Identity;
-using CommunityCar.Application.Interfaces.Identity;
 using CommunityCar.Domain.Enums;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data;
@@ -184,7 +183,7 @@ public class AdminUserService : IAdminUserService
 
     public async Task<IEnumerable<UserLoginHistoryDto>> GetUserLoginHistoryAsync(Guid userId)
     {
-        return await _context.UserLogins.Where(l => l.UserId == userId)
+        return await _context.UserLoginHistory.Where(l => l.UserId == userId)
             .OrderByDescending(l => l.LoginAt).Take(50)
             .Select(l => new UserLoginHistoryDto(l.Id, l.IpAddress, l.Country, l.City, l.Browser, l.Platform, l.IsSuccessful, l.LoginAt))
             .ToListAsync();

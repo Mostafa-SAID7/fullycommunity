@@ -1,6 +1,5 @@
 using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.DTOs.Identity;
-using CommunityCar.Application.Interfaces.Identity;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
@@ -124,7 +123,7 @@ public class UserService : IUserService
 
     public async Task<IEnumerable<UserLoginHistoryDto>> GetLoginHistoryAsync(Guid userId, int count = 10)
     {
-        return await _context.UserLogins
+        return await _context.UserLoginHistory
             .Where(l => l.UserId == userId)
             .OrderByDescending(l => l.LoginAt)
             .Take(count)

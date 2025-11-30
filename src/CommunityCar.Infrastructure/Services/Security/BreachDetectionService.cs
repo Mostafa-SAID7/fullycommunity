@@ -1,5 +1,7 @@
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Models;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,15 +15,18 @@ public class BreachDetectionService : IBreachDetectionService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IDistributedCache _cache;
     private readonly ILogger<BreachDetectionService> _logger;
+    private readonly string? _hibpApiKey;
 
     public BreachDetectionService(
         IHttpClientFactory httpClientFactory,
         IDistributedCache cache,
+        IConfiguration configuration,
         ILogger<BreachDetectionService> logger)
     {
         _httpClientFactory = httpClientFactory;
         _cache = cache;
         _logger = logger;
+        _hibpApiKey = configuration["Security:HaveIBeenPwned:ApiKey"];
     }
 
     public async Task<BreachCheckResult> CheckEmailBreachAsync(string email)
@@ -35,8 +40,14 @@ public class BreachDetectionService : IBreachDetectionService
 
         try
         {
+            if (string.IsNullOrEmpty(_hibpApiKey))
+            {
+                _logger.LogWarning("HaveIBeenPwned API key not configured");
+                return new BreachCheckResult(false, 0, []);
+            }
+
             var client = _httpClientFactory.CreateClient("HaveIBeenPwned");
-            client.DefaultRequestHeaders.Add("hibp-api-key", "YOUR_API_KEY"); // Configure in appsettings
+            client.DefaultRequestHeaders.Add("hibp-api-key", _hibpApiKey);
             client.DefaultRequestHeaders.Add("user-agent", "CommunityCar-Security-Check");
 
             var response = await client.GetAsync($"https://haveibeenpwned.com/api/v3/breachedaccount/{Uri.EscapeDataString(email)}");
@@ -171,8 +182,14 @@ public class BreachDetectionService : IBreachDetectionService
     {
         try
         {
+            if (string.IsNullOrEmpty(_hibpApiKey))
+            {
+                _logger.LogWarning("HaveIBeenPwned API key not configured");
+                return [];
+            }
+
             var client = _httpClientFactory.CreateClient("HaveIBeenPwned");
-            client.DefaultRequestHeaders.Add("hibp-api-key", "YOUR_API_KEY");
+            client.DefaultRequestHeaders.Add("hibp-api-key", _hibpApiKey);
             client.DefaultRequestHeaders.Add("user-agent", "CommunityCar-Security-Check");
 
             var response = await client.GetAsync($"https://haveibeenpwned.com/api/v3/breaches?domain={Uri.EscapeDataString(domain)}");

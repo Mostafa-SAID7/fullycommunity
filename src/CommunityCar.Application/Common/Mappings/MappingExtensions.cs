@@ -10,11 +10,13 @@ public static class MappingExtensions
         this IQueryable queryable,
         IConfigurationProvider configuration,
         CancellationToken cancellationToken = default)
+        where TDestination : class
         => queryable.ProjectTo<TDestination>(configuration).AsNoTracking().ToListAsync(cancellationToken);
 
     public static Task<TDestination?> ProjectToFirstOrDefaultAsync<TDestination>(
         this IQueryable queryable,
         IConfigurationProvider configuration,
         CancellationToken cancellationToken = default)
+        where TDestination : class
         => queryable.ProjectTo<TDestination>(configuration).AsNoTracking().FirstOrDefaultAsync(cancellationToken);
 }
