@@ -23,6 +23,8 @@ public static class DependencyInjection
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
+        services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
+
         // Identity
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
         {

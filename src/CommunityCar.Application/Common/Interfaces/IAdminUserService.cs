@@ -15,8 +15,8 @@ public interface IAdminUserService
     Task<bool> ActivateUserAsync(Guid userId);
     Task<bool> DeactivateUserAsync(Guid userId);
     Task<bool> VerifyUserAsync(Guid userId);
-    Task<bool> BlockUserAsync(Guid userId, BlockUserRequest request);
-    Task<bool> UnblockUserAsync(Guid userId, UnblockUserRequest request);
+    Task<bool> BlockUserAsync(Guid userId, AdminBlockUserRequest request);
+    Task<bool> UnblockUserAsync(Guid userId, AdminUnblockUserRequest request);
 
     // Roles
     Task<bool> AssignRolesAsync(Guid userId, AssignRolesRequest request);

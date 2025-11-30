@@ -75,14 +75,14 @@ public class AdminUsersController : ControllerBase
     }
 
     [HttpPost("{id:guid}/block")]
-    public async Task<IActionResult> Block(Guid id, BlockUserRequest request)
+    public async Task<IActionResult> Block(Guid id, AdminBlockUserRequest request)
     {
         var result = await _adminUserService.BlockUserAsync(id, request);
         return result ? Ok() : NotFound();
     }
 
     [HttpPost("{id:guid}/unblock")]
-    public async Task<IActionResult> Unblock(Guid id, UnblockUserRequest request)
+    public async Task<IActionResult> Unblock(Guid id, AdminUnblockUserRequest request)
     {
         var result = await _adminUserService.UnblockUserAsync(id, request);
         return result ? Ok() : NotFound();

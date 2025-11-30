@@ -128,7 +128,7 @@ public class AdminUserService : IAdminUserService
         return (await _userManager.UpdateAsync(user)).Succeeded;
     }
 
-    public async Task<bool> BlockUserAsync(Guid userId, BlockUserRequest request)
+    public async Task<bool> BlockUserAsync(Guid userId, AdminBlockUserRequest request)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
         if (user == null) return false;
@@ -137,7 +137,7 @@ public class AdminUserService : IAdminUserService
         return (await _userManager.UpdateAsync(user)).Succeeded;
     }
 
-    public async Task<bool> UnblockUserAsync(Guid userId, UnblockUserRequest request)
+    public async Task<bool> UnblockUserAsync(Guid userId, AdminUnblockUserRequest request)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
         if (user == null) return false;

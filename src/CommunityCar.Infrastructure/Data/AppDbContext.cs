@@ -2,10 +2,12 @@ using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Domain.Entities.Profiles;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using CommunityCar.Domain.Entities.Videos;
+using CommunityCar.Application.Common.Interfaces;
 
 namespace CommunityCar.Infrastructure.Data;
 
-public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
+public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>, IAppDbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -17,7 +19,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<OtpCode> OtpCodes => Set<OtpCode>();
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
-    
+
     // Security & Audit
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<SecurityAlert> SecurityAlerts => Set<SecurityAlert>();
@@ -38,6 +40,11 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<InstructorProfile> InstructorProfiles => Set<InstructorProfile>();
     public DbSet<StudentProfile> StudentProfiles => Set<StudentProfile>();
     public DbSet<AffiliateProfile> AffiliateProfiles => Set<AffiliateProfile>();
+
+    // Videos
+    public DbSet<Video> Videos => Set<Video>();
+    public DbSet<Playlist> Playlists => Set<Playlist>();
+    public DbSet<VideoCategory> VideoCategories => Set<VideoCategory>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

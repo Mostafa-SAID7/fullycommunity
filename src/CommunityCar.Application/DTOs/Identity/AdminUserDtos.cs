@@ -34,6 +34,6 @@ public record UpdateUserRequest(
 
 public record AssignRolesRequest(IEnumerable<string> Roles);
 
-public record BlockUserRequest(string? Reason);
+public record AdminBlockUserRequest(string? Reason);
 
-public record UnblockUserRequest(string? Reason);
+public record AdminUnblockUserRequest(string? Reason);
