@@ -145,6 +145,114 @@ public class RoleService : IRoleService
             .ToListAsync();
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // USER-ROLE MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    public async Task<IEnumerable<string>> GetUserRolesAsync(Guid userId)
+    {
+        var roleIds = await _context.Set<IdentityUserRole<Guid>>()
+            .Where(ur => ur.UserId == userId)
+            .Select(ur => ur.RoleId)
+            .ToListAsync();
+
+        var roles = await _roleManager.Roles
+            .Where(r => roleIds.Contains(r.Id))
+            .Select(r => r.Name!)
+            .ToListAsync();
+
+        return roles;
+    }
+
+    public async Task<bool> AssignRoleToUserAsync(Guid userId, string roleName)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return false;
+
+        var role = await _roleManager.FindByNameAsync(roleName);
+        if (role == null) return false;
+
+        // Check if user already has this role
+        var userRole = await _context.Set<IdentityUserRole<Guid>>()
+            .FirstOrDefaultAsync(ur => ur.UserId == userId && ur.RoleId == role.Id);
+
+        if (userRole != null) return true; // Already assigned
+
+        await _context.Set<IdentityUserRole<Guid>>().AddAsync(new IdentityUserRole<Guid>
+        {
+            UserId = userId,
+            RoleId = role.Id
+        });
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> RemoveRoleFromUserAsync(Guid userId, string roleName)
+    {
+        var role = await _roleManager.FindByNameAsync(roleName);
+        if (role == null) return false;
+
+        var userRole = await _context.Set<IdentityUserRole<Guid>>()
+            .FirstOrDefaultAsync(ur => ur.UserId == userId && ur.RoleId == role.Id);
+
+        if (userRole == null) return false;
+
+        _context.Set<IdentityUserRole<Guid>>().Remove(userRole);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // USER-PERMISSION MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    public async Task<IEnumerable<string>> GetUserPermissionsAsync(Guid userId)
+    {
+        // Get roles for the user
+        var roleIds = await _context.Set<IdentityUserRole<Guid>>()
+            .Where(ur => ur.UserId == userId)
+            .Select(ur => ur.RoleId)
+            .ToListAsync();
+
+        // Get permissions from roles
+        var permissions = await _context.RolePermissions
+            .Where(rp => roleIds.Contains(rp.RoleId))
+            .Include(rp => rp.Permission)
+            .Select(rp => rp.Permission.Name)
+            .Distinct()
+            .ToListAsync();
+
+        return permissions;
+    }
+
+    public async Task<bool> AssignPermissionToUserAsync(Guid userId, string permission)
+    {
+        // For simplicity, we can create a user-specific role or add to a custom permissions table
+        // For now, this is a placeholder that would need additional infrastructure
+        // In a real implementation, you'd want a UserPermissions table
+
+        // TODO: Implement user-specific permissions storage
+        // This would require adding a UserPermissions entity and table
+        await Task.CompletedTask;
+        return true;
+    }
+
+    public async Task<bool> RemovePermissionFromUserAsync(Guid userId, string permission)
+    {
+        // Placeholder for removing user-specific permissions
+        // TODO: Implement user-specific permissions removal
+        await Task.CompletedTask;
+        return true;
+    }
+
+    public async Task<bool> UserHasPermissionAsync(Guid userId, string permission)
+    {
+        // Check if user has the permission through their roles
+        var userPermissions = await GetUserPermissionsAsync(userId);
+        return userPermissions.Contains(permission);
+    }
+
     private static RoleDto MapToDto(ApplicationRole role) => new(
         role.Id, role.Name!, role.DisplayName, role.Description, role.IsSystemRole, role.Priority,
         role.Permissions?.Select(rp => rp.Permission.Name) ?? []);

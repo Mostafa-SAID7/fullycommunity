@@ -44,10 +44,25 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<StudentProfile> StudentProfiles => Set<StudentProfile>();
     public DbSet<AffiliateProfile> AffiliateProfiles => Set<AffiliateProfile>();
 
+    // Community
+    public DbSet<CommunityCar.Domain.Entities.Community.Posts.Post> Posts => Set<CommunityCar.Domain.Entities.Community.Posts.Post>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Posts.PostComment> PostComments => Set<CommunityCar.Domain.Entities.Community.Posts.PostComment>();
+    public DbSet<CommunityCar.Domain.Entities.Community.QA.Question> Questions => Set<CommunityCar.Domain.Entities.Community.QA.Question>();
+    public DbSet<CommunityCar.Domain.Entities.Community.QA.Answer> Answers => Set<CommunityCar.Domain.Entities.Community.QA.Answer>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Reviews.Review> Reviews => Set<CommunityCar.Domain.Entities.Community.Reviews.Review>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Guides.Guide> Guides => Set<CommunityCar.Domain.Entities.Community.Guides.Guide>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Guides.GuideStep> GuideSteps => Set<CommunityCar.Domain.Entities.Community.Guides.GuideStep>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Events.Event> Events => Set<CommunityCar.Domain.Entities.Community.Events.Event>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Groups.Group> Groups => Set<CommunityCar.Domain.Entities.Community.Groups.Group>();
+
     // Videos
     public DbSet<Video> Videos => Set<Video>();
     public DbSet<Playlist> Playlists => Set<Playlist>();
     public DbSet<VideoCategory> VideoCategories => Set<VideoCategory>();
+
+    // Podcasts
+    public DbSet<CommunityCar.Domain.Entities.Podcasts.Shows.PodcastShow> PodcastShows => Set<CommunityCar.Domain.Entities.Podcasts.Shows.PodcastShow>();
+    public DbSet<CommunityCar.Domain.Entities.Podcasts.Shows.PodcastEpisode> PodcastEpisodes => Set<CommunityCar.Domain.Entities.Podcasts.Shows.PodcastEpisode>();
 
     // Localization
     public DbSet<Language> Languages => Set<Language>();

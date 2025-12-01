@@ -108,22 +108,27 @@ try
     {
         await context.Database.MigrateAsync();
 
+        // Use comprehensive seeding system
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        var loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
         
-        string[] roles = ["SuperAdmin", "Admin", "Moderator", "User", "Expert", "Author", "Reviewer", "Vendor", "Mechanic", "GarageOwner", "Instructor", "Student", "Affiliate"];
+        var seeder = new CommunityCar.Infrastructure.Data.Seeding.DataSeeder(context, userManager, roleManager, loggerFactory);
         
-        foreach (var role in roles)
+        // Determine environment and seed accordingly
+        var environment = app.Environment.EnvironmentName;
+        if (environment.Equals("Production", StringComparison.OrdinalIgnoreCase))
         {
-            if (!await roleManager.RoleExistsAsync(role))
-            {
-                await roleManager.CreateAsync(new ApplicationRole 
-                { 
-                    Name = role,
-                    DisplayName = role,
-                    IsSystemRole = role is "SuperAdmin" or "Admin" or "User"
-                });
-            }
+            Console.WriteLine("🌱 Seeding production data (essential only)...");
+            await seeder.SeedProductionAsync();
         }
+        else
+        {
+            Console.WriteLine("🌱 Seeding development data (full demo data)...");
+            await seeder.SeedAsync();
+        }
+        
+        Console.WriteLine("✅ Database seeding completed successfully");
     }
     else
     {
@@ -132,7 +137,12 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"⚠️ Database initialization skipped: {ex.Message}");
+    Console.WriteLine($"⚠️ Database initialization error: {ex.Message}");
+    // Don't throw in production to prevent startup failures
+    if (!app.Environment.IsProduction())
+    {
+        throw;
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════

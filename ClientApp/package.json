@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng serve community-car-main",
+    "start:main": "ng serve community-car-main --port 4200",
+    "start:admin": "ng serve community-car-admin --port 4201",
+    "build": "ng build community-car-main && ng build community-car-admin",
+    "build:main": "ng build community-car-main",
+    "build:admin": "ng build community-car-admin",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"

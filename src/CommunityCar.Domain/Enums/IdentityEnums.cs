@@ -88,3 +88,19 @@ public enum LoginStatus
     RequiresVerification = 4,
     Blocked = 5
 }
+
+/// <summary>
+/// Admin role types for specialized admin access
+/// </summary>
+public enum AdminRoleType
+{
+    SuperAdmin = 0,
+    UserAdmin = 1,
+    ContentAdmin = 2,
+    CommunityAdmin = 3,
+    MarketplaceAdmin = 4,
+    VideoAdmin = 5,
+    PodcastAdmin = 6,
+    AnalyticsAdmin = 7,
+    SettingsAdmin = 8
+}

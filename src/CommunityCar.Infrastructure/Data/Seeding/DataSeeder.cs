@@ -1,78 +1,125 @@
 using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Infrastructure.Data.Seeding.Core;
+using CommunityCar.Infrastructure.Data.Seeding.Identity;
+using CommunityCar.Infrastructure.Data.Seeding.Content;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace CommunityCar.Infrastructure.Data.Seeding;
 
+/// <summary>
+/// Main data seeder orchestrator that runs all seeders in proper order
+/// </summary>
 public class DataSeeder
 {
     private readonly AppDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly ILogger<DataSeeder> _logger;
+    private readonly ILoggerFactory _loggerFactory;
+    private readonly List<ISeeder> _seeders;
 
     public DataSeeder(
         AppDbContext context,
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
-        ILogger<DataSeeder> logger)
+        ILoggerFactory loggerFactory)
     {
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
-        _logger = logger;
+        _loggerFactory = loggerFactory;
+        _logger = loggerFactory.CreateLogger<DataSeeder>();
+
+        // Initialize all seeders in dependency order
+        _seeders = new List<ISeeder>
+        {
+            // Identity seeders (must run first)
+            new RoleSeeder(_context, _roleManager, _loggerFactory.CreateLogger<RoleSeeder>()),
+            new AdminUserSeeder(_context, _userManager, _loggerFactory.CreateLogger<AdminUserSeeder>()),
+            new DemoUserSeeder(_context, _userManager, _loggerFactory.CreateLogger<DemoUserSeeder>()),
+            
+            // Content seeders (depend on users)
+            new CommunityContentSeeder(_context, _loggerFactory.CreateLogger<CommunityContentSeeder>()),
+            // new PodcastSeeder(_context, _loggerFactory.CreateLogger<PodcastSeeder>())
+        };
     }
 
+    /// <summary>
+    /// Run all seeders in order
+    /// </summary>
     public async Task SeedAsync()
     {
-        await SeedRolesAsync();
-        await SeedAdminUserAsync();
-        await _context.SaveChangesAsync();
-    }
+        _logger.LogInformation("Starting database seeding process...");
 
-    private async Task SeedRolesAsync()
-    {
-        var roles = new[] { "Admin", "User", "Moderator", "Vendor", "Instructor", "Student" };
-
-        foreach (var roleName in roles)
+        try
         {
-            if (!await _roleManager.RoleExistsAsync(roleName))
-            {
-                var role = new ApplicationRole
-                {
-                    Name = roleName,
-                    NormalizedName = roleName.ToUpperInvariant(),
-                    Description = $"{roleName} role"
-                };
+            // Ensure database is created
+            await _context.Database.EnsureCreatedAsync();
 
-                await _roleManager.CreateAsync(role);
-                _logger.LogInformation("Created role: {RoleName}", roleName);
+            // Run seeders in order
+            var orderedSeeders = _seeders.OrderBy(s => s.Order).ToList();
+
+            foreach (var seeder in orderedSeeders)
+            {
+                await seeder.SeedAsync();
             }
+
+            _logger.LogInformation("Database seeding completed successfully");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during database seeding: {Message}", ex.Message);
+            throw;
         }
     }
 
-    private async Task SeedAdminUserAsync()
+    /// <summary>
+    /// Run only identity seeders (for production)
+    /// </summary>
+    public async Task SeedProductionAsync()
     {
-        const string adminEmail = "admin@communitycar.com";
+        _logger.LogInformation("Starting production database seeding...");
 
-        var adminUser = await _userManager.FindByEmailAsync(adminEmail);
-        if (adminUser == null)
+        try
         {
-            adminUser = new ApplicationUser
-            {
-                UserName = adminEmail,
-                Email = adminEmail,
-                FirstName = "System",
-                LastName = "Administrator",
-                EmailConfirmed = true
-            };
+            await _context.Database.EnsureCreatedAsync();
 
-            var result = await _userManager.CreateAsync(adminUser, "Admin@123!");
-            if (result.Succeeded)
+            // Only run identity seeders for production
+            var identitySeeders = _seeders
+                .Where(s => s.GetType().Namespace!.Contains("Identity"))
+                .OrderBy(s => s.Order)
+                .ToList();
+
+            foreach (var seeder in identitySeeders)
             {
-                await _userManager.AddToRoleAsync(adminUser, "Admin");
-                _logger.LogInformation("Created admin user: {Email}", adminEmail);
+                await seeder.SeedAsync();
             }
+
+            _logger.LogInformation("Production database seeding completed successfully");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during production database seeding: {Message}", ex.Message);
+            throw;
         }
     }
+
+    /*
+    /// <summary>
+    /// Run specific seeder by type
+    /// </summary>
+    public async Task SeedAsync<T>() where T : ISeeder
+    {
+        var seeder = _seeders.OfType<T>().FirstOrDefault();
+        if (seeder != null)
+        {
+            await seeder.SeedAsync();
+        }
+        else
+        {
+            _logger.LogWarning("Seeder of type {SeederType} not found", typeof(T).Name);
+        }
+    }
+    */
 }
