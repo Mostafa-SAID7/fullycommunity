@@ -1,25 +1,20 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Features.Admin.Dashboard.Videos;
 using CommunityCar.Domain.Entities.Videos.Channels;
 using CommunityCar.Domain.Entities.Videos.Content;
 using CommunityCar.Domain.Entities.Videos.LiveStream;
 using CommunityCar.Domain.Entities.Videos.Moderation;
 using CommunityCar.Domain.Entities.Videos.Common;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommunityCar.API.Controllers.Admin.Dashboard.Videos;
 
-// Request DTOs
-public record VerifyRequest(bool IsVerified);
-public record UpdateStatusRequest(string Status);
-public record FeatureRequest(bool IsFeatured);
-public record ResolveReportRequest(string Status, string? Notes, string? ActionTaken);
-
 [ApiController]
 [Route("api/admin/videos")]
 [Authorize(Roles = "Admin,SuperAdmin,Moderator")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class VideosAdminController : ControllerBase
 {
     private readonly IAppDbContext _context;
@@ -42,7 +37,7 @@ public class VideosAdminController : ControllerBase
     }
 
     [HttpPut("channels/{id}/verify")]
-    public async Task<IActionResult> VerifyChannel(Guid id, [FromBody] VerifyRequest request, CancellationToken ct)
+    public async Task<IActionResult> VerifyChannel(Guid id, [FromBody] VideoChannelVerifyRequest request, CancellationToken ct)
     {
         var channel = await _context.Set<Channel>().FindAsync([id], ct);
         if (channel is null) return NotFound();
@@ -53,7 +48,7 @@ public class VideosAdminController : ControllerBase
     }
 
     [HttpPut("channels/{id}/status")]
-    public async Task<IActionResult> UpdateChannelStatus(Guid id, [FromBody] UpdateStatusRequest request, CancellationToken ct)
+    public async Task<IActionResult> UpdateChannelStatus(Guid id, [FromBody] VideoUpdateStatusRequest request, CancellationToken ct)
     {
         var channel = await _context.Set<Channel>().FindAsync([id], ct);
         if (channel is null) return NotFound();
@@ -81,7 +76,7 @@ public class VideosAdminController : ControllerBase
     }
 
     [HttpPut("content/{id}/status")]
-    public async Task<IActionResult> UpdateVideoStatus(Guid id, [FromBody] UpdateStatusRequest request, CancellationToken ct)
+    public async Task<IActionResult> UpdateVideoStatus(Guid id, [FromBody] VideoUpdateStatusRequest request, CancellationToken ct)
     {
         var video = await _context.Set<Video>().FindAsync([id], ct);
         if (video is null) return NotFound();
@@ -145,7 +140,7 @@ public class VideosAdminController : ControllerBase
     }
 
     [HttpPut("reports/{id}/resolve")]
-    public async Task<IActionResult> ResolveReport(Guid id, [FromBody] ResolveReportRequest request, CancellationToken ct)
+    public async Task<IActionResult> ResolveReport(Guid id, [FromBody] VideoResolveReportRequest request, CancellationToken ct)
     {
         var report = await _context.Set<VideoReport>().FindAsync([id], ct);
         if (report is null) return NotFound();

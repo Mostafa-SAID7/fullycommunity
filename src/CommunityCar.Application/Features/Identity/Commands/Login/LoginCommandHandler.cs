@@ -78,8 +78,8 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
         }
 
         // Generate tokens
-        var tokens = await _jwtService.GenerateTokensAsync(user, request.DeviceId);
         var roles = await _userManager.GetRolesAsync(user);
+        var tokens = await _jwtService.GenerateTokensAsync(user, roles, request.DeviceId);
 
         // Update last login
         user.LastLoginAt = DateTime.UtcNow;

@@ -1,125 +1,110 @@
-import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../core/services/auth.service';
+import { NotificationService, Notification } from '../../../core/services/notification.service';
+
+interface AdminRole {
+  id: string;
+  name: string;
+  displayName: string;
+  icon: string;
+  description: string;
+}
 
 @Component({
   selector: 'admin-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
-  template: `
-    <div class="admin-container">
-      <header class="admin-header">
-        <h1>CommunityCar Admin</h1>
-        <div class="admin-user">
-          <span>Admin User</span>
-          <button class="logout-btn">Logout</button>
-        </div>
-      </header>
-      
-      <div class="admin-body">
-        <nav class="admin-sidebar">
-          <ul class="admin-nav">
-            <li><a routerLink="dashboard" routerLinkActive="active">📊 Dashboard</a></li>
-            <li><a routerLink="users" routerLinkActive="active">👥 User Management</a></li>
-            <li><a routerLink="content" routerLinkActive="active">📝 Content Management</a></li>
-            <li><a routerLink="moderation" routerLinkActive="active">🛡️ Moderation</a></li>
-            <li><a routerLink="reports" routerLinkActive="active">📈 Reports & Analytics</a></li>
-            <li><a routerLink="settings" routerLinkActive="active">⚙️ System Settings</a></li>
-          </ul>
-        </nav>
-        
-        <main class="admin-content">
-          <router-outlet></router-outlet>
-        </main>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .admin-container {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .admin-header {
-      background: #2c3e50;
-      color: white;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .admin-header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
-    
-    .admin-user {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    
-    .logout-btn {
-      background: #e74c3c;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    
-    .admin-body {
-      flex: 1;
-      display: flex;
-    }
-    
-    .admin-sidebar {
-      width: 280px;
-      background: #34495e;
-      color: white;
-      padding: 1rem 0;
-    }
-    
-    .admin-nav {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    
-    .admin-nav li {
-      margin: 0;
-    }
-    
-    .admin-nav a {
-      display: block;
-      padding: 1rem 2rem;
-      color: #bdc3c7;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      border-left: 3px solid transparent;
-    }
-    
-    .admin-nav a:hover {
-      background: #2c3e50;
-      color: white;
-      border-left-color: #3498db;
-    }
-    
-    .admin-nav a.active {
-      background: #2c3e50;
-      color: white;
-      border-left-color: #e74c3c;
-    }
-    
-    .admin-content {
-      flex: 1;
-      padding: 2rem;
-      background: #ecf0f1;
-      overflow-y: auto;
-    }
-  `]
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, FormsModule],
+  templateUrl: './admin-layout.component.html',
+  styleUrl: './admin-layout.component.scss'
 })
-export class AdminLayoutComponent {}
+export class AdminLayoutComponent implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  notificationService = inject(NotificationService);
+
+  currentUser = this.authService.currentUser;
+  showRoleSwitcher = signal(false);
+  showNotifications = signal(false);
+  currentViewRole = signal<string>('SuperAdmin');
+
+  adminRoles: AdminRole[] = [
+    { id: 'SuperAdmin', name: 'SuperAdmin', displayName: 'Super Admin', icon: '👑', description: 'Full system access' },
+    { id: 'Admin', name: 'Admin', displayName: 'Admin', icon: '🔧', description: 'General administration' },
+    { id: 'Moderator', name: 'Moderator', displayName: 'Moderator', icon: '🛡️', description: 'Content moderation' },
+    { id: 'UserAdmin', name: 'UserAdmin', displayName: 'User Admin', icon: '👥', description: 'User management' },
+    { id: 'ContentAdmin', name: 'ContentAdmin', displayName: 'Content Admin', icon: '📝', description: 'Content management' },
+  ];
+
+  isSuperAdmin(): boolean {
+    return this.currentUser()?.roles?.includes('SuperAdmin') ?? false;
+  }
+
+  getCurrentRoleDisplay(): AdminRole {
+    return this.adminRoles.find(r => r.id === this.currentViewRole()) || this.adminRoles[0];
+  }
+
+  toggleRoleSwitcher() {
+    this.showRoleSwitcher.update(v => !v);
+  }
+
+  switchRole(role: AdminRole) {
+    this.currentViewRole.set(role.id);
+    this.showRoleSwitcher.set(false);
+    // Navigate to dashboard to refresh view based on new role
+    this.router.navigate(['/admin/dashboard']);
+  }
+
+  getUserInitials(): string {
+    const user = this.currentUser();
+    if (!user) return 'A';
+    return `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase() || 'A';
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  ngOnInit() {
+    this.loadNotifications();
+  }
+
+  loadNotifications() {
+    this.notificationService.loadNotifications().subscribe();
+  }
+
+  toggleNotifications() {
+    this.showNotifications.update(v => !v);
+    if (this.showNotifications()) {
+      this.showRoleSwitcher.set(false);
+    }
+  }
+
+  markAsRead(notification: Notification) {
+    if (!notification.isRead) {
+      this.notificationService.markAsRead(notification.id).subscribe();
+    }
+  }
+
+  markAllAsRead() {
+    this.notificationService.markAllAsRead().subscribe();
+  }
+
+  deleteNotification(event: Event, id: string) {
+    event.stopPropagation();
+    this.notificationService.deleteNotification(id).subscribe();
+  }
+
+  clearAllNotifications() {
+    this.notificationService.clearAll().subscribe();
+  }
+
+  createTestNotification() {
+    this.notificationService.createTestNotification().subscribe(() => {
+      this.loadNotifications();
+    });
+  }
+}

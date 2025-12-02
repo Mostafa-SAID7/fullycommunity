@@ -1,0 +1,210 @@
+<div class="reports">
+  <div class="page-header">
+    <div class="header-info">
+      <h1>Reports & Analytics</h1>
+      <p>Platform performance metrics and insights</p>
+    </div>
+    <div class="header-actions">
+      <select [(ngModel)]="selectedPeriod" (change)="loadData()" class="period-select">
+        <option value="day">Today</option>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+        <option value="year">This Year</option>
+      </select>
+      <button class="btn-secondary" (click)="exportReport()">Export Report</button>
+    </div>
+  </div>
+
+  <!-- Realtime Stats Banner -->
+  <div class="realtime-banner" *ngIf="realtimeStats()">
+    <div class="realtime-item">
+      <span class="pulse"></span>
+      <span class="label">Active Now:</span>
+      <span class="value">{{ realtimeStats()!.activeUsers }}</span>
+    </div>
+    <div class="realtime-item">
+      <span class="label">Today's Posts:</span>
+      <span class="value">{{ realtimeStats()!.todayPosts }}</span>
+    </div>
+    <div class="realtime-item">
+      <span class="label">Today's Reviews:</span>
+      <span class="value">{{ realtimeStats()!.todayReviews }}</span>
+    </div>
+    <div class="realtime-item">
+      <span class="label">Requests/min:</span>
+      <span class="value">{{ realtimeStats()!.requestsPerMinute }}</span>
+    </div>
+  </div>
+
+  <!-- Overview Cards -->
+  <div class="overview-grid" *ngIf="overview()">
+    <div class="overview-card" [class.positive]="overview()!.userGrowthPercent > 0" [class.negative]="overview()!.userGrowthPercent < 0">
+      <div class="card-icon">📈</div>
+      <div class="card-content">
+        <span class="card-value">{{ overview()!.userGrowthPercent > 0 ? '+' : '' }}{{ overview()!.userGrowthPercent }}%</span>
+        <span class="card-label">User Growth</span>
+      </div>
+    </div>
+    <div class="overview-card" [class.positive]="overview()!.contentEngagementPercent > 0" [class.negative]="overview()!.contentEngagementPercent < 0">
+      <div class="card-icon">💬</div>
+      <div class="card-content">
+        <span class="card-value">{{ overview()!.contentEngagementPercent > 0 ? '+' : '' }}{{ overview()!.contentEngagementPercent }}%</span>
+        <span class="card-label">Content Engagement</span>
+      </div>
+    </div>
+    <div class="overview-card" [class.positive]="overview()!.activeUsersPercent > 0">
+      <div class="card-icon">👥</div>
+      <div class="card-content">
+        <span class="card-value">{{ overview()!.activeUsersPercent }}%</span>
+        <span class="card-label">Active Users</span>
+      </div>
+    </div>
+    <div class="overview-card" [class.positive]="overview()!.revenueGrowthPercent > 0" [class.negative]="overview()!.revenueGrowthPercent < 0">
+      <div class="card-icon">💰</div>
+      <div class="card-content">
+        <span class="card-value">{{ overview()!.revenueGrowthPercent > 0 ? '+' : '' }}{{ overview()!.revenueGrowthPercent }}%</span>
+        <span class="card-label">Revenue Growth</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Platform Summary -->
+  <div class="summary-section" *ngIf="summary()">
+    <h3>Platform Summary</h3>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-icon">👤</div>
+        <div class="summary-content">
+          <span class="summary-value">{{ summary()!.users.total | number }}</span>
+          <span class="summary-label">Total Users</span>
+          <span class="summary-sub">+{{ summary()!.users.newThisMonth }} this month</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">📝</div>
+        <div class="summary-content">
+          <span class="summary-value">{{ summary()!.content.posts | number }}</span>
+          <span class="summary-label">Posts</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">⭐</div>
+        <div class="summary-content">
+          <span class="summary-value">{{ summary()!.content.reviews | number }}</span>
+          <span class="summary-label">Reviews</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">📚</div>
+        <div class="summary-content">
+          <span class="summary-value">{{ summary()!.content.guides | number }}</span>
+          <span class="summary-label">Guides</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">❓</div>
+        <div class="summary-content">
+          <span class="summary-value">{{ summary()!.content.questions | number }}</span>
+          <span class="summary-label">Questions</span>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">👁️</div>
+        <div class="summary-content">
+          <span class="summary-value">{{ summary()!.engagement.totalViews | number }}</span>
+          <span class="summary-label">Total Views</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading()" class="loading-container">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Charts Section -->
+  <div *ngIf="!loading()" class="charts-section">
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>User Growth</h3>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="dot new"></span> New Users</span>
+          <span class="legend-item"><span class="dot total"></span> Total Users</span>
+        </div>
+      </div>
+      <div class="chart-body">
+        <div class="chart-placeholder">
+          <div class="bar-chart" *ngIf="userGrowth().length > 0">
+            <div *ngFor="let data of userGrowth()" class="bar-group">
+              <div class="bar new" [style.height.%]="getBarHeight(data.newUsers, 'new')">
+                <span class="bar-value">{{ data.newUsers }}</span>
+              </div>
+              <span class="bar-label">{{ data.date | date:'shortDate' }}</span>
+            </div>
+          </div>
+          <div *ngIf="userGrowth().length === 0" class="empty-chart">
+            No user growth data for this period
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Content Engagement</h3>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="dot views"></span> Views</span>
+          <span class="legend-item"><span class="dot likes"></span> Likes</span>
+          <span class="legend-item"><span class="dot comments"></span> Comments</span>
+        </div>
+      </div>
+      <div class="chart-body">
+        <div class="chart-placeholder">
+          <div class="engagement-stats" *ngIf="contentEngagement().length > 0">
+            <div *ngFor="let data of contentEngagement()" class="engagement-row">
+              <span class="date">{{ data.date | date:'shortDate' }}</span>
+              <div class="stats">
+                <span class="stat-item views">👁️ {{ data.views | number }}</span>
+                <span class="stat-item likes">👍 {{ data.likes | number }}</span>
+                <span class="stat-item comments">💬 {{ data.comments | number }}</span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="contentEngagement().length === 0" class="empty-chart">
+            No engagement data for this period
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Content -->
+  <div *ngIf="!loading()" class="top-content-section">
+    <div class="section-header">
+      <h3>Top Performing Content</h3>
+      <select [(ngModel)]="contentType" (change)="loadTopContent()" class="type-select">
+        <option value="">All Types</option>
+        <option value="post">Posts</option>
+        <option value="review">Reviews</option>
+        <option value="guide">Guides</option>
+      </select>
+    </div>
+    <div class="top-content-list">
+      <div *ngFor="let item of topContent(); let i = index" class="top-content-item">
+        <span class="rank">#{{ i + 1 }}</span>
+        <div class="content-info">
+          <span class="content-title">{{ item.title }}</span>
+          <span class="content-type" [class]="'type-' + item.type">{{ item.type }}</span>
+        </div>
+        <div class="content-metrics">
+          <span class="views">{{ item.views | number }} views</span>
+          <span class="engagement" [class.high]="item.engagement > 10">{{ item.engagement }}% engagement</span>
+        </div>
+      </div>
+      <div *ngIf="topContent().length === 0" class="empty-state">
+        No content data available
+      </div>
+    </div>
+  </div>
+</div>

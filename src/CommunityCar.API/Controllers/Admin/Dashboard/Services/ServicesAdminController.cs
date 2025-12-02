@@ -17,7 +17,7 @@ namespace CommunityCar.API.Controllers.Admin.Dashboard.Services;
 [ApiController]
 [Route("api/admin/services")]
 [Authorize(Roles = "Admin,SuperAdmin")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class ServicesAdminController : ControllerBase
 {
     private readonly IAppDbContext _context;

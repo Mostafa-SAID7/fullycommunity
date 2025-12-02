@@ -10,7 +10,7 @@ namespace CommunityCar.API.Controllers.Admin.Dashboard.Content;
 [ApiController]
 [Route("api/admin/faq")]
 [Authorize(Roles = "Admin")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class FAQAdminController : ControllerBase
 {
     private readonly IFAQService _faqService;

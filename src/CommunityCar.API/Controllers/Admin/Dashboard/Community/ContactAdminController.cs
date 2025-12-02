@@ -9,7 +9,7 @@ namespace CommunityCar.API.Controllers.Admin.Dashboard.Community;
 [ApiController]
 [Route("api/admin/community/contact")]
 [Authorize(Roles = "SuperAdmin,CommunityAdmin")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class ContactAdminController : ControllerBase
 {
     [HttpGet]

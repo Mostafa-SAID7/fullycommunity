@@ -11,7 +11,7 @@ namespace CommunityCar.API.Controllers.Admin.Dashboard.Content;
 [ApiController]
 [Route("api/admin/legal")]
 [Authorize(Roles = "Admin")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class LegalAdminController : ControllerBase
 {
     private readonly ILegalService _legalService;

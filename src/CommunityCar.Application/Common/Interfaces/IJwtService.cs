@@ -5,7 +5,7 @@ namespace CommunityCar.Application.Common.Interfaces;
 
 public interface IJwtService
 {
-    Task<TokenResult> GenerateTokensAsync(ApplicationUser user, string? deviceId = null);
+    Task<TokenResult> GenerateTokensAsync(ApplicationUser user, IList<string>? roles = null, string? deviceId = null);
     Task<TokenResult> RefreshTokensAsync(string refreshToken, string? deviceId = null);
     Task RevokeTokenAsync(string refreshToken);
     Task RevokeAllUserTokensAsync(Guid userId);

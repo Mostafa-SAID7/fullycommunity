@@ -9,7 +9,7 @@ namespace CommunityCar.API.Controllers.Admin.Dashboard.Settings;
 [ApiController]
 [Route("api/admin/files")]
 [Authorize(Roles = "SuperAdmin,SettingsAdmin")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class FilesAdminController : ControllerBase
 {
     private readonly IAppDbContext _context;

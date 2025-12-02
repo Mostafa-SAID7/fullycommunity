@@ -1,6 +1,7 @@
 using CommunityCar.API.Scripts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommunityCar.API.Controllers.Admin;
 
@@ -10,7 +11,7 @@ namespace CommunityCar.API.Controllers.Admin;
 [ApiController]
 [Route("api/admin/[controller]")]
 [Authorize(Policy = "AdminOnly")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class SeedingController : ControllerBase
 {
     private readonly IServiceProvider _services;
@@ -30,7 +31,7 @@ public class SeedingController : ControllerBase
     {
         try
         {
-            var report = await TestSeeding.GetSeedingReportAsync(_services);
+            var report = await Scripts.TestSeeding.GetSeedingReportAsync(_services);
             return Ok(report);
         }
         catch (Exception ex)
@@ -68,6 +69,125 @@ public class SeedingController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during seeding test");
+            return StatusCode(500, new { Success = false, Message = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Seed community content (posts, reviews, guides)
+    /// </summary>
+    [HttpPost("content")]
+    public async Task<ActionResult<object>> SeedContent()
+    {
+        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.Equals("Production", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            return BadRequest("Content seeding is not available in production");
+        }
+
+        try
+        {
+            using var scope = _services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<Infrastructure.Data.AppDbContext>();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Infrastructure.Data.Seeding.Content.CommunityContentSeeder>>();
+            
+            var seeder = new Infrastructure.Data.Seeding.Content.CommunityContentSeeder(context, logger);
+            await seeder.SeedAsync();
+            
+            return Ok(new { 
+                Success = true, 
+                Message = "Content seeded successfully",
+                Stats = new {
+                    Posts = await context.Posts.CountAsync(),
+                    Reviews = await context.Reviews.CountAsync(),
+                    Guides = await context.Guides.CountAsync(),
+                    Questions = await context.Questions.CountAsync()
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error seeding content");
+            return StatusCode(500, new { Success = false, Message = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Seed moderation reports for testing
+    /// </summary>
+    [HttpPost("moderation")]
+    public async Task<ActionResult<object>> SeedModerationReports()
+    {
+        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.Equals("Production", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            return BadRequest("Moderation seeding is not available in production");
+        }
+
+        try
+        {
+            using var scope = _services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<Infrastructure.Data.AppDbContext>();
+            
+            if (await context.ContentReports.AnyAsync())
+            {
+                return Ok(new { Success = true, Message = "Moderation reports already seeded", Count = await context.ContentReports.CountAsync() });
+            }
+
+            var posts = await context.Posts.Where(p => !p.IsDeleted).Take(3).ToListAsync();
+            var reviews = await context.Reviews.Where(r => !r.IsDeleted).Take(2).ToListAsync();
+            var users = await context.Users.Where(u => !u.IsDeleted).Take(5).ToListAsync();
+
+            if (!posts.Any() || !users.Any())
+            {
+                return BadRequest(new { Success = false, Message = "Please seed content first" });
+            }
+
+            var reports = new List<Domain.Entities.Moderation.ContentReport>();
+            var reasons = new[] { 
+                Domain.Entities.Moderation.ReportReason.Spam,
+                Domain.Entities.Moderation.ReportReason.Inappropriate,
+                Domain.Entities.Moderation.ReportReason.Harassment
+            };
+
+            foreach (var post in posts)
+            {
+                var reporter = users[Random.Shared.Next(users.Count)];
+                reports.Add(new Domain.Entities.Moderation.ContentReport
+                {
+                    ContentId = post.Id,
+                    ContentType = "post",
+                    ContentTitle = post.Title,
+                    ReporterId = reporter.Id,
+                    ContentAuthorId = post.AuthorId,
+                    Reason = reasons[Random.Shared.Next(reasons.Length)],
+                    Priority = (Domain.Entities.Moderation.ReportPriority)Random.Shared.Next(4),
+                    CreatedAt = DateTime.UtcNow.AddHours(-Random.Shared.Next(1, 48))
+                });
+            }
+
+            foreach (var review in reviews)
+            {
+                var reporter = users[Random.Shared.Next(users.Count)];
+                reports.Add(new Domain.Entities.Moderation.ContentReport
+                {
+                    ContentId = review.Id,
+                    ContentType = "review",
+                    ContentTitle = review.Title ?? "Review",
+                    ReporterId = reporter.Id,
+                    ContentAuthorId = review.AuthorId,
+                    Reason = Domain.Entities.Moderation.ReportReason.Spam,
+                    Priority = Domain.Entities.Moderation.ReportPriority.Normal,
+                    CreatedAt = DateTime.UtcNow.AddHours(-Random.Shared.Next(1, 24))
+                });
+            }
+
+            context.ContentReports.AddRange(reports);
+            await context.SaveChangesAsync();
+
+            return Ok(new { Success = true, Message = "Moderation reports seeded", Count = reports.Count });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error seeding moderation reports");
             return StatusCode(500, new { Success = false, Message = ex.Message });
         }
     }

@@ -1,0 +1,49 @@
+<div class="expert-dashboard">
+  <h1>Expert Dashboard</h1>
+
+  <div *ngIf="loading" class="loading">Loading...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div class="dashboard-sections" *ngIf="dashboard">
+    <section class="pending-questions">
+      <h2>Recent Questions</h2>
+      <div class="question-list">
+        <div class="question-item" *ngFor="let q of dashboard.recentQuestions">
+          <h3>{{ q.title }}</h3>
+          <p>{{ q.createdAt | date : 'short' }} • {{ q.answerCount }} answers</p>
+          <button class="btn-answer">View</button>
+        </div>
+        <div *ngIf="dashboard.recentQuestions.length === 0" class="empty">
+          No recent questions available
+        </div>
+      </div>
+    </section>
+
+    <section class="expert-stats">
+      <h2>Expert Statistics</h2>
+      <div class="stats">
+        <div class="stat">
+          <span class="number">{{ dashboard.totalAnswers }}</span>
+          <span class="label">Questions Answered</span>
+        </div>
+        <div class="stat">
+          <span class="number">{{ dashboard.acceptedAnswers }}</span>
+          <span class="label">Accepted Answers</span>
+        </div>
+        <div class="stat">
+          <span class="number">{{ dashboard.rating | number : '1.1-1' }}</span>
+          <span class="label">Rating</span>
+        </div>
+        <div class="stat">
+          <span class="number">{{ dashboard.helpfulVotes }}</span>
+          <span class="label">Helpful Votes</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="weekly-activity">
+      <h2>This Week</h2>
+      <p class="highlight">{{ dashboard.questionsAnsweredThisWeek }} questions answered</p>
+    </section>
+  </div>
+</div>

@@ -51,3 +51,7 @@ public record UpdateFAQRequest(
     string? MetaTitle,
     string? MetaDescription
 );
+
+
+// Additional FAQ DTOs
+public record FeedbackRequest(bool IsHelpful);

@@ -1,0 +1,277 @@
+<div class="admin-settings">
+  <div class="page-header">
+    <h1>System Settings</h1>
+    <p>Configure platform settings and preferences</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn" [class.active]="activeTab === 'general'" (click)="activeTab = 'general'">
+      General
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'email'" (click)="activeTab = 'email'">
+      Email
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'security'" (click)="activeTab = 'security'">
+      Security
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'system'" (click)="activeTab = 'system'">
+      System
+    </button>
+  </div>
+
+  <!-- Success/Error Messages -->
+  <div *ngIf="successMessage" class="success-message">
+    ✓ {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading()" class="loading-container">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- General Settings -->
+  <div *ngIf="!loading() && activeTab === 'general' && siteSettings()">
+    <div class="settings-section">
+      <div class="section-header">
+        <h2>Site Information</h2>
+        <p>Basic site configuration</p>
+      </div>
+      <div class="section-body">
+        <div class="form-group">
+          <label>Site Name</label>
+          <input type="text" [(ngModel)]="siteSettings()!.siteName" />
+        </div>
+        <div class="form-group">
+          <label>Site Description</label>
+          <textarea [(ngModel)]="siteSettings()!.siteDescription"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Default Language</label>
+            <select [(ngModel)]="siteSettings()!.defaultLanguage">
+              <option value="en">English</option>
+              <option value="ar">Arabic</option>
+              <option value="fr">French</option>
+              <option value="de">German</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Max Upload Size (MB)</label>
+            <input type="number" [(ngModel)]="siteSettings()!.maxUploadSizeMb" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="section-header">
+        <h2>Feature Toggles</h2>
+        <p>Enable or disable platform features</p>
+      </div>
+      <div class="section-body">
+        <div class="toggle-group">
+          <div class="toggle-info">
+            <span class="toggle-label">Maintenance Mode</span>
+            <span class="toggle-description">Temporarily disable the site for maintenance</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" [(ngModel)]="siteSettings()!.maintenanceMode" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-group">
+          <div class="toggle-info">
+            <span class="toggle-label">User Registration</span>
+            <span class="toggle-description">Allow new users to register</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" [(ngModel)]="siteSettings()!.registrationEnabled" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-group">
+          <div class="toggle-info">
+            <span class="toggle-label">Email Verification Required</span>
+            <span class="toggle-description">Require email verification for new accounts</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" [(ngModel)]="siteSettings()!.emailVerificationRequired" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="section-actions">
+        <button class="btn-primary" (click)="saveSiteSettings()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email Settings -->
+  <div *ngIf="!loading() && activeTab === 'email' && emailSettings()">
+    <div class="settings-section">
+      <div class="section-header">
+        <h2>SMTP Configuration</h2>
+        <p>Configure email server settings</p>
+      </div>
+      <div class="section-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>SMTP Host</label>
+            <input type="text" [(ngModel)]="emailSettings()!.smtpHost" placeholder="smtp.example.com" />
+          </div>
+          <div class="form-group">
+            <label>SMTP Port</label>
+            <input type="number" [(ngModel)]="emailSettings()!.smtpPort" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>SMTP Username</label>
+          <input type="text" [(ngModel)]="emailSettings()!.smtpUsername" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Sender Email</label>
+            <input type="email" [(ngModel)]="emailSettings()!.senderEmail" />
+          </div>
+          <div class="form-group">
+            <label>Sender Name</label>
+            <input type="text" [(ngModel)]="emailSettings()!.senderName" />
+          </div>
+        </div>
+      </div>
+      <div class="section-actions">
+        <button class="btn-secondary" (click)="testEmailConnection()">Test Connection</button>
+        <button class="btn-primary" (click)="saveEmailSettings()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Security Settings -->
+  <div *ngIf="!loading() && activeTab === 'security' && securitySettings()">
+    <div class="settings-section">
+      <div class="section-header">
+        <h2>Login Security</h2>
+        <p>Configure login and session settings</p>
+      </div>
+      <div class="section-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Max Login Attempts</label>
+            <input type="number" [(ngModel)]="securitySettings()!.maxLoginAttempts" />
+            <span class="help-text">Number of failed attempts before lockout</span>
+          </div>
+          <div class="form-group">
+            <label>Lockout Duration (minutes)</label>
+            <input type="number" [(ngModel)]="securitySettings()!.lockoutDurationMinutes" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Session Timeout (minutes)</label>
+          <input type="number" [(ngModel)]="securitySettings()!.sessionTimeoutMinutes" />
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="section-header">
+        <h2>Password Policy</h2>
+        <p>Configure password requirements</p>
+      </div>
+      <div class="section-body">
+        <div class="form-group">
+          <label>Minimum Password Length</label>
+          <input type="number" [(ngModel)]="securitySettings()!.passwordMinLength" />
+        </div>
+        <div class="toggle-group">
+          <div class="toggle-info">
+            <span class="toggle-label">Require Uppercase</span>
+            <span class="toggle-description">Password must contain uppercase letters</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" [(ngModel)]="securitySettings()!.requireUppercase" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-group">
+          <div class="toggle-info">
+            <span class="toggle-label">Require Numbers</span>
+            <span class="toggle-description">Password must contain numbers</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" [(ngModel)]="securitySettings()!.requireNumbers" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-group">
+          <div class="toggle-info">
+            <span class="toggle-label">Require Special Characters</span>
+            <span class="toggle-description">Password must contain special characters</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" [(ngModel)]="securitySettings()!.requireSpecialChars" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-group">
+          <div class="toggle-info">
+            <span class="toggle-label">Two-Factor Authentication</span>
+            <span class="toggle-description">Enable 2FA for all users</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" [(ngModel)]="securitySettings()!.twoFactorEnabled" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="section-actions">
+        <button class="btn-primary" (click)="saveSecuritySettings()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Settings -->
+  <div *ngIf="!loading() && activeTab === 'system'">
+    <div class="settings-section">
+      <div class="section-header">
+        <h2>System Information</h2>
+        <p>Current system status and information</p>
+      </div>
+      <div class="section-body">
+        <div class="system-info" *ngIf="systemInfo()">
+          <div class="info-card">
+            <div class="info-label">Version</div>
+            <div class="info-value">{{ systemInfo()!.version }}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Environment</div>
+            <div class="info-value">{{ systemInfo()!.environment }}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Uptime</div>
+            <div class="info-value">{{ systemInfo()!.uptime }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="section-header">
+        <h2>Maintenance Actions</h2>
+        <p>System maintenance operations</p>
+      </div>
+      <div class="section-body">
+        <div class="toggle-group">
+          <div class="toggle-info">
+            <span class="toggle-label">Clear Cache</span>
+            <span class="toggle-description">Clear all cached data</span>
+          </div>
+          <button class="btn-secondary" (click)="clearCache()">Clear Cache</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

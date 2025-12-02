@@ -9,7 +9,7 @@ namespace CommunityCar.API.Controllers.Admin.Dashboard.Settings;
 [ApiController]
 [Route("api/admin/localization")]
 [Authorize(Roles = "SuperAdmin,SettingsAdmin")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class LocalizationAdminController : ControllerBase
 {
     private readonly IAppDbContext _context;

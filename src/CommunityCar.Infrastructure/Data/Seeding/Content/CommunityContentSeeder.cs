@@ -30,14 +30,14 @@ public class CommunityContentSeeder : BaseSeeder
 
     protected override async Task ExecuteSeedAsync()
     {
-        // Get demo users for content creation
+        // Get users for content creation (demo users or .Car@gmail.com users)
         var users = await Context.Users
-            .Where(u => u.Email!.Contains("demo"))
+            .Where(u => u.Email!.Contains("demo") || u.Email!.Contains(".Car@gmail.com"))
             .ToListAsync();
 
         if (!users.Any())
         {
-            Logger.LogWarning("No demo users found for content seeding");
+            Logger.LogWarning("No users found for content seeding");
             return;
         }
 
@@ -45,6 +45,8 @@ public class CommunityContentSeeder : BaseSeeder
         await SeedReviewsAsync(users);
         await SeedGuidesAsync(users);
         await SeedPostsAsync(users);
+        
+        await Context.SaveChangesAsync();
     }
 
     private async Task SeedQuestionsAsync(List<ApplicationUser> users)
@@ -195,7 +197,7 @@ public class CommunityContentSeeder : BaseSeeder
 
         foreach (var guideData in guides)
         {
-            var author = users.Where(u => u.Email!.Contains("creator") || u.Email!.Contains("expert"))
+            var author = users.Where(u => u.Email!.Contains("Expert") || u.Email!.Contains("Author"))
                               .OrderBy(x => Random.Shared.Next())
                               .FirstOrDefault() ?? users[0];
             

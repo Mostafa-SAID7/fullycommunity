@@ -1,0 +1,523 @@
+.admin-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header {
+  background: #1e293b;
+  color: white;
+  padding: 0 1.5rem;
+  height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: white;
+
+  .logo-icon {
+    font-size: 1.5rem;
+  }
+
+  .logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.notification-btn {
+  position: relative;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s;
+
+  &:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1rem;
+    height: 1rem;
+    background: #ef4444;
+    border-radius: 50%;
+    font-size: 0.625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+  }
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.user-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.user-avatar-img {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+
+  .user-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .user-role {
+    font-size: 0.75rem;
+    color: #94a3b8;
+  }
+}
+
+.logout-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #dc2626;
+  }
+}
+
+.admin-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.admin-sidebar {
+  width: 260px;
+  background: #1e293b;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.nav-section {
+  padding: 1rem 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #334155;
+  }
+}
+
+.nav-section-title {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+.admin-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-nav li {
+  margin: 0;
+}
+
+.admin-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+
+  .nav-icon {
+    font-size: 1.125rem;
+    width: 1.5rem;
+    text-align: center;
+  }
+
+  &:hover {
+    background: #334155;
+    color: white;
+  }
+
+  &.active {
+    background: #334155;
+    color: white;
+    border-left-color: #3b82f6;
+  }
+}
+
+.admin-content {
+  flex: 1;
+  background: #f1f5f9;
+  overflow-y: auto;
+}
+
+
+// Role Switcher Styles
+.role-switcher {
+  position: relative;
+}
+
+.role-switcher-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .role-icon {
+    font-size: 1.125rem;
+  }
+
+  .role-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .dropdown-arrow {
+    font-size: 0.625rem;
+    margin-left: 0.25rem;
+    opacity: 0.7;
+  }
+}
+
+.role-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  width: 280px;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 100;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.role-dropdown-header {
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.role-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: left;
+
+  &:hover {
+    background: #f1f5f9;
+  }
+
+  &.active {
+    background: #eff6ff;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #f1f5f9;
+  }
+}
+
+.role-option-icon {
+  font-size: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border-radius: 0.5rem;
+}
+
+.role-option-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.role-option-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.role-option-desc {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.role-check {
+  color: #3b82f6;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+
+// Notification Dropdown Styles
+.notification-container {
+  position: relative;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  width: 360px;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 100;
+  animation: slideDown 0.2s ease-out;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+
+  span {
+    font-weight: 600;
+    color: #1e293b;
+  }
+}
+
+.notification-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+
+  &:hover {
+    background: #eff6ff;
+  }
+
+  &.danger {
+    color: #ef4444;
+    &:hover {
+      background: #fef2f2;
+    }
+  }
+}
+
+.notification-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notification-loading,
+.notification-empty {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+
+  span {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #f8fafc;
+  }
+
+  &.unread {
+    background: #eff6ff;
+    
+    &:hover {
+      background: #dbeafe;
+    }
+  }
+}
+
+.notification-icon {
+  font-size: 1.25rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.notification-message {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notification-time {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.notification-delete {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  opacity: 0;
+  transition: all 0.2s;
+
+  .notification-item:hover & {
+    opacity: 1;
+  }
+
+  &:hover {
+    background: #fee2e2;
+    color: #ef4444;
+  }
+}
+
+.notification-footer {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+}

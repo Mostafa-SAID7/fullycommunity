@@ -152,3 +152,9 @@ public record ListenProgressRequest(
     double ListenPercent,
     bool IsCompleted
 );
+
+
+// Additional Episode DTOs
+public record CompleteEpisodeUploadRequest(string AudioUrl, string? VideoUrl);
+
+public record ScheduleRequest(DateTime PublishAt);

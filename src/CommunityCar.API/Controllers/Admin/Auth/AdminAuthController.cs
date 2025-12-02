@@ -14,7 +14,7 @@ namespace CommunityCar.API.Controllers.Admin.Auth;
 /// </summary>
 [ApiController]
 [Route("api/admin/auth")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class AdminAuthController : ControllerBase
 {
     private readonly IAuthService _authService;

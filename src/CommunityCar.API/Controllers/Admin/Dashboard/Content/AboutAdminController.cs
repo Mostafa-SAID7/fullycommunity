@@ -10,7 +10,7 @@ namespace CommunityCar.API.Controllers.Admin.Dashboard.Content;
 [ApiController]
 [Route("api/admin/about")]
 [Authorize(Roles = "Admin")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class AboutAdminController : ControllerBase
 {
     private readonly IAboutService _aboutService;

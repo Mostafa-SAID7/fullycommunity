@@ -7,7 +7,7 @@ namespace CommunityCar.API.Controllers.Admin.Dashboard.Users;
 [ApiController]
 [Route("api/admin/dashboard/users/users")]
 [Authorize(Roles = "SuperAdmin,UserAdmin")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class UsersController : ControllerBase
 {
     private readonly ICurrentUserService _currentUserService;

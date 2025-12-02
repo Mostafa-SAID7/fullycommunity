@@ -1,0 +1,58 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo">🚗</div>
+      <h1>CommunityCar Admin</h1>
+      <p>Sign in to access the admin dashboard</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="login-form">
+      <div *ngIf="errorMessage" class="error-alert">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="admin@example.com"
+          required
+          [disabled]="loading"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+          [disabled]="loading"
+        />
+      </div>
+
+      <div class="form-options">
+        <label class="remember-me">
+          <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" />
+          <span>Remember me</span>
+        </label>
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="loading">
+        <span *ngIf="!loading">Sign In</span>
+        <span *ngIf="loading" class="loading-spinner"></span>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>Protected area. Authorized personnel only.</p>
+    </div>
+  </div>
+</div>

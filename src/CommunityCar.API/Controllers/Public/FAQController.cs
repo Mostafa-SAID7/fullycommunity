@@ -63,5 +63,3 @@ public class FAQController : ControllerBase
         return NoContent();
     }
 }
-
-public record FeedbackRequest(bool IsHelpful);

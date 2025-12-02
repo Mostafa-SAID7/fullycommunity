@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces.Videos;
 using CommunityCar.Application.Features.Videos.Content;
+using CommunityCar.Application.Features.Videos.DTOs;
 using System.Security.Claims;
 
 namespace CommunityCar.API.Controllers.Videos;
@@ -150,7 +151,3 @@ public class VideoContentController : ControllerBase
         return NoContent();
     }
 }
-
-public record CompleteUploadRequest(string VideoUrl, string? ThumbnailUrl);
-public record RecordViewRequest(string? SessionId);
-public record WatchProgressRequest(TimeSpan WatchDuration, double WatchPercent);

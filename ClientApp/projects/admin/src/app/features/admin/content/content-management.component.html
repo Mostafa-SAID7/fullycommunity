@@ -1,0 +1,125 @@
+<div class="content-management">
+  <div class="page-header">
+    <div class="header-info">
+      <h1>Content Management</h1>
+      <p>Manage all platform content including posts, reviews, and guides</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="exportData()">Export Data</button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid" *ngIf="stats()">
+    <div class="stat-card">
+      <div class="stat-icon posts">📝</div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats()!.totalPosts }}</span>
+        <span class="stat-label">Total Posts</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon reviews">⭐</div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats()!.totalReviews }}</span>
+        <span class="stat-label">Reviews</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon guides">📚</div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats()!.totalGuides }}</span>
+        <span class="stat-label">Guides</span>
+      </div>
+    </div>
+    <div class="stat-card pending">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats()!.pendingApproval }}</span>
+        <span class="stat-label">Pending Approval</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="onSearch()"
+      placeholder="Search content..."
+      class="search-input"
+    />
+    <select [(ngModel)]="selectedType" (change)="loadContent()" class="filter-select">
+      <option value="">All Types</option>
+      <option value="post">Posts</option>
+      <option value="review">Reviews</option>
+      <option value="guide">Guides</option>
+      <option value="question">Q&A</option>
+      <option value="podcast">Podcasts</option>
+    </select>
+    <select [(ngModel)]="selectedStatus" (change)="loadContent()" class="filter-select">
+      <option value="">All Status</option>
+      <option value="published">Published</option>
+      <option value="draft">Draft</option>
+      <option value="pending">Pending</option>
+      <option value="rejected">Rejected</option>
+    </select>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading()" class="loading-container">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error()" class="error-message">
+    {{ error() }}
+    <button (click)="loadContent()" class="retry-btn">Retry</button>
+  </div>
+
+  <!-- Content List -->
+  <div *ngIf="!loading() && !error()" class="content-list">
+    <div *ngFor="let item of content()" class="content-item">
+      <div class="content-main">
+        <h3 class="content-title">{{ item.title }}</h3>
+        <div class="content-meta">
+          <span class="content-type" [ngClass]="getTypeClass(item.type)">{{ item.type }}</span>
+          <span class="content-author">by {{ item.authorName }}</span>
+          <span class="content-date">{{ item.createdAt | date : "mediumDate" }}</span>
+        </div>
+      </div>
+      <div class="content-stats">
+        <span>👁️ {{ item.viewCount }} views</span>
+        <span>👍 {{ item.likeCount }} likes</span>
+        <span>💬 {{ item.commentCount }} comments</span>
+      </div>
+      <div class="content-status">
+        <span class="status-badge" [ngClass]="getStatusClass(item.status)">{{ item.status }}</span>
+      </div>
+      <div class="content-actions">
+        <button class="action-btn edit">Edit</button>
+        <button class="action-btn view">View</button>
+        <button
+          *ngIf="item.status === 'pending'"
+          class="action-btn approve"
+          (click)="approveContent(item)"
+        >
+          Approve
+        </button>
+        <button
+          *ngIf="item.status === 'pending'"
+          class="action-btn reject"
+          (click)="rejectContent(item)"
+        >
+          Reject
+        </button>
+        <button class="action-btn delete" (click)="deleteContent(item)">Delete</button>
+      </div>
+    </div>
+
+    <div *ngIf="content().length === 0" class="empty-state">
+      <p>No content found matching your criteria</p>
+    </div>
+  </div>
+</div>

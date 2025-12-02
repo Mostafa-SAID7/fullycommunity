@@ -201,8 +201,8 @@ public class AuthService : IAuthService
 
     private async Task<LoginResponse> GenerateLoginResponseAsync(ApplicationUser user, string? deviceId)
     {
-        var tokens = await _jwtService.GenerateTokensAsync(user, deviceId);
         var roles = await _userManager.GetRolesAsync(user);
+        var tokens = await _jwtService.GenerateTokensAsync(user, roles, deviceId);
 
         user.LastLoginAt = DateTime.UtcNow;
         await _userManager.UpdateAsync(user);

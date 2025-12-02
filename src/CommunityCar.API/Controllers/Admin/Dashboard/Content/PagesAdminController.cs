@@ -11,7 +11,7 @@ namespace CommunityCar.API.Controllers.Admin.Dashboard.Content;
 [ApiController]
 [Route("api/admin/pages")]
 [Authorize(Roles = "Admin")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class PagesAdminController : ControllerBase
 {
     private readonly IPageService _pageService;

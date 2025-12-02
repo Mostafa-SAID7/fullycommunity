@@ -14,7 +14,7 @@ namespace CommunityCar.API.Controllers.Admin.Dashboard.Podcasts;
 [ApiController]
 [Route("api/admin/podcasts")]
 [Authorize(Roles = "Admin,SuperAdmin,Moderator")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class PodcastsAdminController : ControllerBase
 {
     private readonly IAppDbContext _context;

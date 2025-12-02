@@ -1,39 +1,57 @@
 import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink],
-  template: `
-    <div class="auth-form">
-      <h2>Login</h2>
-      <form (ngSubmit)="onSubmit()">
-        <input type="email" [(ngModel)]="email" name="email" placeholder="Email" required>
-        <input type="password" [(ngModel)]="password" name="password" placeholder="Password" required>
-        <button type="submit" class="btn btn-primary">Login</button>
-      </form>
-      <p>Don't have an account? <a routerLink="/register">Register</a></p>
-    </div>
-  `,
-  styles: [`
-    .auth-form { max-width: 400px; margin: 2rem auto; }
-    form { display: flex; flex-direction: column; gap: 1rem; }
-    input { padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
-  `]
+  imports: [CommonModule, FormsModule],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
+
   email = '';
   password = '';
+  rememberMe = false;
+  loading = false;
+  errorMessage = '';
 
   onSubmit() {
+    if (!this.email || !this.password) {
+      this.errorMessage = 'Please enter your email and password';
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+
     this.authService.login(this.email, this.password).subscribe({
-      next: () => this.router.navigate(['/']),
-      error: (err) => alert('Login failed: ' + err.message)
+      next: (response) => {
+        this.loading = false;
+        
+        // Check if user has admin role
+        if (this.authService.isAdmin()) {
+          this.router.navigate(['/admin/dashboard']);
+        } else {
+          this.errorMessage = 'You do not have permission to access the admin panel';
+          this.authService.logout();
+        }
+      },
+      error: (err) => {
+        this.loading = false;
+        if (err.status === 401) {
+          this.errorMessage = 'Invalid email or password';
+        } else if (err.status === 403) {
+          this.errorMessage = 'Your account has been suspended';
+        } else {
+          this.errorMessage = err.error?.message || 'Login failed. Please try again.';
+        }
+      }
     });
   }
 }

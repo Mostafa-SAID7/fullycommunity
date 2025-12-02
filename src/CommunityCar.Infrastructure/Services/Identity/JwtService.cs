@@ -33,9 +33,9 @@ public class JwtService : IJwtService
         _refreshTokenExpirationDays = int.Parse(_configuration["Jwt:RefreshTokenExpirationDays"] ?? "7");
     }
 
-    public async Task<TokenResult> GenerateTokensAsync(ApplicationUser user, string? deviceId = null)
+    public async Task<TokenResult> GenerateTokensAsync(ApplicationUser user, IList<string>? roles = null, string? deviceId = null)
     {
-        var accessToken = GenerateAccessToken(user);
+        var accessToken = GenerateAccessToken(user, roles);
         var refreshToken = await GenerateRefreshTokenAsync(user.Id, deviceId);
 
         var accessExpires = DateTime.UtcNow.AddMinutes(_accessTokenExpirationMinutes);
@@ -144,7 +144,7 @@ public class JwtService : IJwtService
         }
     }
 
-    private string GenerateAccessToken(ApplicationUser user)
+    private string GenerateAccessToken(ApplicationUser user, IList<string>? roles = null)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -159,6 +159,15 @@ public class JwtService : IJwtService
             new("userType", user.UserType.ToString()),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+
+        // Add role claims
+        if (roles != null)
+        {
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+        }
 
         var token = new JwtSecurityToken(
             issuer: _issuer,

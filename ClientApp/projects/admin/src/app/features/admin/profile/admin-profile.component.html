@@ -1,0 +1,193 @@
+<div class="profile-page">
+  <div class="page-header">
+    <h1>My Profile</h1>
+    <p>Manage your account settings and preferences</p>
+  </div>
+
+  <div class="profile-content">
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div class="avatar-container">
+        @if (hasAvatar()) {
+          <img [src]="currentUser()?.avatarUrl" alt="Avatar" class="profile-avatar-img">
+        } @else {
+          <div class="profile-avatar">{{ getUserInitials() }}</div>
+        }
+        <button class="avatar-upload-btn" [class.uploading]="uploadingAvatar()" (click)="openAvatarModal()">
+          @if (uploadingAvatar()) {
+            <span>⏳</span>
+          } @else {
+            <span>📷</span>
+          }
+        </button>
+        <input type="file" id="avatar-file-input" accept="image/jpeg,image/png,image/gif,image/webp" (change)="onAvatarSelect($event)" hidden>
+      </div>
+      <div class="profile-info">
+        <h2>{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</h2>
+        <p class="email">{{ currentUser()?.email }}</p>
+        <div class="roles">
+          @for (role of currentUser()?.roles || []; track role) {
+            <span class="badge" [class]="getRoleBadgeClass(role)">{{ role }}</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Avatar Modal -->
+    @if (showAvatarModal()) {
+      <div class="modal-overlay" (click)="closeAvatarModal()">
+        <div class="avatar-modal" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>Change Profile Photo</h3>
+            <button class="close-btn" (click)="closeAvatarModal()">✕</button>
+          </div>
+          <div class="modal-body">
+            <div class="avatar-preview">
+              @if (hasAvatar()) {
+                <img [src]="currentUser()?.avatarUrl" alt="Current Avatar">
+              } @else {
+                <div class="avatar-placeholder">{{ getUserInitials() }}</div>
+              }
+            </div>
+            <div class="avatar-options">
+              <button class="option-btn" (click)="triggerFileInput()">
+                <span class="option-icon">📁</span>
+                <span class="option-text">Browse from Computer</span>
+              </button>
+              @if (hasAvatar()) {
+                <button class="option-btn danger" (click)="removeAvatar()">
+                  <span class="option-icon">🗑️</span>
+                  <span class="option-text">Remove Photo</span>
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button 
+        class="tab" 
+        [class.active]="activeTab() === 'profile'"
+        (click)="setActiveTab('profile')">
+        👤 Profile
+      </button>
+      <button 
+        class="tab" 
+        [class.active]="activeTab() === 'security'"
+        (click)="setActiveTab('security')">
+        🔒 Security
+      </button>
+      <button 
+        class="tab" 
+        [class.active]="activeTab() === 'activity'"
+        (click)="setActiveTab('activity')">
+        📊 Activity
+      </button>
+    </div>
+
+    <!-- Messages -->
+    @if (successMessage()) {
+      <div class="alert alert-success">✓ {{ successMessage() }}</div>
+    }
+    @if (errorMessage()) {
+      <div class="alert alert-error">✕ {{ errorMessage() }}</div>
+    }
+
+    <!-- Profile Tab -->
+    @if (activeTab() === 'profile') {
+      <div class="tab-content">
+        <form (ngSubmit)="saveProfile()" class="profile-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" [(ngModel)]="firstName" name="firstName" placeholder="Enter first name">
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" [(ngModel)]="lastName" name="lastName" placeholder="Enter last name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" [value]="currentUser()?.email" disabled>
+            <span class="hint">Email cannot be changed</span>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" [(ngModel)]="phone" name="phone" placeholder="Enter phone number">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" [disabled]="saving()">
+              {{ saving() ? 'Saving...' : 'Save Changes' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Security Tab -->
+    @if (activeTab() === 'security') {
+      <div class="tab-content">
+        <h3>Change Password</h3>
+        <form (ngSubmit)="changePassword()" class="security-form">
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" [(ngModel)]="currentPassword" name="currentPassword" placeholder="Enter current password">
+          </div>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" [(ngModel)]="newPassword" name="newPassword" placeholder="Enter new password">
+          </div>
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Confirm new password">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" [disabled]="saving()">
+              {{ saving() ? 'Changing...' : 'Change Password' }}
+            </button>
+          </div>
+        </form>
+
+        <div class="security-section">
+          <h3>Two-Factor Authentication</h3>
+          <p>Add an extra layer of security to your account</p>
+          <button class="btn btn-secondary">Enable 2FA</button>
+        </div>
+      </div>
+    }
+
+    <!-- Activity Tab -->
+    @if (activeTab() === 'activity') {
+      <div class="tab-content">
+        <h3>Recent Activity</h3>
+        <div class="activity-list">
+          <div class="activity-item">
+            <span class="activity-icon">🔐</span>
+            <div class="activity-info">
+              <p>Logged in from Windows</p>
+              <span class="activity-time">Just now</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-icon">👤</span>
+            <div class="activity-info">
+              <p>Profile updated</p>
+              <span class="activity-time">2 hours ago</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-icon">🔐</span>
+            <div class="activity-info">
+              <p>Logged in from Windows</p>
+              <span class="activity-time">Yesterday</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

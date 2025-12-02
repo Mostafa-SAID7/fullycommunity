@@ -9,7 +9,7 @@ namespace CommunityCar.API.Controllers.Admin.Dashboard.Settings;
 [ApiController]
 [Route("api/admin/site")]
 [Authorize(Roles = "Admin")]
-[ApiExplorerSettings(GroupName = "admin")]
+[ApiExplorerSettings(GroupName = "dashboard")]
 public class SiteAdminController : ControllerBase
 {
     private readonly ISiteSettingsService _siteService;
