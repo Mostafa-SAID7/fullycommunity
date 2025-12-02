@@ -49,7 +49,7 @@ export interface PagedResult<T> {
 
 @Injectable({ providedIn: 'root' })
 export class PodcastService {
-  private readonly apiUrl = `${environment.apiUrl}/podcasts`;
+  private readonly apiUrl = `${environment.apiUrl}/api/podcasts`;
   
   subscriptions = signal<Podcast[]>([]);
   queue = signal<Episode[]>([]);

@@ -40,8 +40,19 @@ public class DataSeeder
             new DemoUserSeeder(_context, _userManager, _loggerFactory.CreateLogger<DemoUserSeeder>()),
             
             // Content seeders (depend on users)
+            new GroupSeeder(_context, _loggerFactory.CreateLogger<GroupSeeder>()),
+            new PostCategorySeeder(_context, _loggerFactory.CreateLogger<PostCategorySeeder>()),
             new CommunityContentSeeder(_context, _loggerFactory.CreateLogger<CommunityContentSeeder>()),
-            // new PodcastSeeder(_context, _loggerFactory.CreateLogger<PodcastSeeder>())
+            new PostSeeder(_context, _loggerFactory.CreateLogger<PostSeeder>()),
+            new NewsSeeder(_context, _loggerFactory.CreateLogger<NewsSeeder>()),
+            new MapsSeeder(_context, _loggerFactory.CreateLogger<MapsSeeder>()),
+            
+            // Media content seeders
+            new VideoSeeder(_context, _loggerFactory.CreateLogger<VideoSeeder>()),
+            new PodcastSeeder(_context, _loggerFactory.CreateLogger<PodcastSeeder>()),
+            
+            // Marketplace seeders
+            new MarketplaceSeeder(_context, _loggerFactory.CreateLogger<MarketplaceSeeder>())
         };
     }
 

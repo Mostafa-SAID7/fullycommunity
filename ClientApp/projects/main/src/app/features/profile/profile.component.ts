@@ -1,69 +1,97 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { CommunityService, Post } from '../../core/services/community.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [FormsModule],
-  template: `
-    <div class="profile">
-      <h2>My Profile</h2>
-      @if (authService.currentUser(); as user) {
-        <form (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label>First Name</label>
-            <input type="text" [(ngModel)]="firstName" name="firstName">
-          </div>
-          <div class="form-group">
-            <label>Last Name</label>
-            <input type="text" [(ngModel)]="lastName" name="lastName">
-          </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" [value]="user.email" disabled>
-          </div>
-          <div class="form-group">
-            <label>Phone</label>
-            <input type="tel" [(ngModel)]="phone" name="phone">
-          </div>
-          <button type="submit" class="btn btn-primary" [disabled]="saving()">
-            {{ saving() ? 'Saving...' : 'Save Changes' }}
-          </button>
-        </form>
-      }
-    </div>
-  `,
-  styles: [`
-    .profile { max-width: 500px; margin: 0 auto; }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
-    .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
-    .form-group input:disabled { background: #f5f5f5; }
-  `]
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit {
-  authService = inject(AuthService);
-  firstName = '';
-  lastName = '';
-  phone = '';
-  saving = signal(false);
+  private authService = inject(AuthService);
+  private communityService = inject(CommunityService);
+  private route = inject(ActivatedRoute);
+
+  user = this.authService.currentUser;
+  profileUser = signal<any>(null);
+  userPosts = signal<Post[]>([]);
+  activeTab = signal<'posts' | 'about' | 'friends' | 'photos'>('posts');
+  isOwnProfile = signal(true);
+  isEditing = signal(false);
+  loading = signal(true);
+
+  editForm = {
+    firstName: '',
+    lastName: '',
+    phone: '',
+    bio: '',
+    location: ''
+  };
+
+  stats = signal({ posts: 0, friends: 0, followers: 0 });
 
   ngOnInit() {
-    const user = this.authService.currentUser();
-    if (user) {
-      this.firstName = user.firstName;
-      this.lastName = user.lastName;
-      this.phone = user.phoneNumber || '';
+    const userId = this.route.snapshot.paramMap.get('id');
+    if (userId && userId !== this.user()?.id) {
+      this.isOwnProfile.set(false);
+      this.loadUserProfile(userId);
+    } else {
+      this.loadOwnProfile();
     }
   }
 
-  onSubmit() {
-    this.saving.set(true);
-    this.authService.updateProfile({ firstName: this.firstName, lastName: this.lastName, phoneNumber: this.phone })
-      .subscribe({
-        next: () => this.saving.set(false),
-        error: () => this.saving.set(false)
-      });
+  loadOwnProfile() {
+    const u = this.user();
+    if (u) {
+      this.profileUser.set(u);
+      this.editForm = {
+        firstName: u.firstName || '',
+        lastName: u.lastName || '',
+        phone: u.phoneNumber || '',
+        bio: '',
+        location: ''
+      };
+      this.loadUserPosts(u.id);
+    }
+    this.loading.set(false);
+  }
+
+  loadUserProfile(userId: string) {
+    // In real app, fetch user profile from API
+    this.loading.set(false);
+  }
+
+  loadUserPosts(userId: string) {
+    // Load user's posts - mock for now
+    this.stats.set({ posts: 12, friends: 156, followers: 89 });
+  }
+
+  setTab(tab: 'posts' | 'about' | 'friends' | 'photos') {
+    this.activeTab.set(tab);
+  }
+
+  toggleEdit() {
+    this.isEditing.update(v => !v);
+  }
+
+  saveProfile() {
+    this.authService.updateProfile({
+      firstName: this.editForm.firstName,
+      lastName: this.editForm.lastName,
+      phoneNumber: this.editForm.phone
+    }).subscribe({
+      next: () => this.isEditing.set(false)
+    });
+  }
+
+  getUserInitials(): string {
+    const u = this.profileUser();
+    if (!u) return 'U';
+    return ((u.firstName?.charAt(0) || '') + (u.lastName?.charAt(0) || '')).toUpperCase() || 'U';
   }
 }

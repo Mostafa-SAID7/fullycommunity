@@ -1,0 +1,52 @@
+<div class="feed-container">
+  <!-- Stories Section -->
+  <app-stories></app-stories>
+
+  <!-- Create Post -->
+  <app-create-post (postCreated)="onPostCreated($event)"></app-create-post>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    @for (filter of filters; track filter.key) {
+      <button 
+        class="filter-tab" 
+        [class.active]="activeFilter() === filter.key"
+        (click)="setFilter(filter.key)">
+        {{ filter.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Posts Feed -->
+  <div class="posts-feed">
+    @for (post of posts(); track post.id) {
+      <app-post-card 
+        [post]="post" 
+        (deleted)="onPostDeleted($event)">
+      </app-post-card>
+    }
+
+    @if (loading()) {
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <span>Loading posts...</span>
+      </div>
+    }
+
+    @if (!loading() && posts().length === 0) {
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        </svg>
+        <h3>No posts yet</h3>
+        <p>Be the first to share something with the community!</p>
+      </div>
+    }
+
+    @if (hasMore() && !loading() && posts().length > 0) {
+      <button class="load-more-btn" (click)="loadMore()">
+        Load More Posts
+      </button>
+    }
+  </div>
+</div>

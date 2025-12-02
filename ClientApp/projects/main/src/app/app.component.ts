@@ -7,13 +7,21 @@ import { HeaderComponent } from './shared/components/header/header.component';
   standalone: true,
   imports: [RouterOutlet, HeaderComponent],
   template: `
-    <app-header />
-    <main class="container">
-      <router-outlet />
-    </main>
+    <div class="app-layout">
+      <app-header />
+      <main class="main-content">
+        <router-outlet />
+      </main>
+    </div>
   `,
   styles: [`
-    main { padding: 2rem 0; }
+    .app-layout {
+      min-height: 100vh;
+      background: #f0f2f5;
+    }
+    .main-content {
+      min-height: calc(100vh - 56px);
+    }
   `]
 })
 export class AppComponent {}

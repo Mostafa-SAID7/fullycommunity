@@ -47,6 +47,10 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     // Community
     public DbSet<CommunityCar.Domain.Entities.Community.Posts.Post> Posts => Set<CommunityCar.Domain.Entities.Community.Posts.Post>();
     public DbSet<CommunityCar.Domain.Entities.Community.Posts.PostComment> PostComments => Set<CommunityCar.Domain.Entities.Community.Posts.PostComment>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Posts.PostLike> PostLikes => Set<CommunityCar.Domain.Entities.Community.Posts.PostLike>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Posts.PostCategory> PostCategories => Set<CommunityCar.Domain.Entities.Community.Posts.PostCategory>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Posts.PostMedia> PostMedia => Set<CommunityCar.Domain.Entities.Community.Posts.PostMedia>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Posts.PostTag> PostTags => Set<CommunityCar.Domain.Entities.Community.Posts.PostTag>();
     public DbSet<CommunityCar.Domain.Entities.Community.QA.Question> Questions => Set<CommunityCar.Domain.Entities.Community.QA.Question>();
     public DbSet<CommunityCar.Domain.Entities.Community.QA.Answer> Answers => Set<CommunityCar.Domain.Entities.Community.QA.Answer>();
     public DbSet<CommunityCar.Domain.Entities.Community.Reviews.Review> Reviews => Set<CommunityCar.Domain.Entities.Community.Reviews.Review>();
@@ -54,6 +58,14 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<CommunityCar.Domain.Entities.Community.Guides.GuideStep> GuideSteps => Set<CommunityCar.Domain.Entities.Community.Guides.GuideStep>();
     public DbSet<CommunityCar.Domain.Entities.Community.Events.Event> Events => Set<CommunityCar.Domain.Entities.Community.Events.Event>();
     public DbSet<CommunityCar.Domain.Entities.Community.Groups.Group> Groups => Set<CommunityCar.Domain.Entities.Community.Groups.Group>();
+    
+    // News
+    public DbSet<CommunityCar.Domain.Entities.Community.News.NewsArticle> NewsArticles => Set<CommunityCar.Domain.Entities.Community.News.NewsArticle>();
+    public DbSet<CommunityCar.Domain.Entities.Community.News.NewsCategory> NewsCategories => Set<CommunityCar.Domain.Entities.Community.News.NewsCategory>();
+    
+    // Maps
+    public DbSet<CommunityCar.Domain.Entities.Community.Maps.MapLocation> MapLocations => Set<CommunityCar.Domain.Entities.Community.Maps.MapLocation>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Maps.LocationReview> LocationReviews => Set<CommunityCar.Domain.Entities.Community.Maps.LocationReview>();
 
     // Videos
     public DbSet<Video> Videos => Set<Video>();
@@ -421,6 +433,43 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
                   .OnDelete(DeleteBehavior.NoAction);
         });
 
+        builder.Entity<CommunityCar.Domain.Entities.Community.Posts.PostLike>(entity =>
+        {
+            entity.ToTable("PostLikes", "community");
+            entity.HasOne(l => l.Post)
+                  .WithMany(p => p.Likes)
+                  .HasForeignKey(l => l.PostId)
+                  .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(l => l.User)
+                  .WithMany()
+                  .HasForeignKey(l => l.UserId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Posts.PostCategory>(entity =>
+        {
+            entity.ToTable("PostCategories", "community");
+            entity.HasIndex(e => e.Slug).IsUnique();
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Posts.PostMedia>(entity =>
+        {
+            entity.ToTable("PostMedia", "community");
+            entity.HasOne(m => m.Post)
+                  .WithMany(p => p.Media)
+                  .HasForeignKey(m => m.PostId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Posts.PostTag>(entity =>
+        {
+            entity.ToTable("PostTags", "community");
+            entity.HasOne(t => t.Post)
+                  .WithMany(p => p.Tags)
+                  .HasForeignKey(t => t.PostId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
         // ═══════════════════════════════════════════════════════════════════════
         // COMMUNITY - Reviews (fix cascade delete cycles)
         // ═══════════════════════════════════════════════════════════════════════
@@ -431,6 +480,102 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
                   .WithMany(r => r.Comments)
                   .HasForeignKey(c => c.ReviewId)
                   .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // COMMUNITY - News
+        // ═══════════════════════════════════════════════════════════════════════
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.News.NewsArticle>(entity =>
+        {
+            entity.ToTable("NewsArticles", "community");
+            entity.HasIndex(e => e.Slug).IsUnique();
+            entity.HasOne(e => e.Author)
+                  .WithMany()
+                  .HasForeignKey(e => e.AuthorId)
+                  .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(e => e.Category)
+                  .WithMany()
+                  .HasForeignKey(e => e.CategoryId)
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.News.NewsCategory>(entity =>
+        {
+            entity.ToTable("NewsCategories", "community");
+            entity.HasIndex(e => e.Slug).IsUnique();
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.News.NewsTag>(entity =>
+        {
+            entity.ToTable("NewsTags", "community");
+            entity.HasOne(t => t.Article)
+                  .WithMany(a => a.Tags)
+                  .HasForeignKey(t => t.ArticleId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.News.NewsComment>(entity =>
+        {
+            entity.ToTable("NewsComments", "community");
+            entity.HasOne(c => c.Article)
+                  .WithMany(a => a.Comments)
+                  .HasForeignKey(c => c.ArticleId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // COMMUNITY - Maps
+        // ═══════════════════════════════════════════════════════════════════════
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Maps.MapLocation>(entity =>
+        {
+            entity.ToTable("MapLocations", "community");
+            entity.HasIndex(e => e.Slug).IsUnique();
+            entity.HasOne(e => e.AddedBy)
+                  .WithMany()
+                  .HasForeignKey(e => e.AddedById)
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Maps.LocationReview>(entity =>
+        {
+            entity.ToTable("LocationReviews", "community");
+            entity.HasOne(r => r.Location)
+                  .WithMany(l => l.Reviews)
+                  .HasForeignKey(r => r.LocationId)
+                  .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(r => r.Author)
+                  .WithMany()
+                  .HasForeignKey(r => r.AuthorId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Maps.LocationCheckIn>(entity =>
+        {
+            entity.ToTable("LocationCheckIns", "community");
+            entity.HasOne(c => c.Location)
+                  .WithMany(l => l.CheckIns)
+                  .HasForeignKey(c => c.LocationId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Maps.LocationFeature>(entity =>
+        {
+            entity.ToTable("LocationFeatures", "community");
+            entity.HasOne(f => f.Location)
+                  .WithMany(l => l.Features)
+                  .HasForeignKey(f => f.LocationId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Maps.LocationMedia>(entity =>
+        {
+            entity.ToTable("LocationMedia", "community");
+            entity.HasOne(m => m.Location)
+                  .WithMany(l => l.Media)
+                  .HasForeignKey(m => m.LocationId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         // ═══════════════════════════════════════════════════════════════════════

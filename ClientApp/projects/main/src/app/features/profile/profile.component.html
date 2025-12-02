@@ -1,0 +1,160 @@
+@if (loading()) {
+  <div class="loading">Loading profile...</div>
+} @else if (profileUser()) {
+  <div class="profile-page">
+    <!-- Cover & Avatar -->
+    <div class="profile-header">
+      <div class="cover-photo"></div>
+      <div class="profile-info">
+        <div class="avatar-section">
+          <div class="avatar-large">{{ getUserInitials() }}</div>
+          @if (isOwnProfile()) {
+            <button class="edit-avatar-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            </button>
+          }
+        </div>
+        <div class="user-details">
+          <h1>{{ profileUser().firstName }} {{ profileUser().lastName }}</h1>
+          <p class="user-bio">Car enthusiast | DIY mechanic | EV owner</p>
+          <p class="user-stats">
+            <span><strong>{{ stats().posts }}</strong> posts</span>
+            <span><strong>{{ stats().friends }}</strong> friends</span>
+            <span><strong>{{ stats().followers }}</strong> followers</span>
+          </p>
+        </div>
+        <div class="profile-actions">
+          @if (isOwnProfile()) {
+            <button class="btn-secondary" (click)="toggleEdit()">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+              Edit Profile
+            </button>
+          } @else {
+            <button class="btn-primary">Add Friend</button>
+            <button class="btn-secondary">Message</button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="profile-tabs">
+      <button class="tab" [class.active]="activeTab() === 'posts'" (click)="setTab('posts')">Posts</button>
+      <button class="tab" [class.active]="activeTab() === 'about'" (click)="setTab('about')">About</button>
+      <button class="tab" [class.active]="activeTab() === 'friends'" (click)="setTab('friends')">Friends</button>
+      <button class="tab" [class.active]="activeTab() === 'photos'" (click)="setTab('photos')">Photos</button>
+    </div>
+
+    <!-- Content -->
+    <div class="profile-content">
+      @switch (activeTab()) {
+        @case ('posts') {
+          <div class="posts-section">
+            <div class="intro-card">
+              <h3>Intro</h3>
+              <p>🚗 Car enthusiast since 2010</p>
+              <p>🔧 DIY mechanic</p>
+              <p>⚡ Tesla Model 3 owner</p>
+              <p>📍 San Francisco, CA</p>
+            </div>
+            <div class="posts-feed">
+              <div class="empty-posts">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                <p>No posts yet</p>
+              </div>
+            </div>
+          </div>
+        }
+        @case ('about') {
+          <div class="about-section">
+            <div class="about-card">
+              <h3>About</h3>
+              @if (isEditing()) {
+                <form (ngSubmit)="saveProfile()">
+                  <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" [(ngModel)]="editForm.firstName" name="firstName">
+                  </div>
+                  <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" [(ngModel)]="editForm.lastName" name="lastName">
+                  </div>
+                  <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" [(ngModel)]="editForm.phone" name="phone">
+                  </div>
+                  <div class="form-group">
+                    <label>Bio</label>
+                    <textarea [(ngModel)]="editForm.bio" name="bio" rows="3"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" [(ngModel)]="editForm.location" name="location">
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="btn-primary">Save</button>
+                    <button type="button" class="btn-secondary" (click)="toggleEdit()">Cancel</button>
+                  </div>
+                </form>
+              } @else {
+                <div class="about-item">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                  <span>{{ profileUser().email }}</span>
+                </div>
+                @if (editForm.phone) {
+                  <div class="about-item">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                    <span>{{ editForm.phone }}</span>
+                  </div>
+                }
+                <div class="about-item">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                  <span>San Francisco, CA</span>
+                </div>
+                <div class="about-item">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+                  <span>Joined December 2024</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+        @case ('friends') {
+          <div class="friends-section">
+            <div class="friends-card">
+              <h3>Friends ({{ stats().friends }})</h3>
+              <div class="friends-grid">
+                <div class="friend-item">
+                  <div class="friend-avatar">JD</div>
+                  <span>John Doe</span>
+                </div>
+                <div class="friend-item">
+                  <div class="friend-avatar">AS</div>
+                  <span>Alice Smith</span>
+                </div>
+                <div class="friend-item">
+                  <div class="friend-avatar">BW</div>
+                  <span>Bob Wilson</span>
+                </div>
+              </div>
+              <a routerLink="/community/friends" class="see-all">See All Friends</a>
+            </div>
+          </div>
+        }
+        @case ('photos') {
+          <div class="photos-section">
+            <div class="photos-card">
+              <h3>Photos</h3>
+              <div class="photos-grid">
+                <div class="photo-placeholder"></div>
+                <div class="photo-placeholder"></div>
+                <div class="photo-placeholder"></div>
+              </div>
+              <p class="no-photos">No photos uploaded yet</p>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+}

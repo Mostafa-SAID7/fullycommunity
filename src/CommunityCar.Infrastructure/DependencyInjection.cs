@@ -109,6 +109,9 @@ public static class DependencyInjection
         // Messaging
         services.AddScoped<Application.Common.Interfaces.Messaging.IChatService, Services.Messaging.ChatService>();
 
+        // Community Services
+        services.AddScoped<Application.Common.Interfaces.Community.IPostService, Services.Community.PostService>();
+
         return services;
     }
 }
