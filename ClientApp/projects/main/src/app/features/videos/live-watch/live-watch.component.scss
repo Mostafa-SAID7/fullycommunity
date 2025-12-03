@@ -1,0 +1,229 @@
+.live-watch-container {
+  @apply h-screen bg-gray-900 flex;
+}
+
+.loading-spinner {
+  @apply flex-1 flex items-center justify-center;
+  
+  .spinner {
+    @apply w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin;
+  }
+}
+
+.video-section {
+  @apply flex-1 flex flex-col;
+}
+
+.video-player {
+  @apply flex-1 relative bg-black;
+  
+  video {
+    @apply w-full h-full object-contain;
+  }
+}
+
+.stream-placeholder {
+  @apply absolute inset-0 flex items-center justify-center;
+  
+  img {
+    @apply w-full h-full object-cover opacity-50;
+  }
+  
+  .placeholder-content {
+    @apply absolute text-center;
+    
+    .play-icon {
+      @apply w-16 h-16 mx-auto mb-4 rounded-full bg-red-600 flex items-center justify-center;
+      
+      svg {
+        @apply w-8 h-8 text-white;
+      }
+    }
+    
+    p {
+      @apply text-white text-lg;
+    }
+  }
+}
+
+.stream-badges {
+  @apply absolute top-4 left-4 flex items-center gap-3;
+}
+
+.live-badge {
+  @apply px-3 py-1 bg-red-600 text-white text-sm font-medium rounded flex items-center gap-2;
+  
+  .pulse-dot {
+    @apply w-2 h-2 bg-white rounded-full animate-pulse;
+  }
+}
+
+.viewer-count {
+  @apply px-3 py-1 bg-black/70 text-white text-sm rounded flex items-center gap-2;
+  
+  svg {
+    @apply w-4 h-4;
+  }
+}
+
+.stream-info {
+  @apply p-4 bg-gray-800;
+  
+  h1 {
+    @apply text-xl font-bold text-white;
+  }
+}
+
+.channel-row {
+  @apply flex items-center justify-between mt-3;
+}
+
+.channel-link {
+  @apply flex items-center gap-3;
+  
+  img {
+    @apply w-10 h-10 rounded-full object-cover;
+  }
+}
+
+.channel-details {
+  .channel-name {
+    @apply flex items-center gap-1;
+    
+    span {
+      @apply font-medium text-white;
+    }
+    
+    .verified-badge {
+      @apply w-4 h-4 text-blue-500;
+    }
+  }
+  
+  .subscriber-count {
+    @apply text-sm text-gray-400;
+  }
+}
+
+.action-buttons {
+  @apply flex items-center gap-3;
+}
+
+.subscribe-btn {
+  @apply px-4 py-2 bg-red-600 text-white rounded-full font-medium hover:bg-red-700 transition-colors;
+  
+  &.subscribed {
+    @apply bg-gray-700 text-gray-300 hover:bg-gray-600;
+  }
+}
+
+.share-btn {
+  @apply p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors;
+  
+  svg {
+    @apply w-5 h-5;
+  }
+}
+
+.chat-section {
+  @apply w-96 flex flex-col bg-gray-800 border-l border-gray-700;
+}
+
+.chat-header {
+  @apply p-4 border-b border-gray-700 flex items-center justify-between;
+  
+  h3 {
+    @apply font-semibold text-white;
+  }
+  
+  .gift-toggle {
+    @apply text-gray-400 hover:text-white transition-colors;
+    
+    svg {
+      @apply w-5 h-5;
+    }
+  }
+}
+
+.gift-panel {
+  @apply p-4 border-b border-gray-700 bg-gray-700/50;
+  
+  h4 {
+    @apply text-sm font-medium text-gray-300 mb-3;
+  }
+}
+
+.gift-grid {
+  @apply grid grid-cols-4 gap-2;
+}
+
+.gift-item {
+  @apply p-2 rounded-lg bg-gray-700 hover:bg-gray-600 flex flex-col items-center transition-colors;
+  
+  img {
+    @apply w-8 h-8;
+  }
+  
+  span {
+    @apply text-xs text-gray-300 mt-1;
+  }
+}
+
+.chat-messages {
+  @apply flex-1 overflow-y-auto p-4 space-y-3;
+}
+
+.chat-message {
+  @apply flex gap-2;
+  
+  &.gift-message {
+    @apply bg-yellow-500/10 p-2 rounded-lg;
+  }
+  
+  img {
+    @apply w-6 h-6 rounded-full flex-shrink-0;
+  }
+}
+
+.message-content {
+  @apply min-w-0;
+  
+  .message-header {
+    @apply flex items-center gap-2;
+  }
+  
+  .username {
+    @apply text-sm font-medium text-blue-400;
+    
+    &.gift-user {
+      @apply text-yellow-400;
+    }
+  }
+  
+  .gift-label {
+    @apply text-xs text-yellow-400;
+  }
+  
+  p {
+    @apply text-sm text-gray-300 break-words;
+  }
+}
+
+.chat-input {
+  @apply p-4 border-t border-gray-700 flex gap-2;
+  
+  input {
+    @apply flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-full text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  }
+  
+  .send-btn {
+    @apply px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
+    
+    svg {
+      @apply w-5 h-5;
+    }
+  }
+}
+
+.chat-disabled {
+  @apply p-4 border-t border-gray-700 text-center text-gray-400 text-sm;
+}

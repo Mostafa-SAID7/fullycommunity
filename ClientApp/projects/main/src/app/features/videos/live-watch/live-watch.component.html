@@ -1,0 +1,139 @@
+<div class="live-watch-container">
+  @if (loading()) {
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+    </div>
+  } @else if (stream()) {
+    <!-- Video Section -->
+    <div class="video-section">
+      <!-- Video Player -->
+      <div class="video-player">
+        @if (stream()!.streamUrl) {
+          <video [src]="stream()!.streamUrl" autoplay controls></video>
+        } @else {
+          <div class="stream-placeholder">
+            <img [src]="stream()!.thumbnailUrl || 'assets/live-placeholder.png'" alt="Stream thumbnail">
+            <div class="placeholder-content">
+              <div class="play-icon">
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+              <p>Stream starting soon...</p>
+            </div>
+          </div>
+        }
+        
+        <!-- Live Badge & Viewers -->
+        <div class="stream-badges">
+          <div class="live-badge">
+            <span class="pulse-dot"></span>
+            LIVE
+          </div>
+          <div class="viewer-count">
+            <svg fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+              <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+            </svg>
+            {{ formatCount(viewerCount()) }} watching
+          </div>
+        </div>
+      </div>
+
+      <!-- Stream Info -->
+      <div class="stream-info">
+        <h1>{{ stream()!.title }}</h1>
+        <div class="channel-row">
+          <a [routerLink]="['/videos/channel', stream()!.channel.handle]" class="channel-link">
+            <img [src]="stream()!.channel.avatarUrl || 'assets/default-avatar.png'" [alt]="stream()!.channel.displayName">
+            <div class="channel-details">
+              <div class="channel-name">
+                <span>{{ stream()!.channel.displayName }}</span>
+                @if (stream()!.channel.isVerified) {
+                  <svg class="verified-badge" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                }
+              </div>
+              <span class="subscriber-count">{{ formatCount(stream()!.channel.subscriberCount) }} subscribers</span>
+            </div>
+          </a>
+          
+          <div class="action-buttons">
+            <button (click)="toggleSubscribe()" [class.subscribed]="isSubscribed()" class="subscribe-btn">
+              {{ isSubscribed() ? 'Subscribed' : 'Subscribe' }}
+            </button>
+            <button (click)="share()" class="share-btn">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Section -->
+    <div class="chat-section">
+      <!-- Chat Header -->
+      <div class="chat-header">
+        <h3>Live Chat</h3>
+        <button (click)="showGifts.set(!showGifts())" class="gift-toggle">
+          <svg fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm3 0a1 1 0 10-1-1v1h1z" clip-rule="evenodd"/>
+            <path d="M9 11H3v5a2 2 0 002 2h4v-7zM11 18h4a2 2 0 002-2v-5h-6v7z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Gift Panel -->
+      @if (showGifts()) {
+        <div class="gift-panel">
+          <h4>Send a Gift</h4>
+          <div class="gift-grid">
+            @for (gift of giftTypes(); track gift.id) {
+              <button (click)="sendGift(gift)" class="gift-item">
+                <img [src]="gift.iconUrl" [alt]="gift.name">
+                <span>{{ gift.coinCost }}</span>
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Chat Messages -->
+      <div class="chat-messages">
+        @for (msg of chatMessages(); track msg.id) {
+          <div class="chat-message" [class.gift-message]="msg.type === 'Gift'">
+            <img [src]="msg.userAvatar || 'assets/default-avatar.png'" [alt]="msg.userName">
+            <div class="message-content">
+              <div class="message-header">
+                <span class="username" [class.gift-user]="msg.type === 'Gift'">{{ msg.userName }}</span>
+                @if (msg.type === 'Gift') {
+                  <span class="gift-label">sent a gift!</span>
+                }
+              </div>
+              <p>{{ msg.content }}</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Chat Input -->
+      @if (stream()!.chatEnabled) {
+        <div class="chat-input">
+          <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Send a message...">
+          <button (click)="sendMessage()" [disabled]="!newMessage.trim()" class="send-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+          </button>
+        </div>
+      } @else {
+        <div class="chat-disabled">
+          Chat is disabled for this stream
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -2,8 +2,8 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MarketplaceService, Product, Seller, MarketplaceCategory } from '../../../core/services/marketplace.service';
-import { AuctionService, Auction } from '../../../core/services/auction.service';
+import { MarketplaceService, Product, Seller, MarketplaceCategory, Auction } from '../../../core/services/marketplace.service';
+import { AuctionService } from '../../../core/services/auction.service';
 import { ProductCardComponent } from '../shared/product-card.component';
 
 @Component({

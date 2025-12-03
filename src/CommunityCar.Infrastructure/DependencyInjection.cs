@@ -112,6 +112,10 @@ public static class DependencyInjection
         // Community Services
         services.AddScoped<Application.Common.Interfaces.Community.IPostService, Services.Community.PostService>();
 
+        // Video Services
+        services.AddScoped<Application.Common.Interfaces.Videos.IVideoService, Services.Videos.VideoService>();
+        services.AddScoped<Application.Common.Interfaces.Videos.IChannelService, Services.Videos.ChannelService>();
+
         return services;
     }
 }
