@@ -19,28 +19,28 @@ public class ChannelService : IChannelService
 
     public async Task<ChannelDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        var channel = await _context.Set<Channel>()
+        var channel = await _context.Channels
             .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted, ct);
         return channel == null ? null : MapToDto(channel);
     }
 
     public async Task<ChannelDto?> GetByHandleAsync(string handle, CancellationToken ct = default)
     {
-        var channel = await _context.Set<Channel>()
+        var channel = await _context.Channels
             .FirstOrDefaultAsync(c => c.Handle == handle && !c.IsDeleted, ct);
         return channel == null ? null : MapToDto(channel);
     }
 
     public async Task<ChannelDto?> GetByUserIdAsync(Guid userId, CancellationToken ct = default)
     {
-        var channel = await _context.Set<Channel>()
+        var channel = await _context.Channels
             .FirstOrDefaultAsync(c => c.UserId == userId && !c.IsDeleted, ct);
         return channel == null ? null : MapToDto(channel);
     }
 
     public async Task<PagedResult<ChannelListItemDto>> SearchAsync(ChannelSearchRequest request, CancellationToken ct = default)
     {
-        var query = _context.Set<Channel>().Where(c => !c.IsDeleted && c.Status == ChannelStatus.Active);
+        var query = _context.Channels.Where(c => !c.IsDeleted && c.Status == ChannelStatus.Active);
 
         if (!string.IsNullOrEmpty(request.Keywords))
             query = query.Where(c => c.DisplayName.Contains(request.Keywords) || c.Handle.Contains(request.Keywords));
@@ -69,7 +69,7 @@ public class ChannelService : IChannelService
 
     public async Task<List<ChannelListItemDto>> GetTrendingAsync(int count = 10, CancellationToken ct = default)
     {
-        return await _context.Set<Channel>()
+        return await _context.Channels
             .Where(c => !c.IsDeleted && c.Status == ChannelStatus.Active)
             .OrderByDescending(c => c.TotalViews)
             .Take(count)
@@ -87,7 +87,7 @@ public class ChannelService : IChannelService
 
     public async Task<List<ChannelListItemDto>> GetSuggestedAsync(Guid userId, int count = 10, CancellationToken ct = default)
     {
-        return await _context.Set<Channel>()
+        return await _context.Channels
             .Where(c => !c.IsDeleted && c.Status == ChannelStatus.Active && c.UserId != userId)
             .OrderByDescending(c => c.SubscriberCount)
             .Take(count)
@@ -116,14 +116,14 @@ public class ChannelService : IChannelService
             CreatedAt = DateTime.UtcNow
         };
 
-        _context.Set<Channel>().Add(channel);
+        _context.Channels.Add(channel);
         await _context.SaveChangesAsync(ct);
         return MapToDto(channel);
     }
 
     public async Task<ChannelDto> UpdateAsync(Guid id, UpdateChannelRequest request, CancellationToken ct = default)
     {
-        var channel = await _context.Set<Channel>().FindAsync(new object[] { id }, ct);
+        var channel = await _context.Channels.FindAsync(new object[] { id }, ct);
         if (channel == null) throw new Exception("Channel not found");
 
         if (request.DisplayName != null) channel.DisplayName = request.DisplayName;

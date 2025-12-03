@@ -140,11 +140,7 @@ builder.Services.AddAuthorizationBuilder()
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
-        policy.WithOrigins(
-            "http://localhost:4200", 
-            "https://localhost:4200",
-            "http://localhost:4201",
-            "https://localhost:4201")
+        policy.SetIsOriginAllowed(_ => true)
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials());
@@ -215,6 +211,15 @@ catch (Exception ex)
 // MIDDLEWARE
 // ═══════════════════════════════════════════════════════════════════════════════
 
+// Developer exception page for detailed errors in development
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
+// CORS must be early in the pipeline to handle preflight requests
+app.UseCors("AllowAll");
+
 // Request/Response Logging - shows all API traffic in terminal
 app.UseRequestResponseLogging();
 
@@ -237,7 +242,6 @@ app.UseSwaggerUI(c =>
 
 // app.UseHttpsRedirection(); // Disabled for local development
 app.UseStaticFiles(); // For serving uploaded files
-app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

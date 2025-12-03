@@ -56,9 +56,11 @@ public class ChannelsController : ControllerBase
     }
 
     [HttpGet("suggested")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetSuggestedChannels([FromQuery] int count = 10, CancellationToken ct = default)
     {
-        var channels = await _channelService.GetSuggestedAsync(GetUserId(), count, ct);
+        Guid? userId = User.Identity?.IsAuthenticated == true ? GetUserId() : null;
+        var channels = await _channelService.GetSuggestedAsync(userId ?? Guid.Empty, count, ct);
         return Ok(channels);
     }
 

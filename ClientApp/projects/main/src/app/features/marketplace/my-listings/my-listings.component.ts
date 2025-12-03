@@ -48,7 +48,7 @@ import { MarketplaceService, Product } from '../../../core/services/marketplace.
               <div class="listing-info">
                 <h3>{{ product.title }}</h3>
                 <p class="price">\${{ product.price | number:'1.2-2' }}</p>
-                <p class="meta">{{ product.viewCount }} views · {{ product.favoriteCount }} saves</p>
+                <p class="meta">{{ product.viewCount }} views · {{ product.saveCount || 0 }} saves</p>
               </div>
               <div class="listing-actions">
                 <a [routerLink]="['/marketplace/sell/edit', product.id]" class="btn-edit">Edit</a>

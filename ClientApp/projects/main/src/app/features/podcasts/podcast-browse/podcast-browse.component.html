@@ -1,0 +1,103 @@
+<app-podcast-layout>
+  <div class="space-y-6">
+    <h1 class="text-3xl font-bold text-secondary dark:text-white">Browse Podcasts</h1>
+    
+    <!-- Filters -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-border dark:border-gray-700">
+      <div class="flex flex-wrap gap-4">
+        <div class="flex-1 min-w-64">
+          <div class="relative">
+            <input 
+              type="text" 
+              [(ngModel)]="searchQuery" 
+              placeholder="Search podcasts..." 
+              (keyup.enter)="search()"
+              class="w-full pl-4 pr-12 py-3 border border-border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-secondary dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent" />
+            <button 
+              (click)="search()" 
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary">
+              🔍
+            </button>
+          </div>
+        </div>
+        
+        <select 
+          [(ngModel)]="selectedCategory" 
+          (change)="search()"
+          class="px-4 py-3 border border-border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-secondary dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
+          <option value="">All Categories</option>
+          <option *ngFor="let cat of categories; trackBy: trackByCategoryName" [value]="cat.name">
+            {{ cat.name }} ({{ cat.podcastCount }})
+          </option>
+        </select>
+        
+        <select 
+          [(ngModel)]="sortBy" 
+          (change)="search()"
+          class="px-4 py-3 border border-border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-secondary dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
+          <option value="popular">Most Popular</option>
+          <option value="rating">Highest Rated</option>
+          <option value="subscribers">Most Subscribers</option>
+          <option value="newest">Newest</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Category Pills -->
+    <div *ngIf="categories.length > 0" class="flex flex-wrap gap-2">
+      <button 
+        [class]="!selectedCategory ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'"
+        (click)="selectCategory('')"
+        class="px-4 py-2 rounded-full text-sm font-medium transition-colors">
+        All
+      </button>
+      <button 
+        *ngFor="let cat of categories; trackBy: trackByCategoryName"
+        [class]="selectedCategory === cat.name ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'"
+        (click)="selectCategory(cat.name)"
+        class="px-4 py-2 rounded-full text-sm font-medium transition-colors">
+        {{ cat.name }}
+      </button>
+    </div>
+
+    <!-- Results -->
+    <div class="space-y-6">
+      <div *ngIf="loading" class="flex justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+
+      <div *ngIf="!loading && podcasts.length === 0" class="text-center py-16 bg-gray-50 dark:bg-gray-800 rounded-xl">
+        <span class="text-6xl block mb-4">🎙️</span>
+        <h3 class="text-xl font-semibold text-secondary dark:text-white mb-2">No podcasts found</h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">Try different filters or search terms.</p>
+        <button 
+          *ngIf="searchQuery || selectedCategory"
+          (click)="clearFilters()" 
+          class="bg-primary hover:bg-primary-hover text-white px-6 py-2 rounded-lg font-medium transition-colors">
+          Clear Filters
+        </button>
+      </div>
+
+      <div *ngIf="!loading && podcasts.length > 0">
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-gray-600 dark:text-gray-400">{{ totalCount }} podcasts found</span>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <app-podcast-card 
+            *ngFor="let podcast of podcasts; trackBy: trackByPodcastId" 
+            [podcast]="podcast" />
+        </div>
+        
+        <div *ngIf="hasMore" class="text-center mt-8">
+          <button 
+            (click)="loadMore()" 
+            [disabled]="loadingMore"
+            class="bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+            {{ loadingMore ? 'Loading...' : 'Load More' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-podcast-layout>

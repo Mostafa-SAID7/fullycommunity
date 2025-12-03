@@ -1,0 +1,137 @@
+<div class="min-h-screen bg-background dark:bg-background-dark p-6">
+  <div class="max-w-6xl mx-auto">
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="text-display text-secondary-900 dark:text-secondary-100">Friends</h1>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex flex-wrap gap-3 mb-6">
+      <ui-button 
+        [variant]="activeTab() === 'all' ? 'primary' : 'outline'"
+        (clicked)="activeTab.set('all')">
+        All Friends 
+        <ui-badge variant="secondary" size="sm">{{ friendCount() }}</ui-badge>
+      </ui-button>
+      
+      <ui-button 
+        [variant]="activeTab() === 'requests' ? 'primary' : 'outline'"
+        (clicked)="activeTab.set('requests')">
+        Friend Requests 
+        @if (requestCount() > 0) {
+          <ui-badge variant="error" size="sm">{{ requestCount() }}</ui-badge>
+        }
+      </ui-button>
+      
+      <ui-button 
+        [variant]="activeTab() === 'suggestions' ? 'primary' : 'outline'"
+        (clicked)="activeTab.set('suggestions')">
+        Suggestions
+      </ui-button>
+    </div>
+
+    <!-- Search -->
+    <div class="mb-8">
+      <ui-input 
+        type="search"
+        placeholder="Search friends..."
+        icon="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        [clearable]="true">
+      </ui-input>
+    </div>
+
+    <!-- Friends Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (friend of filteredFriends(); track friend.id) {
+        <ui-card variant="elevated" [hover]="true">
+          <!-- Friend Avatar -->
+          <div class="flex items-center gap-4 mb-4">
+            <ui-avatar 
+              [src]="friend.avatarUrl" 
+              [name]="friend.firstName + ' ' + friend.lastName"
+              size="lg">
+            </ui-avatar>
+            <div class="flex-1">
+              <a [routerLink]="['/profile', friend.id]" 
+                class="font-semibold text-lg text-secondary-900 dark:text-secondary-100 hover:text-primary block">
+                {{ friend.firstName }} {{ friend.lastName }}
+              </a>
+              <p class="text-caption">{{ friend.mutualFriends }} mutual friends</p>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-2">
+            @if (activeTab() === 'requests') {
+              <ui-button 
+                variant="success" 
+                size="sm" 
+                [fullWidth]="true"
+                icon="M5 13l4 4L19 7"
+                (clicked)="acceptRequest(friend)">
+                Confirm
+              </ui-button>
+              <ui-button 
+                variant="outline" 
+                size="sm" 
+                (clicked)="declineRequest(friend)">
+                Delete
+              </ui-button>
+            } @else if (activeTab() === 'suggestions') {
+              <ui-button 
+                variant="primary" 
+                size="sm" 
+                [fullWidth]="true"
+                icon="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                (clicked)="sendRequest(friend)">
+                Add Friend
+              </ui-button>
+              <ui-button 
+                variant="outline" 
+                size="sm" 
+                (clicked)="removeSuggestion(friend)">
+                Remove
+              </ui-button>
+            } @else {
+              <ui-button 
+                variant="outline" 
+                size="sm" 
+                [fullWidth]="true"
+                icon="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                (clicked)="unfriend(friend)">
+                Friends
+              </ui-button>
+            }
+          </div>
+        </ui-card>
+      }
+    </div>
+
+    <!-- Empty State -->
+    @if (filteredFriends().length === 0) {
+      <ui-card variant="filled">
+        <div class="text-center py-12">
+          <div class="w-24 h-24 mx-auto mb-6 bg-secondary-100 dark:bg-secondary-800 rounded-full flex items-center justify-center">
+            <svg class="w-12 h-12 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-title-large text-secondary-900 dark:text-secondary-100 mb-2">
+            @switch (activeTab()) {
+              @case ('requests') { No friend requests }
+              @case ('suggestions') { No suggestions available }
+              @default { No friends yet }
+            }
+          </h3>
+          <p class="text-body text-secondary-600 dark:text-secondary-400">
+            @switch (activeTab()) {
+              @case ('requests') { You don't have any pending friend requests. }
+              @case ('suggestions') { Check back later for new friend suggestions. }
+              @default { Start connecting with people to build your network. }
+            }
+          </p>
+        </div>
+      </ui-card>
+    }
+  </div>
+</div>

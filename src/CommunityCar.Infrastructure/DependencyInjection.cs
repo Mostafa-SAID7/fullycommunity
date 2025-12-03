@@ -115,6 +115,12 @@ public static class DependencyInjection
         // Video Services
         services.AddScoped<Application.Common.Interfaces.Videos.IVideoService, Services.Videos.VideoService>();
         services.AddScoped<Application.Common.Interfaces.Videos.IChannelService, Services.Videos.ChannelService>();
+        services.AddScoped<Application.Common.Interfaces.Videos.IVideoEngagementService, Services.Videos.VideoEngagementService>();
+
+        // Podcast Services
+        services.AddScoped<Application.Common.Interfaces.Podcasts.IPodcastShowService, Services.Podcasts.PodcastShowService>();
+        services.AddScoped<Application.Common.Interfaces.Podcasts.IPodcastEpisodeService, Services.Podcasts.PodcastEpisodeService>();
+        services.AddScoped<Application.Common.Interfaces.Podcasts.IPodcastEngagementService, Services.Podcasts.PodcastEngagementService>();
 
         return services;
     }

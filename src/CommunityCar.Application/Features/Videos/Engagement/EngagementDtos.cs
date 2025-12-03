@@ -2,81 +2,71 @@ using CommunityCar.Domain.Entities.Videos.Common;
 
 namespace CommunityCar.Application.Features.Videos.Engagement;
 
-public record VideoCommentDto(
+public record ReactionDto(Guid Id, ReactionType Type);
+
+public record CommentDto(
     Guid Id,
     Guid VideoId,
-    Guid AuthorId,
-    string AuthorHandle,
-    string AuthorDisplayName,
-    string? AuthorAvatarUrl,
-    bool AuthorIsVerified,
+    Guid UserId,
+    string UserName,
+    string? UserAvatar,
     string Content,
-    Guid? ParentCommentId,
-    TimeSpan? VideoTimestamp,
+    Guid? ParentId,
     int LikeCount,
     int ReplyCount,
     bool IsPinned,
-    bool IsCreatorLiked,
-    bool IsLikedByUser,
-    DateTime CreatedAt,
-    List<VideoCommentDto>? Replies
+    bool IsLiked,
+    bool IsCreatorReply,
+    List<CommentDto>? Replies,
+    DateTime CreatedAt
+);
+
+public record CommentSearchRequest(
+    Guid VideoId = default,
+    string SortBy = "Top",
+    int Page = 1,
+    int PageSize = 20
 );
 
 public record CreateCommentRequest(
     Guid VideoId,
     string Content,
-    Guid? ParentCommentId,
-    TimeSpan? VideoTimestamp,
-    List<Guid>? MentionedUserIds
-);
-
-public record CommentSearchRequest(
-    Guid VideoId,
-    string? SortBy,
-    bool SortDescending = false,
-    int Page = 1,
-    int PageSize = 20
-);
-
-public record VideoReactionDto(
-    Guid Id,
-    Guid VideoId,
-    Guid UserId,
-    string UserHandle,
-    ReactionType Type,
-    DateTime CreatedAt
+    Guid? ParentId = null
 );
 
 public record SavedVideoDto(
     Guid Id,
     Guid VideoId,
-    string VideoTitle,
-    string? VideoThumbnailUrl,
-    TimeSpan VideoDuration,
-    string ChannelHandle,
+    VideoSummaryDto Video,
     Guid? CollectionId,
-    string? CollectionName,
     DateTime SavedAt
+);
+
+public record VideoSummaryDto(
+    Guid Id,
+    string Title,
+    string? ThumbnailUrl,
+    TimeSpan Duration,
+    string ChannelDisplayName,
+    long ViewCount
 );
 
 public record VideoCollectionDto(
     Guid Id,
     string Name,
     string? Description,
-    string? CoverImageUrl,
     bool IsPrivate,
     int VideoCount,
+    string? ThumbnailUrl,
     DateTime CreatedAt
 );
 
-public record CreateCollectionRequest(string Name, string? Description, bool IsPrivate);
+public record AddToCollectionRequest(Guid VideoId, Guid? CollectionId = null);
 
-public record AddToCollectionRequest(Guid VideoId, Guid? CollectionId);
-
-public record VideoShareDto(
-    Guid Id,
-    Guid VideoId,
-    string Platform,
-    string? ShareUrl,
-    DateTime SharedAt
+public record CreateCollectionRequest(
+    string Name,
+    string? Description = null,
+    bool IsPrivate = false
 );
+
+public record ShareResponseDto(string ShareUrl);

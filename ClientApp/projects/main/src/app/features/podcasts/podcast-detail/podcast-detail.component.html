@@ -1,0 +1,122 @@
+<app-podcast-layout>
+  @if (loading) {
+    <div class="flex flex-col items-center justify-center py-16">
+      <div class="w-12 h-12 border-4 border-border dark:border-gray-600 border-t-primary rounded-full animate-spin mb-4"></div>
+      <p class="text-gray-600 dark:text-gray-400">Loading podcast...</p>
+    </div>
+  } @else if (podcast) {
+    <div class="max-w-6xl mx-auto">
+      <!-- Podcast Header -->
+      <div class="flex flex-col lg:flex-row gap-8 mb-12">
+        <img [src]="podcast.coverImageUrl || '/assets/podcast-default.png'" [alt]="podcast.title" 
+          class="w-72 h-72 rounded-2xl object-cover shadow-2xl flex-shrink-0 mx-auto lg:mx-0" />
+        <div class="flex-1 text-center lg:text-left">
+          <span class="inline-block bg-primary text-background px-3 py-1 rounded-full text-sm font-semibold uppercase tracking-wide mb-3">
+            {{ getCategoryName() }}
+          </span>
+          <h1 class="text-4xl font-bold text-secondary dark:text-background mb-2">{{ podcast.title }}</h1>
+          <p class="text-xl text-gray-600 dark:text-gray-400 mb-4">by {{ podcast.ownerName }}</p>
+          
+          <div class="flex flex-wrap justify-center lg:justify-start gap-6 mb-6 text-gray-600 dark:text-gray-400">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-warning" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span>{{ podcast.averageRating | number:'1.1-1' }}</span>
+            </div>
+            <span>{{ podcast.subscriberCount | number }} subscribers</span>
+            <span>{{ podcast.episodeCount }} episodes</span>
+          </div>
+          
+          <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">{{ podcast.description }}</p>
+          
+          <div class="flex flex-wrap justify-center lg:justify-start gap-4">
+            @if (isLoggedIn) {
+              <button (click)="toggleSubscribe()" 
+                [class]="isSubscribed 
+                  ? 'px-6 py-3 bg-success text-background rounded-lg font-semibold hover:bg-green-600 flex items-center gap-2' 
+                  : 'px-6 py-3 bg-primary text-background rounded-lg font-semibold hover:bg-primary-hover flex items-center gap-2'">
+                @if (isSubscribed) {
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Subscribed
+                } @else {
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                  </svg>
+                  Subscribe
+                }
+              </button>
+            } @else {
+              <a routerLink="/login" class="px-6 py-3 bg-primary text-background rounded-lg font-semibold hover:bg-primary-hover">
+                Sign in to Subscribe
+              </a>
+            }
+            
+            <button (click)="share()" class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-secondary dark:text-background rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+              </svg>
+              Share
+            </button>
+            
+            @if (canEdit) {
+              <a [routerLink]="['/podcasts/manage', podcast.id]" class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-secondary dark:text-background rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                </svg>
+                Manage
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Episodes Section -->
+      <section class="bg-background dark:bg-secondary rounded-2xl p-6 border border-border dark:border-gray-600">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <h2 class="text-2xl font-bold text-secondary dark:text-background">Episodes ({{ podcast.episodeCount }})</h2>
+          <select [(ngModel)]="sortBy" (change)="loadEpisodes()" 
+            class="px-4 py-2 border border-border dark:border-gray-600 rounded-lg bg-background dark:bg-background-dark text-secondary dark:text-background focus:ring-2 focus:ring-primary">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="popular">Most Popular</option>
+          </select>
+        </div>
+        
+        @if (loadingEpisodes) {
+          <div class="text-center py-8">
+            <div class="w-8 h-8 border-4 border-border dark:border-gray-600 border-t-primary rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-gray-600 dark:text-gray-400">Loading episodes...</p>
+          </div>
+        } @else {
+          <div class="space-y-4">
+            @for (episode of episodes; track episode.id) {
+              <app-episode-card [episode]="episode" (onPlay)="playEpisode($event)" />
+            }
+          </div>
+          
+          @if (hasMoreEpisodes) {
+            <div class="text-center mt-8">
+              <button (click)="loadMoreEpisodes()" 
+                class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-secondary dark:text-background rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600">
+                Load More Episodes
+              </button>
+            </div>
+          }
+        }
+      </section>
+    </div>
+  } @else {
+    <div class="text-center py-16">
+      <div class="w-24 h-24 mx-auto mb-6 bg-error/10 rounded-full flex items-center justify-center">
+        <svg class="w-12 h-12 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+      </div>
+      <h2 class="text-2xl font-bold text-secondary dark:text-background mb-4">Podcast Not Found</h2>
+      <p class="text-gray-600 dark:text-gray-400">The podcast you're looking for doesn't exist or has been removed.</p>
+    </div>
+  }
+</app-podcast-layout>

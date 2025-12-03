@@ -4,14 +4,15 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { PodcastLayoutComponent } from '../shared/podcast-layout/podcast-layout.component';
+import { PodcastLayoutComponent } from '../podcast-layout/podcast-layout.component';
+import { PodcastService, PodcastShow, EpisodeListItem, PodcastHost } from '../../../core/services/podcast.service';
 
 @Component({
   selector: 'app-podcast-manage',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink, PodcastLayoutComponent],
   template: `
-    <app-podcast-layout [canEdit]="true">
+    <app-podcast-layout>
       <div class="manage-page">
         <div class="page-header">
           <h1>Manage Podcast</h1>
@@ -51,12 +52,12 @@ import { PodcastLayoutComponent } from '../shared/podcast-layout/podcast-layout.
                     <tr>
                       <td>{{ ep.episodeNumber }}</td>
                       <td>{{ ep.title }}</td>
-                      <td><span class="status" [class]="ep.status.toLowerCase()">{{ ep.status }}</span></td>
+                      <td><span class="status" [class.published]="ep.publishedAt">{{ ep.publishedAt ? 'Published' : 'Draft' }}</span></td>
                       <td>{{ ep.publishedAt | date:'shortDate' }}</td>
                       <td>{{ ep.playCount | number }}</td>
                       <td class="actions">
                         <button (click)="editEpisode(ep)">Edit</button>
-                        @if (ep.status === 'Draft') {
+                        @if (!ep.publishedAt) {
                           <button (click)="publishEpisode(ep)">Publish</button>
                         }
                         <button (click)="deleteEpisode(ep)" class="btn-danger">Delete</button>
@@ -150,7 +151,7 @@ import { PodcastLayoutComponent } from '../shared/podcast-layout/podcast-layout.
                   <img [src]="host.avatarUrl || '/assets/avatar-default.png'" class="host-avatar" />
                   <div class="host-info">
                     <h4>{{ host.name }}</h4>
-                    <p>{{ host.title }}</p>
+                    @if (host.bio) { <p>{{ host.bio }}</p> }
                     @if (host.isPrimaryHost) {
                       <span class="badge">Primary Host</span>
                     }
@@ -255,11 +256,11 @@ import { PodcastLayoutComponent } from '../shared/podcast-layout/podcast-layout.
 export class PodcastManageComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private http = inject(HttpClient);
+  private podcastService = inject(PodcastService);
 
-  podcast: any = null;
-  episodes: any[] = [];
-  hosts: any[] = [];
+  podcast: PodcastShow | null = null;
+  episodes: EpisodeListItem[] = [];
+  hosts: PodcastHost[] = [];
   analytics = { totalPlays: 0, subscribers: 0, avgRating: 0, totalDownloads: 0 };
   activeTab = 'episodes';
   showUploadModal = false;
@@ -268,31 +269,35 @@ export class PodcastManageComponent implements OnInit {
   audioFile: File | null = null;
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.loadPodcast(params['id']);
-    });
+    this.route.params.subscribe(params => this.loadPodcast(params['id']));
   }
 
   loadPodcast(id: string) {
-    this.http.get<any>(`${environment.apiUrl}/podcasts/${id}`).subscribe(p => {
+    this.podcastService.getPodcast(id).subscribe(p => {
       this.podcast = p;
+      this.analytics = {
+        totalPlays: p.totalPlays,
+        subscribers: p.subscriberCount,
+        avgRating: p.averageRating,
+        totalDownloads: 0
+      };
+      this.hosts = p.hosts || [];
       this.loadEpisodes();
-      this.loadHosts();
     });
   }
 
   loadEpisodes() {
-    this.http.get<any>(`${environment.apiUrl}/podcasts/${this.podcast.id}/episodes?pageSize=100`)
-      .subscribe(r => this.episodes = r.items);
-  }
-
-  loadHosts() {
-    this.http.get<any[]>(`${environment.apiUrl}/podcasts/${this.podcast.id}/hosts`)
-      .subscribe(h => this.hosts = h);
+    if (!this.podcast) return;
+    this.podcastService.getEpisodes(this.podcast.id, 1, 100).subscribe(r => this.episodes = r.items);
   }
 
   saveSettings() {
-    this.http.put(`${environment.apiUrl}/podcasts/${this.podcast.id}`, this.podcast).subscribe();
+    if (!this.podcast) return;
+    this.podcastService.updatePodcast(this.podcast.id, {
+      title: this.podcast.title,
+      description: this.podcast.description,
+      category: this.podcast.category
+    }).subscribe();
   }
 
   selectAudioFile(event: any) {
@@ -300,47 +305,57 @@ export class PodcastManageComponent implements OnInit {
   }
 
   uploadEpisode() {
-    if (!this.audioFile) return;
+    if (!this.audioFile || !this.podcast) return;
     this.uploading = true;
-    // Initiate upload, then complete
-    this.http.post<any>(`${environment.apiUrl}/podcasts/${this.podcast.id}/episodes/upload`, this.newEpisode)
-      .subscribe(res => {
-        // Upload audio file, then complete
+    this.podcastService.initiateEpisodeUpload(this.podcast.id, {
+      title: this.newEpisode.title,
+      episodeNumber: this.newEpisode.episodeNumber,
+      description: this.newEpisode.description,
+      type: 0,
+      explicitContent: 0,
+      allowComments: true,
+      allowDownloads: true
+    }).subscribe({
+      next: () => {
         this.showUploadModal = false;
         this.uploading = false;
         this.loadEpisodes();
-      });
+      },
+      error: () => this.uploading = false
+    });
   }
 
-  editEpisode(ep: any) { console.log('Edit', ep); }
-  publishEpisode(ep: any) {
-    this.http.post(`${environment.apiUrl}/podcasts/${this.podcast.id}/episodes/${ep.id}/publish`, {}).subscribe(() => this.loadEpisodes());
+  editEpisode(ep: EpisodeListItem) { console.log('Edit', ep); }
+  
+  publishEpisode(ep: EpisodeListItem) {
+    if (!this.podcast) return;
+    this.podcastService.publishEpisode(this.podcast.id, ep.id).subscribe(() => this.loadEpisodes());
   }
-  deleteEpisode(ep: any) {
-    if (confirm('Delete this episode?')) {
-      this.http.delete(`${environment.apiUrl}/podcasts/${this.podcast.id}/episodes/${ep.id}`).subscribe(() => this.loadEpisodes());
-    }
+  
+  deleteEpisode(ep: EpisodeListItem) {
+    if (!this.podcast || !confirm('Delete this episode?')) return;
+    this.podcastService.deleteEpisode(this.podcast.id, ep.id).subscribe(() => this.loadEpisodes());
   }
 
   addHost() { console.log('Add host'); }
-  editHost(host: any) { console.log('Edit host', host); }
-  removeHost(host: any) {
-    if (confirm('Remove this host?')) {
-      this.http.delete(`${environment.apiUrl}/podcasts/hosts/${host.id}`).subscribe(() => this.loadHosts());
-    }
+  editHost(host: PodcastHost) { console.log('Edit host', host); }
+  
+  removeHost(host: PodcastHost) {
+    if (!confirm('Remove this host?')) return;
+    this.podcastService.removeHost(host.id).subscribe(() => {
+      this.hosts = this.hosts.filter(h => h.id !== host.id);
+    });
   }
 
   unpublishPodcast() {
-    if (confirm('Unpublish this podcast?')) {
-      this.http.post(`${environment.apiUrl}/podcasts/${this.podcast.id}/unpublish`, {}).subscribe();
-    }
+    if (!this.podcast || !confirm('Unpublish this podcast?')) return;
+    this.podcastService.unpublishPodcast(this.podcast.id).subscribe();
   }
 
   deletePodcast() {
-    if (confirm('Delete this podcast? This cannot be undone.')) {
-      this.http.delete(`${environment.apiUrl}/podcasts/${this.podcast.id}`).subscribe(() => {
-        this.router.navigate(['/podcasts']);
-      });
-    }
+    if (!this.podcast || !confirm('Delete this podcast? This cannot be undone.')) return;
+    this.podcastService.deletePodcast(this.podcast.id).subscribe(() => {
+      this.router.navigate(['/podcasts']);
+    });
   }
 }

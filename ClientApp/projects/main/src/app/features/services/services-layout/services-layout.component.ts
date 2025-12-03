@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
 import { SectionLayoutComponent, MenuItem, SidebarShortcut } from '../../../shared/components/section-layout/section-layout.component';
 
 @Component({
   selector: 'app-services-layout',
   standalone: true,
-  imports: [CommonModule, SectionLayoutComponent],
+  imports: [CommonModule, RouterOutlet, SectionLayoutComponent],
   template: `
     <app-section-layout
       sectionTitle="Services"
@@ -14,7 +15,9 @@ import { SectionLayoutComponent, MenuItem, SidebarShortcut } from '../../../shar
       [shortcuts]="shortcuts"
       [showRightSidebar]="true"
       rightSidebarContent="services"
-    />
+    >
+      <router-outlet />
+    </app-section-layout>
   `
 })
 export class ServicesLayoutComponent {

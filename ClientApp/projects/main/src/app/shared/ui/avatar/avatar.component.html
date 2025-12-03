@@ -1,0 +1,12 @@
+<div [class]="avatarClasses">
+  @if (src) {
+    <img [src]="src" [alt]="displayAlt" class="w-full h-full object-cover" />
+  } @else {
+    <span>{{ initials }}</span>
+  }
+  
+  <!-- Status Indicator -->
+  @if (status) {
+    <span [class]="statusClasses"></span>
+  }
+</div>

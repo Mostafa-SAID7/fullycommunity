@@ -51,6 +51,7 @@ export interface Product {
   handlingDays: number;
   viewCount: number;
   watchCount: number;
+  saveCount: number;
   inquiryCount: number;
   publishedAt?: string;
   expiresAt?: string;

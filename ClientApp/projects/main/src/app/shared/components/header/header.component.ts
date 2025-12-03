@@ -1,17 +1,22 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { LocalizationService } from '../../../core/services/localization.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, TranslatePipe],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
   authService = inject(AuthService);
+  localization = inject(LocalizationService);
   private router = inject(Router);
+
+  showLanguageMenu = signal(false);
 
   showNotifications = signal(false);
   showUserMenu = signal(false);
@@ -33,6 +38,18 @@ export class HeaderComponent {
   toggleUserMenu() {
     this.showUserMenu.update(v => !v);
     this.showNotifications.set(false);
+    this.showLanguageMenu.set(false);
+  }
+
+  toggleLanguageMenu() {
+    this.showLanguageMenu.update(v => !v);
+    this.showNotifications.set(false);
+    this.showUserMenu.set(false);
+  }
+
+  setLanguage(langCode: string) {
+    this.localization.setLanguage(langCode);
+    this.showLanguageMenu.set(false);
   }
 
   navigateTo(path: string) {

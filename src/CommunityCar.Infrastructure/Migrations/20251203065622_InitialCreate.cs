@@ -11,6 +11,18 @@ namespace CommunityCar.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "profiles");
+
+            migrationBuilder.EnsureSchema(
+                name: "security");
+
+            migrationBuilder.EnsureSchema(
+                name: "community");
+
+            migrationBuilder.EnsureSchema(
+                name: "identity");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -85,6 +97,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AuditLogs",
+                schema: "security",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -112,6 +125,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "BlockedIps",
+                schema: "security",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -154,6 +168,34 @@ namespace CommunityCar.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EntityTranslations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GiftType",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IconUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AnimationUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Currency = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CoinsRequired = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsLimited = table.Column<bool>(type: "bit", nullable: false),
+                    SortOrder = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GiftType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -206,7 +248,26 @@ namespace CommunityCar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "NewsCategories",
+                schema: "community",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Slug = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IconUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SortOrder = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NewsCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Permissions",
+                schema: "identity",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -221,20 +282,28 @@ namespace CommunityCar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostCategory",
+                name: "PostCategories",
+                schema: "community",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Slug = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IconUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SortOrder = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostCategory", x => x.Id);
+                    table.PrimaryKey("PK_PostCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -373,6 +442,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AdminProfiles",
+                schema: "profiles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -401,6 +471,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AffiliateProfiles",
+                schema: "profiles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -520,6 +591,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AuthorProfiles",
+                schema: "profiles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -550,7 +622,7 @@ namespace CommunityCar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Channel",
+                name: "Channels",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -594,10 +666,57 @@ namespace CommunityCar.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Channel", x => x.Id);
+                    table.PrimaryKey("PK_Channels", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Channel_AspNetUsers_UserId",
+                        name: "FK_Channels_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ContentReports",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ContentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContentTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContentPreview = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReporterId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ContentAuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Reason = table.Column<int>(type: "int", nullable: false),
+                    ReasonDetails = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: false),
+                    ModeratorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ModeratedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModeratorNotes = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ActionTaken = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContentReports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ContentReports_AspNetUsers_ContentAuthorId",
+                        column: x => x.ContentAuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ContentReports_AspNetUsers_ModeratorId",
+                        column: x => x.ModeratorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ContentReports_AspNetUsers_ReporterId",
+                        column: x => x.ReporterId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -660,6 +779,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "ExpertProfiles",
+                schema: "profiles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -722,6 +842,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "GarageOwnerProfiles",
+                schema: "profiles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -805,6 +926,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "InstructorProfiles",
+                schema: "profiles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -837,6 +959,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "LoginAttempts",
+                schema: "security",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -870,7 +993,59 @@ namespace CommunityCar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MapLocations",
+                schema: "community",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Slug = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AddedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Website = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OpeningHours = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsOpen24Hours = table.Column<bool>(type: "bit", nullable: false),
+                    AverageRating = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ReviewCount = table.Column<int>(type: "int", nullable: false),
+                    CheckInCount = table.Column<int>(type: "int", nullable: false),
+                    SaveCount = table.Column<int>(type: "int", nullable: false),
+                    IsVerified = table.Column<bool>(type: "bit", nullable: false),
+                    IsClaimedByOwner = table.Column<bool>(type: "bit", nullable: false),
+                    ClaimedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MapLocations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MapLocations_AspNetUsers_AddedById",
+                        column: x => x.AddedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MechanicProfiles",
+                schema: "profiles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -902,7 +1077,55 @@ namespace CommunityCar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ActionUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ActionType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EntityType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ActorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    ReadAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsSent = table.Column<bool>(type: "bit", nullable: false),
+                    SentAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SentViaEmail = table.Column<bool>(type: "bit", nullable: false),
+                    SentViaPush = table.Column<bool>(type: "bit", nullable: false),
+                    SentViaSms = table.Column<bool>(type: "bit", nullable: false),
+                    DataJson = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notifications_AspNetUsers_ActorId",
+                        column: x => x.ActorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Notifications_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OtpCodes",
+                schema: "identity",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1028,6 +1251,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "ReviewerProfiles",
+                schema: "profiles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1110,6 +1334,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "SecurityAlerts",
+                schema: "security",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1150,6 +1375,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "StudentProfiles",
+                schema: "profiles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1180,6 +1406,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "TwoFactorBackupCodes",
+                schema: "security",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1203,6 +1430,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "UserActivities",
+                schema: "security",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1309,6 +1537,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "UserSessions",
+                schema: "security",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1345,6 +1574,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "VendorProfiles",
+                schema: "profiles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1373,6 +1603,36 @@ namespace CommunityCar.Infrastructure.Migrations
                     table.PrimaryKey("PK_VendorProfiles", x => x.Id);
                     table.ForeignKey(
                         name: "FK_VendorProfiles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VideoCollection",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CoverImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsPrivate = table.Column<bool>(type: "bit", nullable: false),
+                    VideoCount = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VideoCollection", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VideoCollection_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -1431,7 +1691,62 @@ namespace CommunityCar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "NewsArticles",
+                schema: "community",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Slug = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Excerpt = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CoverImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VideoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    PublishedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ScheduledAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    MetaTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MetaDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MetaKeywords = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ViewCount = table.Column<int>(type: "int", nullable: false),
+                    LikeCount = table.Column<int>(type: "int", nullable: false),
+                    CommentCount = table.Column<int>(type: "int", nullable: false),
+                    ShareCount = table.Column<int>(type: "int", nullable: false),
+                    IsFeatured = table.Column<bool>(type: "bit", nullable: false),
+                    IsBreaking = table.Column<bool>(type: "bit", nullable: false),
+                    AllowComments = table.Column<bool>(type: "bit", nullable: false),
+                    SourceName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SourceUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NewsArticles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NewsArticles_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_NewsArticles_NewsCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalSchema: "community",
+                        principalTable: "NewsCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RolePermissions",
+                schema: "identity",
                 columns: table => new
                 {
                     RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1451,6 +1766,7 @@ namespace CommunityCar.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_RolePermissions_Permissions_PermissionId",
                         column: x => x.PermissionId,
+                        principalSchema: "identity",
                         principalTable: "Permissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -1497,14 +1813,15 @@ namespace CommunityCar.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Posts_PostCategory_CategoryId",
+                        name: "FK_Posts_PostCategories_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "PostCategory",
+                        principalSchema: "community",
+                        principalTable: "PostCategories",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ChannelSubscription",
+                name: "ChannelSubscriptions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -1524,17 +1841,16 @@ namespace CommunityCar.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChannelSubscription", x => x.Id);
+                    table.PrimaryKey("PK_ChannelSubscriptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ChannelSubscription_AspNetUsers_SubscriberId",
+                        name: "FK_ChannelSubscriptions_AspNetUsers_SubscriberId",
                         column: x => x.SubscriberId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_ChannelSubscription_Channel_ChannelId",
+                        name: "FK_ChannelSubscriptions_Channels_ChannelId",
                         column: x => x.ChannelId,
-                        principalTable: "Channel",
+                        principalTable: "Channels",
                         principalColumn: "Id");
                 });
 
@@ -1566,9 +1882,9 @@ namespace CommunityCar.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Playlists", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Playlists_Channel_ChannelId",
+                        name: "FK_Playlists_Channels_ChannelId",
                         column: x => x.ChannelId,
-                        principalTable: "Channel",
+                        principalTable: "Channels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1704,6 +2020,119 @@ namespace CommunityCar.Infrastructure.Migrations
                         principalTable: "Groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LocationCheckIns",
+                schema: "community",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CheckedInAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocationCheckIns", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LocationCheckIns_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LocationCheckIns_MapLocations_LocationId",
+                        column: x => x.LocationId,
+                        principalSchema: "community",
+                        principalTable: "MapLocations",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LocationFeatures",
+                schema: "community",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Feature = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocationFeatures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LocationFeatures_MapLocations_LocationId",
+                        column: x => x.LocationId,
+                        principalSchema: "community",
+                        principalTable: "MapLocations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LocationMedia",
+                schema: "community",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UploadedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Caption = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SortOrder = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocationMedia", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LocationMedia_MapLocations_LocationId",
+                        column: x => x.LocationId,
+                        principalSchema: "community",
+                        principalTable: "MapLocations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LocationReviews",
+                schema: "community",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ServiceRating = table.Column<int>(type: "int", nullable: true),
+                    PriceRating = table.Column<int>(type: "int", nullable: true),
+                    CleanlinessRating = table.Column<int>(type: "int", nullable: true),
+                    HelpfulCount = table.Column<int>(type: "int", nullable: false),
+                    ReportCount = table.Column<int>(type: "int", nullable: false),
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    OwnerResponse = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OwnerResponseAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocationReviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LocationReviews_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_LocationReviews_MapLocations_LocationId",
+                        column: x => x.LocationId,
+                        principalSchema: "community",
+                        principalTable: "MapLocations",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -2035,6 +2464,63 @@ namespace CommunityCar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "NewsComments",
+                schema: "community",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ArticleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LikeCount = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NewsComments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NewsComments_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_NewsComments_NewsArticles_ArticleId",
+                        column: x => x.ArticleId,
+                        principalSchema: "community",
+                        principalTable: "NewsArticles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_NewsComments_NewsComments_ParentId",
+                        column: x => x.ParentId,
+                        principalSchema: "community",
+                        principalTable: "NewsComments",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NewsTags",
+                schema: "community",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ArticleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Tag = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NewsTags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NewsTags_NewsArticles_ArticleId",
+                        column: x => x.ArticleId,
+                        principalSchema: "community",
+                        principalTable: "NewsArticles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PostComments",
                 columns: table => new
                 {
@@ -2042,11 +2528,8 @@ namespace CommunityCar.Infrastructure.Migrations
                     PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ParentCommentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     LikeCount = table.Column<int>(type: "int", nullable: false),
-                    ReplyCount = table.Column<int>(type: "int", nullable: false),
-                    IsEdited = table.Column<bool>(type: "bit", nullable: false),
-                    EditedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -2065,8 +2548,8 @@ namespace CommunityCar.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PostComments_PostComments_ParentCommentId",
-                        column: x => x.ParentCommentId,
+                        name: "FK_PostComments_PostComments_ParentId",
+                        column: x => x.ParentId,
                         principalTable: "PostComments",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -2077,39 +2560,54 @@ namespace CommunityCar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostLike",
+                name: "PostLikes",
+                schema: "community",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostLike", x => x.Id);
+                    table.PrimaryKey("PK_PostLikes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PostLike_Posts_PostId",
+                        name: "FK_PostLikes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_PostLikes_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "PostMedia",
+                schema: "community",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ThumbnailUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FileSize = table.Column<long>(type: "bigint", nullable: true),
-                    MimeType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SortOrder = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ThumbnailUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2123,20 +2621,52 @@ namespace CommunityCar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostTag",
+                name: "PostTags",
+                schema: "community",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Tag = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Slug = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostTag", x => x.Id);
+                    table.PrimaryKey("PK_PostTags", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PostTag_Posts_PostId",
+                        name: "FK_PostTags_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LocationReviewMedia",
+                schema: "community",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationReviewId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Caption = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocationReviewMedia", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LocationReviewMedia_LocationReviews_LocationReviewId",
+                        column: x => x.LocationReviewId,
+                        principalSchema: "community",
+                        principalTable: "LocationReviews",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -2370,7 +2900,13 @@ namespace CommunityCar.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CommentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -2572,6 +3108,135 @@ namespace CommunityCar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LiveStreamChats",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LiveStreamId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    IsPinned = table.Column<bool>(type: "bit", nullable: false),
+                    IsHighlighted = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    SentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LiveStreamChats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LiveStreamChats_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LiveStreamGift",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LiveStreamId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GiftTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    TotalValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LiveStreamGift", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LiveStreamGift_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LiveStreamGift_GiftType_GiftTypeId",
+                        column: x => x.GiftTypeId,
+                        principalTable: "GiftType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LiveStreams",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ChannelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ThumbnailUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StreamKey = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StreamUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PlaybackUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChatRoomId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Quality = table.Column<int>(type: "int", nullable: false),
+                    ContentRating = table.Column<int>(type: "int", nullable: false),
+                    ScheduledStartAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ActualStartAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
+                    PeakViewers = table.Column<int>(type: "int", nullable: false),
+                    CurrentViewers = table.Column<int>(type: "int", nullable: false),
+                    TotalViewers = table.Column<int>(type: "int", nullable: false),
+                    LikeCount = table.Column<int>(type: "int", nullable: false),
+                    ChatMessageCount = table.Column<int>(type: "int", nullable: false),
+                    AllowChat = table.Column<bool>(type: "bit", nullable: false),
+                    SlowModeEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    SlowModeSeconds = table.Column<int>(type: "int", nullable: false),
+                    SubscribersOnlyChat = table.Column<bool>(type: "bit", nullable: false),
+                    AllowGifts = table.Column<bool>(type: "bit", nullable: false),
+                    SaveRecording = table.Column<bool>(type: "bit", nullable: false),
+                    RecordedVideoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsMonetized = table.Column<bool>(type: "bit", nullable: false),
+                    TotalGiftsReceived = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalEarnings = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Tags = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LiveStreams", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LiveStreams_Channels_ChannelId",
+                        column: x => x.ChannelId,
+                        principalTable: "Channels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LiveStreams_VideoCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "VideoCategories",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PlaylistItem",
                 columns: table => new
                 {
@@ -2601,7 +3266,40 @@ namespace CommunityCar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sound",
+                name: "SavedVideos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VideoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CollectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SavedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SavedVideos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SavedVideos_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SavedVideos_VideoCollection_CollectionId",
+                        column: x => x.CollectionId,
+                        principalTable: "VideoCollection",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sounds",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -2637,11 +3335,11 @@ namespace CommunityCar.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sound", x => x.Id);
+                    table.PrimaryKey("PK_Sounds", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Sound_Channel_CreatorChannelId",
+                        name: "FK_Sounds_Channels_CreatorChannelId",
                         column: x => x.CreatorChannelId,
-                        principalTable: "Channel",
+                        principalTable: "Channels",
                         principalColumn: "Id");
                 });
 
@@ -2729,15 +3427,15 @@ namespace CommunityCar.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Videos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Videos_Channel_ChannelId",
+                        name: "FK_Videos_Channels_ChannelId",
                         column: x => x.ChannelId,
-                        principalTable: "Channel",
+                        principalTable: "Channels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Videos_Sound_SoundId",
+                        name: "FK_Videos_Sounds_SoundId",
                         column: x => x.SoundId,
-                        principalTable: "Sound",
+                        principalTable: "Sounds",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
@@ -2767,7 +3465,7 @@ namespace CommunityCar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "VideoComment",
+                name: "VideoComments",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -2792,27 +3490,27 @@ namespace CommunityCar.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VideoComment", x => x.Id);
+                    table.PrimaryKey("PK_VideoComments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_VideoComment_AspNetUsers_AuthorId",
+                        name: "FK_VideoComments_AspNetUsers_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_VideoComment_VideoComment_ParentCommentId",
+                        name: "FK_VideoComments_VideoComments_ParentCommentId",
                         column: x => x.ParentCommentId,
-                        principalTable: "VideoComment",
+                        principalTable: "VideoComments",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_VideoComment_Videos_VideoId",
+                        name: "FK_VideoComments_Videos_VideoId",
                         column: x => x.VideoId,
                         principalTable: "Videos",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "VideoReaction",
+                name: "VideoReactions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -2829,22 +3527,56 @@ namespace CommunityCar.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VideoReaction", x => x.Id);
+                    table.PrimaryKey("PK_VideoReactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_VideoReaction_AspNetUsers_UserId",
+                        name: "FK_VideoReactions_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_VideoReaction_Videos_VideoId",
+                        name: "FK_VideoReactions_Videos_VideoId",
                         column: x => x.VideoId,
                         principalTable: "Videos",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "VideoView",
+                name: "VideoShares",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VideoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Platform = table.Column<int>(type: "int", nullable: false),
+                    ShareUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SharedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VideoShares", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VideoShares_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_VideoShares_Videos_VideoId",
+                        column: x => x.VideoId,
+                        principalTable: "Videos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VideoViews",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -2873,14 +3605,14 @@ namespace CommunityCar.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VideoView", x => x.Id);
+                    table.PrimaryKey("PK_VideoViews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_VideoView_AspNetUsers_UserId",
+                        name: "FK_VideoViews_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_VideoView_Videos_VideoId",
+                        name: "FK_VideoViews_Videos_VideoId",
                         column: x => x.VideoId,
                         principalTable: "Videos",
                         principalColumn: "Id",
@@ -2915,9 +3647,9 @@ namespace CommunityCar.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_VideoMention_VideoComment_CommentId",
+                        name: "FK_VideoMention_VideoComments_CommentId",
                         column: x => x.CommentId,
-                        principalTable: "VideoComment",
+                        principalTable: "VideoComments",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_VideoMention_Videos_VideoId",
@@ -2928,17 +3660,20 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_AdminProfiles_UserId",
+                schema: "profiles",
                 table: "AdminProfiles",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AffiliateProfiles_AffiliateCode",
+                schema: "profiles",
                 table: "AffiliateProfiles",
                 column: "AffiliateCode",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AffiliateProfiles_UserId",
+                schema: "profiles",
                 table: "AffiliateProfiles",
                 column: "UserId");
 
@@ -3025,48 +3760,54 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuditLogs_EntityType",
+                schema: "security",
                 table: "AuditLogs",
                 column: "EntityType");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuditLogs_EntityType_EntityId",
+                schema: "security",
                 table: "AuditLogs",
                 columns: new[] { "EntityType", "EntityId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuditLogs_Timestamp",
+                schema: "security",
                 table: "AuditLogs",
                 column: "Timestamp");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuditLogs_UserId",
+                schema: "security",
                 table: "AuditLogs",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuthorProfiles_UserId",
+                schema: "profiles",
                 table: "AuthorProfiles",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BlockedIps_IpAddress",
+                schema: "security",
                 table: "BlockedIps",
                 column: "IpAddress",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Channel_UserId",
-                table: "Channel",
+                name: "IX_Channels_UserId",
+                table: "Channels",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChannelSubscription_ChannelId",
-                table: "ChannelSubscription",
+                name: "IX_ChannelSubscriptions_ChannelId",
+                table: "ChannelSubscriptions",
                 column: "ChannelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChannelSubscription_SubscriberId",
-                table: "ChannelSubscription",
+                name: "IX_ChannelSubscriptions_SubscriberId",
+                table: "ChannelSubscriptions",
                 column: "SubscriberId");
 
             migrationBuilder.CreateIndex(
@@ -3078,6 +3819,21 @@ namespace CommunityCar.Infrastructure.Migrations
                 name: "IX_CommentLike_UserId",
                 table: "CommentLike",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContentReports_ContentAuthorId",
+                table: "ContentReports",
+                column: "ContentAuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContentReports_ModeratorId",
+                table: "ContentReports",
+                column: "ModeratorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContentReports_ReporterId",
+                table: "ContentReports",
+                column: "ReporterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EpisodeChapter_EpisodeId",
@@ -3151,6 +3907,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExpertProfiles_UserId",
+                schema: "profiles",
                 table: "ExpertProfiles",
                 column: "UserId");
 
@@ -3167,6 +3924,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_GarageOwnerProfiles_UserId",
+                schema: "profiles",
                 table: "GarageOwnerProfiles",
                 column: "UserId");
 
@@ -3247,21 +4005,183 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_InstructorProfiles_UserId",
+                schema: "profiles",
                 table: "InstructorProfiles",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LiveStreamChats_LiveStreamId",
+                table: "LiveStreamChats",
+                column: "LiveStreamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LiveStreamChats_UserId",
+                table: "LiveStreamChats",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LiveStreamGift_GiftTypeId",
+                table: "LiveStreamGift",
+                column: "GiftTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LiveStreamGift_LiveStreamId",
+                table: "LiveStreamGift",
+                column: "LiveStreamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LiveStreamGift_SenderId",
+                table: "LiveStreamGift",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LiveStreams_CategoryId",
+                table: "LiveStreams",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LiveStreams_ChannelId",
+                table: "LiveStreams",
+                column: "ChannelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LiveStreams_RecordedVideoId",
+                table: "LiveStreams",
+                column: "RecordedVideoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocationCheckIns_LocationId",
+                schema: "community",
+                table: "LocationCheckIns",
+                column: "LocationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocationCheckIns_UserId",
+                schema: "community",
+                table: "LocationCheckIns",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocationFeatures_LocationId",
+                schema: "community",
+                table: "LocationFeatures",
+                column: "LocationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocationMedia_LocationId",
+                schema: "community",
+                table: "LocationMedia",
+                column: "LocationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocationReviewMedia_LocationReviewId",
+                schema: "community",
+                table: "LocationReviewMedia",
+                column: "LocationReviewId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocationReviews_AuthorId",
+                schema: "community",
+                table: "LocationReviews",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocationReviews_LocationId",
+                schema: "community",
+                table: "LocationReviews",
+                column: "LocationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LoginAttempts_UserId_CreatedAt",
+                schema: "security",
                 table: "LoginAttempts",
                 columns: new[] { "UserId", "CreatedAt" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_MapLocations_AddedById",
+                schema: "community",
+                table: "MapLocations",
+                column: "AddedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MapLocations_Slug",
+                schema: "community",
+                table: "MapLocations",
+                column: "Slug",
+                unique: true,
+                filter: "[Slug] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MechanicProfiles_UserId",
+                schema: "profiles",
                 table: "MechanicProfiles",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NewsArticles_AuthorId",
+                schema: "community",
+                table: "NewsArticles",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NewsArticles_CategoryId",
+                schema: "community",
+                table: "NewsArticles",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NewsArticles_Slug",
+                schema: "community",
+                table: "NewsArticles",
+                column: "Slug",
+                unique: true,
+                filter: "[Slug] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NewsCategories_Slug",
+                schema: "community",
+                table: "NewsCategories",
+                column: "Slug",
+                unique: true,
+                filter: "[Slug] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NewsComments_ArticleId",
+                schema: "community",
+                table: "NewsComments",
+                column: "ArticleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NewsComments_AuthorId",
+                schema: "community",
+                table: "NewsComments",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NewsComments_ParentId",
+                schema: "community",
+                table: "NewsComments",
+                column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NewsTags_ArticleId",
+                schema: "community",
+                table: "NewsTags",
+                column: "ArticleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_ActorId",
+                table: "Notifications",
+                column: "ActorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_UserId",
+                table: "Notifications",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OtpCodes_UserId",
+                schema: "identity",
                 table: "OtpCodes",
                 column: "UserId");
 
@@ -3316,14 +4236,21 @@ namespace CommunityCar.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PostCategories_Slug",
+                schema: "community",
+                table: "PostCategories",
+                column: "Slug",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PostComments_AuthorId",
                 table: "PostComments",
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostComments_ParentCommentId",
+                name: "IX_PostComments_ParentId",
                 table: "PostComments",
-                column: "ParentCommentId");
+                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostComments_PostId",
@@ -3331,12 +4258,20 @@ namespace CommunityCar.Infrastructure.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostLike_PostId",
-                table: "PostLike",
+                name: "IX_PostLikes_PostId",
+                schema: "community",
+                table: "PostLikes",
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PostLikes_UserId",
+                schema: "community",
+                table: "PostLikes",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PostMedia_PostId",
+                schema: "community",
                 table: "PostMedia",
                 column: "PostId");
 
@@ -3351,8 +4286,9 @@ namespace CommunityCar.Infrastructure.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostTag_PostId",
-                table: "PostTag",
+                name: "IX_PostTags_PostId",
+                schema: "community",
+                table: "PostTags",
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
@@ -3425,6 +4361,7 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReviewerProfiles_UserId",
+                schema: "profiles",
                 table: "ReviewerProfiles",
                 column: "UserId");
 
@@ -3450,36 +4387,56 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_RolePermissions_PermissionId",
+                schema: "identity",
                 table: "RolePermissions",
                 column: "PermissionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SavedVideos_CollectionId",
+                table: "SavedVideos",
+                column: "CollectionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SavedVideos_UserId",
+                table: "SavedVideos",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SavedVideos_VideoId",
+                table: "SavedVideos",
+                column: "VideoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SecurityAlerts_UserId",
+                schema: "security",
                 table: "SecurityAlerts",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sound_CreatorChannelId",
-                table: "Sound",
+                name: "IX_Sounds_CreatorChannelId",
+                table: "Sounds",
                 column: "CreatorChannelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sound_OriginalVideoId1",
-                table: "Sound",
+                name: "IX_Sounds_OriginalVideoId1",
+                table: "Sounds",
                 column: "OriginalVideoId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentProfiles_UserId",
+                schema: "profiles",
                 table: "StudentProfiles",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TwoFactorBackupCodes_UserId",
+                schema: "security",
                 table: "TwoFactorBackupCodes",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserActivities_UserId_CreatedAt",
+                schema: "security",
                 table: "UserActivities",
                 columns: new[] { "UserId", "CreatedAt" });
 
@@ -3496,17 +4453,20 @@ namespace CommunityCar.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserSessions_SessionToken",
+                schema: "security",
                 table: "UserSessions",
                 column: "SessionToken",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserSessions_UserId",
+                schema: "security",
                 table: "UserSessions",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VendorProfiles_UserId",
+                schema: "profiles",
                 table: "VendorProfiles",
                 column: "UserId");
 
@@ -3516,18 +4476,23 @@ namespace CommunityCar.Infrastructure.Migrations
                 column: "ParentCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VideoComment_AuthorId",
-                table: "VideoComment",
+                name: "IX_VideoCollection_UserId",
+                table: "VideoCollection",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VideoComments_AuthorId",
+                table: "VideoComments",
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VideoComment_ParentCommentId",
-                table: "VideoComment",
+                name: "IX_VideoComments_ParentCommentId",
+                table: "VideoComments",
                 column: "ParentCommentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VideoComment_VideoId",
-                table: "VideoComment",
+                name: "IX_VideoComments_VideoId",
+                table: "VideoComments",
                 column: "VideoId");
 
             migrationBuilder.CreateIndex(
@@ -3546,13 +4511,13 @@ namespace CommunityCar.Infrastructure.Migrations
                 column: "VideoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VideoReaction_UserId",
-                table: "VideoReaction",
+                name: "IX_VideoReactions_UserId",
+                table: "VideoReactions",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VideoReaction_VideoId",
-                table: "VideoReaction",
+                name: "IX_VideoReactions_VideoId",
+                table: "VideoReactions",
                 column: "VideoId");
 
             migrationBuilder.CreateIndex(
@@ -3586,13 +4551,23 @@ namespace CommunityCar.Infrastructure.Migrations
                 column: "StitchOfVideoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VideoView_UserId",
-                table: "VideoView",
+                name: "IX_VideoShares_UserId",
+                table: "VideoShares",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VideoView_VideoId",
-                table: "VideoView",
+                name: "IX_VideoShares_VideoId",
+                table: "VideoShares",
+                column: "VideoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VideoViews_UserId",
+                table: "VideoViews",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VideoViews_VideoId",
+                table: "VideoViews",
                 column: "VideoId");
 
             migrationBuilder.AddForeignKey(
@@ -3611,6 +4586,29 @@ namespace CommunityCar.Infrastructure.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
+                name: "FK_LiveStreamChats_LiveStreams_LiveStreamId",
+                table: "LiveStreamChats",
+                column: "LiveStreamId",
+                principalTable: "LiveStreams",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_LiveStreamGift_LiveStreams_LiveStreamId",
+                table: "LiveStreamGift",
+                column: "LiveStreamId",
+                principalTable: "LiveStreams",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_LiveStreams_Videos_RecordedVideoId",
+                table: "LiveStreams",
+                column: "RecordedVideoId",
+                principalTable: "Videos",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_PlaylistItem_Videos_VideoId",
                 table: "PlaylistItem",
                 column: "VideoId",
@@ -3618,8 +4616,16 @@ namespace CommunityCar.Infrastructure.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Sound_Videos_OriginalVideoId1",
-                table: "Sound",
+                name: "FK_SavedVideos_Videos_VideoId",
+                table: "SavedVideos",
+                column: "VideoId",
+                principalTable: "Videos",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Sounds_Videos_OriginalVideoId1",
+                table: "Sounds",
                 column: "OriginalVideoId1",
                 principalTable: "Videos",
                 principalColumn: "Id");
@@ -3633,8 +4639,8 @@ namespace CommunityCar.Infrastructure.Migrations
                 table: "Answers");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Channel_AspNetUsers_UserId",
-                table: "Channel");
+                name: "FK_Channels_AspNetUsers_UserId",
+                table: "Channels");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Questions_AspNetUsers_AuthorId",
@@ -3645,22 +4651,28 @@ namespace CommunityCar.Infrastructure.Migrations
                 table: "Questions");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Sound_Channel_CreatorChannelId",
-                table: "Sound");
+                name: "FK_Sounds_Channels_CreatorChannelId",
+                table: "Sounds");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Videos_Channel_ChannelId",
+                name: "FK_Videos_Channels_ChannelId",
                 table: "Videos");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Sound_Videos_OriginalVideoId1",
-                table: "Sound");
+                name: "FK_Videos_VideoCategories_CategoryId",
+                table: "Videos");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Sounds_Videos_OriginalVideoId1",
+                table: "Sounds");
 
             migrationBuilder.DropTable(
-                name: "AdminProfiles");
+                name: "AdminProfiles",
+                schema: "profiles");
 
             migrationBuilder.DropTable(
-                name: "AffiliateProfiles");
+                name: "AffiliateProfiles",
+                schema: "profiles");
 
             migrationBuilder.DropTable(
                 name: "AnswerComment");
@@ -3684,19 +4696,25 @@ namespace CommunityCar.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "AuditLogs");
+                name: "AuditLogs",
+                schema: "security");
 
             migrationBuilder.DropTable(
-                name: "AuthorProfiles");
+                name: "AuthorProfiles",
+                schema: "profiles");
 
             migrationBuilder.DropTable(
-                name: "BlockedIps");
+                name: "BlockedIps",
+                schema: "security");
 
             migrationBuilder.DropTable(
-                name: "ChannelSubscription");
+                name: "ChannelSubscriptions");
 
             migrationBuilder.DropTable(
                 name: "CommentLike");
+
+            migrationBuilder.DropTable(
+                name: "ContentReports");
 
             migrationBuilder.DropTable(
                 name: "EntityTranslations");
@@ -3723,13 +4741,15 @@ namespace CommunityCar.Infrastructure.Migrations
                 name: "EventMedia");
 
             migrationBuilder.DropTable(
-                name: "ExpertProfiles");
+                name: "ExpertProfiles",
+                schema: "profiles");
 
             migrationBuilder.DropTable(
                 name: "ExternalLogins");
 
             migrationBuilder.DropTable(
-                name: "GarageOwnerProfiles");
+                name: "GarageOwnerProfiles",
+                schema: "profiles");
 
             migrationBuilder.DropTable(
                 name: "GroupMember");
@@ -3750,19 +4770,56 @@ namespace CommunityCar.Infrastructure.Migrations
                 name: "GuideTag");
 
             migrationBuilder.DropTable(
-                name: "InstructorProfiles");
+                name: "InstructorProfiles",
+                schema: "profiles");
 
             migrationBuilder.DropTable(
                 name: "Languages");
 
             migrationBuilder.DropTable(
-                name: "LoginAttempts");
+                name: "LiveStreamChats");
 
             migrationBuilder.DropTable(
-                name: "MechanicProfiles");
+                name: "LiveStreamGift");
 
             migrationBuilder.DropTable(
-                name: "OtpCodes");
+                name: "LocationCheckIns",
+                schema: "community");
+
+            migrationBuilder.DropTable(
+                name: "LocationFeatures",
+                schema: "community");
+
+            migrationBuilder.DropTable(
+                name: "LocationMedia",
+                schema: "community");
+
+            migrationBuilder.DropTable(
+                name: "LocationReviewMedia",
+                schema: "community");
+
+            migrationBuilder.DropTable(
+                name: "LoginAttempts",
+                schema: "security");
+
+            migrationBuilder.DropTable(
+                name: "MechanicProfiles",
+                schema: "profiles");
+
+            migrationBuilder.DropTable(
+                name: "NewsComments",
+                schema: "community");
+
+            migrationBuilder.DropTable(
+                name: "NewsTags",
+                schema: "community");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
+
+            migrationBuilder.DropTable(
+                name: "OtpCodes",
+                schema: "identity");
 
             migrationBuilder.DropTable(
                 name: "PlaylistItem");
@@ -3774,13 +4831,16 @@ namespace CommunityCar.Infrastructure.Migrations
                 name: "PodcastSubscription");
 
             migrationBuilder.DropTable(
-                name: "PostLike");
+                name: "PostLikes",
+                schema: "community");
 
             migrationBuilder.DropTable(
-                name: "PostMedia");
+                name: "PostMedia",
+                schema: "community");
 
             migrationBuilder.DropTable(
-                name: "PostTag");
+                name: "PostTags",
+                schema: "community");
 
             migrationBuilder.DropTable(
                 name: "QuestionBookmark");
@@ -3801,7 +4861,8 @@ namespace CommunityCar.Infrastructure.Migrations
                 name: "ReviewCon");
 
             migrationBuilder.DropTable(
-                name: "ReviewerProfiles");
+                name: "ReviewerProfiles",
+                schema: "profiles");
 
             migrationBuilder.DropTable(
                 name: "ReviewHelpful");
@@ -3813,25 +4874,33 @@ namespace CommunityCar.Infrastructure.Migrations
                 name: "ReviewPro");
 
             migrationBuilder.DropTable(
-                name: "RolePermissions");
+                name: "RolePermissions",
+                schema: "identity");
 
             migrationBuilder.DropTable(
-                name: "SecurityAlerts");
+                name: "SavedVideos");
+
+            migrationBuilder.DropTable(
+                name: "SecurityAlerts",
+                schema: "security");
 
             migrationBuilder.DropTable(
                 name: "StoredFiles");
 
             migrationBuilder.DropTable(
-                name: "StudentProfiles");
+                name: "StudentProfiles",
+                schema: "profiles");
 
             migrationBuilder.DropTable(
                 name: "Translations");
 
             migrationBuilder.DropTable(
-                name: "TwoFactorBackupCodes");
+                name: "TwoFactorBackupCodes",
+                schema: "security");
 
             migrationBuilder.DropTable(
-                name: "UserActivities");
+                name: "UserActivities",
+                schema: "security");
 
             migrationBuilder.DropTable(
                 name: "UserDevices");
@@ -3840,19 +4909,24 @@ namespace CommunityCar.Infrastructure.Migrations
                 name: "UserLoginHistory");
 
             migrationBuilder.DropTable(
-                name: "UserSessions");
+                name: "UserSessions",
+                schema: "security");
 
             migrationBuilder.DropTable(
-                name: "VendorProfiles");
+                name: "VendorProfiles",
+                schema: "profiles");
 
             migrationBuilder.DropTable(
                 name: "VideoMention");
 
             migrationBuilder.DropTable(
-                name: "VideoReaction");
+                name: "VideoReactions");
 
             migrationBuilder.DropTable(
-                name: "VideoView");
+                name: "VideoShares");
+
+            migrationBuilder.DropTable(
+                name: "VideoViews");
 
             migrationBuilder.DropTable(
                 name: "PostComments");
@@ -3867,6 +4941,20 @@ namespace CommunityCar.Infrastructure.Migrations
                 name: "GuideSteps");
 
             migrationBuilder.DropTable(
+                name: "GiftType");
+
+            migrationBuilder.DropTable(
+                name: "LiveStreams");
+
+            migrationBuilder.DropTable(
+                name: "LocationReviews",
+                schema: "community");
+
+            migrationBuilder.DropTable(
+                name: "NewsArticles",
+                schema: "community");
+
+            migrationBuilder.DropTable(
                 name: "Playlists");
 
             migrationBuilder.DropTable(
@@ -3879,10 +4967,14 @@ namespace CommunityCar.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Permissions");
+                name: "Permissions",
+                schema: "identity");
 
             migrationBuilder.DropTable(
-                name: "VideoComment");
+                name: "VideoCollection");
+
+            migrationBuilder.DropTable(
+                name: "VideoComments");
 
             migrationBuilder.DropTable(
                 name: "Posts");
@@ -3891,10 +4983,19 @@ namespace CommunityCar.Infrastructure.Migrations
                 name: "Guides");
 
             migrationBuilder.DropTable(
+                name: "MapLocations",
+                schema: "community");
+
+            migrationBuilder.DropTable(
+                name: "NewsCategories",
+                schema: "community");
+
+            migrationBuilder.DropTable(
                 name: "PodcastShows");
 
             migrationBuilder.DropTable(
-                name: "PostCategory");
+                name: "PostCategories",
+                schema: "community");
 
             migrationBuilder.DropTable(
                 name: "GuideCategory");
@@ -3912,16 +5013,16 @@ namespace CommunityCar.Infrastructure.Migrations
                 name: "QuestionCategory");
 
             migrationBuilder.DropTable(
-                name: "Channel");
+                name: "Channels");
+
+            migrationBuilder.DropTable(
+                name: "VideoCategories");
 
             migrationBuilder.DropTable(
                 name: "Videos");
 
             migrationBuilder.DropTable(
-                name: "Sound");
-
-            migrationBuilder.DropTable(
-                name: "VideoCategories");
+                name: "Sounds");
         }
     }
 }

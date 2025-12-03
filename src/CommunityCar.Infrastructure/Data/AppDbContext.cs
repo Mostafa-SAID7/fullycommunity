@@ -71,6 +71,16 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<Video> Videos => Set<Video>();
     public DbSet<Playlist> Playlists => Set<Playlist>();
     public DbSet<VideoCategory> VideoCategories => Set<VideoCategory>();
+    public DbSet<CommunityCar.Domain.Entities.Videos.Channels.Channel> Channels => Set<CommunityCar.Domain.Entities.Videos.Channels.Channel>();
+    public DbSet<CommunityCar.Domain.Entities.Videos.Channels.ChannelSubscription> ChannelSubscriptions => Set<CommunityCar.Domain.Entities.Videos.Channels.ChannelSubscription>();
+    public DbSet<CommunityCar.Domain.Entities.Videos.Engagement.VideoComment> VideoComments => Set<CommunityCar.Domain.Entities.Videos.Engagement.VideoComment>();
+    public DbSet<CommunityCar.Domain.Entities.Videos.Engagement.VideoReaction> VideoReactions => Set<CommunityCar.Domain.Entities.Videos.Engagement.VideoReaction>();
+    public DbSet<CommunityCar.Domain.Entities.Videos.Engagement.SavedVideo> SavedVideos => Set<CommunityCar.Domain.Entities.Videos.Engagement.SavedVideo>();
+    public DbSet<CommunityCar.Domain.Entities.Videos.Engagement.VideoShare> VideoShares => Set<CommunityCar.Domain.Entities.Videos.Engagement.VideoShare>();
+    public DbSet<CommunityCar.Domain.Entities.Videos.Engagement.VideoView> VideoViews => Set<CommunityCar.Domain.Entities.Videos.Engagement.VideoView>();
+    public DbSet<CommunityCar.Domain.Entities.Videos.Content.Sound> Sounds => Set<CommunityCar.Domain.Entities.Videos.Content.Sound>();
+    public DbSet<CommunityCar.Domain.Entities.Videos.LiveStream.LiveStream> LiveStreams => Set<CommunityCar.Domain.Entities.Videos.LiveStream.LiveStream>();
+    public DbSet<CommunityCar.Domain.Entities.Videos.LiveStream.LiveStreamChat> LiveStreamChats => Set<CommunityCar.Domain.Entities.Videos.LiveStream.LiveStreamChat>();
 
     // Podcasts
     public DbSet<CommunityCar.Domain.Entities.Podcasts.Shows.PodcastShow> PodcastShows => Set<CommunityCar.Domain.Entities.Podcasts.Shows.PodcastShow>();
@@ -353,11 +363,23 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
         // VIDEOS - Channels
         // ═══════════════════════════════════════════════════════════════════════
 
+        builder.Entity<CommunityCar.Domain.Entities.Videos.Channels.Channel>(entity =>
+        {
+            entity.HasOne(c => c.User)
+                  .WithMany()
+                  .HasForeignKey(c => c.UserId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
+
         builder.Entity<CommunityCar.Domain.Entities.Videos.Channels.ChannelSubscription>(entity =>
         {
             entity.HasOne(s => s.Channel)
                   .WithMany(c => c.Subscribers)
                   .HasForeignKey(s => s.ChannelId)
+                  .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(s => s.Subscriber)
+                  .WithMany()
+                  .HasForeignKey(s => s.SubscriberId)
                   .OnDelete(DeleteBehavior.NoAction);
         });
 
@@ -549,6 +571,15 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
                   .WithMany()
                   .HasForeignKey(r => r.AuthorId)
                   .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Maps.LocationReviewMedia>(entity =>
+        {
+            entity.ToTable("LocationReviewMedia", "community");
+            entity.HasOne(m => m.LocationReview)
+                  .WithMany(r => r.Media)
+                  .HasForeignKey(m => m.LocationReviewId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Entity<CommunityCar.Domain.Entities.Community.Maps.LocationCheckIn>(entity =>

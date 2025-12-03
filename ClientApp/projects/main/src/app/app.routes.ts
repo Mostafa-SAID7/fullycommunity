@@ -24,9 +24,18 @@ export const routes: Routes = [
     loadChildren: () => import('./features/podcasts/podcasts.routes').then(m => m.podcastRoutes) 
   },
   {
+    path: 'services',
+    loadChildren: () => import('./features/services/services.routes').then(m => m.servicesRoutes)
+  },
+  {
     path: 'dashboard',
     loadChildren: () => import('./features/dashboard/dashboard.routes').then(m => m.dashboardRoutes),
     canActivate: [authGuard]
   },
-  { path: '**', redirectTo: '' }
+  // Error pages
+  { path: 'error', loadComponent: () => import('./features/errors/server-error/server-error.component').then(m => m.ServerErrorComponent) },
+  { path: 'forbidden', loadComponent: () => import('./features/errors/forbidden/forbidden.component').then(m => m.ForbiddenComponent) },
+  { path: 'unauthorized', loadComponent: () => import('./features/errors/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent) },
+  { path: 'not-found', loadComponent: () => import('./features/errors/not-found/not-found.component').then(m => m.NotFoundComponent) },
+  { path: '**', loadComponent: () => import('./features/errors/not-found/not-found.component').then(m => m.NotFoundComponent) }
 ];

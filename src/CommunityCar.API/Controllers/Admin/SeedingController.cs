@@ -193,7 +193,40 @@ public class SeedingController : ControllerBase
     }
 
     /// <summary>
-    /// Get seeding documentation and user accounts
+    /// Seed podcast content
+    /// </summary>
+    [HttpPost("podcasts")]
+    [AllowAnonymous] // Allow for development
+    public async Task<ActionResult<object>> SeedPodcasts()
+    {
+
+        try
+        {
+            using var scope = _services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<Infrastructure.Data.AppDbContext>();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Infrastructure.Data.Seeding.Content.PodcastSeeder>>();
+            
+            var seeder = new Infrastructure.Data.Seeding.Content.PodcastSeeder(context, logger);
+            await seeder.SeedAsync();
+            
+            return Ok(new { 
+                Success = true, 
+                Message = "Podcasts seeded successfully",
+                Stats = new {
+                    Shows = await context.Set<Domain.Entities.Podcasts.Shows.PodcastShow>().CountAsync(),
+                    Episodes = await context.Set<Domain.Entities.Podcasts.Shows.PodcastEpisode>().CountAsync()
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error seeding podcasts");
+            return StatusCode(500, new { Success = false, Message = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// /// Get seeding documentation and user accounts
     /// </summary>
     [HttpGet("info")]
     public ActionResult<object> GetSeedingInfo()

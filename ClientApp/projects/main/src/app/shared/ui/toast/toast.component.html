@@ -1,0 +1,43 @@
+@if (visible) {
+  <div [class]="toastClasses">
+    <div class="p-4">
+      <div class="flex items-start">
+        <!-- Icon -->
+        <div class="flex-shrink-0">
+          <svg [class]="iconColor + ' w-5 h-5'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="iconPath"/>
+          </svg>
+        </div>
+        
+        <!-- Content -->
+        <div class="ml-3 w-0 flex-1">
+          @if (title) {
+            <p class="text-sm font-medium text-secondary-900 dark:text-secondary-100">
+              {{ title }}
+            </p>
+          }
+          @if (message) {
+            <p class="text-sm text-secondary-500 dark:text-secondary-400" [class.mt-1]="title">
+              {{ message }}
+            </p>
+          }
+          <ng-content></ng-content>
+        </div>
+        
+        <!-- Close Button -->
+        @if (closable) {
+          <div class="ml-4 flex-shrink-0 flex">
+            <button
+              type="button"
+              class="bg-background dark:bg-background-dark rounded-md inline-flex text-secondary-400 hover:text-secondary-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              (click)="close()">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

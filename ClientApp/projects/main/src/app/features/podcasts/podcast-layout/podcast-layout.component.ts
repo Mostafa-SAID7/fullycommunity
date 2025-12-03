@@ -14,23 +14,25 @@ import { SectionLayoutComponent, MenuItem, SidebarShortcut } from '../../../shar
       [shortcuts]="shortcuts"
       [showRightSidebar]="true"
       rightSidebarContent="podcasts"
-    />
+    >
+      <ng-content></ng-content>
+    </app-section-layout>
   `
 })
 export class PodcastLayoutComponent {
   menuItems: MenuItem[] = [
-    { icon: 'home', label: 'Discover', route: '/podcasts', exact: true },
-    { icon: 'episodes', label: 'Episodes', route: '/podcasts/episodes' },
-    { icon: 'shows', label: 'Shows', route: '/podcasts/shows' },
-    { icon: 'subscriptions', label: 'Subscriptions', route: '/podcasts/subscriptions' },
-    { icon: 'library', label: 'Your Library', route: '/podcasts/library' },
-    { icon: 'history', label: 'History', route: '/podcasts/history' },
-    { icon: 'saved', label: 'Saved Episodes', route: '/podcasts/saved' }
+    { icon: 'home', label: 'Home', route: '/podcasts', exact: true },
+    { icon: 'browse', label: 'Browse', route: '/podcasts/browse' },
+    { icon: 'library', label: 'Library', route: '/podcasts/library' },
+    { icon: 'subscriptions', label: 'Subscriptions', route: '/podcasts/library' },
+    { icon: 'history', label: 'History', route: '/podcasts/library' },
+    { icon: 'create', label: 'Create Show', route: '/podcasts/create' }
   ];
 
   shortcuts: SidebarShortcut[] = [
-    { id: 'car-talk', name: 'Car Talk Weekly', image: '/assets/podcasts/car-talk.jpg', type: 'podcasts/show' },
-    { id: 'garage-stories', name: 'Garage Stories', image: '/assets/podcasts/garage.jpg', type: 'podcasts/show' },
-    { id: 'ev-future', name: 'EV Future', image: '/assets/podcasts/ev.jpg', type: 'podcasts/show' }
+    { id: 'car-talk', name: 'The Car Talk Show', image: 'https://picsum.photos/seed/cartalk/400/400', type: 'podcasts/show' },
+    { id: 'garage-sessions', name: 'Garage Sessions', image: 'https://picsum.photos/seed/garage/400/400', type: 'podcasts/show' },
+    { id: 'ev-revolution', name: 'EV Revolution', image: 'https://picsum.photos/seed/evrev/400/400', type: 'podcasts/show' },
+    { id: 'wrench-talk', name: 'Wrench Talk', image: 'https://picsum.photos/seed/wrench/400/400', type: 'podcasts/show' }
   ];
 }

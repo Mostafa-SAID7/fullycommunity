@@ -1,0 +1,146 @@
+<app-podcast-layout>
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex flex-col items-center justify-center py-16">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+    <p class="text-secondary dark:text-gray-300">Loading podcasts...</p>
+  </div>
+
+  <div *ngIf="!loading">
+    <!-- Not logged in - Show login prompt -->
+    <section *ngIf="!isLoggedIn" class="bg-gradient-to-br from-primary to-primary-hover text-white p-8 rounded-2xl mb-8">
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold mb-4">Discover Amazing Podcasts</h1>
+        <p class="text-xl opacity-90 mb-6">Listen to the best automotive podcasts, car reviews, and expert discussions.</p>
+        <div class="flex gap-4 justify-center">
+          <a routerLink="/login" class="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            Sign In
+          </a>
+          <a routerLink="/register" class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-colors">
+            Create Account
+          </a>
+        </div>
+      </div>
+      
+      <div class="flex gap-8 justify-center flex-wrap">
+        <div class="text-center p-4">
+          <span class="text-4xl block mb-2">🎧</span>
+          <h3 class="font-semibold mb-1">Unlimited Listening</h3>
+          <p class="opacity-80 text-sm">Access thousands of episodes</p>
+        </div>
+        <div class="text-center p-4">
+          <span class="text-4xl block mb-2">📱</span>
+          <h3 class="font-semibold mb-1">Listen Anywhere</h3>
+          <p class="opacity-80 text-sm">Web, mobile, and offline</p>
+        </div>
+        <div class="text-center p-4">
+          <span class="text-4xl block mb-2">🚗</span>
+          <h3 class="font-semibold mb-1">Car Community</h3>
+          <p class="opacity-80 text-sm">Connect with enthusiasts</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trending for guests -->
+    <section *ngIf="!isLoggedIn && trendingPodcasts.length > 0" class="mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-secondary dark:text-white">Trending Podcasts</h2>
+        <a routerLink="/podcasts/browse" class="text-primary hover:text-primary-hover font-medium">See All</a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <app-podcast-card *ngFor="let podcast of trendingPodcasts; trackBy: trackByPodcastId" [podcast]="podcast" />
+      </div>
+    </section>
+
+    <!-- Latest Episodes for guests -->
+    <section *ngIf="!isLoggedIn && latestEpisodes.length > 0" class="mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-secondary dark:text-white">Latest Episodes</h2>
+      </div>
+      <div class="space-y-4">
+        <app-episode-card 
+          *ngFor="let episode of latestEpisodes.slice(0, 5); trackBy: trackByEpisodeId" 
+          [episode]="episode" 
+          (onPlay)="playEpisode($event)" />
+      </div>
+    </section>
+
+    <!-- Logged in - Show personalized content -->
+    <div *ngIf="isLoggedIn">
+      <!-- Continue Listening -->
+      <section *ngIf="continueListening.length > 0" class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-secondary dark:text-white">Continue Listening</h2>
+          <a routerLink="/podcasts/library" class="text-primary hover:text-primary-hover font-medium">View History</a>
+        </div>
+        <div class="space-y-4">
+          <app-episode-card 
+            *ngFor="let item of continueListening; trackBy: trackByHistoryId" 
+            [episode]="item.episode" 
+            [showProgress]="true" 
+            [progress]="item.listenPercent"
+            (onPlay)="playEpisode(item.episode)" />
+        </div>
+      </section>
+
+      <!-- Your Subscriptions -->
+      <section *ngIf="subscriptions.length > 0" class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-secondary dark:text-white">Your Subscriptions</h2>
+          <a routerLink="/podcasts/library" class="text-primary hover:text-primary-hover font-medium">Manage</a>
+        </div>
+        <div class="flex gap-4 overflow-x-auto pb-4">
+          <app-podcast-card 
+            *ngFor="let podcast of subscriptions; trackBy: trackByPodcastId" 
+            [podcast]="podcast" 
+            [compact]="true" />
+        </div>
+      </section>
+
+      <!-- New Episodes from Subscriptions -->
+      <section *ngIf="latestEpisodes.length > 0" class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-secondary dark:text-white">New Episodes</h2>
+        </div>
+        <div class="space-y-4">
+          <app-episode-card 
+            *ngFor="let episode of latestEpisodes; trackBy: trackByEpisodeId" 
+            [episode]="episode" 
+            (onPlay)="playEpisode($event)" />
+        </div>
+      </section>
+
+      <!-- Recommended for You -->
+      <section *ngIf="recommendedPodcasts.length > 0" class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-secondary dark:text-white">Recommended for You</h2>
+          <a routerLink="/podcasts/browse" class="text-primary hover:text-primary-hover font-medium">Explore</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <app-podcast-card *ngFor="let podcast of recommendedPodcasts; trackBy: trackByPodcastId" [podcast]="podcast" />
+        </div>
+      </section>
+
+      <!-- Trending -->
+      <section *ngIf="trendingPodcasts.length > 0" class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-secondary dark:text-white">Trending Now</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <app-podcast-card *ngFor="let podcast of trendingPodcasts; trackBy: trackByPodcastId" [podcast]="podcast" />
+        </div>
+      </section>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && trendingPodcasts.length === 0 && latestEpisodes.length === 0" 
+         class="text-center py-16 bg-gray-50 dark:bg-gray-800 rounded-2xl">
+      <span class="text-6xl block mb-4">🎙️</span>
+      <h2 class="text-2xl font-bold text-secondary dark:text-white mb-2">No Podcasts Available</h2>
+      <p class="text-gray-600 dark:text-gray-400 mb-6">Check back later for new content or try refreshing the page.</p>
+      <button (click)="loadData()" 
+              class="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+        Refresh
+      </button>
+    </div>
+  </div>
+</app-podcast-layout>

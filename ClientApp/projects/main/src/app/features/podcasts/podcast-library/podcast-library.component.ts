@@ -1,40 +1,42 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PodcastService, Podcast, Episode } from '../../../core/services/podcast.service';
-import { PodcastLayoutComponent } from '../shared/podcast-layout/podcast-layout.component';
+import { RouterLink } from '@angular/router';
+import { PodcastService, PodcastListItem, EpisodeListItem, ListenHistory, QueueItem } from '../../../core/services/podcast.service';
+import { PodcastLayoutComponent } from '../podcast-layout/podcast-layout.component';
 import { PodcastCardComponent } from '../shared/podcast-card/podcast-card.component';
 import { EpisodeCardComponent } from '../shared/episode-card/episode-card.component';
 
 @Component({
   selector: 'app-podcast-library',
   standalone: true,
-  imports: [CommonModule, PodcastLayoutComponent, PodcastCardComponent, EpisodeCardComponent],
+  imports: [CommonModule, RouterLink, PodcastLayoutComponent, PodcastCardComponent, EpisodeCardComponent],
   template: `
     <app-podcast-layout>
       <div class="library-page">
         <h1>Your Library</h1>
         
-        <!-- Tabs -->
         <div class="tabs">
-          <button [class.active]="activeTab === 'subscriptions'" (click)="activeTab = 'subscriptions'">
+          <button [class.active]="activeTab === 'subscriptions'" (click)="setTab('subscriptions')">
             Subscriptions
           </button>
-          <button [class.active]="activeTab === 'saved'" (click)="activeTab = 'saved'; loadSaved()">
+          <button [class.active]="activeTab === 'saved'" (click)="setTab('saved')">
             Saved Episodes
           </button>
-          <button [class.active]="activeTab === 'history'" (click)="activeTab = 'history'; loadHistory()">
+          <button [class.active]="activeTab === 'history'" (click)="setTab('history')">
             History
           </button>
-          <button [class.active]="activeTab === 'queue'" (click)="activeTab = 'queue'; loadQueue()">
+          <button [class.active]="activeTab === 'queue'" (click)="setTab('queue')">
             Queue
           </button>
         </div>
 
-        <!-- Subscriptions -->
         @if (activeTab === 'subscriptions') {
           <div class="section">
-            @if (subscriptions.length === 0) {
+            @if (loadingSubscriptions) {
+              <div class="loading">Loading subscriptions...</div>
+            } @else if (subscriptions.length === 0) {
               <div class="empty">
+                <span class="empty-icon">📻</span>
                 <p>You haven't subscribed to any podcasts yet.</p>
                 <a routerLink="/podcasts/browse" class="btn">Browse Podcasts</a>
               </div>
@@ -48,35 +50,53 @@ import { EpisodeCardComponent } from '../shared/episode-card/episode-card.compon
           </div>
         }
 
-        <!-- Saved Episodes -->
         @if (activeTab === 'saved') {
           <div class="section">
-            @if (savedEpisodes.length === 0) {
-              <div class="empty">No saved episodes yet.</div>
+            @if (loadingSaved) {
+              <div class="loading">Loading saved episodes...</div>
+            } @else if (savedEpisodes.length === 0) {
+              <div class="empty">
+                <span class="empty-icon">🔖</span>
+                <p>No saved episodes yet.</p>
+              </div>
             } @else {
               <div class="episode-list">
                 @for (episode of savedEpisodes; track episode.id) {
-                  <app-episode-card [episode]="episode" />
+                  <app-episode-card [episode]="episode" (onPlay)="playEpisode($event)" />
                 }
               </div>
             }
           </div>
         }
 
-        <!-- History -->
         @if (activeTab === 'history') {
           <div class="section">
             <div class="section-header">
               <span></span>
-              <button (click)="clearHistory()" class="btn-text">Clear History</button>
+              @if (history.length > 0) {
+                <button (click)="clearHistory()" class="btn-text">Clear History</button>
+              }
             </div>
-            @if (history.length === 0) {
-              <div class="empty">No listening history yet.</div>
+            @if (loadingHistory) {
+              <div class="loading">Loading history...</div>
+            } @else if (history.length === 0) {
+              <div class="empty">
+                <span class="empty-icon">📜</span>
+                <p>No listening history yet.</p>
+              </div>
             } @else {
               <div class="episode-list">
                 @for (item of history; track item.episodeId) {
                   <div class="history-item">
-                    <app-episode-card [episode]="item" [showProgress]="true" [progress]="item.progressPercent" />
+                    <app-episode-card 
+                      [episode]="item.episode" 
+                      [showProgress]="true" 
+                      [progress]="item.listenPercent"
+                      (onPlay)="playEpisode(item.episode)" 
+                    />
+                    @if (item.isCompleted) {
+                      <span class="completed-badge">✓ Completed</span>
+                    }
                   </div>
                 }
               </div>
@@ -84,22 +104,28 @@ import { EpisodeCardComponent } from '../shared/episode-card/episode-card.compon
           </div>
         }
 
-        <!-- Queue -->
         @if (activeTab === 'queue') {
           <div class="section">
             <div class="section-header">
-              <span>{{ queue.length }} episodes</span>
-              <button (click)="clearQueue()" class="btn-text">Clear Queue</button>
+              <span>{{ queue.length }} episodes in queue</span>
+              @if (queue.length > 0) {
+                <button (click)="clearQueue()" class="btn-text">Clear Queue</button>
+              }
             </div>
-            @if (queue.length === 0) {
-              <div class="empty">Your queue is empty.</div>
+            @if (loadingQueue) {
+              <div class="loading">Loading queue...</div>
+            } @else if (queue.length === 0) {
+              <div class="empty">
+                <span class="empty-icon">📋</span>
+                <p>Your queue is empty.</p>
+              </div>
             } @else {
               <div class="episode-list">
                 @for (item of queue; track item.episodeId; let i = $index) {
                   <div class="queue-item">
                     <span class="queue-number">{{ i + 1 }}</span>
-                    <app-episode-card [episode]="item" />
-                    <button (click)="removeFromQueue(item.episodeId)" class="btn-remove">✕</button>
+                    <app-episode-card [episode]="item.episode" [compact]="true" (onPlay)="playEpisode(item.episode)" />
+                    <button (click)="removeFromQueue(item.episodeId)" class="btn-remove" title="Remove">✕</button>
                   </div>
                 }
               </div>
@@ -111,65 +137,118 @@ import { EpisodeCardComponent } from '../shared/episode-card/episode-card.compon
   `,
   styles: [`
     .library-page h1 { margin-bottom: 1.5rem; }
-    .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; flex-wrap: wrap; }
     .tabs button {
       padding: 0.75rem 1.5rem; border: none; background: none; cursor: pointer;
-      font-size: 1rem; color: #666; border-radius: 8px 8px 0 0;
+      font-size: 1rem; color: #666; border-radius: 8px 8px 0 0; transition: all 0.2s;
     }
+    .tabs button:hover { background: #f5f5f5; }
     .tabs button.active { background: #6366f1; color: white; }
-    .section-header { display: flex; justify-content: space-between; margin-bottom: 1rem; }
-    .btn-text { background: none; border: none; color: #6366f1; cursor: pointer; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .btn-text { background: none; border: none; color: #6366f1; cursor: pointer; font-size: 0.9rem; }
+    .btn-text:hover { text-decoration: underline; }
     .podcast-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
     .episode-list { display: flex; flex-direction: column; gap: 1rem; }
-    .empty { text-align: center; padding: 3rem; color: #666; }
-    .empty .btn { display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: #6366f1; color: white; border-radius: 8px; text-decoration: none; }
+    .loading { text-align: center; padding: 2rem; color: #666; }
+    .empty { text-align: center; padding: 4rem; background: #f8f9fa; border-radius: 16px; }
+    .empty-icon { font-size: 4rem; display: block; margin-bottom: 1rem; }
+    .empty p { color: #666; margin-bottom: 1rem; }
+    .empty .btn { 
+      display: inline-block; padding: 0.75rem 1.5rem; background: #6366f1; 
+      color: white; border-radius: 8px; text-decoration: none; 
+    }
+    .history-item { position: relative; }
+    .completed-badge {
+      position: absolute; top: 1rem; right: 1rem;
+      background: #10b981; color: white; padding: 4px 8px;
+      border-radius: 4px; font-size: 0.75rem; font-weight: 600;
+    }
     .queue-item { display: flex; align-items: center; gap: 1rem; }
-    .queue-number { font-size: 1.25rem; font-weight: bold; color: #999; width: 30px; }
-    .btn-remove { background: none; border: none; color: #999; cursor: pointer; font-size: 1.25rem; }
+    .queue-number { font-size: 1.25rem; font-weight: bold; color: #999; width: 30px; text-align: center; }
+    .btn-remove { 
+      background: none; border: none; color: #999; cursor: pointer; 
+      font-size: 1.25rem; padding: 0.5rem; transition: color 0.2s;
+    }
+    .btn-remove:hover { color: #ef4444; }
   `]
 })
 export class PodcastLibraryComponent implements OnInit {
   private podcastService = inject(PodcastService);
 
   activeTab = 'subscriptions';
-  subscriptions: Podcast[] = [];
-  savedEpisodes: Episode[] = [];
-  history: any[] = [];
-  queue: any[] = [];
+  subscriptions: PodcastListItem[] = [];
+  savedEpisodes: EpisodeListItem[] = [];
+  history: ListenHistory[] = [];
+  queue: QueueItem[] = [];
+
+  loadingSubscriptions = false;
+  loadingSaved = false;
+  loadingHistory = false;
+  loadingQueue = false;
 
   ngOnInit() {
     this.loadSubscriptions();
   }
 
+  setTab(tab: string) {
+    this.activeTab = tab;
+    switch (tab) {
+      case 'subscriptions': this.loadSubscriptions(); break;
+      case 'saved': this.loadSaved(); break;
+      case 'history': this.loadHistory(); break;
+      case 'queue': this.loadQueue(); break;
+    }
+  }
+
   loadSubscriptions() {
-    this.podcastService.getSubscriptions(1, 50).subscribe(r => this.subscriptions = r.items);
+    if (this.subscriptions.length > 0) return;
+    this.loadingSubscriptions = true;
+    this.podcastService.getSubscriptions(1, 50).subscribe({
+      next: r => { this.subscriptions = r.items; this.loadingSubscriptions = false; },
+      error: () => this.loadingSubscriptions = false
+    });
   }
 
   loadSaved() {
-    this.podcastService.getSavedEpisodes(1, 50).subscribe(r => this.savedEpisodes = r.items);
+    if (this.savedEpisodes.length > 0) return;
+    this.loadingSaved = true;
+    this.podcastService.getSavedEpisodes(1, 50).subscribe({
+      next: r => { this.savedEpisodes = r.items; this.loadingSaved = false; },
+      error: () => this.loadingSaved = false
+    });
   }
 
   loadHistory() {
-    this.podcastService.getHistory(1, 50).subscribe(r => this.history = r.items);
+    this.loadingHistory = true;
+    this.podcastService.getHistory(1, 50).subscribe({
+      next: r => { this.history = r.items; this.loadingHistory = false; },
+      error: () => this.loadingHistory = false
+    });
   }
 
   loadQueue() {
-    this.podcastService.getQueue().subscribe(q => this.queue = q);
+    this.loadingQueue = true;
+    this.podcastService.getQueue().subscribe({
+      next: q => { this.queue = q; this.loadingQueue = false; },
+      error: () => this.loadingQueue = false
+    });
   }
 
   clearHistory() {
-    // API call to clear history
-    this.history = [];
+    this.podcastService.clearHistory().subscribe(() => this.history = []);
   }
 
   clearQueue() {
-    // API call to clear queue
-    this.queue = [];
+    this.podcastService.clearQueue().subscribe(() => this.queue = []);
   }
 
   removeFromQueue(episodeId: string) {
     this.podcastService.removeFromQueue(episodeId).subscribe(() => {
       this.queue = this.queue.filter(q => q.episodeId !== episodeId);
     });
+  }
+
+  playEpisode(episode: EpisodeListItem) {
+    window.location.href = '/podcasts/episode/' + episode.podcastShowId + '/' + episode.id;
   }
 }

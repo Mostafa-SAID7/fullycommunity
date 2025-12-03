@@ -4,7 +4,8 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { PodcastLayoutComponent } from '../shared/podcast-layout/podcast-layout.component';
+import { PodcastLayoutComponent } from '../podcast-layout/podcast-layout.component';
+import { PodcastService, PodcastType, PodcastCategory, ExplicitContent, CreatePodcastRequest } from '../../../core/services/podcast.service';
 
 @Component({
   selector: 'app-podcast-create',
@@ -38,24 +39,23 @@ import { PodcastLayoutComponent } from '../shared/podcast-layout/podcast-layout.
               <div class="form-group">
                 <label>Category *</label>
                 <select [(ngModel)]="podcast.category" name="category" required>
-                  <option value="">Select category</option>
-                  <option value="Automotive">Automotive</option>
-                  <option value="Technology">Technology</option>
-                  <option value="News">News</option>
-                  <option value="Education">Education</option>
-                  <option value="Entertainment">Entertainment</option>
-                  <option value="Business">Business</option>
-                  <option value="Lifestyle">Lifestyle</option>
-                  <option value="Sports">Sports</option>
+                  <option [ngValue]="0">Automotive</option>
+                  <option [ngValue]="1">Classic Cars</option>
+                  <option [ngValue]="2">Electric Vehicles</option>
+                  <option [ngValue]="3">Racing</option>
+                  <option [ngValue]="4">Maintenance & DIY</option>
+                  <option [ngValue]="5">Auto Business</option>
+                  <option [ngValue]="6">News</option>
+                  <option [ngValue]="7">Reviews</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label>Type</label>
                 <select [(ngModel)]="podcast.type" name="type">
-                  <option value="Audio">Audio Only</option>
-                  <option value="Video">Video</option>
-                  <option value="AudioVideo">Audio & Video</option>
+                  <option [ngValue]="0">Audio Only</option>
+                  <option [ngValue]="1">Video</option>
+                  <option [ngValue]="2">Audio & Video</option>
                 </select>
               </div>
 
@@ -101,8 +101,9 @@ import { PodcastLayoutComponent } from '../shared/podcast-layout/podcast-layout.
             <div class="form-group">
               <label>Content Rating</label>
               <select [(ngModel)]="podcast.explicitContent" name="explicitContent">
-                <option value="Clean">Clean (All ages)</option>
-                <option value="Explicit">Explicit (Adult content)</option>
+                <option [ngValue]="0">None</option>
+                <option [ngValue]="1">Clean (All ages)</option>
+                <option [ngValue]="2">Explicit (Adult content)</option>
               </select>
             </div>
           </div>
@@ -163,19 +164,20 @@ import { PodcastLayoutComponent } from '../shared/podcast-layout/podcast-layout.
 export class PodcastCreateComponent {
   private http = inject(HttpClient);
   private router = inject(Router);
+  private podcastService = inject(PodcastService);
 
   creating = false;
   podcast = {
     title: '',
     description: '',
     summary: '',
-    category: '',
-    type: 'Audio',
+    category: PodcastCategory.Automotive,
+    type: PodcastType.Audio,
     language: 'en',
     coverImageUrl: '',
     allowComments: true,
     allowDownloads: true,
-    explicitContent: 'Clean',
+    explicitContent: ExplicitContent.None,
     websiteUrl: '',
     applePodcastsUrl: '',
     spotifyUrl: ''
@@ -184,20 +186,30 @@ export class PodcastCreateComponent {
   uploadCover(event: any) {
     const file = event.target.files[0];
     if (!file) return;
-    // Upload to server and get URL
     const formData = new FormData();
     formData.append('file', file);
-    this.http.post<{ url: string }>(`${environment.apiUrl}/upload`, formData)
+    this.http.post<{ url: string }>(`${environment.apiUrl}/api/files/upload`, formData)
       .subscribe(res => this.podcast.coverImageUrl = res.url);
   }
 
   create() {
-    if (!this.podcast.title || !this.podcast.category) return;
+    if (!this.podcast.title) return;
     this.creating = true;
-    this.http.post<any>(`${environment.apiUrl}/podcasts`, this.podcast)
-      .subscribe({
-        next: (result) => this.router.navigate(['/podcasts/manage', result.id]),
-        error: () => this.creating = false
-      });
+    const request: CreatePodcastRequest = {
+      title: this.podcast.title,
+      description: this.podcast.description,
+      summary: this.podcast.summary,
+      coverImageUrl: this.podcast.coverImageUrl,
+      type: this.podcast.type,
+      category: this.podcast.category,
+      language: this.podcast.language,
+      explicitContent: this.podcast.explicitContent,
+      allowComments: this.podcast.allowComments,
+      allowDownloads: this.podcast.allowDownloads
+    };
+    this.podcastService.createPodcast(request).subscribe({
+      next: (result) => this.router.navigate(['/podcasts/manage', result.id]),
+      error: () => this.creating = false
+    });
   }
 }

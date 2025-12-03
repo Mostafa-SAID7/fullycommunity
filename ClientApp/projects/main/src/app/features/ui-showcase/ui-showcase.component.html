@@ -1,0 +1,282 @@
+<div class="min-h-screen bg-background dark:bg-background-dark p-8">
+  <div class="max-w-7xl mx-auto space-y-12">
+    <!-- Header -->
+    <div class="text-center">
+      <h1 class="text-display text-secondary-900 dark:text-secondary-100 mb-4">
+        Microsoft Fluent UI Components
+      </h1>
+      <p class="text-subtitle text-secondary-600 dark:text-secondary-400">
+        A comprehensive UI component library inspired by Microsoft Fluent Design System
+      </p>
+    </div>
+
+    <!-- Buttons Section -->
+    <ui-card>
+      <h2 class="text-title-large mb-6">Buttons</h2>
+      <div class="space-y-6">
+        <!-- Primary Buttons -->
+        <div>
+          <h3 class="text-subtitle mb-3">Primary Variants</h3>
+          <div class="flex flex-wrap gap-3">
+            <ui-button variant="primary">Primary</ui-button>
+            <ui-button variant="secondary">Secondary</ui-button>
+            <ui-button variant="accent">Accent</ui-button>
+            <ui-button variant="success">Success</ui-button>
+            <ui-button variant="error">Error</ui-button>
+            <ui-button variant="warning">Warning</ui-button>
+            <ui-button variant="ghost">Ghost</ui-button>
+            <ui-button variant="outline">Outline</ui-button>
+          </div>
+        </div>
+
+        <!-- Button Sizes -->
+        <div>
+          <h3 class="text-subtitle mb-3">Sizes</h3>
+          <div class="flex flex-wrap items-center gap-3">
+            <ui-button size="sm">Small</ui-button>
+            <ui-button size="md">Medium</ui-button>
+            <ui-button size="lg">Large</ui-button>
+            <ui-button size="xl">Extra Large</ui-button>
+          </div>
+        </div>
+
+        <!-- Button States -->
+        <div>
+          <h3 class="text-subtitle mb-3">States</h3>
+          <div class="flex flex-wrap gap-3">
+            <ui-button>Normal</ui-button>
+            <ui-button [loading]="true">Loading</ui-button>
+            <ui-button [disabled]="true">Disabled</ui-button>
+            <ui-button icon="M12 4v16m8-8H4">With Icon</ui-button>
+            <ui-button icon="M19 9l-7 7-7-7" iconPosition="right">Icon Right</ui-button>
+          </div>
+        </div>
+      </div>
+    </ui-card>
+
+    <!-- Cards Section -->
+    <ui-card>
+      <h2 class="text-title-large mb-6">Cards</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <ui-card variant="default">
+          <h3 class="text-title mb-2">Default Card</h3>
+          <p class="text-body text-secondary-600 dark:text-secondary-400">
+            Standard card with border and background.
+          </p>
+        </ui-card>
+
+        <ui-card variant="elevated">
+          <h3 class="text-title mb-2">Elevated Card</h3>
+          <p class="text-body text-secondary-600 dark:text-secondary-400">
+            Card with shadow elevation effect.
+          </p>
+        </ui-card>
+
+        <ui-card variant="outlined">
+          <h3 class="text-title mb-2">Outlined Card</h3>
+          <p class="text-body text-secondary-600 dark:text-secondary-400">
+            Card with prominent border styling.
+          </p>
+        </ui-card>
+
+        <ui-card variant="filled" [hover]="true" [clickable]="true">
+          <h3 class="text-title mb-2">Interactive Card</h3>
+          <p class="text-body text-secondary-600 dark:text-secondary-400">
+            Hoverable and clickable card with filled background.
+          </p>
+        </ui-card>
+      </div>
+    </ui-card>
+
+    <!-- Inputs Section -->
+    <ui-card>
+      <h2 class="text-title-large mb-6">Input Fields</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <ui-input 
+          label="Standard Input" 
+          placeholder="Enter text here..."
+          helperText="This is helper text">
+        </ui-input>
+
+        <ui-input 
+          label="Email Input" 
+          type="email"
+          placeholder="user@example.com"
+          icon="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207">
+        </ui-input>
+
+        <ui-input 
+          label="Search Input" 
+          type="search"
+          placeholder="Search..."
+          icon="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          [clearable]="true">
+        </ui-input>
+
+        <ui-input 
+          label="Required Field" 
+          placeholder="This field is required"
+          [required]="true"
+          errorText="This field is required">
+        </ui-input>
+      </div>
+    </ui-card>
+
+    <!-- Badges Section -->
+    <ui-card>
+      <h2 class="text-title-large mb-6">Badges</h2>
+      <div class="space-y-6">
+        <!-- Badge Variants -->
+        <div>
+          <h3 class="text-subtitle mb-3">Variants</h3>
+          <div class="flex flex-wrap gap-3">
+            <ui-badge variant="primary">Primary</ui-badge>
+            <ui-badge variant="secondary">Secondary</ui-badge>
+            <ui-badge variant="success">Success</ui-badge>
+            <ui-badge variant="error">Error</ui-badge>
+            <ui-badge variant="warning">Warning</ui-badge>
+            <ui-badge variant="info">Info</ui-badge>
+            <ui-badge variant="accent">Accent</ui-badge>
+          </div>
+        </div>
+
+        <!-- Outlined Badges -->
+        <div>
+          <h3 class="text-subtitle mb-3">Outlined</h3>
+          <div class="flex flex-wrap gap-3">
+            <ui-badge variant="primary" [outline]="true">Primary</ui-badge>
+            <ui-badge variant="success" [outline]="true">Success</ui-badge>
+            <ui-badge variant="error" [outline]="true">Error</ui-badge>
+            <ui-badge variant="warning" [outline]="true">Warning</ui-badge>
+          </div>
+        </div>
+
+        <!-- Dot Badges -->
+        <div>
+          <h3 class="text-subtitle mb-3">Dot Indicators</h3>
+          <div class="flex flex-wrap items-center gap-4">
+            <div class="flex items-center gap-2">
+              <ui-badge variant="success" [dot]="true"></ui-badge>
+              <span class="text-body">Online</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <ui-badge variant="error" [dot]="true"></ui-badge>
+              <span class="text-body">Offline</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <ui-badge variant="warning" [dot]="true"></ui-badge>
+              <span class="text-body">Away</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ui-card>
+
+    <!-- Avatars Section -->
+    <ui-card>
+      <h2 class="text-title-large mb-6">Avatars</h2>
+      <div class="space-y-6">
+        <!-- Avatar Sizes -->
+        <div>
+          <h3 class="text-subtitle mb-3">Sizes</h3>
+          <div class="flex flex-wrap items-end gap-4">
+            <ui-avatar size="xs" name="John Doe"></ui-avatar>
+            <ui-avatar size="sm" name="Jane Smith"></ui-avatar>
+            <ui-avatar size="md" name="Bob Wilson"></ui-avatar>
+            <ui-avatar size="lg" name="Alice Johnson"></ui-avatar>
+            <ui-avatar size="xl" name="Charlie Brown"></ui-avatar>
+            <ui-avatar size="2xl" name="Diana Prince"></ui-avatar>
+          </div>
+        </div>
+
+        <!-- Avatar with Status -->
+        <div>
+          <h3 class="text-subtitle mb-3">Status Indicators</h3>
+          <div class="flex flex-wrap gap-4">
+            <ui-avatar name="Online User" status="online"></ui-avatar>
+            <ui-avatar name="Away User" status="away"></ui-avatar>
+            <ui-avatar name="Busy User" status="busy"></ui-avatar>
+            <ui-avatar name="Offline User" status="offline"></ui-avatar>
+          </div>
+        </div>
+
+        <!-- Square Avatars -->
+        <div>
+          <h3 class="text-subtitle mb-3">Square Avatars</h3>
+          <div class="flex flex-wrap gap-4">
+            <ui-avatar name="Square One" [rounded]="false"></ui-avatar>
+            <ui-avatar name="Square Two" [rounded]="false" size="lg"></ui-avatar>
+          </div>
+        </div>
+      </div>
+    </ui-card>
+
+    <!-- Loading States Section -->
+    <ui-card>
+      <h2 class="text-title-large mb-6">Loading States</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="text-center">
+          <h3 class="text-subtitle mb-4">Spinner</h3>
+          <ui-loading type="spinner" size="lg"></ui-loading>
+        </div>
+
+        <div class="text-center">
+          <h3 class="text-subtitle mb-4">Dots</h3>
+          <ui-loading type="dots" size="lg"></ui-loading>
+        </div>
+
+        <div class="text-center">
+          <h3 class="text-subtitle mb-4">Pulse</h3>
+          <ui-loading type="pulse" size="md"></ui-loading>
+        </div>
+
+        <div class="text-center">
+          <h3 class="text-subtitle mb-4">Skeleton</h3>
+          <ui-loading type="skeleton"></ui-loading>
+        </div>
+      </div>
+
+      <div class="mt-8 text-center">
+        <ui-loading type="spinner" text="Loading content..." size="md"></ui-loading>
+      </div>
+    </ui-card>
+
+    <!-- Interactive Components -->
+    <ui-card>
+      <h2 class="text-title-large mb-6">Interactive Components</h2>
+      <div class="flex flex-wrap gap-4">
+        <ui-button (clicked)="openModal()">Open Modal</ui-button>
+        <ui-button variant="success" (clicked)="showToastMessage()">Show Toast</ui-button>
+      </div>
+    </ui-card>
+
+    <!-- Modal -->
+    <ui-modal 
+      [isOpen]="showModal" 
+      title="Example Modal" 
+      size="md"
+      (closed)="closeModal()">
+      <div class="space-y-4">
+        <p class="text-body">This is an example modal dialog using the Microsoft Fluent Design inspired modal component.</p>
+        <ui-input label="Modal Input" placeholder="Enter something..."></ui-input>
+      </div>
+      
+      <div slot="footer" class="flex justify-end gap-3 p-6 border-t border-border dark:border-border-dark">
+        <ui-button variant="outline" (clicked)="closeModal()">Cancel</ui-button>
+        <ui-button (clicked)="closeModal()">Save Changes</ui-button>
+      </div>
+    </ui-modal>
+
+    <!-- Toast Container -->
+    @if (showToast) {
+      <div class="fixed top-4 right-4 z-50">
+        <ui-toast 
+          type="success" 
+          title="Success!" 
+          message="This is a success toast notification."
+          (closed)="hideToast()">
+        </ui-toast>
+      </div>
+    }
+  </div>
+</div>

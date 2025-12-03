@@ -6,9 +6,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getToken();
 
+  // Clone request with credentials for CORS
+  req = req.clone({
+    withCredentials: true
+  });
+
   if (token) {
     req = req.clone({
-      setHeaders: { Authorization: `Bearer ${token}` }
+      setHeaders: { Authorization: `Bearer ${token}` },
+      withCredentials: true
     });
   }
   return next(req);
