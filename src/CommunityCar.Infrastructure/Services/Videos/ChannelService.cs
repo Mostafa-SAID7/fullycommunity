@@ -2,6 +2,7 @@ using CommunityCar.Application.Common.Interfaces.Videos;
 using CommunityCar.Application.Common.Pagination;
 using CommunityCar.Application.Features.Videos.Channels;
 using CommunityCar.Domain.Entities.Videos.Channels;
+using CommunityCar.Domain.Entities.Videos.Common;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,26 +42,26 @@ public class ChannelService : IChannelService
     {
         var query = _context.Set<Channel>().Where(c => !c.IsDeleted && c.Status == ChannelStatus.Active);
 
-        if (!string.IsNullOrEmpty(request.Query))
-            query = query.Where(c => c.DisplayName.Contains(request.Query) || c.Handle.Contains(request.Query));
+        if (!string.IsNullOrEmpty(request.Keywords))
+            query = query.Where(c => c.DisplayName.Contains(request.Keywords) || c.Handle.Contains(request.Keywords));
 
         var total = await query.CountAsync(ct);
-        var page = request.Page ?? 1;
-        var pageSize = request.PageSize ?? 20;
+        var page = request.Page;
+        var pageSize = request.PageSize;
 
         var items = await query
             .OrderByDescending(c => c.SubscriberCount)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(c => new ChannelListItemDto
-            {
-                Id = c.Id,
-                Handle = c.Handle,
-                DisplayName = c.DisplayName,
-                AvatarUrl = c.AvatarUrl,
-                IsVerified = c.IsVerified,
-                SubscriberCount = c.SubscriberCount
-            })
+            .Select(c => new ChannelListItemDto(
+                c.Id,
+                c.Handle,
+                c.DisplayName,
+                c.AvatarUrl,
+                c.IsVerified,
+                c.SubscriberCount,
+                c.VideoCount
+            ))
             .ToListAsync(ct);
 
         return new PagedResult<ChannelListItemDto>(items, total, page, pageSize);
@@ -72,15 +73,15 @@ public class ChannelService : IChannelService
             .Where(c => !c.IsDeleted && c.Status == ChannelStatus.Active)
             .OrderByDescending(c => c.TotalViews)
             .Take(count)
-            .Select(c => new ChannelListItemDto
-            {
-                Id = c.Id,
-                Handle = c.Handle,
-                DisplayName = c.DisplayName,
-                AvatarUrl = c.AvatarUrl,
-                IsVerified = c.IsVerified,
-                SubscriberCount = c.SubscriberCount
-            })
+            .Select(c => new ChannelListItemDto(
+                c.Id,
+                c.Handle,
+                c.DisplayName,
+                c.AvatarUrl,
+                c.IsVerified,
+                c.SubscriberCount,
+                c.VideoCount
+            ))
             .ToListAsync(ct);
     }
 
@@ -90,15 +91,15 @@ public class ChannelService : IChannelService
             .Where(c => !c.IsDeleted && c.Status == ChannelStatus.Active && c.UserId != userId)
             .OrderByDescending(c => c.SubscriberCount)
             .Take(count)
-            .Select(c => new ChannelListItemDto
-            {
-                Id = c.Id,
-                Handle = c.Handle,
-                DisplayName = c.DisplayName,
-                AvatarUrl = c.AvatarUrl,
-                IsVerified = c.IsVerified,
-                SubscriberCount = c.SubscriberCount
-            })
+            .Select(c => new ChannelListItemDto(
+                c.Id,
+                c.Handle,
+                c.DisplayName,
+                c.AvatarUrl,
+                c.IsVerified,
+                c.SubscriberCount,
+                c.VideoCount
+            ))
             .ToListAsync(ct);
     }
 
@@ -134,16 +135,21 @@ public class ChannelService : IChannelService
         return MapToDto(channel);
     }
 
-    public async Task<ChannelStatsDto> GetStatsAsync(Guid channelId, CancellationToken ct = default)
+    public Task<ChannelStatsDto> GetStatsAsync(Guid channelId, CancellationToken ct = default)
     {
-        var channel = await _context.Set<Channel>().FindAsync(new object[] { channelId }, ct);
-        return new ChannelStatsDto
-        {
-            TotalViews = channel?.TotalViews ?? 0,
-            TotalLikes = channel?.TotalLikes ?? 0,
-            SubscriberCount = channel?.SubscriberCount ?? 0,
-            VideoCount = channel?.VideoCount ?? 0
-        };
+        return Task.FromResult(new ChannelStatsDto(
+            TotalSubscribers: 0,
+            SubscribersThisMonth: 0,
+            TotalVideos: 0,
+            TotalViews: 0,
+            ViewsThisMonth: 0,
+            TotalLikes: 0,
+            TotalComments: 0,
+            TotalWatchTime: TimeSpan.Zero,
+            TotalEarnings: 0,
+            EarningsThisMonth: 0,
+            Last30Days: new List<DailyStatDto>()
+        ));
     }
 
     public Task SubscribeAsync(Guid channelId, Guid userId, CancellationToken ct = default) => Task.CompletedTask;
@@ -153,20 +159,32 @@ public class ChannelService : IChannelService
         => Task.FromResult(new PagedResult<ChannelListItemDto>(new List<ChannelListItemDto>(), 0, page, pageSize));
     public Task<PagedResult<ChannelListItemDto>> GetSubscribersAsync(Guid channelId, int page, int pageSize, CancellationToken ct = default)
         => Task.FromResult(new PagedResult<ChannelListItemDto>(new List<ChannelListItemDto>(), 0, page, pageSize));
+    
+    public Task UpdateNotificationSettingsAsync(Guid channelId, Guid userId, bool notifyOnUpload, bool notifyOnLive, CancellationToken ct = default)
+        => Task.CompletedTask;
 
-    private static ChannelDto MapToDto(Channel c) => new()
-    {
-        Id = c.Id,
-        UserId = c.UserId,
-        Handle = c.Handle,
-        DisplayName = c.DisplayName,
-        Bio = c.Bio,
-        AvatarUrl = c.AvatarUrl,
-        BannerUrl = c.BannerUrl,
-        IsVerified = c.IsVerified,
-        SubscriberCount = c.SubscriberCount,
-        VideoCount = c.VideoCount,
-        TotalViews = c.TotalViews,
-        CreatedAt = c.CreatedAt
-    };
+    private static ChannelDto MapToDto(Channel c) => new(
+        Id: c.Id,
+        UserId: c.UserId,
+        Handle: c.Handle,
+        DisplayName: c.DisplayName,
+        Bio: c.Bio,
+        AvatarUrl: c.AvatarUrl,
+        BannerUrl: c.BannerUrl,
+        WebsiteUrl: c.WebsiteUrl,
+        Status: c.Status,
+        Tier: c.Tier,
+        IsVerified: c.IsVerified,
+        SubscriberCount: c.SubscriberCount,
+        VideoCount: c.VideoCount,
+        TotalViews: c.TotalViews,
+        AllowComments: c.AllowComments,
+        ShowSubscriberCount: c.ShowSubscriberCount,
+        AllowDuets: c.AllowDuets,
+        InstagramUrl: c.InstagramUrl,
+        TwitterUrl: c.TwitterUrl,
+        Country: c.Country,
+        ContentCategories: c.ContentCategories,
+        CreatedAt: c.CreatedAt
+    );
 }
