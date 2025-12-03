@@ -52,7 +52,10 @@ public class DataSeeder
             new PodcastSeeder(_context, _loggerFactory.CreateLogger<PodcastSeeder>()),
             
             // Marketplace seeders
-            new MarketplaceSeeder(_context, _loggerFactory.CreateLogger<MarketplaceSeeder>())
+            new MarketplaceSeeder(_context, _loggerFactory.CreateLogger<MarketplaceSeeder>()),
+            
+            // Services seeders
+            new ServicesSeeder(_context, _loggerFactory.CreateLogger<ServicesSeeder>())
         };
     }
 

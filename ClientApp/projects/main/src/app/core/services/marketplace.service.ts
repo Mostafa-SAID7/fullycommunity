@@ -534,6 +534,35 @@ export class MarketplaceService {
     return this.http.put<Seller>(`${this.baseUrl}/sellers/me`, data);
   }
 
+  // My Listings
+  getMyListings(page = 1, pageSize = 20, status?: ListingStatus): Observable<PagedResult<Product>> {
+    const params: any = { page, pageSize };
+    if (status) params.status = status;
+    return this.http.get<PagedResult<Product>>(`${this.baseUrl}/products/my`, { params });
+  }
+
+  // Reviews
+  getProductReviews(productId: string, page = 1, pageSize = 20): Observable<PagedResult<ProductReview>> {
+    return this.http.get<PagedResult<ProductReview>>(`${this.baseUrl}/reviews/product/${productId}`, { params: { page, pageSize } });
+  }
+
+  createReview(productId: string, rating: number, title: string, content: string, pros?: string[], cons?: string[]): Observable<ProductReview> {
+    return this.http.post<ProductReview>(`${this.baseUrl}/reviews`, { productId, rating, title, content, pros, cons });
+  }
+
+  markReviewHelpful(reviewId: string): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/reviews/${reviewId}/helpful`, {});
+  }
+
+  // Categories
+  getCategories(): Observable<{ category: MarketplaceCategory; name: string; count: number }[]> {
+    return this.http.get<{ category: MarketplaceCategory; name: string; count: number }[]>(`${this.baseUrl}/categories`);
+  }
+
+  getSubCategories(category: MarketplaceCategory): Observable<ProductSubCategory[]> {
+    return this.http.get<ProductSubCategory[]>(`${this.baseUrl}/categories/${category}/subcategories`);
+  }
+
   private buildParams(obj: any): HttpParams {
     let params = new HttpParams();
     Object.keys(obj).forEach(key => {
