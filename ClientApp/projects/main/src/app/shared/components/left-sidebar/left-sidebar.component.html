@@ -16,13 +16,13 @@
 
 <!-- Sidebar Container -->
 <aside 
-  class="fixed lg:sticky top-14 left-0 h-[calc(100vh-56px)] z-40 flex transition-all duration-300"
+  class="fixed lg:sticky top-14 left-0 h-[calc(100vh-56px)] z-40 flex border-r border-gray-200/50 dark:border-gray-700/50 transition-all duration-300"
   [class.translate-x-0]="isMobileOpen()"
   [class.-translate-x-full]="!isMobileOpen()"
   [class.lg:translate-x-0]="true">
   
   <!-- Catalogue Rail (Icon-only column) -->
-  <div class="w-12 bg-gray-50 dark:bg-gray-900 border-r border-gray-200/50 dark:border-gray-700/50 flex flex-col items-center py-2 gap-1">
+  <div class="w-12 bg-gray-50/80 dark:bg-gray-900/80 flex flex-col items-center py-2 gap-1">
     <!-- Toggle Button -->
     <button 
       (click)="toggleSidebar()"
@@ -85,10 +85,9 @@
 
   <!-- Expanded Sidebar Panel -->
   <div 
-    class="bg-white dark:bg-gray-900 border-r border-gray-200/50 dark:border-gray-700/50 overflow-hidden transition-all duration-300"
-    [class.w-56]="isExpanded()"
-    [class.w-0]="!isExpanded()">
-    <div class="w-56 h-full flex flex-col overflow-y-auto scrollbar-sidebar">
+    class="bg-white/80 dark:bg-gray-900/80 overflow-hidden transition-all duration-300"
+    [ngClass]="{'w-52': isExpanded(), 'w-0': !isExpanded()}">
+    <div class="w-52 h-full flex flex-col overflow-y-auto scrollbar-sidebar">
       
       <!-- User Profile Section -->
       @if (showUserProfile && user() && isExpanded()) {
