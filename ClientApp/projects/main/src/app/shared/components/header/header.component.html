@@ -2,13 +2,16 @@
   <div class="max-w-[1600px] mx-auto px-3 sm:px-4 md:px-6 h-14 flex items-center justify-between gap-2 sm:gap-4 md:gap-6">
     
     <!-- Logo & Brand -->
-    <a routerLink="/" class="flex items-center gap-2.5 text-gray-900 dark:text-white hover:text-primary-500 transition-colors flex-shrink-0">
-      <div class="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-primary-400 via-primary-500 to-primary-600 rounded-xl flex items-center justify-center text-white font-bold text-sm sm:text-base shadow-lg">
+    <a routerLink="/" class="flex items-center gap-1.5 sm:gap-2 md:gap-2.5 text-gray-900 dark:text-white hover:text-primary-500 transition-colors flex-shrink-0">
+      <!-- Logo - Always visible -->
+      <div class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-primary-400 via-primary-500 to-primary-600 rounded-lg sm:rounded-xl flex items-center justify-center text-white font-bold text-xs sm:text-sm md:text-base shadow-lg">
         CC
       </div>
+      <!-- Brand Name - Hidden on xs, visible on sm+ -->
       <div class="hidden sm:flex flex-col leading-tight">
-        <span class="font-bold text-sm md:text-base text-gray-900 dark:text-white">Community Car</span>
-        <span class="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-medium">Drive Together, Thrive Together</span>
+        <span class="font-bold text-xs sm:text-sm md:text-base text-gray-900 dark:text-white whitespace-nowrap">Community Car</span>
+        <!-- Slogan - Hidden on xs/sm, visible on md+ -->
+        <span class="hidden md:block text-[9px] md:text-[10px] lg:text-xs text-gray-500 dark:text-gray-400 font-medium whitespace-nowrap">Drive Together, Thrive Together</span>
       </div>
     </a>
 
