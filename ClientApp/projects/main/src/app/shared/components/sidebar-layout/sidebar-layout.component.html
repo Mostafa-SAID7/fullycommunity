@@ -1,25 +1,18 @@
-<div class="flex min-h-[calc(100vh-56px)]">
-  <!-- Left Sidebar -->
+<div class="min-h-[calc(100vh-56px)] overflow-x-hidden">
+  <!-- Left Sidebar (Fixed - pushes content on lg screens) -->
   @if (showLeftSidebar) {
     <app-left-sidebar 
       [menuItems]="leftMenuItems"
       [shortcuts]="shortcuts"
       [showUserProfile]="showUserProfile"
-      [showFooter]="showFooter">
+      [showFooter]="showFooter"
+      (expandedChange)="onSidebarToggle($event)">
     </app-left-sidebar>
   }
 
-  <!-- Main Content Area -->
-  <main class="flex-1 min-w-0 overflow-x-hidden">
-    <div class="max-w-[1200px] mx-auto p-4 lg:p-6">
-      <ng-content></ng-content>
-    </div>
-  </main>
-
-  <!-- Right Sidebar -->
+  <!-- Right Sidebar (Fixed overlay) -->
   @if (showRightSidebar) {
     <app-right-sidebar
-      class="hidden xl:block"
       [sponsoredItems]="sponsoredItems"
       [events]="events"
       [contacts]="contacts"
@@ -28,4 +21,15 @@
       [showContacts]="showContacts">
     </app-right-sidebar>
   }
+
+  <!-- Main Content Area - Adjusts margin based on sidebar state on lg screens -->
+  <!-- Sidebar widths: Rail=48px, Panel=208px, Total=256px, Right=288px -->
+  <main 
+    class="min-h-[calc(100vh-56px)] w-full overflow-x-hidden transition-all duration-300"
+    [style.margin-left.px]="showLeftSidebar ? (isSidebarExpanded() ? 256 : 48) : 0"
+    [class.xl:mr-72]="showRightSidebar">
+    <div class="w-full px-2 py-3 sm:p-4 lg:p-6">
+      <ng-content></ng-content>
+    </div>
+  </main>
 </div>

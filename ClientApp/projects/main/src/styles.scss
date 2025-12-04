@@ -9,11 +9,40 @@
   }
   
   body {
-    @apply bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 font-segoe;
+    @apply text-gray-900 dark:text-gray-100 font-segoe;
     margin: 0;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    
+    /* Microsoft Fluent Design Background - Light Mode */
+    background: 
+      linear-gradient(135deg, rgba(243, 244, 246, 0.8) 0%, rgba(249, 250, 251, 0.9) 50%, rgba(243, 244, 246, 0.8) 100%),
+      radial-gradient(ellipse at top left, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
+    background-color: #f3f4f6;
+    background-attachment: fixed;
+  }
+  
+  .dark body,
+  body.dark {
+    /* Microsoft Fluent Design Background - Dark Mode */
+    background: 
+      linear-gradient(135deg, rgba(3, 7, 18, 0.95) 0%, rgba(17, 24, 39, 0.9) 50%, rgba(3, 7, 18, 0.95) 100%),
+      radial-gradient(ellipse at top left, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+    background-color: #030712;
+    background-attachment: fixed;
+  }
+  
+  /* Alternative: Apply dark background when html has dark class */
+  html.dark body {
+    background: 
+      linear-gradient(135deg, rgba(3, 7, 18, 0.95) 0%, rgba(17, 24, 39, 0.9) 50%, rgba(3, 7, 18, 0.95) 100%),
+      radial-gradient(ellipse at top left, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+    background-color: #030712;
+    background-attachment: fixed;
   }
   
   a {
@@ -144,6 +173,45 @@
     
     &::-webkit-scrollbar-thumb:hover {
       @apply bg-gray-500/70 dark:bg-gray-400/60;
+    }
+  }
+
+  /* Scrollbar on left side (for right sidebar) */
+  .scrollbar-left {
+    direction: rtl;
+    
+    & > * {
+      direction: ltr;
+    }
+    
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      @apply bg-transparent;
+      margin: 4px 0;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      @apply bg-gray-200/0 dark:bg-gray-700/0 rounded-full;
+      transition: background 300ms ease;
+    }
+    
+    &:hover::-webkit-scrollbar-thumb {
+      @apply bg-gray-300/60 dark:bg-gray-600/40;
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+      @apply bg-gray-400/80 dark:bg-gray-500/60;
+    }
+    
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    
+    &:hover {
+      scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LeftSidebarComponent, type SidebarMenuItem, type SidebarShortcut } from '../left-sidebar/left-sidebar.component';
@@ -11,6 +11,8 @@ import { RightSidebarComponent, type SponsoredItem, type EventReminder, type Con
   templateUrl: './sidebar-layout.component.html'
 })
 export class SidebarLayoutComponent {
+  @ViewChild(LeftSidebarComponent) leftSidebar?: LeftSidebarComponent;
+  
   // Left sidebar props
   @Input() leftMenuItems: SidebarMenuItem[] = [];
   @Input() shortcuts: SidebarShortcut[] = [];
@@ -27,26 +29,10 @@ export class SidebarLayoutComponent {
   @Input() showContacts = true;
   @Input() showRightSidebar = true;
 
-  // Layout props
-  @Input() maxWidth = '1400px';
-  @Input() contentPadding = '1rem';
-  @Input() gap = '1rem';
-  @Input() leftSidebarWidth = '280px';
-  @Input() rightSidebarWidth = '320px';
+  // Track sidebar expanded state for margin calculation
+  isSidebarExpanded = signal(true);
 
-  getGridColumns(): string {
-    const columns: string[] = [];
-    
-    if (this.showLeftSidebar) {
-      columns.push(this.leftSidebarWidth);
-    }
-    
-    columns.push('1fr');
-    
-    if (this.showRightSidebar) {
-      columns.push(this.rightSidebarWidth);
-    }
-    
-    return columns.join(' ');
+  onSidebarToggle(expanded: boolean) {
+    this.isSidebarExpanded.set(expanded);
   }
 }
