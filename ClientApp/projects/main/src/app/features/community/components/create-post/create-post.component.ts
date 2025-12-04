@@ -8,8 +8,7 @@ import { AuthService } from '../../../../core/services/auth.service';
   selector: 'app-create-post',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './create-post.component.html',
-  styleUrl: './create-post.component.scss'
+  templateUrl: './create-post.component.html'
 })
 export class CreatePostComponent {
   private communityService = inject(CommunityService);

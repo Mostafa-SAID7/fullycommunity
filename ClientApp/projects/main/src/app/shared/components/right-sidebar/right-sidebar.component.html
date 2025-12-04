@@ -1,0 +1,86 @@
+<aside class="sticky top-[76px] h-fit max-h-[calc(100vh-92px)] overflow-y-auto pl-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+  <!-- Sponsored / Ads -->
+  @if (showSponsored && sponsoredItems.length > 0) {
+    <div class="mb-4">
+      <h4 class="text-base font-semibold text-gray-500 dark:text-gray-400 mb-3">Sponsored</h4>
+      @for (item of sponsoredItems; track item.id) {
+        <a [href]="item.url" 
+           class="flex gap-3 no-underline text-gray-900 dark:text-gray-100 p-2 rounded-lg -mx-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+           target="_blank" rel="noopener">
+          <img [src]="item.image" [alt]="item.title" 
+               class="w-[120px] h-[120px] rounded-lg object-cover bg-gray-200 dark:bg-gray-700"
+               onerror="this.style.display='none'">
+          <div class="flex-1">
+            <p class="m-0 font-medium text-sm">{{ item.title }}</p>
+            <span class="text-xs text-gray-500 dark:text-gray-400">{{ item.url }}</span>
+          </div>
+        </a>
+      }
+    </div>
+    @if (showEvents || showContacts) {
+      <hr class="border-0 border-t border-gray-300 dark:border-gray-700 my-3">
+    }
+  }
+
+  <!-- Birthdays / Events -->
+  @if (showEvents && events.length > 0) {
+    <div class="mb-4">
+      <h4 class="text-base font-semibold text-gray-500 dark:text-gray-400 mb-3">Upcoming Events</h4>
+      @for (event of events; track event.id) {
+        <div class="flex gap-3 items-start p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg mb-2 last:mb-0">
+          <svg class="w-6 h-6 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
+          </svg>
+          <div>
+            <p class="m-0 font-medium text-sm text-gray-900 dark:text-gray-100">{{ event.title }}</p>
+            <span class="text-xs text-gray-500 dark:text-gray-400">{{ event.time }}</span>
+          </div>
+        </div>
+      }
+    </div>
+    @if (showContacts) {
+      <hr class="border-0 border-t border-gray-300 dark:border-gray-700 my-3">
+    }
+  }
+
+  <!-- Online Friends / Contacts -->
+  @if (showContacts && contacts.length > 0) {
+    <div>
+      <div class="flex justify-between items-center mb-2">
+        <h4 class="text-base font-semibold text-gray-500 dark:text-gray-400 m-0">Contacts</h4>
+        <div class="flex gap-1">
+          <button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  title="Search">
+            <svg class="w-4.5 h-4.5 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+          </button>
+          <button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  title="Options">
+            <svg class="w-4.5 h-4.5 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1">
+        @for (contact of contacts; track contact.id) {
+          <a href="#" 
+             class="flex items-center gap-3 p-2 rounded-lg no-underline text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <div class="relative w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-white flex items-center justify-center font-semibold text-xs overflow-hidden">
+              @if (contact.avatar) {
+                <img [src]="contact.avatar" [alt]="contact.name" class="w-full h-full object-cover">
+              } @else {
+                <span>{{ contact.initials }}</span>
+              }
+              @if (contact.online) {
+                <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white dark:border-gray-900 rounded-full"></span>
+              }
+            </div>
+            <span class="font-medium text-sm">{{ contact.name }}</span>
+          </a>
+        }
+      </div>
+    </div>
+  }
+</aside>

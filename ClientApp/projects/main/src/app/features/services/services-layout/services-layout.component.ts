@@ -1,27 +1,25 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { SectionLayoutComponent, MenuItem, SidebarShortcut } from '../../../shared/components/section-layout/section-layout.component';
+import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
+import { SidebarMenuItem, SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 
 @Component({
   selector: 'app-services-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, SectionLayoutComponent],
+  imports: [CommonModule, RouterOutlet, SidebarLayoutComponent],
   template: `
-    <app-section-layout
-      sectionTitle="Services"
-      sectionIcon="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"
-      [menuItems]="menuItems"
+    <app-sidebar-layout
+      [leftMenuItems]="menuItems"
       [shortcuts]="shortcuts"
       [showRightSidebar]="true"
-      rightSidebarContent="services"
     >
-      <router-outlet />
-    </app-section-layout>
+      <router-outlet></router-outlet>
+    </app-sidebar-layout>
   `
 })
 export class ServicesLayoutComponent {
-  menuItems: MenuItem[] = [
+  menuItems: SidebarMenuItem[] = [
     { icon: 'home', label: 'All Services', route: '/services', exact: true },
     { icon: 'garage', label: 'Find Garages', route: '/services/garages' },
     { icon: 'fuel', label: 'Fuel & Charging', route: '/services/fuel' },

@@ -18,7 +18,7 @@
             "polyfills": ["zone.js"],
             "tsConfig": "projects/main/tsconfig.app.json",
             "assets": ["projects/main/src/favicon.ico", "projects/main/src/assets"],
-            "styles": ["projects/main/src/styles.css"],
+            "styles": ["projects/main/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -65,7 +65,7 @@
             "polyfills": ["zone.js"],
             "tsConfig": "projects/admin/tsconfig.app.json",
             "assets": ["projects/admin/src/favicon.ico", "projects/admin/src/assets"],
-            "styles": ["projects/admin/src/styles.css"],
+            "styles": ["projects/admin/src/styles.scss"],
             "scripts": []
           },
           "configurations": {

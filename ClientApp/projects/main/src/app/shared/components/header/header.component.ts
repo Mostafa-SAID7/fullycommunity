@@ -1,15 +1,22 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
 import { LocalizationService } from '../../../core/services/localization.service';
-import { TranslatePipe } from '../../pipes/translate.pipe';
+import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
+import { SearchBoxComponent } from '../search-box/search-box.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, TranslatePipe],
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  imports: [
+    CommonModule, 
+    RouterLink, 
+    RouterLinkActive, 
+    LanguageSwitcherComponent,
+    SearchBoxComponent
+  ],
+  templateUrl: './header.component.html'
 })
 export class HeaderComponent {
   authService = inject(AuthService);
@@ -17,13 +24,22 @@ export class HeaderComponent {
   private router = inject(Router);
 
   showLanguageMenu = signal(false);
-
   showNotifications = signal(false);
   showUserMenu = signal(false);
+  showSearchModal = signal(false);
+  
   notifications = signal([
     { id: 1, title: 'New comment on your post', time: '2 min ago', read: false },
     { id: 2, title: 'Someone liked your review', time: '1 hour ago', read: false },
     { id: 3, title: 'New follower', time: '3 hours ago', read: true }
+  ]);
+
+  searchSuggestions = signal([
+    { text: 'Toyota Camry 2023', count: 45 },
+    { text: 'Honda Accord', count: 32 },
+    { text: 'BMW 3 Series', count: 28 },
+    { text: 'Car maintenance tips', count: 156 },
+    { text: 'Electric vehicles', count: 89 }
   ]);
 
   get unreadCount() {
@@ -33,12 +49,20 @@ export class HeaderComponent {
   toggleNotifications() {
     this.showNotifications.update(v => !v);
     this.showUserMenu.set(false);
+    this.showSearchModal.set(false);
   }
 
   toggleUserMenu() {
     this.showUserMenu.update(v => !v);
     this.showNotifications.set(false);
     this.showLanguageMenu.set(false);
+    this.showSearchModal.set(false);
+  }
+
+  toggleSearchModal() {
+    this.showSearchModal.update(v => !v);
+    this.showNotifications.set(false);
+    this.showUserMenu.set(false);
   }
 
   toggleLanguageMenu() {
@@ -66,5 +90,16 @@ export class HeaderComponent {
     const u = this.authService.currentUser();
     if (!u) return 'U';
     return ((u.firstName?.charAt(0) || '') + (u.lastName?.charAt(0) || '')).toUpperCase() || 'U';
+  }
+
+  onSearch(term: string) {
+    console.log('Searching for:', term);
+    // Implement search logic here
+    this.showSearchModal.set(false);
+  }
+
+  onSuggestionSelected(text: string) {
+    console.log('Selected suggestion:', text);
+    this.showSearchModal.set(false);
   }
 }

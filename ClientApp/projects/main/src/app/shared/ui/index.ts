@@ -6,6 +6,12 @@ export * from './badge/badge.component';
 export * from './avatar/avatar.component';
 export * from './modal/modal.component';
 export * from './toast/toast.component';
+export * from './dropdown/dropdown.component';
+export * from './select/select.component';
+export * from './search-input/search-input.component';
+export * from './chip/chip.component';
+export * from './skeleton/skeleton.component';
+export * from './spinner/spinner.component';
 export * from './loading/loading.component';
 
 // UI Component Array for easy importing
@@ -16,6 +22,12 @@ import { BadgeComponent } from './badge/badge.component';
 import { AvatarComponent } from './avatar/avatar.component';
 import { ModalComponent } from './modal/modal.component';
 import { ToastComponent } from './toast/toast.component';
+import { DropdownComponent } from './dropdown/dropdown.component';
+import { SelectComponent } from './select/select.component';
+import { SearchInputComponent } from './search-input/search-input.component';
+import { ChipComponent } from './chip/chip.component';
+import { SkeletonComponent } from './skeleton/skeleton.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 import { LoadingComponent } from './loading/loading.component';
 
 export const UI_COMPONENTS = [
@@ -26,5 +38,11 @@ export const UI_COMPONENTS = [
   AvatarComponent,
   ModalComponent,
   ToastComponent,
-  LoadingComponent,
+  DropdownComponent,
+  SelectComponent,
+  SearchInputComponent,
+  ChipComponent,
+  SkeletonComponent,
+  SpinnerComponent,
+  LoadingComponent
 ] as const;

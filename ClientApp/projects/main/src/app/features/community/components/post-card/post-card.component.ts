@@ -9,8 +9,7 @@ import { AuthService } from '../../../../core/services/auth.service';
   selector: 'app-post-card',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './post-card.component.html',
-  styleUrl: './post-card.component.scss'
+  templateUrl: './post-card.component.html'
 })
 export class PostCardComponent {
   private communityService = inject(CommunityService);

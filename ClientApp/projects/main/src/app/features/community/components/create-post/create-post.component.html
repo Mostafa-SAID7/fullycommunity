@@ -1,141 +1,88 @@
 <!-- Create Post Card -->
-<div class="create-post-card">
-  <div class="create-post-header">
-    <div class="avatar">{{ getUserInitials() }}</div>
-    <button class="post-input-btn" (click)="openModal()">
-      What's on your mind, {{ user()?.firstName }}?
+<div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-4 mb-4">
+  <div class="flex items-center gap-3 mb-3">
+    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-hover text-white flex items-center justify-center font-semibold">
+      {{ getUserInitials() }}
+    </div>
+    <button class="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full text-left text-gray-500 dark:text-gray-400 transition-colors" (click)="openModal()">
+      What's on your mind?
     </button>
   </div>
-  <div class="create-post-actions">
-    <button class="action-btn" (click)="openModal()">
-      <svg viewBox="0 0 24 24" fill="currentColor" class="icon-red">
+  <div class="flex items-center justify-around pt-3 border-t border-gray-200 dark:border-gray-800">
+    <button class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors" (click)="openModal()">
+      <svg class="w-6 h-6 text-error" viewBox="0 0 24 24" fill="currentColor">
         <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
       </svg>
-      <span>Live Video</span>
+      <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Live Video</span>
     </button>
-    <button class="action-btn" (click)="openModal()">
-      <svg viewBox="0 0 24 24" fill="currentColor" class="icon-green">
+    <button class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors" (click)="openModal()">
+      <svg class="w-6 h-6 text-success" viewBox="0 0 24 24" fill="currentColor">
         <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
       </svg>
-      <span>Photo/Video</span>
+      <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Photo/Video</span>
     </button>
-    <button class="action-btn" (click)="openModal()">
-      <svg viewBox="0 0 24 24" fill="currentColor" class="icon-yellow">
+    <button class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors" (click)="openModal()">
+      <svg class="w-6 h-6 text-warning" viewBox="0 0 24 24" fill="currentColor">
         <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
       </svg>
-      <span>Feeling/Activity</span>
+      <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Feeling/Activity</span>
     </button>
   </div>
 </div>
 
 <!-- Create Post Modal -->
-@if (showModal()) {
-  <div class="modal-overlay" (click)="closeModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h2>Create Post</h2>
-        <button class="close-btn" (click)="closeModal()">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-          </svg>
-        </button>
-      </div>
+<div *ngIf="showModal()" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" (click)="closeModal()">
+  <div class="bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Create Post</h2>
+      <button class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" (click)="closeModal()">
+        <svg class="w-6 h-6 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
+    </div>
 
-      <div class="modal-body">
-        <!-- User Info -->
-        <div class="post-author">
-          <div class="avatar">{{ getUserInitials() }}</div>
-          <div class="author-info">
-            <span class="author-name">{{ user()?.firstName }} {{ user()?.lastName }}</span>
-            <select class="visibility-select" [(ngModel)]="visibility">
-              <option value="Public">🌍 Public</option>
-              <option value="FriendsOnly">👥 Friends</option>
-              <option value="Private">🔒 Only me</option>
-            </select>
-          </div>
+    <!-- Modal Body -->
+    <div class="flex-1 overflow-y-auto p-4">
+      <!-- User Info -->
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-hover text-white flex items-center justify-center font-semibold">
+          {{ getUserInitials() }}
         </div>
-
-        <!-- Post Type Selector -->
-        <div class="post-type-selector">
-          @for (type of postTypes; track type.value) {
-            <button 
-              class="type-btn" 
-              [class.active]="postType() === type.value"
-              (click)="postType.set(type.value)">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path [attr.d]="type.icon"/>
-              </svg>
-              <span>{{ type.label }}</span>
-            </button>
-          }
-        </div>
-
-        <!-- Content Input -->
-        <textarea 
-          class="post-textarea"
-          [placeholder]="'What\'s on your mind, ' + user()?.firstName + '?'"
-          [(ngModel)]="postContent"
-          rows="4">
-        </textarea>
-
-        <!-- Selected Images Preview -->
-        @if (selectedImages().length > 0) {
-          <div class="images-preview">
-            @for (img of selectedImages(); track $index) {
-              <div class="image-item">
-                <img [src]="img" alt="Selected image">
-                <button class="remove-img-btn" (click)="removeImage($index)">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                  </svg>
-                </button>
-              </div>
-            }
-          </div>
-        }
-
-        <!-- Add to Post -->
-        <div class="add-to-post">
-          <span>Add to your post</span>
-          <div class="add-actions">
-            <label class="add-btn" title="Photo/Video">
-              <input type="file" accept="image/*,video/*" multiple (change)="onFileSelect($event)" hidden>
-              <svg viewBox="0 0 24 24" fill="currentColor" class="icon-green">
-                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
-              </svg>
-            </label>
-            <button class="add-btn" title="Tag People">
-              <svg viewBox="0 0 24 24" fill="currentColor" class="icon-blue">
-                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-              </svg>
-            </button>
-            <button class="add-btn" title="Feeling/Activity">
-              <svg viewBox="0 0 24 24" fill="currentColor" class="icon-yellow">
-                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
-              </svg>
-            </button>
-            <button class="add-btn" title="Check In">
-              <svg viewBox="0 0 24 24" fill="currentColor" class="icon-red">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-              </svg>
-            </button>
-          </div>
+        <div class="flex-1">
+          <div class="font-semibold text-gray-900 dark:text-white">User Name</div>
+          <select class="mt-1 px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 border-0 rounded-md text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" [(ngModel)]="visibility">
+            <option value="Public">🌍 Public</option>
+            <option value="FriendsOnly">👥 Friends</option>
+            <option value="Private">🔒 Only me</option>
+          </select>
         </div>
       </div>
 
-      <div class="modal-footer">
-        <button 
-          class="post-btn" 
-          [disabled]="!postContent().trim() || isSubmitting()"
-          (click)="submitPost()">
-          @if (isSubmitting()) {
-            <span class="spinner"></span>
-            Posting...
-          } @else {
-            Post
-          }
-        </button>
+      <!-- Content Input -->
+      <textarea class="w-full p-3 border-0 resize-none focus:outline-none text-gray-900 dark:text-white bg-transparent placeholder-gray-400 dark:placeholder-gray-500" placeholder="What's on your mind?" [(ngModel)]="postContent" rows="4"></textarea>
+
+      <!-- Add to Post -->
+      <div class="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg mt-4">
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Add to your post</span>
+        <div class="flex items-center gap-1">
+          <label class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors" title="Photo/Video">
+            <input type="file" accept="image/*,video/*" multiple (change)="onFileSelect($event)" hidden>
+            <svg class="w-6 h-6 text-success" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+            </svg>
+          </label>
+        </div>
       </div>
     </div>
+
+    <!-- Modal Footer -->
+    <div class="p-4 border-t border-gray-200 dark:border-gray-800">
+      <button class="w-full py-2.5 px-4 bg-primary hover:bg-primary-hover disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors" [disabled]="!postContent().trim() || isSubmitting()" (click)="submitPost()">
+        <span *ngIf="isSubmitting()">Posting...</span>
+        <span *ngIf="!isSubmitting()">Post</span>
+      </button>
+    </div>
   </div>
-}
+</div>

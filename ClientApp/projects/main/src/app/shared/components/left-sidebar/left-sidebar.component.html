@@ -1,0 +1,57 @@
+<aside class="sticky top-[76px] h-fit max-h-[calc(100vh-92px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+  <!-- User Profile Quick Access -->
+  @if (showUserProfile && user()) {
+    <a routerLink="/profile" 
+       class="flex items-center gap-3 p-2 rounded-lg no-underline text-gray-900 dark:text-gray-100 font-medium mb-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+      <div class="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-hover text-white flex items-center justify-center font-semibold text-sm">
+        {{ getUserInitials() }}
+      </div>
+      <span>{{ user()?.firstName }} {{ user()?.lastName }}</span>
+    </a>
+  }
+
+  <!-- Main Menu -->
+  @if (menuItems.length > 0) {
+    <nav class="flex flex-col gap-1">
+      @for (item of menuItems; track item.route) {
+        <a [routerLink]="item.route" 
+           routerLinkActive="bg-orange-50 dark:bg-orange-900/20 text-primary"
+           [routerLinkActiveOptions]="{exact: item.exact || false}"
+           class="flex items-center gap-3 px-2 py-2.5 rounded-lg no-underline text-gray-900 dark:text-gray-100 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+          <svg class="w-7 h-7 text-primary" viewBox="0 0 24 24" fill="currentColor">
+            <path [attr.d]="getIcon(item.icon)"/>
+          </svg>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+  }
+
+  <!-- Shortcuts -->
+  @if (shortcuts.length > 0) {
+    <hr class="border-0 border-t border-gray-300 dark:border-gray-700 my-3">
+    <div>
+      <h4 class="text-base font-semibold text-gray-500 dark:text-gray-400 px-2 mb-2">Your Shortcuts</h4>
+      @for (shortcut of shortcuts; track shortcut.id) {
+        <a [routerLink]="shortcut.route || '/community/groups/' + shortcut.id" 
+           class="flex items-center gap-3 p-2 rounded-lg no-underline text-gray-900 dark:text-gray-100 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+          <div class="w-9 h-9 rounded-lg bg-gray-200 dark:bg-gray-700 bg-cover bg-center flex items-center justify-center"
+               [style.background-image]="'url(' + shortcut.image + ')'">
+            <span class="text-gray-500 dark:text-gray-400 font-semibold">{{ shortcut.name.charAt(0) }}</span>
+          </div>
+          <span>{{ shortcut.name }}</span>
+        </a>
+      }
+    </div>
+  }
+
+  <!-- Footer Links -->
+  @if (showFooter) {
+    <div class="py-4 px-2 text-xs text-gray-500 dark:text-gray-400">
+      <a href="#" class="hover:underline">Privacy</a> · 
+      <a href="#" class="hover:underline">Terms</a> · 
+      <a href="#" class="hover:underline">About</a>
+      <p class="mt-2 mb-0">© {{ getCurrentYear() }} CommunityCar</p>
+    </div>
+  }
+</aside>

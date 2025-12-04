@@ -1,0 +1,33 @@
+<div class="grid mx-auto min-h-[calc(100vh-60px)] lg:gap-4 p-4"
+     [style.max-width]="maxWidth"
+     [style.grid-template-columns]="getGridColumns()">
+  
+  <!-- Left Sidebar -->
+  @if (showLeftSidebar) {
+    <app-left-sidebar 
+      class="hidden lg:block"
+      [menuItems]="leftMenuItems"
+      [shortcuts]="shortcuts"
+      [showUserProfile]="showUserProfile"
+      [showFooter]="showFooter">
+    </app-left-sidebar>
+  }
+
+  <!-- Main Content Area -->
+  <main class="min-w-0 w-full">
+    <ng-content></ng-content>
+  </main>
+
+  <!-- Right Sidebar -->
+  @if (showRightSidebar) {
+    <app-right-sidebar
+      class="hidden lg:block"
+      [sponsoredItems]="sponsoredItems"
+      [events]="events"
+      [contacts]="contacts"
+      [showSponsored]="showSponsored"
+      [showEvents]="showEvents"
+      [showContacts]="showContacts">
+    </app-right-sidebar>
+  }
+</div>

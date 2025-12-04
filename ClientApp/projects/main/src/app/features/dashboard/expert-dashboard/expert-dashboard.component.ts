@@ -7,7 +7,6 @@ import { DashboardService, ExpertDashboard } from '../../../core/services/dashbo
   standalone: true,
   imports: [CommonModule],
   templateUrl: './expert-dashboard.component.html',
-  styleUrl: './expert-dashboard.component.scss',
 })
 export class ExpertDashboardComponent implements OnInit {
   dashboard: ExpertDashboard | null = null;

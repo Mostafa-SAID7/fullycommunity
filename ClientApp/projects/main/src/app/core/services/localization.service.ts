@@ -50,11 +50,17 @@ export class LocalizationService {
   async setLanguage(langCode: string): Promise<void> {
     if (langCode === this._currentLang()) return;
 
+    this._isLoading.set(true);
     this._currentLang.set(langCode);
     localStorage.setItem('language', langCode);
     
     await this.loadTranslations(langCode);
     this.applyDirection(langCode);
+    
+    // Trigger page reload for better RTL/LTR transition
+    if (typeof window !== 'undefined') {
+      window.location.reload();
+    }
   }
 
   private async loadTranslations(langCode: string): Promise<void> {
@@ -73,19 +79,59 @@ export class LocalizationService {
     }
   }
 
-  private loadLocalTranslations(langCode: string): void {
-    // Fallback translations
-    const fallback: Record<string, Translations> = {
-      en: {
-        common: { home: 'Home', search: 'Search', login: 'Login', logout: 'Logout', settings: 'Settings', profile: 'Profile' },
-        navigation: { community: 'Community', videos: 'Videos', marketplace: 'Marketplace', podcasts: 'Podcasts', services: 'Services' }
-      },
-      ar: {
-        common: { home: 'الرئيسية', search: 'بحث', login: 'تسجيل الدخول', logout: 'تسجيل الخروج', settings: 'الإعدادات', profile: 'الملف الشخصي' },
-        navigation: { community: 'المجتمع', videos: 'الفيديوهات', marketplace: 'السوق', podcasts: 'البودكاست', services: 'الخدمات' }
-      }
-    };
-    this._translations.set(fallback[langCode] || fallback['en']);
+  private async loadLocalTranslations(langCode: string): Promise<void> {
+    try {
+      // Try to load from local assets first
+      const localTranslations = await this.http
+        .get<Translations>(`/assets/i18n/${langCode}.json`)
+        .toPromise();
+      this._translations.set(localTranslations || {});
+    } catch {
+      // Ultimate fallback translations
+      const fallback: Record<string, Translations> = {
+        en: {
+          common: { 
+            home: 'Home', search: 'Search', login: 'Login', logout: 'Logout', 
+            settings: 'Settings', profile: 'Profile', loading: 'Loading...',
+            save: 'Save', cancel: 'Cancel', edit: 'Edit', delete: 'Delete',
+            create: 'Create', update: 'Update', back: 'Back', next: 'Next'
+          },
+          navigation: { 
+            community: 'Community', videos: 'Videos', marketplace: 'Marketplace', 
+            podcasts: 'Podcasts', services: 'Services', news: 'News', events: 'Events'
+          },
+          podcasts: {
+            title: 'Podcasts', browse: 'Browse Podcasts', search: 'Search podcasts...',
+            categories: 'Categories', allCategories: 'All Categories', episodes: 'episodes',
+            subscribe: 'Subscribe', subscribed: 'Subscribed', play: 'Play', pause: 'Pause',
+            noPodcasts: 'No podcasts found', tryDifferentFilters: 'Try different filters or search terms.',
+            clearFilters: 'Clear Filters', loadMore: 'Load More', mostPopular: 'Most Popular',
+            highestRated: 'Highest Rated', mostSubscribers: 'Most Subscribers', newest: 'Newest'
+          }
+        },
+        ar: {
+          common: { 
+            home: 'الرئيسية', search: 'بحث', login: 'تسجيل الدخول', logout: 'تسجيل الخروج', 
+            settings: 'الإعدادات', profile: 'الملف الشخصي', loading: 'جاري التحميل...',
+            save: 'حفظ', cancel: 'إلغاء', edit: 'تعديل', delete: 'حذف',
+            create: 'إنشاء', update: 'تحديث', back: 'رجوع', next: 'التالي'
+          },
+          navigation: { 
+            community: 'المجتمع', videos: 'الفيديوهات', marketplace: 'السوق', 
+            podcasts: 'البودكاست', services: 'الخدمات', news: 'الأخبار', events: 'الفعاليات'
+          },
+          podcasts: {
+            title: 'البودكاست', browse: 'تصفح البودكاست', search: 'البحث في البودكاست...',
+            categories: 'الفئات', allCategories: 'جميع الفئات', episodes: 'حلقات',
+            subscribe: 'اشتراك', subscribed: 'مشترك', play: 'تشغيل', pause: 'إيقاف',
+            noPodcasts: 'لم يتم العثور على بودكاست', tryDifferentFilters: 'جرب مرشحات أو مصطلحات بحث مختلفة.',
+            clearFilters: 'مسح المرشحات', loadMore: 'تحميل المزيد', mostPopular: 'الأكثر شعبية',
+            highestRated: 'الأعلى تقييماً', mostSubscribers: 'الأكثر اشتراكاً', newest: 'الأحدث'
+          }
+        }
+      };
+      this._translations.set(fallback[langCode] || fallback['en']);
+    }
   }
 
   private applyDirection(langCode: string): void {

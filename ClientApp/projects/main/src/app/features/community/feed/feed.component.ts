@@ -12,8 +12,7 @@ import { StoriesComponent } from '../components/stories/stories.component';
   selector: 'app-feed',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, PostCardComponent, CreatePostComponent, StoriesComponent],
-  templateUrl: './feed.component.html',
-  styleUrl: './feed.component.scss'
+  templateUrl: './feed.component.html'
 })
 export class FeedComponent implements OnInit {
   private communityService = inject(CommunityService);

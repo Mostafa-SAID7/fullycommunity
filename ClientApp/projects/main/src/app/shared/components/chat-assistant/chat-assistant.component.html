@@ -1,0 +1,129 @@
+<!-- Chat Button -->
+@if (!isOpen()) {
+  <button class="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary-hover text-white shadow-lg hover:scale-110 transition-transform z-[1000] flex items-center justify-center"
+          (click)="toggleChat()" title="Chat with assistant">
+    <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+    </svg>
+    <span class="absolute -top-1 -right-1 w-5 h-5 bg-error text-white text-xs font-semibold rounded-full flex items-center justify-center border-2 border-white">1</span>
+  </button>
+}
+
+<!-- Chat Window -->
+@if (isOpen()) {
+  <div class="fixed bottom-8 right-8 w-96 max-w-[calc(100vw-2rem)] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl flex flex-col z-[1000] animate-slide-up"
+       [class.h-[60px]]="isMinimized()"
+       [class.h-[600px]]="!isMinimized()"
+       [class.max-h-[calc(100vh-4rem)]]="!isMinimized()">
+    <!-- Chat Header -->
+    <div class="flex items-center justify-between p-4 bg-gradient-to-r from-primary to-primary-hover text-white rounded-t-2xl">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+          </svg>
+        </div>
+        <div>
+          <h4 class="font-semibold">CommunityCar Assistant</h4>
+          <span class="text-xs opacity-90">Online</span>
+        </div>
+      </div>
+      <div class="flex gap-1">
+        <button class="w-8 h-8 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors"
+                (click)="minimizeChat()" title="Minimize">
+          <svg class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 13H5v-2h14v2z"/>
+          </svg>
+        </button>
+        <button class="w-8 h-8 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors" (click)="closeChat()" title="Close">
+          <svg class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    @if (!isMinimized()) {
+      <!-- Chat Body -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 overflow-y-auto p-4 space-y-4">
+          @for (message of messages(); track message.id) {
+            <div class="flex gap-2 animate-fade-in" [class.flex-row-reverse]="message.sender === 'user'">
+              @if (message.sender === 'assistant') {
+                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                  </svg>
+                </div>
+              }
+              <div class="flex flex-col" [class.items-end]="message.sender === 'user'">
+                <div class="px-4 py-2 rounded-2xl max-w-xs break-words"
+                     [class.bg-primary]="message.sender === 'user'"
+                     [class.text-white]="message.sender === 'user'"
+                     [class.bg-gray-100]="message.sender === 'assistant'"
+                     [class.dark:bg-gray-800]="message.sender === 'assistant'"
+                     [class.text-gray-900]="message.sender === 'assistant'"
+                     [class.dark:text-white]="message.sender === 'assistant'">
+                  {{ message.text }}
+                </div>
+                <span class="text-xs text-gray-500 dark:text-gray-400 mt-1 px-2">{{ formatTime(message.timestamp) }}</span>
+              </div>
+            </div>
+          }
+          
+          @if (isTyping()) {
+            <div class="flex gap-2 animate-fade-in">
+              <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>
+              </div>
+              <div class="px-4 py-2 rounded-2xl bg-gray-100 dark:bg-gray-800 flex gap-1 items-center">
+                <span class="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full typing-dot"></span>
+                <span class="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full typing-dot"></span>
+                <span class="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full typing-dot"></span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-2 gap-2 p-4 border-t border-gray-200 dark:border-gray-800">
+          @for (action of quickActions; track action.action) {
+            <button class="flex flex-col items-center gap-1 p-3 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" (click)="handleQuickAction(action.action)">
+              <span class="text-2xl">{{ action.icon }}</span>
+              <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ action.label }}</span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Chat Footer -->
+      <div class="p-4 border-t border-gray-200 dark:border-gray-800">
+        <div class="flex gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-2">
+          <input 
+            type="text" 
+            [(ngModel)]="messageInput"
+            (keyup.enter)="sendMessage()"
+            placeholder="Type your message..."
+            class="flex-1 bg-transparent outline-none text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+          <button 
+            class="w-8 h-8 rounded-full flex items-center justify-center transition-colors" 
+            [class.bg-primary]="messageInput().trim()"
+            [class.text-white]="messageInput().trim()"
+            [class.hover:bg-primary-hover]="messageInput().trim()"
+            [class.bg-gray-300]="!messageInput().trim()"
+            [class.dark:bg-gray-700]="!messageInput().trim()"
+            [class.text-gray-500]="!messageInput().trim()"
+            [class.cursor-not-allowed]="!messageInput().trim()"
+            (click)="sendMessage()"
+            [disabled]="!messageInput().trim()">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+}

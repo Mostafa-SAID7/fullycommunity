@@ -1,156 +1,186 @@
 @if (loading()) {
-  <div class="loading">Loading profile...</div>
+  <div class="text-center py-12 text-gray-600 dark:text-gray-400">Loading profile...</div>
 } @else if (profileUser()) {
-  <div class="profile-page">
+  <div class="max-w-4xl mx-auto bg-gray-50 dark:bg-gray-950">
     <!-- Cover & Avatar -->
-    <div class="profile-header">
-      <div class="cover-photo"></div>
-      <div class="profile-info">
-        <div class="avatar-section">
-          <div class="avatar-large">{{ getUserInitials() }}</div>
+    <div class="bg-white dark:bg-gray-900 rounded-b-lg shadow-sm mb-4">
+      <div class="h-80 bg-gradient-to-br from-primary to-success rounded-b-lg"></div>
+      <div class="flex flex-col md:flex-row items-center md:items-end gap-4 px-8 pb-4 -mt-20">
+        <div class="relative">
+          <div class="w-40 h-40 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 border-4 border-white dark:border-gray-900 text-white flex items-center justify-center text-5xl font-bold shadow-lg">
+            {{ getUserInitials() }}
+          </div>
           @if (isOwnProfile()) {
-            <button class="edit-avatar-btn">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            <button class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center justify-center transition-colors">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
             </button>
           }
         </div>
-        <div class="user-details">
-          <h1>{{ profileUser().firstName }} {{ profileUser().lastName }}</h1>
-          <p class="user-bio">Car enthusiast | DIY mechanic | EV owner</p>
-          <p class="user-stats">
-            <span><strong>{{ stats().posts }}</strong> posts</span>
-            <span><strong>{{ stats().friends }}</strong> friends</span>
-            <span><strong>{{ stats().followers }}</strong> followers</span>
+        <div class="flex-1 pb-4 text-center md:text-left">
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ profileUser().firstName }} {{ profileUser().lastName }}</h1>
+          <p class="mt-1 text-gray-600 dark:text-gray-400">Car enthusiast | DIY mechanic | EV owner</p>
+          <p class="mt-2 flex flex-wrap justify-center md:justify-start gap-4 text-gray-600 dark:text-gray-400 text-sm">
+            <span><strong class="text-gray-900 dark:text-white">{{ stats().posts }}</strong> posts</span>
+            <span><strong class="text-gray-900 dark:text-white">{{ stats().friends }}</strong> friends</span>
+            <span><strong class="text-gray-900 dark:text-white">{{ stats().followers }}</strong> followers</span>
           </p>
         </div>
-        <div class="profile-actions">
+        <div class="flex gap-2 pb-4">
           @if (isOwnProfile()) {
-            <button class="btn-secondary" (click)="toggleEdit()">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            <button class="flex items-center gap-2 px-5 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" (click)="toggleEdit()">
+              <svg class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
               Edit Profile
             </button>
           } @else {
-            <button class="btn-primary">Add Friend</button>
-            <button class="btn-secondary">Message</button>
+            <button class="px-5 py-2.5 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors">Add Friend</button>
+            <button class="px-5 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Message</button>
           }
         </div>
       </div>
     </div>
 
     <!-- Tabs -->
-    <div class="profile-tabs">
-      <button class="tab" [class.active]="activeTab() === 'posts'" (click)="setTab('posts')">Posts</button>
-      <button class="tab" [class.active]="activeTab() === 'about'" (click)="setTab('about')">About</button>
-      <button class="tab" [class.active]="activeTab() === 'friends'" (click)="setTab('friends')">Friends</button>
-      <button class="tab" [class.active]="activeTab() === 'photos'" (click)="setTab('photos')">Photos</button>
+    <div class="flex bg-white dark:bg-gray-900 rounded-lg px-4 mb-4 shadow-sm">
+      <button class="px-6 py-4 border-b-2 font-semibold text-sm transition-colors" 
+              [class.text-primary]="activeTab() === 'posts'" 
+              [class.border-primary]="activeTab() === 'posts'"
+              [class.text-gray-600]="activeTab() !== 'posts'"
+              [class.dark:text-gray-400]="activeTab() !== 'posts'"
+              [class.border-transparent]="activeTab() !== 'posts'"
+              [class.hover:bg-gray-50]="activeTab() !== 'posts'"
+              [class.dark:hover:bg-gray-800]="activeTab() !== 'posts'"
+              (click)="setTab('posts')">Posts</button>
+      <button class="px-6 py-4 border-b-2 font-semibold text-sm transition-colors"
+              [class.text-primary]="activeTab() === 'about'" 
+              [class.border-primary]="activeTab() === 'about'"
+              [class.text-gray-600]="activeTab() !== 'about'"
+              [class.dark:text-gray-400]="activeTab() !== 'about'"
+              [class.border-transparent]="activeTab() !== 'about'"
+              [class.hover:bg-gray-50]="activeTab() !== 'about'"
+              [class.dark:hover:bg-gray-800]="activeTab() !== 'about'"
+              (click)="setTab('about')">About</button>
+      <button class="px-6 py-4 border-b-2 font-semibold text-sm transition-colors"
+              [class.text-primary]="activeTab() === 'friends'" 
+              [class.border-primary]="activeTab() === 'friends'"
+              [class.text-gray-600]="activeTab() !== 'friends'"
+              [class.dark:text-gray-400]="activeTab() !== 'friends'"
+              [class.border-transparent]="activeTab() !== 'friends'"
+              [class.hover:bg-gray-50]="activeTab() !== 'friends'"
+              [class.dark:hover:bg-gray-800]="activeTab() !== 'friends'"
+              (click)="setTab('friends')">Friends</button>
+      <button class="px-6 py-4 border-b-2 font-semibold text-sm transition-colors"
+              [class.text-primary]="activeTab() === 'photos'" 
+              [class.border-primary]="activeTab() === 'photos'"
+              [class.text-gray-600]="activeTab() !== 'photos'"
+              [class.dark:text-gray-400]="activeTab() !== 'photos'"
+              [class.border-transparent]="activeTab() !== 'photos'"
+              [class.hover:bg-gray-50]="activeTab() !== 'photos'"
+              [class.dark:hover:bg-gray-800]="activeTab() !== 'photos'"
+              (click)="setTab('photos')">Photos</button>
     </div>
 
     <!-- Content -->
-    <div class="profile-content">
+    <div class="grid md:grid-cols-[360px_1fr] gap-4">
       @switch (activeTab()) {
         @case ('posts') {
-          <div class="posts-section">
-            <div class="intro-card">
-              <h3>Intro</h3>
-              <p>🚗 Car enthusiast since 2010</p>
-              <p>🔧 DIY mechanic</p>
-              <p>⚡ Tesla Model 3 owner</p>
-              <p>📍 San Francisco, CA</p>
-            </div>
-            <div class="posts-feed">
-              <div class="empty-posts">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                <p>No posts yet</p>
-              </div>
-            </div>
+          <div class="bg-white dark:bg-gray-900 rounded-lg p-4 shadow-sm h-fit">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Intro</h3>
+            <p class="my-2 text-sm text-gray-900 dark:text-white">🚗 Car enthusiast since 2010</p>
+            <p class="my-2 text-sm text-gray-900 dark:text-white">🔧 DIY mechanic</p>
+            <p class="my-2 text-sm text-gray-900 dark:text-white">⚡ Tesla Model 3 owner</p>
+            <p class="my-2 text-sm text-gray-900 dark:text-white">📍 San Francisco, CA</p>
+          </div>
+          <div class="bg-white dark:bg-gray-900 rounded-lg p-12 shadow-sm text-center">
+            <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            <p class="text-gray-600 dark:text-gray-400">No posts yet</p>
           </div>
         }
         @case ('about') {
-          <div class="about-section">
-            <div class="about-card">
-              <h3>About</h3>
+          <div class="md:col-span-2 max-w-2xl">
+            <div class="bg-white dark:bg-gray-900 rounded-lg p-4 shadow-sm">
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">About</h3>
               @if (isEditing()) {
                 <form (ngSubmit)="saveProfile()">
-                  <div class="form-group">
-                    <label>First Name</label>
-                    <input type="text" [(ngModel)]="editForm.firstName" name="firstName">
+                  <div class="mb-4">
+                    <label class="block mb-2 font-medium text-sm text-gray-900 dark:text-white">First Name</label>
+                    <input type="text" [(ngModel)]="editForm.firstName" name="firstName" class="w-full px-2.5 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-primary bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                   </div>
-                  <div class="form-group">
-                    <label>Last Name</label>
-                    <input type="text" [(ngModel)]="editForm.lastName" name="lastName">
+                  <div class="mb-4">
+                    <label class="block mb-2 font-medium text-sm text-gray-900 dark:text-white">Last Name</label>
+                    <input type="text" [(ngModel)]="editForm.lastName" name="lastName" class="w-full px-2.5 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-primary bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                   </div>
-                  <div class="form-group">
-                    <label>Phone</label>
-                    <input type="tel" [(ngModel)]="editForm.phone" name="phone">
+                  <div class="mb-4">
+                    <label class="block mb-2 font-medium text-sm text-gray-900 dark:text-white">Phone</label>
+                    <input type="tel" [(ngModel)]="editForm.phone" name="phone" class="w-full px-2.5 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-primary bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                   </div>
-                  <div class="form-group">
-                    <label>Bio</label>
-                    <textarea [(ngModel)]="editForm.bio" name="bio" rows="3"></textarea>
+                  <div class="mb-4">
+                    <label class="block mb-2 font-medium text-sm text-gray-900 dark:text-white">Bio</label>
+                    <textarea [(ngModel)]="editForm.bio" name="bio" rows="3" class="w-full px-2.5 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-primary resize-y bg-white dark:bg-gray-800 text-gray-900 dark:text-white"></textarea>
                   </div>
-                  <div class="form-group">
-                    <label>Location</label>
-                    <input type="text" [(ngModel)]="editForm.location" name="location">
+                  <div class="mb-4">
+                    <label class="block mb-2 font-medium text-sm text-gray-900 dark:text-white">Location</label>
+                    <input type="text" [(ngModel)]="editForm.location" name="location" class="w-full px-2.5 py-2.5 border border-gray-300 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-primary bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                   </div>
-                  <div class="form-actions">
-                    <button type="submit" class="btn-primary">Save</button>
-                    <button type="button" class="btn-secondary" (click)="toggleEdit()">Cancel</button>
+                  <div class="flex gap-2 mt-4">
+                    <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-lg font-semibold hover:bg-primary-hover transition-colors">Save</button>
+                    <button type="button" class="px-5 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" (click)="toggleEdit()">Cancel</button>
                   </div>
                 </form>
               } @else {
-                <div class="about-item">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                  <span>{{ profileUser().email }}</span>
+                <div class="flex items-center gap-3 py-3 border-b border-gray-200 dark:border-gray-800 last:border-b-0">
+                  <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                  <span class="text-sm text-gray-900 dark:text-white">{{ profileUser().email }}</span>
                 </div>
                 @if (editForm.phone) {
-                  <div class="about-item">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                    <span>{{ editForm.phone }}</span>
+                  <div class="flex items-center gap-3 py-3 border-b border-gray-200 dark:border-gray-800 last:border-b-0">
+                    <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                    <span class="text-sm text-gray-900 dark:text-white">{{ editForm.phone }}</span>
                   </div>
                 }
-                <div class="about-item">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                  <span>San Francisco, CA</span>
+                <div class="flex items-center gap-3 py-3 border-b border-gray-200 dark:border-gray-800 last:border-b-0">
+                  <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                  <span class="text-sm text-gray-900 dark:text-white">San Francisco, CA</span>
                 </div>
-                <div class="about-item">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
-                  <span>Joined December 2024</span>
+                <div class="flex items-center gap-3 py-3 border-b border-gray-200 dark:border-gray-800 last:border-b-0">
+                  <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+                  <span class="text-sm text-gray-900 dark:text-white">Joined December 2024</span>
                 </div>
               }
             </div>
           </div>
         }
         @case ('friends') {
-          <div class="friends-section">
-            <div class="friends-card">
-              <h3>Friends ({{ stats().friends }})</h3>
-              <div class="friends-grid">
-                <div class="friend-item">
-                  <div class="friend-avatar">JD</div>
-                  <span>John Doe</span>
+          <div class="md:col-span-2 max-w-2xl">
+            <div class="bg-white dark:bg-gray-900 rounded-lg p-4 shadow-sm">
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Friends ({{ stats().friends }})</h3>
+              <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="text-center">
+                  <div class="w-20 h-20 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 text-white flex items-center justify-center font-semibold text-xl mx-auto mb-2">JD</div>
+                  <span class="text-sm font-medium text-gray-900 dark:text-white">John Doe</span>
                 </div>
-                <div class="friend-item">
-                  <div class="friend-avatar">AS</div>
-                  <span>Alice Smith</span>
+                <div class="text-center">
+                  <div class="w-20 h-20 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 text-white flex items-center justify-center font-semibold text-xl mx-auto mb-2">AS</div>
+                  <span class="text-sm font-medium text-gray-900 dark:text-white">Alice Smith</span>
                 </div>
-                <div class="friend-item">
-                  <div class="friend-avatar">BW</div>
-                  <span>Bob Wilson</span>
+                <div class="text-center">
+                  <div class="w-20 h-20 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 text-white flex items-center justify-center font-semibold text-xl mx-auto mb-2">BW</div>
+                  <span class="text-sm font-medium text-gray-900 dark:text-white">Bob Wilson</span>
                 </div>
               </div>
-              <a routerLink="/community/friends" class="see-all">See All Friends</a>
+              <a routerLink="/community/friends" class="block text-center text-primary font-medium hover:underline">See All Friends</a>
             </div>
           </div>
         }
         @case ('photos') {
-          <div class="photos-section">
-            <div class="photos-card">
-              <h3>Photos</h3>
-              <div class="photos-grid">
-                <div class="photo-placeholder"></div>
-                <div class="photo-placeholder"></div>
-                <div class="photo-placeholder"></div>
+          <div class="md:col-span-2 max-w-2xl">
+            <div class="bg-white dark:bg-gray-900 rounded-lg p-4 shadow-sm">
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Photos</h3>
+              <div class="grid grid-cols-3 gap-2 mb-4">
+                <div class="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+                <div class="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+                <div class="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
               </div>
-              <p class="no-photos">No photos uploaded yet</p>
+              <p class="text-center text-gray-600 dark:text-gray-400">No photos uploaded yet</p>
             </div>
           </div>
         }

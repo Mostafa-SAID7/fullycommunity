@@ -241,14 +241,133 @@
       </div>
     </ui-card>
 
+    <!-- New UI Components -->
+    <ui-card>
+      <h2 class="text-title-large mb-6">Enhanced Components</h2>
+      <div class="space-y-8">
+        
+        <!-- Search Input -->
+        <div>
+          <h3 class="text-subtitle mb-3">Search Input</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ui-search-input placeholder="Search with debounce..." [debounceTime]="300"></ui-search-input>
+            <ui-search-input placeholder="Search with loading..." [loading]="true"></ui-search-input>
+          </div>
+        </div>
+
+        <!-- Select Component -->
+        <div>
+          <h3 class="text-subtitle mb-3">Select Dropdown</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ui-select 
+              label="Choose Option"
+              [options]="selectOptions"
+              placeholder="Select an option...">
+            </ui-select>
+            <ui-select 
+              label="Multi-size Select"
+              [options]="selectOptions"
+              size="lg"
+              [fullWidth]="false">
+            </ui-select>
+          </div>
+        </div>
+
+        <!-- Dropdown Component -->
+        <div>
+          <h3 class="text-subtitle mb-3">Advanced Dropdown</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ui-dropdown 
+              [items]="dropdownItems"
+              placeholder="Select with search..."
+              [searchable]="true">
+            </ui-dropdown>
+            <ui-dropdown 
+              [items]="dropdownItems"
+              placeholder="Multi-select..."
+              [multiple]="true">
+            </ui-dropdown>
+          </div>
+        </div>
+
+        <!-- Chips -->
+        <div>
+          <h3 class="text-subtitle mb-3">Chips</h3>
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-2">
+              <ui-chip label="Default Chip" variant="default"></ui-chip>
+              <ui-chip label="Primary Chip" variant="primary"></ui-chip>
+              <ui-chip label="Success Chip" variant="success"></ui-chip>
+              <ui-chip label="Error Chip" variant="error"></ui-chip>
+              <ui-chip label="Warning Chip" variant="warning"></ui-chip>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <ui-chip label="Removable" variant="primary" [removable]="true"></ui-chip>
+              <ui-chip label="Clickable" variant="secondary" [clickable]="true"></ui-chip>
+              <ui-chip label="With Avatar" variant="info" avatar="/assets/images/avatar.jpg"></ui-chip>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spinners -->
+        <div>
+          <h3 class="text-subtitle mb-3">Spinners</h3>
+          <div class="flex flex-wrap items-center gap-8">
+            <div class="text-center">
+              <ui-spinner variant="border" size="sm" color="primary"></ui-spinner>
+              <p class="text-xs mt-2">Border Small</p>
+            </div>
+            <div class="text-center">
+              <ui-spinner variant="dots" size="md" color="success"></ui-spinner>
+              <p class="text-xs mt-2">Dots Medium</p>
+            </div>
+            <div class="text-center">
+              <ui-spinner variant="pulse" size="lg" color="error"></ui-spinner>
+              <p class="text-xs mt-2">Pulse Large</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skeleton Loaders -->
+        <div>
+          <h3 class="text-subtitle mb-3">Skeleton Loaders</h3>
+          <div class="space-y-4">
+            <div class="flex items-center space-x-4">
+              <ui-skeleton variant="circular" width="40px" height="40px"></ui-skeleton>
+              <div class="flex-1 space-y-2">
+                <ui-skeleton variant="text" width="60%"></ui-skeleton>
+                <ui-skeleton variant="text" width="40%"></ui-skeleton>
+              </div>
+            </div>
+            <ui-skeleton variant="rectangular" width="100%" height="200px"></ui-skeleton>
+          </div>
+        </div>
+      </div>
+    </ui-card>
+
     <!-- Interactive Components -->
     <ui-card>
       <h2 class="text-title-large mb-6">Interactive Components</h2>
-      <div class="flex flex-wrap gap-4">
-        <ui-button (clicked)="openModal()">Open Modal</ui-button>
-        <ui-button variant="success" (clicked)="showToastMessage()">Show Toast</ui-button>
+      <div class="space-y-4">
+        <div>
+          <h3 class="text-subtitle mb-3">Modal</h3>
+          <ui-button (clicked)="openModal()">Open Modal</ui-button>
+        </div>
+        
+        <div>
+          <h3 class="text-subtitle mb-3">Toast Notifications</h3>
+          <div class="flex flex-wrap gap-2">
+            <ui-button variant="success" (clicked)="showToastMessage()">Success Toast</ui-button>
+            <ui-button variant="error" (clicked)="showErrorToast()">Error Toast</ui-button>
+            <ui-button variant="warning" (clicked)="showWarningToast()">Warning Toast</ui-button>
+            <ui-button variant="secondary" (clicked)="showInfoToast()">Info Toast</ui-button>
+          </div>
+        </div>
       </div>
     </ui-card>
+
+    <!-- Animation Showcase -->
+    <app-animation-showcase></app-animation-showcase>
 
     <!-- Modal -->
     <ui-modal 
@@ -267,16 +386,6 @@
       </div>
     </ui-modal>
 
-    <!-- Toast Container -->
-    @if (showToast) {
-      <div class="fixed top-4 right-4 z-50">
-        <ui-toast 
-          type="success" 
-          title="Success!" 
-          message="This is a success toast notification."
-          (closed)="hideToast()">
-        </ui-toast>
-      </div>
-    }
+
   </div>
 </div>

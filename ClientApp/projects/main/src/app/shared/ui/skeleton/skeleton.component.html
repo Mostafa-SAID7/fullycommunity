@@ -1,0 +1,15 @@
+<div [class]="containerClasses">
+  @if (variant === 'text') {
+    @for (line of [].constructor(lines); track $index) {
+      <div 
+        [class]="skeletonClasses" 
+        [ngStyle]="{ ...skeletonStyle, width: getLineWidth($index) }">
+      </div>
+    }
+  } @else {
+    <div 
+      [class]="skeletonClasses" 
+      [ngStyle]="skeletonStyle">
+    </div>
+  }
+</div>

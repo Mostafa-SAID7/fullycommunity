@@ -9,8 +9,7 @@ import { CommunityService, Post } from '../../core/services/community.service';
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnInit {
   private authService = inject(AuthService);

@@ -1,24 +1,34 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SectionLayoutComponent, MenuItem, SidebarShortcut } from '../../../shared/components/section-layout/section-layout.component';
+import { RouterModule } from '@angular/router';
+import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
+import { SidebarMenuItem, SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
+import { SponsoredItem, EventReminder, Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
 
 @Component({
   selector: 'app-marketplace-layout',
   standalone: true,
-  imports: [CommonModule, SectionLayoutComponent],
+  imports: [CommonModule, RouterModule, SidebarLayoutComponent],
   template: `
-    <app-section-layout
-      sectionTitle="Marketplace"
-      sectionIcon="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-      [menuItems]="menuItems"
+    <app-sidebar-layout
+      [leftMenuItems]="leftMenuItems"
       [shortcuts]="shortcuts"
+      [showUserProfile]="true"
+      [showFooter]="true"
+      [sponsoredItems]="sponsoredItems"
+      [events]="events"
+      [contacts]="contacts"
+      [showSponsored]="true"
+      [showEvents]="true"
+      [showContacts]="true"
       [showRightSidebar]="true"
-      rightSidebarContent="marketplace"
-    />
+    >
+      <router-outlet></router-outlet>
+    </app-sidebar-layout>
   `
 })
 export class MarketplaceLayoutComponent {
-  menuItems: MenuItem[] = [
+  leftMenuItems: SidebarMenuItem[] = [
     { icon: 'home', label: 'Browse All', route: '/marketplace', exact: true },
     { icon: 'sell', label: 'Sell', route: '/marketplace/sell' },
     { icon: 'auctions', label: 'Auctions', route: '/marketplace/auctions' },
@@ -32,5 +42,22 @@ export class MarketplaceLayoutComponent {
     { id: 'parts', name: 'Car Parts', image: '/assets/marketplace/parts.jpg', type: 'marketplace/category' },
     { id: 'accessories', name: 'Accessories', image: '/assets/marketplace/accessories.jpg', type: 'marketplace/category' },
     { id: 'tools', name: 'Tools & Equipment', image: '/assets/marketplace/tools.jpg', type: 'marketplace/category' }
+  ];
+
+  sponsoredItems: SponsoredItem[] = [
+    { id: '1', title: 'Premium Auto Parts Store', url: 'autoparts.com', image: '/assets/ads/auto-parts.jpg' },
+    { id: '2', title: 'Car Accessories Hub', url: 'caraccessories.com', image: '/assets/ads/car-accessories.jpg' }
+  ];
+
+  events: EventReminder[] = [
+    { id: '1', title: 'Car Parts Sale - 50% Off', time: 'Ends Tomorrow' },
+    { id: '2', title: 'Classic Car Auction', time: 'Saturday at 2:00 PM' }
+  ];
+
+  contacts: Contact[] = [
+    { id: '1', name: 'Parts Dealer Pro', initials: 'PD', online: true },
+    { id: '2', name: 'Auto Seller', initials: 'AS', online: true },
+    { id: '3', name: 'Classic Cars Inc', initials: 'CC', online: false },
+    { id: '4', name: 'Speed Shop', initials: 'SS', online: true }
   ];
 }

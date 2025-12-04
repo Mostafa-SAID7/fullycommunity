@@ -47,7 +47,7 @@
           <!-- Friend Avatar -->
           <div class="flex items-center gap-4 mb-4">
             <ui-avatar 
-              [src]="friend.avatarUrl" 
+              [src]="friend.avatarUrl || ''" 
               [name]="friend.firstName + ' ' + friend.lastName"
               size="lg">
             </ui-avatar>

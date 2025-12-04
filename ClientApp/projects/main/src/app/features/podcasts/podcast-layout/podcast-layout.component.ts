@@ -1,26 +1,34 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SectionLayoutComponent, MenuItem, SidebarShortcut } from '../../../shared/components/section-layout/section-layout.component';
+import { RouterModule } from '@angular/router';
+import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
+import { SidebarMenuItem, SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
+import { SponsoredItem, EventReminder, Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
 
 @Component({
   selector: 'app-podcast-layout',
   standalone: true,
-  imports: [CommonModule, SectionLayoutComponent],
+  imports: [CommonModule, RouterModule, SidebarLayoutComponent],
   template: `
-    <app-section-layout
-      sectionTitle="Podcasts"
-      sectionIcon="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"
-      [menuItems]="menuItems"
+    <app-sidebar-layout
+      [leftMenuItems]="leftMenuItems"
       [shortcuts]="shortcuts"
+      [showUserProfile]="true"
+      [showFooter]="true"
+      [sponsoredItems]="sponsoredItems"
+      [events]="events"
+      [contacts]="contacts"
+      [showSponsored]="true"
+      [showEvents]="true"
+      [showContacts]="true"
       [showRightSidebar]="true"
-      rightSidebarContent="podcasts"
     >
-      <ng-content></ng-content>
-    </app-section-layout>
+      <router-outlet></router-outlet>
+    </app-sidebar-layout>
   `
 })
 export class PodcastLayoutComponent {
-  menuItems: MenuItem[] = [
+  leftMenuItems: SidebarMenuItem[] = [
     { icon: 'home', label: 'Home', route: '/podcasts', exact: true },
     { icon: 'browse', label: 'Browse', route: '/podcasts/browse' },
     { icon: 'library', label: 'Library', route: '/podcasts/library' },
@@ -34,5 +42,22 @@ export class PodcastLayoutComponent {
     { id: 'garage-sessions', name: 'Garage Sessions', image: 'https://picsum.photos/seed/garage/400/400', type: 'podcasts/show' },
     { id: 'ev-revolution', name: 'EV Revolution', image: 'https://picsum.photos/seed/evrev/400/400', type: 'podcasts/show' },
     { id: 'wrench-talk', name: 'Wrench Talk', image: 'https://picsum.photos/seed/wrench/400/400', type: 'podcasts/show' }
+  ];
+
+  sponsoredItems: SponsoredItem[] = [
+    { id: '1', title: 'Premium Podcast Equipment', url: 'podcastgear.com', image: '/assets/ads/podcast-equipment.jpg' },
+    { id: '2', title: 'Audio Recording Studio', url: 'audiostudio.com', image: '/assets/ads/audio-studio.jpg' }
+  ];
+
+  events: EventReminder[] = [
+    { id: '1', title: 'Live Podcast Recording', time: 'Tonight at 9:00 PM' },
+    { id: '2', title: 'Car Talk Live Show', time: 'Sunday at 3:00 PM' }
+  ];
+
+  contacts: Contact[] = [
+    { id: '1', name: 'Car Talk Host', initials: 'CT', online: true },
+    { id: '2', name: 'Garage Guru', initials: 'GG', online: true },
+    { id: '3', name: 'EV Expert', initials: 'EE', online: false },
+    { id: '4', name: 'Wrench Master', initials: 'WM', online: true }
   ];
 }

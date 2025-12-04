@@ -1,0 +1,81 @@
+<div class="dropdown-container relative" [class]="containerClasses">
+  <!-- Trigger Button -->
+  <button
+    type="button"
+    [disabled]="disabled"
+    (click)="toggle()"
+    [class]="triggerClasses"
+    [attr.aria-expanded]="isOpen"
+    [attr.aria-haspopup]="true">
+    
+    <span class="flex-1 text-left truncate">{{ selectedLabel }}</span>
+    
+    <svg 
+      class="w-4 h-4 transition-transform duration-200"
+      [class.rotate-180]="isOpen"
+      fill="none" 
+      stroke="currentColor" 
+      viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+
+  <!-- Dropdown Menu -->
+  <div 
+    *ngIf="isOpen"
+    [class]="menuClasses"
+    role="listbox"
+    [attr.aria-multiselectable]="multiple">
+    
+    <!-- Search Input -->
+    <div *ngIf="searchable" class="p-2 border-b border-border dark:border-border-dark">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange($event)"
+        placeholder="Search..."
+        class="w-full px-3 py-2 text-sm border border-border dark:border-border-dark rounded-md bg-background dark:bg-background-dark text-secondary-900 dark:text-secondary-100 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+        (click)="$event.stopPropagation()">
+    </div>
+
+    <!-- Items List -->
+    <div class="max-h-60 overflow-y-auto">
+      <div *ngFor="let item of filteredItems; trackBy: trackByValue" class="relative">
+        
+        <!-- Divider -->
+        <div *ngIf="item.divider" class="border-t border-border dark:border-border-dark my-1"></div>
+        
+        <!-- Item -->
+        <button
+          *ngIf="!item.divider"
+          type="button"
+          [disabled]="item.disabled"
+          (click)="selectItem(item)"
+          [class]="getItemClasses(item)"
+          role="option"
+          [attr.aria-selected]="isSelected(item)">
+          
+          <!-- Icon -->
+          <span *ngIf="item.icon" class="w-4 h-4 mr-2" [innerHTML]="item.icon"></span>
+          
+          <!-- Label -->
+          <span class="flex-1 text-left">{{ item.label }}</span>
+          
+          <!-- Check Mark for Selected Items -->
+          <svg 
+            *ngIf="isSelected(item)"
+            class="w-4 h-4 text-primary"
+            fill="currentColor" 
+            viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- No Results -->
+      <div *ngIf="searchable && filteredItems.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 text-center">
+        No results found
+      </div>
+    </div>
+  </div>
+</div>

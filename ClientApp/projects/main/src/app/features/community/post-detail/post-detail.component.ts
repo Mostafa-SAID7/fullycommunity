@@ -9,8 +9,7 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-post-detail',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './post-detail.component.html',
-  styleUrl: './post-detail.component.scss'
+  templateUrl: './post-detail.component.html'
 })
 export class PostDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
