@@ -1,22 +1,22 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../../core/services/auth.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 interface Story {
-  id: string;
-  userId: string;
-  userName: string;
-  userAvatar?: string;
-  imageUrl: string;
-  viewed: boolean;
-  createdAt: string;
+    id: string;
+    userId: string;
+    userName: string;
+    userAvatar?: string;
+    imageUrl: string;
+    viewed: boolean;
+    createdAt: string;
 }
 
 @Component({
-  selector: 'app-stories',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
+    selector: 'app-stories',
+    standalone: true,
+    imports: [CommonModule],
+    template: `
     <div class="stories-container">
       <!-- Create Story -->
       <div class="story-card create-story">
@@ -48,14 +48,14 @@ interface Story {
       }
     </div>
   `,
-  styles: [`
+    styles: [`
     .stories-container {
       display: flex;
       gap: 0.5rem;
       padding: 1rem;
       background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       margin-bottom: 1rem;
       overflow-x: auto;
 
@@ -192,26 +192,26 @@ interface Story {
   `]
 })
 export class StoriesComponent {
-  private authService = inject(AuthService);
-  user = this.authService.currentUser;
+    private authService = inject(AuthService);
+    user = this.authService.currentUser;
 
-  stories = signal<Story[]>([
-    { id: '1', userId: '1', userName: 'John Doe', imageUrl: '/assets/stories/story1.jpg', viewed: false, createdAt: new Date().toISOString() },
-    { id: '2', userId: '2', userName: 'Alice Smith', imageUrl: '/assets/stories/story2.jpg', viewed: false, createdAt: new Date().toISOString() },
-    { id: '3', userId: '3', userName: 'Bob Wilson', imageUrl: '/assets/stories/story3.jpg', viewed: true, createdAt: new Date().toISOString() },
-    { id: '4', userId: '4', userName: 'Emma Davis', imageUrl: '/assets/stories/story4.jpg', viewed: false, createdAt: new Date().toISOString() }
-  ]);
+    stories = signal<Story[]>([
+        { id: '1', userId: '1', userName: 'John Doe', imageUrl: '/assets/stories/story1.jpg', viewed: false, createdAt: new Date().toISOString() },
+        { id: '2', userId: '2', userName: 'Alice Smith', imageUrl: '/assets/stories/story2.jpg', viewed: false, createdAt: new Date().toISOString() },
+        { id: '3', userId: '3', userName: 'Bob Wilson', imageUrl: '/assets/stories/story3.jpg', viewed: true, createdAt: new Date().toISOString() },
+        { id: '4', userId: '4', userName: 'Emma Davis', imageUrl: '/assets/stories/story4.jpg', viewed: false, createdAt: new Date().toISOString() }
+    ]);
 
-  viewStory(story: Story) {
-    this.stories.update(stories => 
-      stories.map(s => s.id === story.id ? { ...s, viewed: true } : s)
-    );
-    // Open story viewer modal
-  }
+    viewStory(story: Story) {
+        this.stories.update(stories =>
+            stories.map(s => s.id === story.id ? { ...s, viewed: true } : s)
+        );
+        // Open story viewer modal
+    }
 
-  getUserInitials(): string {
-    const u = this.user();
-    if (!u) return 'U';
-    return ((u.firstName?.charAt(0) || '') + (u.lastName?.charAt(0) || '')).toUpperCase() || 'U';
-  }
+    getUserInitials(): string {
+        const u = this.user();
+        if (!u) return 'U';
+        return ((u.firstName?.charAt(0) || '') + (u.lastName?.charAt(0) || '')).toUpperCase() || 'U';
+    }
 }

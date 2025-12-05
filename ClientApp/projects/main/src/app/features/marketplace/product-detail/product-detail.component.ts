@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MarketplaceService, Product, ProductReview } from '../../../core/services/marketplace.service';
+import { MarketplaceService, Product, ProductReview } from '../../../core/services/commerce/marketplace.service';
 import { ProductCardComponent } from '../shared/product-card.component';
 
 @Component({

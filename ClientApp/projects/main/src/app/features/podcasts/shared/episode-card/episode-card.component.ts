@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { EpisodeListItem, PodcastService } from '../../../../core/services/podcast.service';
+import { EpisodeListItem, PodcastService } from '../../../../core/services/media/podcast.service';
 
 @Component({
   selector: 'app-episode-card',

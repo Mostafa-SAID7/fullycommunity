@@ -2,8 +2,8 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { AuctionService, AuctionSearchRequest } from '../../../core/services/auction.service';
-import { Auction } from '../../../core/services/marketplace.service';
+import { AuctionService, AuctionSearchRequest } from '../../../core/services/commerce/auction.service';
+import { Auction } from '../../../core/services/commerce/marketplace.service';
 
 @Component({
   selector: 'app-auctions',

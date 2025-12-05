@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardService, ExpertDashboard } from '../../../core/services/dashboard.service';
+import { DashboardService, ExpertDashboard } from '../../../core/services/business/dashboard.service';
 
 @Component({
   selector: 'app-expert-dashboard',

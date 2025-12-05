@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { 
   LiveStream, ChatMessage, GiftType, CreateLiveStreamRequest, 
   SendChatMessageRequest, SendGiftRequest, PagedResult 
-} from './video.service';
+} from '../media/video.service';
 
 export interface LiveStreamSearchRequest {
   query?: string;

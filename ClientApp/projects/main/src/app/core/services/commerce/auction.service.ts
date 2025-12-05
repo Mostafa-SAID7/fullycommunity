@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { Auction, Bid, AuctionStatus, Order, PagedResult } from './marketplace.service';
+import { environment } from '../../../../environments/environment';
+import { Auction, Bid, AuctionStatus, Order, PagedResult } from '../commerce/marketplace.service';
 
 export interface AuctionSearchRequest {
   query?: string;

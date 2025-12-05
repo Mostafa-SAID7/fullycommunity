@@ -1,7 +1,7 @@
 import { Component, Input, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { PodcastListItem, PodcastService } from '../../../../core/services/podcast.service';
+import { PodcastListItem, PodcastService } from '../../../../core/services/media/podcast.service';
 import { BadgeComponent, ButtonComponent, CardComponent } from '../../../../shared/ui';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 

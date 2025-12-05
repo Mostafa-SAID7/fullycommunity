@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { GuidesService, Guide } from '../../../core/services/guides.service';
+import { GuidesService, Guide } from '../../../core/services/community/guides.service';
 
 @Component({
   selector: 'app-guide-detail',

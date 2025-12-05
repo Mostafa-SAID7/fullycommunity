@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ReviewsService, Review } from '../../../core/services/reviews.service';
+import { ReviewsService, Review } from '../../../core/services/community/reviews.service';
 
 @Component({
   selector: 'app-review-detail',

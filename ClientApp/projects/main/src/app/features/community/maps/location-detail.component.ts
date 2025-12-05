@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MapsService, MapLocation, LocationReview } from '../../../core/services/maps.service';
+import { MapsService, MapLocation, LocationReview } from '../../../core/services/ui/maps.service';
 
 @Component({
   selector: 'app-location-detail',

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
-import { MarketplaceService, Order } from '../../../core/services/marketplace.service';
+import { MarketplaceService, Order } from '../../../core/services/commerce/marketplace.service';
 
 @Component({
   selector: 'app-order-detail',

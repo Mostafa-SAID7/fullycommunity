@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ReviewsService, ReviewListItem, ReviewSubjectType } from '../../../core/services/reviews.service';
+import { ReviewsService, ReviewListItem, ReviewSubjectType } from '../../../core/services/community/reviews.service';
 
 @Component({
   selector: 'app-reviews',

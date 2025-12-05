@@ -1,7 +1,7 @@
 import { Component, inject, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
 
 export interface SidebarMenuItem {
   icon: string;

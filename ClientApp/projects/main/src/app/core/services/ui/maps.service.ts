@@ -1,8 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, of } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { PagedResult } from './community.service';
+import { environment } from '../../../../environments/environment';
+import { PagedResult } from '../../types/common.types';
 
 export interface MapLocation {
   id: string;

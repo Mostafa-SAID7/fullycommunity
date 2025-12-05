@@ -2,9 +2,9 @@ import { Injectable, inject, signal, OnDestroy } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from '@microsoft/signalr';
 import { BehaviorSubject, Subject, Observable, fromEvent, merge } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { AuthService } from './auth.service';
-import { GlobalErrorHandlerService } from './global-error-handler.service';
-import { environment } from '../../../environments/environment';
+import { AuthService } from '../auth/auth.service';
+import { GlobalErrorHandlerService } from '../common/global-error-handler.service';
+import { environment } from '../../../../environments/environment';
 
 export interface SignalRMessage {
   type: string;

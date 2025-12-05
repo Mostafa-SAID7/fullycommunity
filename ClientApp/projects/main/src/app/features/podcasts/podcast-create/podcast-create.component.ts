@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { PodcastLayoutComponent } from '../podcast-layout/podcast-layout.component';
-import { PodcastService, PodcastType, PodcastCategory, ExplicitContent, CreatePodcastRequest } from '../../../core/services/podcast.service';
+import { PodcastService, PodcastType, PodcastCategory, ExplicitContent, CreatePodcastRequest } from '../../../core/services/media/podcast.service';
 
 @Component({
   selector: 'app-podcast-create',

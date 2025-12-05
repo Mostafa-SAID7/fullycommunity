@@ -1,8 +1,8 @@
 import { Component, inject, signal, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CommunityService, Post, PostType, CreatePostRequest } from '../../../../core/services/community.service';
-import { AuthService } from '../../../../core/services/auth.service';
+import { CommunityService, Post, PostType, CreatePostRequest } from '../../../../core/services/community/community.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-create-post',

@@ -268,4 +268,4 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 }
 
 // Import environment
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';

@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Product, MarketplaceService } from '../../../core/services/marketplace.service';
+import { Product, MarketplaceService } from '../../../core/services/commerce/marketplace.service';
 
 @Component({
   selector: 'app-product-card',

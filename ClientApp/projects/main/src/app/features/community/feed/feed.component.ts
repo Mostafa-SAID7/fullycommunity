@@ -2,16 +2,15 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { CommunityService, Post, PostType, CreatePostRequest } from '../../../core/services/community.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { PostCardComponent } from '../components/post-card/post-card.component';
-import { CreatePostComponent } from '../components/create-post/create-post.component';
-import { StoriesComponent } from '../components/stories/stories.component';
+import { CommunityService, Post, PostType, CreatePostRequest } from '../../../core/services/community/community.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { PostCardComponent, CreatePostComponent } from '../components';
+
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, PostCardComponent, CreatePostComponent, StoriesComponent],
+  imports: [CommonModule, FormsModule, RouterModule, PostCardComponent, CreatePostComponent],
   templateUrl: './feed.component.html'
 })
 export class FeedComponent implements OnInit {

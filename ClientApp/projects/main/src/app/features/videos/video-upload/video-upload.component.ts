@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { VideoService, VideoCategory, CreateVideoRequest, VideoVisibility } from '../../../core/services/video.service';
+import { VideoService, VideoCategory, CreateVideoRequest, VideoVisibility } from '../../../core/services/media/video.service';
 
 @Component({
   selector: 'app-video-upload',

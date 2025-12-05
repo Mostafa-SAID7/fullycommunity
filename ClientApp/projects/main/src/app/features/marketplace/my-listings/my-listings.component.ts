@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { MarketplaceService, Product } from '../../../core/services/marketplace.service';
+import { MarketplaceService, Product } from '../../../core/services/commerce/marketplace.service';
 
 @Component({
   selector: 'app-my-listings',

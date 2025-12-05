@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { MarketplaceService, WishlistItem } from '../../../core/services/marketplace.service';
+import { MarketplaceService, WishlistItem } from '../../../core/services/commerce/marketplace.service';
 
 @Component({
   selector: 'app-wishlist',

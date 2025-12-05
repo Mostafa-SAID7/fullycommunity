@@ -1,6 +1,6 @@
 import { Component, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LocalizationService } from '../../../core/services/localization.service';
+import { LocalizationService } from '../../../core/services/ui/localization.service';
 
 @Component({
   selector: 'app-language-switcher',

@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { LiveStreamService } from '../../../core/services/livestream.service';
-import { ChannelService } from '../../../core/services/channel.service';
-import { LiveStream, ChatMessage, GiftType } from '../../../core/services/video.service';
+import { LiveStreamService } from '../../../core/services/media/livestream.service';
+import { ChannelService } from '../../../core/services/media/channel.service';
+import { LiveStream, ChatMessage, GiftType } from '../../../core/services/media/video.service';
 
 @Component({
   selector: 'app-live-watch',

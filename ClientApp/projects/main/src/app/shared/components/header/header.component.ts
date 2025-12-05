@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../core/services/auth.service';
-import { LocalizationService } from '../../../core/services/localization.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { LocalizationService } from '../../../core/services/ui/localization.service';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
 import { SearchBoxComponent } from '../search-box/search-box.component';
 

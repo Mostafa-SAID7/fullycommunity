@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { VideoService, Video } from '../../../core/services/video.service';
+import { VideoService, Video } from '../../../core/services/media/video.service';
 
 @Component({
   selector: 'app-watch-history',

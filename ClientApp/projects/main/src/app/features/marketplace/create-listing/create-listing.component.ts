@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MarketplaceService, CreateProductRequest, MarketplaceCategory, ProductCondition, WarrantyType } from '../../../core/services/marketplace.service';
+import { MarketplaceService, CreateProductRequest, MarketplaceCategory, ProductCondition, WarrantyType } from '../../../core/services/commerce/marketplace.service';
 
 @Component({
   selector: 'app-create-listing',

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { PodcastService, PodcastListItem, EpisodeListItem, ListenHistory, QueueItem } from '../../../core/services/podcast.service';
+import { PodcastService, PodcastListItem, EpisodeListItem, ListenHistory, QueueItem } from '../../../core/services/media/podcast.service';
 import { PodcastLayoutComponent } from '../podcast-layout/podcast-layout.component';
 import { PodcastCardComponent } from '../shared/podcast-card/podcast-card.component';
 import { EpisodeCardComponent } from '../shared/episode-card/episode-card.component';

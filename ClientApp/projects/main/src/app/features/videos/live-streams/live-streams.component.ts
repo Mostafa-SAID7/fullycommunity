@@ -1,8 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { LiveStreamService } from '../../../core/services/livestream.service';
-import { LiveStream } from '../../../core/services/video.service';
+import { LiveStreamService } from '../../../core/services/media/livestream.service';
+import { LiveStream } from '../../../core/services/media/video.service';
 
 @Component({
   selector: 'app-live-streams',

@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MarketplaceService, Cart, OrderAddress, ShippingMethod, PaymentMethod } from '../../../core/services/marketplace.service';
+import { MarketplaceService, Cart, OrderAddress, ShippingMethod, PaymentMethod } from '../../../core/services/commerce/marketplace.service';
 
 @Component({
   selector: 'app-checkout',

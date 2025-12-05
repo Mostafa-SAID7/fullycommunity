@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { PodcastService, PodcastListItem, PodcastCategoryDto } from '../../../core/services/podcast.service';
+import { PodcastService, PodcastListItem, PodcastCategoryDto } from '../../../core/services/media/podcast.service';
 import { PodcastLayoutComponent } from '../podcast-layout/podcast-layout.component';
 import { PodcastCardComponent } from '../shared/podcast-card/podcast-card.component';
 import { 
@@ -13,8 +13,8 @@ import {
   SpinnerComponent 
 } from '../../../shared/ui';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
-import { LocalizationService } from '../../../core/services/localization.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { LocalizationService } from '../../../core/services/ui/localization.service';
+import { ToastService } from '../../../core/services/ui/toast.service';
 
 @Component({
   selector: 'app-podcast-browse',

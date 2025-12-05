@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { GroupsService, Group } from '../../../core/services/groups.service';
+import { GroupsService, Group } from '../../../core/services/community/groups.service';
 
 @Component({
   selector: 'app-groups',

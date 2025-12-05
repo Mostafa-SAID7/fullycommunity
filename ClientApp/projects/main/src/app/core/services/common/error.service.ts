@@ -1,11 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-
-export interface AppError {
-  id: string;
-  message: string;
-  type: 'error' | 'warning' | 'info' | 'success';
-  timestamp: Date;
-}
+import { AppError } from '../../types/common.types';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorService {

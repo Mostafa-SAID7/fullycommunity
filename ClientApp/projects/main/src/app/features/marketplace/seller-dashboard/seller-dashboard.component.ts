@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MarketplaceService, Seller, SellerStats, Product, Order } from '../../../core/services/marketplace.service';
+import { MarketplaceService, Seller, SellerStats, Product, Order } from '../../../core/services/commerce/marketplace.service';
 
 @Component({
   selector: 'app-seller-dashboard',

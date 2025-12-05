@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { NewsService, NewsArticle, NewsListItem } from '../../../core/services/news.service';
+import { NewsService, NewsArticle, NewsListItem } from '../../../core/services/community/news.service';
 
 @Component({
   selector: 'app-news-detail',

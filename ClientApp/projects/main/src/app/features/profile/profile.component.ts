@@ -2,8 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
-import { CommunityService, Post } from '../../core/services/community.service';
+import { AuthService } from '../../core/services/auth/auth.service';
+import { CommunityService, Post } from '../../core/services/community/community.service';
 
 @Component({
   selector: 'app-profile',

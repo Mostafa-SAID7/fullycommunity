@@ -1,8 +1,8 @@
 import { Component, OnInit, inject, signal, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { VideoService, Video, ReactionType } from '../../../core/services/video.service';
-import { ChannelService } from '../../../core/services/channel.service';
+import { VideoService, Video, ReactionType } from '../../../core/services/media/video.service';
+import { ChannelService } from '../../../core/services/media/channel.service';
 
 @Component({
   selector: 'app-video-shorts',

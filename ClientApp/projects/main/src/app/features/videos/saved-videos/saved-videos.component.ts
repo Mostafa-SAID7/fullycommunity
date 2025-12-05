@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { VideoService, SavedVideo, VideoCollection } from '../../../core/services/video.service';
+import { VideoService, SavedVideo, VideoCollection } from '../../../core/services/media/video.service';
 import { VideoCardComponent } from '../shared/video-card.component';
 
 @Component({

@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { 
   Channel, ChannelStats, ChannelSearchRequest, CreateChannelRequest, 
   UpdateChannelRequest, Video, PagedResult, ChannelSummary 
-} from './video.service';
+} from '../media/video.service';
 
 @Injectable({ providedIn: 'root' })
 export class ChannelService {

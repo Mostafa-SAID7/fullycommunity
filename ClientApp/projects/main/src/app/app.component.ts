@@ -4,8 +4,8 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { ToastContainerComponent } from './shared/components/toast-container/toast-container.component';
 import { ScrollToTopComponent } from './shared/components/scroll-to-top/scroll-to-top.component';
 import { ChatAssistantComponent } from './shared/components/chat-assistant/chat-assistant.component';
-import { LocalizationService } from './core/services/localization.service';
-import { AnimationService } from './core/services/animation.service';
+import { LocalizationService } from './core/services/ui/localization.service';
+import { AnimationService } from './core/services/ui/animation.service';
 import { slideInAnimation, fadeAnimation, getRouteAnimationData } from './core/animations/route-animations';
 
 @Component({

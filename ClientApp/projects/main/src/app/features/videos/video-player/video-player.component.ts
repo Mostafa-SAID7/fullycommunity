@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, inject, signal, ElementRef, ViewChild } f
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { VideoService, Video, VideoComment, ReactionType } from '../../../core/services/video.service';
-import { ChannelService } from '../../../core/services/channel.service';
+import { VideoService, Video, VideoComment, ReactionType } from '../../../core/services/media/video.service';
+import { ChannelService } from '../../../core/services/media/channel.service';
 
 @Component({
   selector: 'app-video-player',

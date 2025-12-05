@@ -1,8 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ChannelService } from '../../../core/services/channel.service';
-import { Channel, ChannelStats, Video } from '../../../core/services/video.service';
+import { ChannelService } from '../../../core/services/media/channel.service';
+import { Channel, ChannelStats, Video } from '../../../core/services/media/video.service';
 
 @Component({
   selector: 'app-my-channel',

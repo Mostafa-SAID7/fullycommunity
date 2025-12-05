@@ -15,7 +15,7 @@ namespace CommunityCar.Infrastructure.Data.Seeding.Content;
 /// </summary>
 public class CommunityContentSeeder : BaseSeeder
 {
-    public CommunityContentSeeder(AppDbContext context, ILogger<CommunityContentSeeder> logger) 
+    public CommunityContentSeeder(AppDbContext context, ILogger<CommunityContentSeeder> logger)
         : base(context, logger)
     {
     }
@@ -45,7 +45,7 @@ public class CommunityContentSeeder : BaseSeeder
         await SeedReviewsAsync(users);
         await SeedGuidesAsync(users);
         await SeedPostsAsync(users);
-        
+
         await Context.SaveChangesAsync();
     }
 
@@ -99,23 +99,55 @@ public class CommunityContentSeeder : BaseSeeder
         {
             var author = users[Random.Shared.Next(users.Count)];
             var hasAcceptedAnswer = Random.Shared.Next(1, 100) > 40;
-            
+
             var question = new Question
             {
                 Title = q.Title,
                 Slug = GenerateSlug(q.Title),
                 Content = q.Content,
                 AuthorId = author.Id,
-                Status = hasAcceptedAnswer ? QuestionStatus.Answered : QuestionStatus.Open,
+                Status = QuestionStatus.Open, // Will update if answered
                 CreatedAt = DateTime.UtcNow.AddDays(-Random.Shared.Next(1, 60)),
                 ViewCount = Random.Shared.Next(50, 1000),
                 VoteCount = Random.Shared.Next(-2, 50),
-                AnswerCount = Random.Shared.Next(0, 15),
                 BookmarkCount = Random.Shared.Next(0, 20),
                 BountyPoints = Random.Shared.Next(1, 100) > 80 ? Random.Shared.Next(25, 100) : null
             };
 
             Context.Set<Question>().Add(question);
+
+            // Seed Answers
+            var answerCount = Random.Shared.Next(0, 8);
+            if (answerCount > 0)
+            {
+                var hasAccepted = false;
+                for (int i = 0; i < answerCount; i++)
+                {
+                    var answerAuthor = users[Random.Shared.Next(users.Count)];
+                    var isAccepted = !hasAccepted && Random.Shared.Next(1, 100) > 60;
+                    if (isAccepted) hasAccepted = true;
+
+                    var answer = new Answer
+                    {
+                        Question = question,
+                        AuthorId = answerAuthor.Id,
+                        Content = GetRandomAnswerContent(),
+                        VoteCount = Random.Shared.Next(-5, 50),
+                        IsAccepted = isAccepted,
+                        AcceptedAt = isAccepted ? DateTime.UtcNow : null,
+                        CreatedAt = question.CreatedAt.AddHours(Random.Shared.Next(1, 48))
+                    };
+
+                    Context.Set<Answer>().Add(answer);
+
+                    if (isAccepted)
+                    {
+                        question.Status = QuestionStatus.Answered;
+                        question.AcceptedAnswer = answer;
+                    }
+                }
+                question.AnswerCount = answerCount;
+            }
         }
 
         Logger.LogInformation("Seeded {Count} questions", questions.Length);
@@ -161,7 +193,7 @@ public class CommunityContentSeeder : BaseSeeder
         foreach (var r in reviews)
         {
             var reviewer = users[Random.Shared.Next(users.Count)];
-            
+
             var review = new Review
             {
                 Title = r.Title,
@@ -243,14 +275,14 @@ public class CommunityContentSeeder : BaseSeeder
             var author = users.Where(u => u.Email!.Contains("Expert") || u.Email!.Contains("Author"))
                               .OrderBy(x => Random.Shared.Next())
                               .FirstOrDefault() ?? users[0];
-            
+
             var guide = new Guide
             {
                 Title = guideData.Title,
                 Description = guideData.Description,
                 Slug = GenerateSlug(guideData.Title),
                 AuthorId = author.Id,
-                Difficulty = guideData.Difficulty == "Beginner" ? GuideDifficulty.Beginner : 
+                Difficulty = guideData.Difficulty == "Beginner" ? GuideDifficulty.Beginner :
                            guideData.Difficulty == "Intermediate" ? GuideDifficulty.Intermediate : GuideDifficulty.Advanced,
                 EstimatedMinutes = guideData.EstimatedTime,
                 Status = GuideStatus.Published,
@@ -307,13 +339,13 @@ public class CommunityContentSeeder : BaseSeeder
         foreach (var postData in posts)
         {
             var author = users[Random.Shared.Next(users.Count)];
-            
+
             var post = new Post
             {
                 Title = postData.Title,
                 Content = postData.Content,
                 AuthorId = author.Id,
-                Type = postData.Type == "News" ? PostType.Announcement : 
+                Type = postData.Type == "News" ? PostType.Announcement :
                        postData.Type == "Event" ? PostType.General : PostType.General,
                 Status = PostStatus.Published,
                 CreatedAt = DateTime.UtcNow.AddDays(-Random.Shared.Next(1, 14)),
@@ -328,5 +360,23 @@ public class CommunityContentSeeder : BaseSeeder
 
         Logger.LogInformation("Seeded {Count} posts", posts.Length);
         return Task.CompletedTask;
+    }
+    private static string GetRandomAnswerContent()
+    {
+        var answers = new[]
+        {
+            "That's a great question! In my experience, it really depends on the specific model year.",
+            "I had the same issue last month. The solution was surprisingly simple - check the fuse box.",
+            "Technically yes, but I wouldn't recommend it unless you have the proper tools.",
+            "Check the manual, it usually lists the recommended specifications for this.",
+            "I've been using this setup for 2 years without any issues. Highly recommended!",
+            "Be careful with this modification, it might void your warranty.",
+            "The cost difference is negligible considering the performance benefits.",
+            "You might want to consult with a certified mechanic for this one.",
+            "There's a great video on YouTube that explains this step-by-step.",
+            "I disagree with the previous answer. The manufacturer guidelines state otherwise."
+        };
+        
+        return answers[Random.Shared.Next(answers.Length)];
     }
 }

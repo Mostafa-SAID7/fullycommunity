@@ -17,7 +17,7 @@ import {
   SkeletonComponent
 } from '../../shared/ui';
 import type { DropdownItem } from '../../shared/ui';
-import { ToastService } from '../../core/services/toast.service';
+import { ToastService } from '../../core/services/ui/toast.service';
 import { AnimationShowcaseComponent } from '../../shared/components/animation-showcase/animation-showcase.component';
 
 @Component({

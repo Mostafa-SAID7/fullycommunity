@@ -1,7 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap, catchError, of } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
+import { PagedResult } from '../../types/common.types';
 
 export interface Post {
   id: string;
@@ -89,13 +90,7 @@ export interface PostFilter {
 
 export type PostType = 'General' | 'Article' | 'Question' | 'Poll' | 'Announcement';
 
-export interface PagedResult<T> {
-  items: T[];
-  totalCount: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
+
 
 export interface TrendingTopic {
   id: string;

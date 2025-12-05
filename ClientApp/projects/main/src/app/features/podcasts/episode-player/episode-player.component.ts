@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, inject, ViewChild, ElementRef } from '@an
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { PodcastService, Episode, EpisodeChapter, EpisodeComment } from '../../../core/services/podcast.service';
-import { AuthService } from '../../../core/services/auth.service';
+import { PodcastService, Episode, EpisodeChapter, EpisodeComment } from '../../../core/services/media/podcast.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
 import { PodcastLayoutComponent } from '../podcast-layout/podcast-layout.component';
 
 @Component({

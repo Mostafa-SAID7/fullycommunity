@@ -2,8 +2,8 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { VideoService, Video, VideoCategory, VideoFeedRequest, Channel } from '../../../core/services/video.service';
-import { ChannelService } from '../../../core/services/channel.service';
+import { VideoService, Video, VideoCategory, VideoFeedRequest, Channel } from '../../../core/services/media/video.service';
+import { ChannelService } from '../../../core/services/media/channel.service';
 import { VideoCardComponent } from '../shared/video-card.component';
 
 @Component({

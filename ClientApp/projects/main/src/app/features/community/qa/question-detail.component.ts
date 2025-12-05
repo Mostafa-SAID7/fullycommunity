@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { QAService, Question, Answer, QuestionListItem } from '../../../core/services/qa.service';
+import { QAService, Question, Answer, QuestionListItem } from '../../../core/services/community/qa.service';
 
 @Component({
   selector: 'app-question-detail',
@@ -256,7 +256,7 @@ export class QuestionDetailComponent implements OnInit {
 
   loadRelatedQuestions(questionId: string) {
     this.qaService.getRelatedQuestions(questionId, 5).subscribe({
-      next: (questions) => this.relatedQuestions.set(questions)
+      next: (questions: QuestionListItem[]) => this.relatedQuestions.set(questions)
     });
   }
 
@@ -281,7 +281,7 @@ export class QuestionDetailComponent implements OnInit {
   voteAnswer(answerId: string, type: 'Up' | 'Down') {
     this.qaService.voteAnswer(answerId, type).subscribe({
       next: (result) => {
-        this.answers.update(answers => 
+        this.answers.update(answers =>
           answers.map(a => a.id === answerId ? { ...a, voteCount: result.voteCount } : a)
         );
       }
@@ -291,7 +291,7 @@ export class QuestionDetailComponent implements OnInit {
   acceptAnswer(answerId: string) {
     this.qaService.acceptAnswer(answerId).subscribe({
       next: () => {
-        this.answers.update(answers => 
+        this.answers.update(answers =>
           answers.map(a => ({ ...a, isAccepted: a.id === answerId }))
         );
         const q = this.question();
@@ -303,7 +303,7 @@ export class QuestionDetailComponent implements OnInit {
   submitAnswer() {
     const q = this.question();
     if (!q || !this.newAnswer.trim()) return;
-    
+
     this.qaService.createAnswer(q.id, { content: this.newAnswer }).subscribe({
       next: (answer) => {
         this.answers.update(answers => [...answers, answer]);

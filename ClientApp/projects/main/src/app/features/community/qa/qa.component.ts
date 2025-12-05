@@ -2,8 +2,8 @@ import { Component, inject, OnInit, signal, computed, HostListener } from '@angu
 import { CommonModule } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
-import { QAService, QuestionListItem, QuestionCategory, QuestionStatus } from '../../../core/services/qa.service';
-import { ThemeService } from '../../../core/services/theme.service';
+import { QAService, QuestionListItem, QuestionCategory, QuestionStatus } from '../../../core/services/community/qa.service';
+import { ThemeService } from '../../../core/services/ui/theme.service';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 // Import child components
@@ -16,7 +16,7 @@ import { AskQuestionModalComponent, NewQuestionForm } from './components/ask-que
   selector: 'app-qa',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     FormsModule,
     QAHeaderComponent,
     QASearchFiltersComponent,
@@ -77,6 +77,7 @@ import { AskQuestionModalComponent, NewQuestionForm } from './components/ask-que
         <app-question-list
           [questions]="questions()"
           [loading]="loading()"
+          [error]="error()"
           [viewMode]="viewMode"
           [hasFilters]="hasActiveFilters()"
           (clearFilters)="clearAllFilters()"
@@ -104,7 +105,8 @@ export class QAComponent implements OnInit {
   questions = signal<QuestionListItem[]>([]);
   categories = signal<QuestionCategory[]>([]);
   loading = signal(false);
-  
+  error = signal<string | null>(null);
+
   // Statistics
   totalQuestions = signal(0);
   answeredCount = signal(0);
@@ -197,6 +199,8 @@ export class QAComponent implements OnInit {
 
   loadQuestions() {
     this.loading.set(true);
+    this.error.set(null);
+
     this.qaService.getQuestions({
       status: this.selectedStatus as QuestionStatus || undefined,
       searchTerm: this.searchTerm || undefined,
@@ -209,7 +213,11 @@ export class QAComponent implements OnInit {
         this.updateStats(result.items);
         this.loading.set(false);
       },
-      error: () => this.loading.set(false)
+      error: (err) => {
+        console.error('Failed to load questions:', err);
+        this.error.set('Failed to load questions. Please check your connection and try again.');
+        this.loading.set(false);
+      }
     });
   }
 
@@ -257,11 +265,11 @@ export class QAComponent implements OnInit {
   }
 
   hasActiveFilters(): boolean {
-    return this.selectedStatus !== '' || 
-           this.selectedCategory !== '' || 
-           this.selectedTag !== '' || 
-           this.dateFilter !== 'all' || 
-           this.bountyFilter !== '';
+    return this.selectedStatus !== '' ||
+      this.selectedCategory !== '' ||
+      this.selectedTag !== '' ||
+      this.dateFilter !== 'all' ||
+      this.bountyFilter !== '';
   }
 
   filterByTag(tag: string) {
@@ -287,7 +295,7 @@ export class QAComponent implements OnInit {
 
   submitQuestion(formData: NewQuestionForm) {
     if (!formData.title || !formData.content) return;
-    
+
     this.qaService.createQuestion({
       title: formData.title,
       content: formData.content,

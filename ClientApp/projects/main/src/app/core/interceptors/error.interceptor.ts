@@ -2,7 +2,7 @@ import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
-import { ErrorService } from '../services/error.service';
+import { ErrorService } from '../services/common/error.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
@@ -19,33 +19,33 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       switch (error.status) {
         case 0:
           if (!isPublicPage) {
-            errorService.showError('Unable to connect to server.');
+            (errorService as any).showError('Unable to connect to server.');
           }
           break;
         case 400:
-          errorService.showError(error.error?.message || 'Bad request.');
+          (errorService as any).showError(error.error?.message || 'Bad request.');
           break;
         case 401:
           // Don't redirect on public pages - let component handle it
           if (!isPublicPage) {
-            errorService.showError('Session expired. Please login again.');
+            (errorService as any).showError('Session expired. Please login again.');
             router.navigate(['/login']);
           }
           break;
         case 403:
           if (!isPublicPage) {
-            errorService.showError('You do not have permission.');
+            (errorService as any).showError('You do not have permission.');
             router.navigate(['/forbidden']);
           }
           break;
         case 422:
-          errorService.showError(error.error?.message || 'Validation error.');
+          (errorService as any).showError(error.error?.message || 'Validation error.');
           break;
         case 500:
-          errorService.showError('Server error. Please try again later.');
+          (errorService as any).showError('Server error. Please try again later.');
           break;
         case 503:
-          errorService.showError('Service temporarily unavailable.');
+          (errorService as any).showError('Service temporarily unavailable.');
           break;
       }
 
