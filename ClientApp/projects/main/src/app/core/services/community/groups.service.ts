@@ -75,7 +75,8 @@ export class GroupsService {
       ],
       totalCount: 5,
       page: 1,
-      pageSize: 20
+      pageSize: 20,
+      totalPages: 1
     };
   }
 }
