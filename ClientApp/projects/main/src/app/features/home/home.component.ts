@@ -1,10 +1,13 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { CommunityService, Post, PostCategory } from '../../core/services/community/community.service';
 import { AuthService } from '../../core/services/auth/auth.service';
-import { QAService, QuestionListItem } from '../../core/services/community/qa.service';
 import { StoriesComponent } from './components/stories/stories.component';
+import { WelcomeBannerComponent } from './components/welcome-banner/welcome-banner.component';
+import { QuickActionsComponent } from './components/quick-actions/quick-actions.component';
+import { FeaturedPostsComponent } from './components/featured-posts/featured-posts.component';
+import { TrendingQuestionsComponent } from './components/trending-questions/trending-questions.component';
+import { PopularCategoriesComponent } from './components/popular-categories/popular-categories.component';
 import { SidebarLayoutComponent } from '../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarMenuItem, type SidebarShortcut } from '../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../shared/components/right-sidebar/right-sidebar.component';
@@ -19,19 +22,23 @@ export interface CommunityStats {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, StoriesComponent, SidebarLayoutComponent],
+  imports: [
+    CommonModule, 
+    RouterLink, 
+    StoriesComponent, 
+    WelcomeBannerComponent,
+    QuickActionsComponent,
+    FeaturedPostsComponent,
+    TrendingQuestionsComponent,
+    PopularCategoriesComponent,
+    SidebarLayoutComponent
+  ],
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
-  private communityService = inject(CommunityService);
-  private qaService = inject(QAService);
   private authService = inject(AuthService);
 
   user = this.authService.currentUser;
-  featuredPosts = signal<Post[]>([]);
-  suggestedQuestions = signal<QuestionListItem[]>([]);
-  categories = signal<PostCategory[]>([]);
-  loading = signal(true);
 
   stats = signal<CommunityStats>({
     members: 12500,
@@ -42,9 +49,6 @@ export class HomeComponent implements OnInit {
 
   // Computed properties
   isAuthenticated = computed(() => !!this.user());
-  hasContent = computed(() => 
-    this.featuredPosts().length > 0 || this.suggestedQuestions().length > 0
-  );
 
   // Sidebar configuration
   leftMenuItems: SidebarMenuItem[] = [
@@ -86,58 +90,7 @@ export class HomeComponent implements OnInit {
     { id: '5', name: 'Sarah Davis', initials: 'SD', online: true }
   ];
 
-  ngOnInit() {
-    this.loadData();
-  }
-
-  loadData(): void {
-    this.loading.set(true);
-
-    // Load Featured Posts
-    this.communityService.getPosts({ isFeatured: true }, 1, 6).subscribe({
-      next: (result: any) => {
-        this.featuredPosts.set(result.items || []);
-      },
-      error: (error) => {
-        console.error('Error loading featured posts:', error);
-        this.featuredPosts.set([]);
-      }
-    });
-
-    // Load Suggested Questions
-    this.qaService.getQuestions({ sortBy: 'active' }, 1, 5).subscribe({
-      next: (result: any) => {
-        this.suggestedQuestions.set(result.items || []);
-        this.loading.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading questions:', error);
-        this.suggestedQuestions.set([]);
-        this.loading.set(false);
-      }
-    });
-
-    // Load Categories
-    this.communityService.getCategories().subscribe({
-      next: (cats: any) => {
-        this.categories.set(cats || []);
-      },
-      error: (error) => {
-        console.error('Error loading categories:', error);
-        this.categories.set([]);
-      }
-    });
-  }
-
-
-  getTimeAgo(date: string): string {
-    const now = new Date();
-    const postDate = new Date(date);
-    const diff = now.getTime() - postDate.getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    if (days === 0) return 'Today';
-    if (days === 1) return 'Yesterday';
-    if (days < 7) return `${days} days ago`;
-    return postDate.toLocaleDateString();
+  ngOnInit(): void {
+    // Component initialization - individual components handle their own data loading
   }
 }
