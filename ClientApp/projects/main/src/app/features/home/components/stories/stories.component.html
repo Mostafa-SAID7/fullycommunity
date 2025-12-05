@@ -1,0 +1,107 @@
+<!-- Stories Container -->
+<div class="flex gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
+  
+  <!-- Create Story Card -->
+  <div class="flex-shrink-0 w-28 cursor-pointer group" (click)="createStory()">
+    <div class="relative w-28 h-44 rounded-xl overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300 group-hover:scale-105">
+      
+      <!-- User Avatar Background -->
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+          <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 font-bold text-lg">
+            {{ getUserInitials() }}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Plus Icon -->
+      <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-blue-600 rounded-full border-4 border-white flex items-center justify-center group-hover:bg-blue-700 transition-colors">
+        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+      </div>
+      
+      <!-- Create Label -->
+      <div class="absolute bottom-0 left-0 right-0 p-2 text-center">
+        <span class="text-white text-xs font-semibold drop-shadow-sm">Create Story</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Story Cards -->
+  @for (story of stories(); track story.id; let i = $index) {
+    <div class="flex-shrink-0 w-28 cursor-pointer group" (click)="viewStory(story)">
+      <div class="relative w-28 h-44 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
+        
+        <!-- Story Background Image -->
+        <div 
+          class="absolute inset-0 bg-cover bg-center bg-gray-200 dark:bg-gray-700"
+          [style.background-image]="'url(' + story.imageUrl + ')'">
+          
+          <!-- Gradient Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+        </div>
+        
+        <!-- User Avatar -->
+        <div class="absolute top-3 left-3">
+          <div 
+            class="w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr"
+            [class]="story.viewed ? 'from-gray-300 to-gray-400' : 'from-pink-500 to-orange-500'">
+            <div class="w-full h-full rounded-full bg-white dark:bg-gray-800 p-0.5">
+              @if (story.userAvatar) {
+                <img 
+                  [src]="story.userAvatar" 
+                  [alt]="story.userName"
+                  class="w-full h-full rounded-full object-cover">
+              } @else {
+                <div 
+                  class="w-full h-full rounded-full flex items-center justify-center text-white text-sm font-bold bg-gradient-to-br"
+                  [class]="getStoryGradient(i)">
+                  {{ story.userName.charAt(0) }}
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+        
+        <!-- Story Type Indicator -->
+        @if (story.type === 'video') {
+          <div class="absolute top-3 right-3">
+            <div class="w-6 h-6 bg-black/50 rounded-full flex items-center justify-center">
+              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
+          </div>
+        }
+        
+        <!-- User Name -->
+        <div class="absolute bottom-0 left-0 right-0 p-3">
+          <p class="text-white text-xs font-semibold truncate drop-shadow-sm">
+            {{ story.userName }}
+          </p>
+        </div>
+        
+        <!-- Viewed Indicator -->
+        @if (story.viewed) {
+          <div class="absolute inset-0 bg-black/20 flex items-center justify-center">
+            <div class="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+  
+  <!-- Loading Skeleton (if needed) -->
+  @if (stories().length === 0) {
+    @for (i of [1,2,3,4,5]; track i) {
+      <div class="flex-shrink-0 w-28">
+        <div class="w-28 h-44 rounded-xl bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+      </div>
+    }
+  }
+</div>

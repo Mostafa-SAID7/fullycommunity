@@ -12,28 +12,186 @@
   [contentWidth]="'wide'"
   [centerContent]="true">
 
-  <div class="w-full">
-    <!-- Stories Section - Top Priority -->
+  <div class="w-full max-w-4xl mx-auto space-y-6">
+    
+    <!-- Welcome Section -->
     @if (user()) {
-      <section class="pb-8 mb-8 border-b border-gray-200 dark:border-gray-700">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-2xl font-semibold text-gray-900 dark:text-white m-0">Community Stories</h2>
-          <a routerLink="/community" class="text-primary hover:underline font-medium text-sm">View Community →</a>
+      <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-6 text-white">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold mb-2">
+              Welcome back, {{ user()?.firstName }}! 👋
+            </h1>
+            <p class="text-blue-100 mb-4">
+              Discover what's happening in the car community today
+            </p>
+            <div class="flex items-center gap-6 text-sm">
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span>{{ stats().members.toLocaleString() }} Members</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                <span>{{ stats().posts.toLocaleString() }} Posts</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-pink-400 rounded-full"></div>
+                <span>{{ stats().experts.toLocaleString() }} Experts</span>
+              </div>
+            </div>
+          </div>
+          <div class="hidden md:block">
+            <div class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center">
+              <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Stories Section -->
+    @if (user()) {
+      <section class="space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white">Community Stories</h2>
+          <a routerLink="/community" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors">
+            View Community →
+          </a>
         </div>
         <app-stories></app-stories>
       </section>
     }
 
-    <!-- Suggested QA Section -->
-    <section class="pb-8">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-semibold text-gray-900 dark:text-white m-0">Trending Questions</h2>
-        <a routerLink="/community/qa" class="text-primary hover:underline font-medium text-sm">View All Questions →</a>
+    <!-- Quick Actions -->
+    @if (user()) {
+      <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a routerLink="/community/create-post" class="bg-white dark:bg-gray-800 rounded-xl p-4 text-center hover:shadow-md transition-all duration-200 group">
+          <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
+            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Create Post</h3>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Share your thoughts</p>
+        </a>
+
+        <a routerLink="/community/qa/ask" class="bg-white dark:bg-gray-800 rounded-xl p-4 text-center hover:shadow-md transition-all duration-200 group">
+          <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 dark:group-hover:bg-green-900/50 transition-colors">
+            <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Ask Question</h3>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Get expert help</p>
+        </a>
+
+        <a routerLink="/marketplace/create" class="bg-white dark:bg-gray-800 rounded-xl p-4 text-center hover:shadow-md transition-all duration-200 group">
+          <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors">
+            <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Sell Item</h3>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">List on marketplace</p>
+        </a>
+
+        <a routerLink="/community/events" class="bg-white dark:bg-gray-800 rounded-xl p-4 text-center hover:shadow-md transition-all duration-200 group">
+          <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-200 dark:group-hover:bg-orange-900/50 transition-colors">
+            <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Find Events</h3>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Join car meets</p>
+        </a>
+      </section>
+    }
+
+    <!-- Featured Posts Section -->
+    @if (featuredPosts().length > 0) {
+      <section class="space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white">Featured Posts</h2>
+          <a routerLink="/community" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors">
+            View All Posts →
+          </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          @for (post of featuredPosts().slice(0, 4); track post.id) {
+            <article class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
+              @if (post.coverImageUrl) {
+                <div class="aspect-video bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                  <img [src]="post.coverImageUrl" [alt]="post.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                </div>
+              }
+              
+              <div class="p-4">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                    {{ post.author.firstName[0] }}
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      {{ post.author.firstName }} {{ post.author.lastName }}
+                    </p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                      {{ getTimeAgo(post.publishedAt) }}
+                    </p>
+                  </div>
+                  @if (post.category) {
+                    <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded-full">
+                      {{ post.category.name }}
+                    </span>
+                  }
+                </div>
+                
+                <h3 class="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  <a [routerLink]="['/community/post', post.slug]">{{ post.title }}</a>
+                </h3>
+                
+                <p class="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mb-3">
+                  {{ post.content }}
+                </p>
+                
+                <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                  <div class="flex items-center gap-4">
+                    <span class="flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                      </svg>
+                      {{ post.likeCount }}
+                    </span>
+                    <span class="flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                      </svg>
+                      {{ post.commentCount }}
+                    </span>
+                  </div>
+                  <span>{{ post.viewCount }} views</span>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Trending Questions Section -->
+    <section class="space-y-4">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Trending Questions</h2>
+        <a routerLink="/community/qa" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors">
+          View All Questions →
+        </a>
       </div>
 
-      <div class="space-y-4">
+      <div class="space-y-3">
         @for (question of suggestedQuestions(); track question.id) {
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow">
+          <article class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 hover:shadow-md transition-all duration-200 group">
             <div class="flex gap-4">
               <!-- Vote Count -->
               <div class="flex flex-col items-center justify-center min-w-[3rem] px-2 py-1 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
@@ -43,39 +201,79 @@
               
               <!-- Content -->
               <div class="flex-1 min-w-0">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1 line-clamp-1 hover:text-blue-600 dark:hover:text-blue-400">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   <a [routerLink]="['/community/qa', question.slug]">{{ question.title }}</a>
                 </h3>
                 
                 <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                   <span [class]="question.hasAcceptedAnswer ? 'text-green-600 dark:text-green-400 font-medium' : ''">
-                    @if (question.hasAcceptedAnswer) { ✓ }
+                    @if (question.hasAcceptedAnswer) { 
+                      <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                      </svg>
+                    }
                     {{ question.answerCount }} answers
                   </span>
                   <span class="hidden sm:inline">•</span>
                   <div class="flex items-center gap-1.5 truncate">
-                    <div class="w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-[10px] font-bold">
+                    <div class="w-5 h-5 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white text-[10px] font-bold">
                       {{ question.author.firstName[0] }}
                     </div>
-                    <span>{{ question.author.firstName }} {{ question.author.lastName }}</span>
                   </div>
                   <span class="hidden sm:inline">•</span>
                   <span>{{ question.createdAt | date:'MMM d' }}</span>
                 </div>
               </div>
             </div>
-          </div>
+          </article>
         }
         
         @if (loading()) {
-          <!-- Simple Skeleton for Suggested Questions -->
-          <div class="animate-pulse space-y-4">
+          <!-- Loading Skeleton -->
+          <div class="animate-pulse space-y-3">
             @for (i of [1,2,3]; track i) {
-              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 h-24"></div>
+       div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4">
+                <div class="flex gap-4">
+                  <div class="w-12"lit part qa " h-16 bg-200 dark:bgra00 roundy-7ed-lg"></div>
+                  <div class="flex-1 space-y-2">
+                    <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                    <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                  </div>
+                </div>
+              </div>
             }
           </div>
         }
       </div>
     </section>
+
+    <!-- Categories Section -->
+    @if (categories().length > 0) {
+      <section class="space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white">Popular Categories</h2>
+          <a routerLink="/community/categories" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors">
+            View All →
+          </a>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          @for (category of categories().slice(0, 8); track category.id) {
+            <a [routerLink]="['/community/category', category.slug]" class="bg-white dark:bg-gray-800 rounded-xl p-4 text-center hover:shadow-md transition-all duration-200 group">
+              <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                @if (category.icon) {
+                  <span class="text-white text-lg">{{ category.icon }}</span>
+                } @else {
+                  <span class="text-white text-lg">#</span>
+                }
+              </div>
+              <h3 class="font-semibold text-gray-900 dark:text-white text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                {{ category.name }}
+              </h3>
+            </a>
+          }
+        </div>
+      </section>
+    }
   </div>
 </app-sidebar-layout>

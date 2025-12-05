@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MapsService, MapLocationListItem, LocationType } from '../../../core/services/ui/maps.service';
+import { MapsService, MapLocationListItem, LocationType } from '../../../core/services/community/maps.service';
 
 @Component({
   selector: 'app-maps',

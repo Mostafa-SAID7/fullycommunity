@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CommunityService, Post, PostCategory } from '../../core/services/community/community.service';
@@ -8,6 +8,13 @@ import { StoriesComponent } from './components/stories/stories.component';
 import { SidebarLayoutComponent } from '../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarMenuItem, type SidebarShortcut } from '../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../shared/components/right-sidebar/right-sidebar.component';
+
+export interface CommunityStats {
+  members: number;
+  posts: number;
+  experts: number;
+  garages: number;
+}
 
 @Component({
   selector: 'app-home',
@@ -26,12 +33,18 @@ export class HomeComponent implements OnInit {
   categories = signal<PostCategory[]>([]);
   loading = signal(true);
 
-  stats = signal({
+  stats = signal<CommunityStats>({
     members: 12500,
     posts: 45000,
     experts: 350,
     garages: 1200
   });
+
+  // Computed properties
+  isAuthenticated = computed(() => !!this.user());
+  hasContent = computed(() => 
+    this.featuredPosts().length > 0 || this.suggestedQuestions().length > 0
+  );
 
   // Sidebar configuration
   leftMenuItems: SidebarMenuItem[] = [
@@ -77,27 +90,42 @@ export class HomeComponent implements OnInit {
     this.loadData();
   }
 
-  loadData() {
+  loadData(): void {
     this.loading.set(true);
 
-    // Load Featured Posts (existing)
+    // Load Featured Posts
     this.communityService.getPosts({ isFeatured: true }, 1, 6).subscribe({
       next: (result: any) => {
-        this.featuredPosts.set(result.items);
+        this.featuredPosts.set(result.items || []);
+      },
+      error: (error) => {
+        console.error('Error loading featured posts:', error);
+        this.featuredPosts.set([]);
       }
     });
 
-    // Load Suggested Questions (new)
+    // Load Suggested Questions
     this.qaService.getQuestions({ sortBy: 'active' }, 1, 5).subscribe({
       next: (result: any) => {
-        this.suggestedQuestions.set(result.items);
+        this.suggestedQuestions.set(result.items || []);
         this.loading.set(false);
       },
-      error: () => this.loading.set(false)
+      error: (error) => {
+        console.error('Error loading questions:', error);
+        this.suggestedQuestions.set([]);
+        this.loading.set(false);
+      }
     });
 
+    // Load Categories
     this.communityService.getCategories().subscribe({
-      next: (cats: any) => this.categories.set(cats)
+      next: (cats: any) => {
+        this.categories.set(cats || []);
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+        this.categories.set([]);
+      }
     });
   }
 

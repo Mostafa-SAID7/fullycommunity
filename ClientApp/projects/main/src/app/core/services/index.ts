@@ -29,7 +29,7 @@ export * from './ui/lottie.service';
 export * from './ui/theme.service';
 export * from './ui/toast.service';
 export * from './ui/localization.service';
-export * from './ui/maps.service';
+export * from './community/maps.service';
 
 // Common
 export * from './common/error.service';
