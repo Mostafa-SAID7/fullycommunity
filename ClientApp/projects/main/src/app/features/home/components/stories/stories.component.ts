@@ -2,6 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { StoriesService, Story, StoryType } from '../../../../core/services/home/stories.service';
+import { StoryViewerComponent } from '../../../../shared/components/story-viewer/story-viewer.component';
 
 export interface LoadingState {
   isLoading: boolean;
@@ -11,7 +12,7 @@ export interface LoadingState {
 @Component({
   selector: 'app-stories',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, StoryViewerComponent],
   templateUrl: './stories.component.html'
 })
 export class StoriesComponent implements OnInit {
@@ -21,6 +22,10 @@ export class StoriesComponent implements OnInit {
   user = this.authService.currentUser;
   stories = signal<Story[]>([]);
   loadingState = signal<LoadingState>({ isLoading: true, error: null });
+  
+  // Story viewer state
+  showStoryViewer = signal(false);
+  currentStoryIndex = signal(0);
 
   ngOnInit(): void {
     this.loadStories();
@@ -50,21 +55,23 @@ export class StoriesComponent implements OnInit {
   }
 
   viewStory(story: Story): void {
-    // Mark as viewed locally
-    this.stories.update(stories =>
-      stories.map(s => s.id === story.id ? { ...s, isViewed: true } : s)
-    );
+    const storyIndex = this.stories().findIndex(s => s.id === story.id);
+    if (storyIndex !== -1) {
+      this.currentStoryIndex.set(storyIndex);
+      this.showStoryViewer.set(true);
+    }
+  }
 
-    // Send view to backend
-    this.storiesService.viewStory(story.id).subscribe({
-      next: () => {
-        console.log('Story viewed:', story.user.firstName);
-        // TODO: Open story viewer modal
-      },
-      error: (error) => {
-        console.error('Error viewing story:', error);
-      }
-    });
+  closeStoryViewer(): void {
+    this.showStoryViewer.set(false);
+  }
+
+  onStoryChanged(event: { story: Story; index: number }): void {
+    this.currentStoryIndex.set(event.index);
+    // Update the story as viewed in our local state
+    this.stories.update(stories =>
+      stories.map(s => s.id === event.story.id ? { ...s, isViewed: true } : s)
+    );
   }
 
   likeStory(story: Story, event: Event): void {

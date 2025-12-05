@@ -9,6 +9,7 @@ export * from './sidebar-layout/sidebar-layout.component';
 export * from './scroll-to-top/scroll-to-top.component';
 export * from './chat-assistant/chat-assistant.component';
 export * from './search-box/search-box.component';
+export * from './story-viewer/story-viewer.component';
 
 // Component Array for easy importing
 import { EmptyStateComponent } from './empty-state/empty-state.component';
@@ -21,6 +22,7 @@ import { SidebarLayoutComponent } from './sidebar-layout/sidebar-layout.componen
 import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 import { ChatAssistantComponent } from './chat-assistant/chat-assistant.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
+import { StoryViewerComponent } from './story-viewer/story-viewer.component';
 
 export const SHARED_COMPONENTS = [
   EmptyStateComponent,
@@ -33,4 +35,5 @@ export const SHARED_COMPONENTS = [
   ScrollToTopComponent,
   ChatAssistantComponent,
   SearchBoxComponent,
+  StoryViewerComponent,
 ] as const;

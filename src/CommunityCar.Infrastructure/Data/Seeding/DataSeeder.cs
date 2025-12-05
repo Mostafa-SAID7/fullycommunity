@@ -2,6 +2,8 @@ using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data.Seeding.Core;
 using CommunityCar.Infrastructure.Data.Seeding.Identity;
 using CommunityCar.Infrastructure.Data.Seeding.Content;
+using CommunityCar.Infrastructure.Data.Seeding.Community;
+using CommunityCar.Infrastructure.Data.Seeding.Home;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -55,7 +57,11 @@ public class DataSeeder
             new MarketplaceSeeder(_context, _loggerFactory.CreateLogger<MarketplaceSeeder>()),
             
             // Services seeders
-            new ServicesSeeder(_context, _loggerFactory.CreateLogger<ServicesSeeder>())
+            new ServicesSeeder(_context, _loggerFactory.CreateLogger<ServicesSeeder>()),
+            
+            // Community seeders
+            new PageSeeder(_context, _loggerFactory.CreateLogger<PageSeeder>()),
+            new StorySeeder(_context, _loggerFactory.CreateLogger<StorySeeder>())
         };
     }
 

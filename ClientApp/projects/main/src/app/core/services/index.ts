@@ -10,6 +10,7 @@ export * from './community/community.service';
 export * from './community/groups.service';
 export * from './community/guides.service';
 export * from './community/news.service';
+export * from './community/pages.service';
 export * from './community/qa.service';
 export * from './community/reviews.service';
 

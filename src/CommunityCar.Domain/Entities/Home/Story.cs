@@ -1,11 +1,13 @@
 using CommunityCar.Domain.Common;
+using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Domain.Entities.Community.Pages;
 
-namespace CommunityCar.Domain.Entities;
+namespace CommunityCar.Domain.Entities.Home;
 
-public class Story : BaseAuditableEntity
+public class Story : BaseEntity
 {
     public string UserId { get; set; } = string.Empty;
-    public User User { get; set; } = null!;
+    public ApplicationUser User { get; set; } = null!;
     
     public string? PageId { get; set; }
     public Page? Page { get; set; }
@@ -59,7 +61,7 @@ public class StoryView : BaseEntity
     public Story Story { get; set; } = null!;
     
     public string UserId { get; set; } = string.Empty;
-    public User User { get; set; } = null!;
+    public ApplicationUser User { get; set; } = null!;
     
     public DateTime ViewedAt { get; set; } = DateTime.UtcNow;
 }
@@ -70,18 +72,18 @@ public class StoryLike : BaseEntity
     public Story Story { get; set; } = null!;
     
     public string UserId { get; set; } = string.Empty;
-    public User User { get; set; } = null!;
+    public ApplicationUser User { get; set; } = null!;
     
     public DateTime LikedAt { get; set; } = DateTime.UtcNow;
 }
 
-public class StoryReply : BaseAuditableEntity
+public class StoryReply : BaseEntity
 {
     public string StoryId { get; set; } = string.Empty;
     public Story Story { get; set; } = null!;
     
     public string UserId { get; set; } = string.Empty;
-    public User User { get; set; } = null!;
+    public ApplicationUser User { get; set; } = null!;
     
     public string Content { get; set; } = string.Empty;
     public string? MediaUrl { get; set; }

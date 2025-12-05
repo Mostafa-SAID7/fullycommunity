@@ -1,8 +1,10 @@
 using CommunityCar.Domain.Common;
+using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Domain.Entities.Home;
 
-namespace CommunityCar.Domain.Entities;
+namespace CommunityCar.Domain.Entities.Community.Pages;
 
-public class Page : BaseAuditableEntity
+public class Page : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty; // Unique handle like @mycarpage
@@ -41,7 +43,7 @@ public class Page : BaseAuditableEntity
     
     // Owner/Admin
     public string OwnerId { get; set; } = string.Empty;
-    public User Owner { get; set; } = null!;
+    public ApplicationUser Owner { get; set; } = null!;
     
     // Stats
     public int FollowerCount { get; set; } = 0;
@@ -53,7 +55,6 @@ public class Page : BaseAuditableEntity
     // Navigation Properties
     public ICollection<PageFollower> Followers { get; set; } = new List<PageFollower>();
     public ICollection<PageAdmin> Admins { get; set; } = new List<PageAdmin>();
-    public ICollection<Post> Posts { get; set; } = new List<Post>();
     public ICollection<Story> Stories { get; set; } = new List<Story>();
     public ICollection<PageReview> Reviews { get; set; } = new List<PageReview>();
 }
@@ -93,7 +94,7 @@ public class PageFollower : BaseEntity
     public Page Page { get; set; } = null!;
     
     public string UserId { get; set; } = string.Empty;
-    public User User { get; set; } = null!;
+    public ApplicationUser User { get; set; } = null!;
     
     public DateTime FollowedAt { get; set; } = DateTime.UtcNow;
     public bool IsNotificationEnabled { get; set; } = true;
@@ -105,7 +106,7 @@ public class PageAdmin : BaseEntity
     public Page Page { get; set; } = null!;
     
     public string UserId { get; set; } = string.Empty;
-    public User User { get; set; } = null!;
+    public ApplicationUser User { get; set; } = null!;
     
     public PageRole Role { get; set; } = PageRole.Admin;
     public DateTime AssignedAt { get; set; } = DateTime.UtcNow;
@@ -121,13 +122,13 @@ public enum PageRole
     Analyst
 }
 
-public class PageReview : BaseAuditableEntity
+public class PageReview : BaseEntity
 {
     public string PageId { get; set; } = string.Empty;
     public Page Page { get; set; } = null!;
     
     public string UserId { get; set; } = string.Empty;
-    public User User { get; set; } = null!;
+    public ApplicationUser User { get; set; } = null!;
     
     public int Rating { get; set; } // 1-5 stars
     public string? Title { get; set; }

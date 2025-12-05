@@ -3,23 +3,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
-export interface StoryUser {
-  id: string;
-  firstName: string;
-  lastName: string;
-  avatarUrl?: string;
-  isVerified: boolean;
-}
-
-export interface StoryPage {
-  id: string;
-  name: string;
-  username: string;
-  profileImageUrl?: string;
-  isVerified: boolean;
-  category: PageCategory;
-}
-
 export interface Story {
   id: string;
   userId: string;
@@ -45,6 +28,23 @@ export interface Story {
   canView: boolean;
 }
 
+export interface StoryUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: string;
+  isVerified: boolean;
+}
+
+export interface StoryPage {
+  id: string;
+  name: string;
+  username: string;
+  profileImageUrl?: string;
+  isVerified: boolean;
+  category: string;
+}
+
 export interface StoryView {
   id: string;
   userId: string;
@@ -52,15 +52,14 @@ export interface StoryView {
   viewedAt: string;
 }
 
-export interface CreateStoryRequest {
-  pageId?: string;
-  mediaUrl: string;
-  thumbnailUrl?: string;
-  type: StoryType;
-  caption?: string;
-  backgroundColor?: string;
-  textColor?: string;
-  visibility: StoryVisibility;
+export interface StoryReply {
+  id: string;
+  userId: string;
+  user: StoryUser;
+  content: string;
+  mediaUrl?: string;
+  type: StoryReplyType;
+  createdAt: string;
 }
 
 export enum StoryType {
@@ -78,14 +77,37 @@ export enum StoryVisibility {
   Private = 'Private'
 }
 
-export enum PageCategory {
-  CarDealer = 'CarDealer',
-  Garage = 'Garage',
-  PartsStore = 'PartsStore',
-  Insurance = 'Insurance',
-  Influencer = 'Influencer',
-  Brand = 'Brand',
-  Community = 'Community'
+export enum StoryReplyType {
+  Text = 'Text',
+  Image = 'Image',
+  Video = 'Video',
+  Emoji = 'Emoji'
+}
+
+export interface StoryFilter {
+  userId?: string;
+  pageId?: string;
+  includeExpired?: boolean;
+  visibility?: StoryVisibility;
+  type?: StoryType;
+}
+
+export interface CreateStoryRequest {
+  pageId?: string;
+  mediaUrl: string;
+  thumbnailUrl?: string;
+  type: StoryType;
+  caption?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  visibility: StoryVisibility;
+  viewerIds?: string[];
+}
+
+export interface CreateStoryReplyRequest {
+  content: string;
+  mediaUrl?: string;
+  type: StoryReplyType;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -96,11 +118,13 @@ export class StoriesService {
   stories = signal<Story[]>([]);
   loading = signal(false);
 
-  getStories(userId?: string, pageId?: string, includeExpired = false): Observable<Story[]> {
+  getStories(filter: StoryFilter = {}): Observable<Story[]> {
     let params = new HttpParams();
-    if (userId) params = params.set('userId', userId);
-    if (pageId) params = params.set('pageId', pageId);
-    if (includeExpired) params = params.set('includeExpired', includeExpired.toString());
+    if (filter.userId) params = params.set('userId', filter.userId);
+    if (filter.pageId) params = params.set('pageId', filter.pageId);
+    if (filter.includeExpired !== undefined) params = params.set('includeExpired', filter.includeExpired);
+    if (filter.visibility) params = params.set('visibility', filter.visibility);
+    if (filter.type) params = params.set('type', filter.type);
 
     return this.http.get<Story[]>(this.apiUrl, { params }).pipe(
       catchError(() => of(this.getMockStories()))
@@ -108,53 +132,59 @@ export class StoriesService {
   }
 
   getStory(id: string): Observable<Story> {
-    return this.http.get<Story>(`${this.apiUrl}/${id}`);
+    return this.http.get<Story>(`${this.apiUrl}/${id}`).pipe(
+      catchError(() => of(this.getMockStories()[0]))
+    );
   }
 
   createStory(request: CreateStoryRequest): Observable<Story> {
     return this.http.post<Story>(this.apiUrl, request);
   }
 
-  viewStory(id: string): Observable<{ success: boolean; message: string }> {
-    return this.http.post<{ success: boolean; message: string }>(`${this.apiUrl}/${id}/view`, {});
+  deleteStory(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  likeStory(id: string): Observable<{ success: boolean; message: string }> {
-    return this.http.post<{ success: boolean; message: string }>(`${this.apiUrl}/${id}/like`, {});
+  viewStory(id: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/view`, {});
   }
 
-  unlikeStory(id: string): Observable<{ success: boolean; message: string }> {
-    return this.http.delete<{ success: boolean; message: string }>(`${this.apiUrl}/${id}/like`);
+  likeStory(id: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/like`, {});
+  }
+
+  unlikeStory(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}/like`);
   }
 
   getStoryViews(id: string): Observable<StoryView[]> {
-    return this.http.get<StoryView[]>(`${this.apiUrl}/${id}/views`);
+    return this.http.get<StoryView[]>(`${this.apiUrl}/${id}/views`).pipe(
+      catchError(() => of(this.getMockStoryViews()))
+    );
   }
 
-  deleteStory(id: string): Observable<{ success: boolean; message: string }> {
-    return this.http.delete<{ success: boolean; message: string }>(`${this.apiUrl}/${id}`);
+  getStoryReplies(id: string): Observable<StoryReply[]> {
+    return this.http.get<StoryReply[]>(`${this.apiUrl}/${id}/replies`).pipe(
+      catchError(() => of([]))
+    );
   }
 
-  // Load stories with state management
-  loadStories(userId?: string, pageId?: string, reset = false) {
-    if (this.loading()) return;
-    
-    this.loading.set(true);
-
-    this.getStories(userId, pageId).subscribe({
-      next: (stories) => {
-        this.stories.set(stories);
-        this.loading.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading stories:', error);
-        this.stories.set(this.getMockStories());
-        this.loading.set(false);
-      }
-    });
+  replyToStory(storyId: string, request: CreateStoryReplyRequest): Observable<StoryReply> {
+    return this.http.post<StoryReply>(`${this.apiUrl}/${storyId}/replies`, request);
   }
 
-  // Mock data for demo when API is unavailable
+  getMyStories(): Observable<Story[]> {
+    return this.http.get<Story[]>(`${this.apiUrl}/my-stories`).pipe(
+      catchError(() => of([]))
+    );
+  }
+
+  getFollowingStories(): Observable<Story[]> {
+    return this.http.get<Story[]>(`${this.apiUrl}/following`).pipe(
+      catchError(() => of(this.getMockStories()))
+    );
+  }
+
   private getMockStories(): Story[] {
     return [
       {
@@ -170,7 +200,7 @@ export class StoriesService {
         mediaUrl: 'https://images.unsplash.com/photo-1549927681-0b673b922a7b?w=400&h=600&fit=crop',
         thumbnailUrl: 'https://images.unsplash.com/photo-1549927681-0b673b922a7b?w=200&h=300&fit=crop',
         type: StoryType.Image,
-        caption: 'Just finished detailing my ride! ✨',
+        caption: 'Just finished detailing my ride! ✨ #CarCare #DetailingLife',
         createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
         expiresAt: new Date(Date.now() + 22 * 60 * 60 * 1000).toISOString(),
         isActive: true,
@@ -200,12 +230,12 @@ export class StoriesService {
           username: 'automax_official',
           profileImageUrl: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=100&h=100&fit=crop',
           isVerified: true,
-          category: PageCategory.CarDealer
+          category: 'CarDealer'
         },
         mediaUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&h=600&fit=crop',
         thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=200&h=300&fit=crop',
         type: StoryType.Image,
-        caption: 'New 2024 models just arrived! Come check them out 🚗',
+        caption: 'New 2024 models just arrived! Come check them out 🚗 #NewCars #2024Models #AutoMax',
         createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
         expiresAt: new Date(Date.now() + 23 * 60 * 60 * 1000).toISOString(),
         isActive: true,
@@ -231,7 +261,7 @@ export class StoriesService {
         mediaUrl: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&h=600&fit=crop',
         thumbnailUrl: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&h=300&fit=crop',
         type: StoryType.Image,
-        caption: 'Track day was amazing! 🏁',
+        caption: 'Track day was amazing! 🏁 #TrackDay #Racing #Adrenaline',
         createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
         expiresAt: new Date(Date.now() + 20 * 60 * 60 * 1000).toISOString(),
         isActive: true,
@@ -257,7 +287,7 @@ export class StoriesService {
         mediaUrl: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&h=600&fit=crop',
         thumbnailUrl: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=200&h=300&fit=crop',
         type: StoryType.Image,
-        caption: 'Sunday drive with the family 🌟',
+        caption: 'Sunday drive with the family 🌟 #FamilyTime #SundayDrive',
         createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
         expiresAt: new Date(Date.now() + 18 * 60 * 60 * 1000).toISOString(),
         isActive: true,
@@ -283,7 +313,7 @@ export class StoriesService {
         mediaUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=600&fit=crop',
         thumbnailUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=300&fit=crop',
         type: StoryType.Image,
-        caption: 'Electric future is here! ⚡',
+        caption: 'Electric future is here! ⚡ #ElectricVehicle #Tesla #EcoFriendly',
         createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
         expiresAt: new Date(Date.now() + 23.5 * 60 * 60 * 1000).toISOString(),
         isActive: true,
@@ -295,6 +325,35 @@ export class StoriesService {
         isViewed: false,
         isLiked: false,
         canView: true
+      }
+    ];
+  }
+
+  private getMockStoryViews(): StoryView[] {
+    return [
+      {
+        id: '1',
+        userId: 'user1',
+        user: {
+          id: 'user1',
+          firstName: 'John',
+          lastName: 'Doe',
+          avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+          isVerified: false
+        },
+        viewedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString()
+      },
+      {
+        id: '2',
+        userId: 'user2',
+        user: {
+          id: 'user2',
+          firstName: 'Alice',
+          lastName: 'Smith',
+          avatarUrl: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+          isVerified: true
+        },
+        viewedAt: new Date(Date.now() - 15 * 60 * 1000).toISOString()
       }
     ];
   }

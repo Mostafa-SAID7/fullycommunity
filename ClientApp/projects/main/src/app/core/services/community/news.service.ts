@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { PagedResult } from '../community/community.service';
+import { PagedResult } from '../../types/common.types';
 
 export interface NewsArticle {
   id: string;
@@ -115,13 +115,13 @@ export class NewsService {
 
   getFeaturedArticles(count = 5): Observable<NewsListItem[]> {
     return this.http.get<NewsListItem[]>(`${this.apiUrl}/featured`, { params: { count } }).pipe(
-      catchError(() => of(this.getMockNews().items.filter(a => a.isFeatured)))
+      catchError(() => of(this.getMockNews().items.filter((a: any) => a.isFeatured)))
     );
   }
 
   getBreakingNews(count = 3): Observable<NewsListItem[]> {
     return this.http.get<NewsListItem[]>(`${this.apiUrl}/breaking`, { params: { count } }).pipe(
-      catchError(() => of(this.getMockNews().items.filter(a => a.isBreaking)))
+      catchError(() => of(this.getMockNews().items.filter((a: any) => a.isBreaking)))
     );
   }
 

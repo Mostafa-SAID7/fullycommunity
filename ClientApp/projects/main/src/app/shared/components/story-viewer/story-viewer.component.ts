@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, signal, computed, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, computed, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Story, StoriesService } from '../../../core/services/home/stories.service';
 
@@ -132,7 +132,7 @@ export class StoryViewerComponent implements OnInit, OnDestroy {
           // Update local state
           story.isViewed = true;
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error marking story as viewed:', error);
         }
       });
@@ -174,7 +174,7 @@ export class StoryViewerComponent implements OnInit, OnDestroy {
     story.likeCount = isLiked ? story.likeCount - 1 : story.likeCount + 1;
 
     action.subscribe({
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error toggling like:', error);
         // Revert optimistic update
         story.isLiked = isLiked;

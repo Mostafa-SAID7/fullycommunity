@@ -48,6 +48,18 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<CommunityCar.Domain.Entities.Community.Posts.Post> Posts => Set<CommunityCar.Domain.Entities.Community.Posts.Post>();
     public DbSet<CommunityCar.Domain.Entities.Community.Posts.PostComment> PostComments => Set<CommunityCar.Domain.Entities.Community.Posts.PostComment>();
     public DbSet<CommunityCar.Domain.Entities.Community.Posts.PostLike> PostLikes => Set<CommunityCar.Domain.Entities.Community.Posts.PostLike>();
+    
+    // Pages
+    public DbSet<CommunityCar.Domain.Entities.Community.Pages.Page> Pages => Set<CommunityCar.Domain.Entities.Community.Pages.Page>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Pages.PageFollower> PageFollowers => Set<CommunityCar.Domain.Entities.Community.Pages.PageFollower>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Pages.PageAdmin> PageAdmins => Set<CommunityCar.Domain.Entities.Community.Pages.PageAdmin>();
+    public DbSet<CommunityCar.Domain.Entities.Community.Pages.PageReview> PageReviews => Set<CommunityCar.Domain.Entities.Community.Pages.PageReview>();
+    
+    // Stories
+    public DbSet<CommunityCar.Domain.Entities.Home.Story> Stories => Set<CommunityCar.Domain.Entities.Home.Story>();
+    public DbSet<CommunityCar.Domain.Entities.Home.StoryView> StoryViews => Set<CommunityCar.Domain.Entities.Home.StoryView>();
+    public DbSet<CommunityCar.Domain.Entities.Home.StoryLike> StoryLikes => Set<CommunityCar.Domain.Entities.Home.StoryLike>();
+    public DbSet<CommunityCar.Domain.Entities.Home.StoryReply> StoryReplies => Set<CommunityCar.Domain.Entities.Home.StoryReply>();
     public DbSet<CommunityCar.Domain.Entities.Community.Posts.PostCategory> PostCategories => Set<CommunityCar.Domain.Entities.Community.Posts.PostCategory>();
     public DbSet<CommunityCar.Domain.Entities.Community.Posts.PostMedia> PostMedia => Set<CommunityCar.Domain.Entities.Community.Posts.PostMedia>();
     public DbSet<CommunityCar.Domain.Entities.Community.Posts.PostTag> PostTags => Set<CommunityCar.Domain.Entities.Community.Posts.PostTag>();
@@ -670,6 +682,119 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
             entity.HasOne(p => p.Video)
                   .WithMany()
                   .HasForeignKey(p => p.VideoId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // COMMUNITY - Pages
+        // ═══════════════════════════════════════════════════════════════════════
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Pages.Page>(entity =>
+        {
+            entity.ToTable("Pages", "community");
+            entity.HasIndex(e => e.Username).IsUnique();
+            entity.HasOne(p => p.Owner)
+                  .WithMany()
+                  .HasForeignKey(p => p.OwnerId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Pages.PageFollower>(entity =>
+        {
+            entity.ToTable("PageFollowers", "community");
+            entity.HasKey(e => new { e.PageId, e.UserId });
+            entity.HasOne(f => f.Page)
+                  .WithMany(p => p.Followers)
+                  .HasForeignKey(f => f.PageId)
+                  .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(f => f.User)
+                  .WithMany()
+                  .HasForeignKey(f => f.UserId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Pages.PageAdmin>(entity =>
+        {
+            entity.ToTable("PageAdmins", "community");
+            entity.HasKey(e => new { e.PageId, e.UserId });
+            entity.HasOne(a => a.Page)
+                  .WithMany(p => p.Admins)
+                  .HasForeignKey(a => a.PageId)
+                  .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(a => a.User)
+                  .WithMany()
+                  .HasForeignKey(a => a.UserId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Community.Pages.PageReview>(entity =>
+        {
+            entity.ToTable("PageReviews", "community");
+            entity.HasOne(r => r.Page)
+                  .WithMany(p => p.Reviews)
+                  .HasForeignKey(r => r.PageId)
+                  .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(r => r.User)
+                  .WithMany()
+                  .HasForeignKey(r => r.UserId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // HOME - Stories
+        // ═══════════════════════════════════════════════════════════════════════
+
+        builder.Entity<CommunityCar.Domain.Entities.Home.Story>(entity =>
+        {
+            entity.ToTable("Stories", "home");
+            entity.HasOne(s => s.User)
+                  .WithMany()
+                  .HasForeignKey(s => s.UserId)
+                  .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(s => s.Page)
+                  .WithMany(p => p.Stories)
+                  .HasForeignKey(s => s.PageId)
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Home.StoryView>(entity =>
+        {
+            entity.ToTable("StoryViews", "home");
+            entity.HasKey(e => new { e.StoryId, e.UserId });
+            entity.HasOne(v => v.Story)
+                  .WithMany(s => s.Views)
+                  .HasForeignKey(v => v.StoryId)
+                  .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(v => v.User)
+                  .WithMany()
+                  .HasForeignKey(v => v.UserId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Home.StoryLike>(entity =>
+        {
+            entity.ToTable("StoryLikes", "home");
+            entity.HasKey(e => new { e.StoryId, e.UserId });
+            entity.HasOne(l => l.Story)
+                  .WithMany(s => s.Likes)
+                  .HasForeignKey(l => l.StoryId)
+                  .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(l => l.User)
+                  .WithMany()
+                  .HasForeignKey(l => l.UserId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        builder.Entity<CommunityCar.Domain.Entities.Home.StoryReply>(entity =>
+        {
+            entity.ToTable("StoryReplies", "home");
+            entity.HasOne(r => r.Story)
+                  .WithMany(s => s.Replies)
+                  .HasForeignKey(r => r.StoryId)
+                  .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(r => r.User)
+                  .WithMany()
+                  .HasForeignKey(r => r.UserId)
                   .OnDelete(DeleteBehavior.NoAction);
         });
     }

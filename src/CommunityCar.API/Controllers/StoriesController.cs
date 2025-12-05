@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using CommunityCar.Application.Features.Stories.DTOs;
 using CommunityCar.Domain.Entities.Home;
+using CommunityCar.Domain.Entities.Community.Pages;
 
 namespace CommunityCar.API.Controllers;
 
@@ -121,7 +122,7 @@ public class StoriesController : ControllerBase
                     FirstName = "John",
                     LastName = "Doe",
                     AvatarUrl = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100it=crop&crop=face"
-                }           ViewedAt = DateTime.Utcutes(-30)
+                }           
             }
         };
       return Ok(views);

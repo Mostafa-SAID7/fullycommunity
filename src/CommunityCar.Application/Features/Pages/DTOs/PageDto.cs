@@ -1,4 +1,4 @@
-using CommunityCar.Domain.Entities;
+using CommunityCar.Domain.Entities.Community.Pages;
 
 namespace CommunityCar.Application.Features.Pages.DTOs;
 
