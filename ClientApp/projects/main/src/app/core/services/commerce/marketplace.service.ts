@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { PagedResult } from '../../types/common.types';
 
 // Product Models
 export interface Product {
@@ -342,13 +343,7 @@ export interface CreateOrderRequest {
   notes?: string;
 }
 
-export interface PagedResult<T> {
-  items: T[];
-  totalCount: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
+
 
 @Injectable({ providedIn: 'root' })
 export class MarketplaceService {

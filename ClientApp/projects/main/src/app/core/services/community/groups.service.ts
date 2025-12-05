@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { PagedResult } from '../../types/common.types';
 
 export interface Group {
   id: string;
@@ -14,12 +15,7 @@ export interface Group {
   isJoined?: boolean;
 }
 
-export interface PagedResult<T> {
-  items: T[];
-  totalCount: number;
-  page: number;
-  pageSize: number;
-}
+
 
 @Injectable({ providedIn: 'root' })
 export class GroupsService {

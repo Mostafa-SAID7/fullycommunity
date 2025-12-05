@@ -2,19 +2,9 @@ import { Injectable, ErrorHandler, inject, NgZone } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { AppError } from '../../types/common.types';
 
-export interface AppError {
-  id: string;
-  type: 'error' | 'warning' | 'info' | 'success';
-  title: string;
-  message: string;
-  timestamp: Date;
-  details?: any;
-  action?: {
-    label: string;
-    handler: () => void;
-  };
-}
+
 
 export interface ToastNotification {
   id: string;

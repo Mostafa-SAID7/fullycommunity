@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { PagedResult } from '../../types/common.types';
 
 // Enums matching backend
 export enum PodcastType { Audio = 0, Video = 1, Mixed = 2 }
@@ -197,13 +198,7 @@ export interface QueueItem {
   addedAt: string;
 }
 
-export interface PagedResult<T> {
-  items: T[];
-  totalCount: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
+
 
 // Request DTOs
 export interface CreatePodcastRequest {

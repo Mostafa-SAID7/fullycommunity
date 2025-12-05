@@ -10,7 +10,13 @@ export interface PagedResult<T> {
 
 export interface AppError {
   id: string;
-  message: string;
   type: 'error' | 'warning' | 'info' | 'success';
+  title?: string;
+  message: string;
   timestamp: Date;
+  details?: any;
+  action?: {
+    label: string;
+    handler: () => void;
+  };
 }
