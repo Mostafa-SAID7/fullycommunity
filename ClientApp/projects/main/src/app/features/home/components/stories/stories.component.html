@@ -1,106 +1,215 @@
 <!-- Stories Container -->
 <div class="flex gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
   
-  <!-- Create Story Card -->
-  <div class="flex-shrink-0 w-28 cursor-pointer group" (click)="createStory()">
-    <div class="relative w-28 h-44 rounded-xl overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300 group-hover:scale-105">
-      
-      <!-- User Avatar Background -->
-      <div class="absolute inset-0 flex items-center justify-center">
-        <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-          <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 font-bold text-lg">
-            {{ getUserInitials() }}
-          </div>
-        </div>
-      </div>
-      
-      <!-- Plus Icon -->
-      <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-blue-600 rounded-full border-4 border-white flex items-center justify-center group-hover:bg-blue-700 transition-colors">
-        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-        </svg>
-      </div>
-      
-      <!-- Create Label -->
-      <div class="absolute bottom-0 left-0 right-0 p-2 text-center">
-        <span class="text-white text-xs font-semibold drop-shadow-sm">Create Story</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Story Cards -->
-  @for (story of stories(); track story.id; let i = $index) {
-    <div class="flex-shrink-0 w-28 cursor-pointer group" (click)="viewStory(story)">
-      <div class="relative w-28 h-44 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
-        
-        <!-- Story Background Image -->
-        <div 
-          class="absolute inset-0 bg-cover bg-center bg-gray-200 dark:bg-gray-700"
-          [style.background-image]="'url(' + story.imageUrl + ')'">
-          
-          <!-- Gradient Overlay -->
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
-        </div>
-        
-        <!-- User Avatar -->
-        <div class="absolute top-3 left-3">
-          <div 
-            class="w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr"
-            [class]="story.viewed ? 'from-gray-300 to-gray-400' : 'from-pink-500 to-orange-500'">
-            <div class="w-full h-full rounded-full bg-white dark:bg-gray-800 p-0.5">
-              @if (story.userAvatar) {
-                <img 
-                  [src]="story.userAvatar" 
-                  [alt]="story.userName"
-                  class="w-full h-full rounded-full object-cover">
-              } @else {
-                <div 
-                  class="w-full h-full rounded-full flex items-center justify-center text-white text-sm font-bold bg-gradient-to-br"
-                  [class]="getStoryGradient(i)">
-                  {{ story.userName.charAt(0) }}
-                </div>
-              }
-            </div>
-          </div>
-        </div>
-        
-        <!-- Story Type Indicator -->
-        @if (story.type === 'video') {
-          <div class="absolute top-3 right-3">
-            <div class="w-6 h-6 bg-black/50 rounded-full flex items-center justify-center">
-              <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-            </div>
-          </div>
-        }
-        
-        <!-- User Name -->
-        <div class="absolute bottom-0 left-0 right-0 p-3">
-          <p class="text-white text-xs font-semibold truncate drop-shadow-sm">
-            {{ story.userName }}
-          </p>
-        </div>
-        
-        <!-- Viewed Indicator -->
-        @if (story.viewed) {
-          <div class="absolute inset-0 bg-black/20 flex items-center justify-center">
-            <div class="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-  }
-  
-  <!-- Loading Skeleton (if needed) -->
-  @if (stories().length === 0) {
+  <!-- Loading State -->
+  @if (loadingState().isLoading) {
     @for (i of [1,2,3,4,5]; track i) {
       <div class="flex-shrink-0 w-28">
         <div class="w-28 h-44 rounded-xl bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+      </div>
+    }
+  }
+
+  <!-- Error State -->
+  @else if (loadingState().error) {
+    <div class="flex-shrink-0 w-full min-w-80">
+      <v class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-center">
+        <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-2">
+          <svg class="w-4 h-4 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+        </div>
+        <p class="text-sm text-red-700 dark:text-red-300 mb-2">{{ loadingState().error }}</p>
+        <button 
+          (click)="retryLoad()"
+          class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded font-medium transition-colors">
+          Retry
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Success State -->
+  @else {
+    <!-- Create Story Card -->
+    @if (user()) {
+      <div class="flex-shrink-0 w-28 cursor-pointer group" (click)="createStory()">
+        <div class="relative w-28 h-44 rounded-xl overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300 group-hover:scale-105">
+          
+          <!-- User Avatar Background -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-600 font-bold text-lg">
+                {{ getUserInitials() }}
+              </div>
+            </div>
+          </div>
+          
+          <!-- Plus Icon -->
+          <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-blue-600 rounded-full border-4 border-white flex items-center justify-center group-hover:bg-blue-700 transition-colors">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+          </div>
+          
+          <!-- Create Label -->
+          <div class="absolute bottom-0 left-0 right-0 p-2 text-center">
+            <span class="text-white text-xs font-semibold drop-shadow-sm">Create Story</span>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Story Cards -->
+    @for (story of stories(); track story.id; let i = $index) {
+      <div class="flex-shrink-0 w-28 cursor-pointer group" (click)="viewStory(story)">
+        <div class="relative w-28 h-44 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
+          
+          <!-- Story Background Image -->
+          <div 
+            class="absolute inset-0 bg-cover bg-center bg-gray-200 dark:bg-gray-700"
+            [style.background-image]="'url(' + story.mediaUrl + ')'">
+            
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+          </div>
+          
+          <!-- User Avatar -->
+          <div class="absolute top-3 left-3">
+            <div 
+              class="w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr"
+              [class]="story.isViewed ? 'from-gray-300 to-gray-400' : 'from-pink-500 to-orange-500'">
+              <div class="w-full h-full rounded-full bg-white dark:bg-gray-800 p-0.5">
+                @if (getDisplayAvatar(story)) {
+                  <img 
+                    [src]="getDisplayAvatar(story)" 
+                    [alt]="getDisplayName(story)"
+                    class="w-full h-full rounded-full object-cover">
+                } @else {
+                  <div 
+                    class="w-full h-full rounded-full flex items-center justify-center text-white text-sm font-bold bg-gradient-to-br"
+                    [class]="getStoryGradient(i)">
+                    {{ getDisplayName(story).charAt(0) }}
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Verified Badge -->
+          @if (isVerified(story)) {
+            <div class="absolute top-2 right-2">
+              <div class="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+              </div>
+            </div>
+          }
+          
+          <!-- Story Type Indicator -->
+          @if (story.type !== 'Image' && getStoryTypeIcon(story.type)) {
+            <div class="absolute top-3 right-3">
+              <div class="w-6 h-6 bg-black/50 rounded-full flex items-center justify-center">
+                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path [attr.d]="getStoryTypeIcon(story.type)"/>
+                </svg>
+              </div>
+            </div>
+          }
+
+          <!-- Live Indicator -->
+          @if (story.type === 'Live') {
+            <div class="absolute top-3 left-3 right-3">
+              <div class="bg-red-500 text-white text-xs px-2 py-1 rounded-full text-center font-semibold animate-pulse">
+                LIVE
+              </div>
+            </div>
+          }
+
+          <!-- Story Stats -->
+          <div class="absolute top-3 right-3 flex flex-col gap-1">
+            @if (story.viewCount > 0) {
+              <div class="bg-black/50 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+                {{ story.viewCount }}
+              </div>
+            }
+          </div>
+
+          <!-- Like Button -->
+          <div class="absolute bottom-12 right-3">
+            <button 
+              (click)="likeStory(story, $event)"
+              class="w-8 h-8 bg-black/50 rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
+              [class.text-red-500]="story.isLiked"
+              [class.text-white]="!story.isLiked">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </button>
+            @if (story.likeCount > 0) {
+              <div class="text-white text-xs text-center mt-1 font-semibold">
+                {{ story.likeCount }}
+              </div>
+            }
+          </div>
+          
+          <!-- User Name and Time -->
+          <div class="absolute bottom-0 left-0 right-0 p-3">
+            <p class="text-white text-xs font-semibold truncate drop-shadow-sm">
+              {{ getDisplayName(story) }}
+            </p>
+            <p class="text-white/80 text-xs truncate drop-shadow-sm">
+              {{ getTimeAgo(story.createdAt) }}
+            </p>
+          </div>
+          
+          <!-- Viewed Indicator -->
+          @if (story.isViewed) {
+            <div class="absolute inset-0 bg-black/20 flex items-center justify-center">
+              <div class="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+            </div>
+          }
+
+          <!-- Caption Preview -->
+          @if (story.caption) {
+            <div class="absolute bottom-16 left-3 right-3">
+              <p class="text-white text-xs bg-black/50 rounded px-2 py-1 truncate">
+                {{ story.caption }}
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (stories().length === 0) {
+      <div class="flex-shrink-0 w-full min-w-80">
+        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-6 text-center">
+          <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg class="w-6 h-6 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-1">No Stories Yet</h3>
+          <p class="text-xs text-gray-600 dark:text-gray-400 mb-3">Be the first to share your story!</p>
+          @if (user()) {
+            <button 
+              (click)="createStory()"
+              class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded font-medium transition-colors">
+              Create Story
+            </button>
+          }
+        </div>
       </div>
     }
   }

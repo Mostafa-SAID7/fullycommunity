@@ -38,3 +38,6 @@ export * from './common/signalr.service';
 
 // Business
 export * from './business/dashboard.service';
+
+// Home
+export * from './home/stories.service';
