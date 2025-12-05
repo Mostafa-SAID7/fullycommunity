@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { 
   LiveStream, ChatMessage, GiftType, CreateLiveStreamRequest, 
-  SendChatMessageRequest, SendGiftRequest, PagedResult 
+  SendChatMessageRequest, SendGiftRequest 
 } from '../media/video.service';
+import { PagedResult } from '../../types/common.types';
 
 export interface LiveStreamSearchRequest {
   query?: string;

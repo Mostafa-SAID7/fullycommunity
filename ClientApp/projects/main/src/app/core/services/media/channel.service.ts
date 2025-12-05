@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { 
   Channel, ChannelStats, ChannelSearchRequest, CreateChannelRequest, 
-  UpdateChannelRequest, Video, PagedResult, ChannelSummary 
+  UpdateChannelRequest, Video, ChannelSummary 
 } from '../media/video.service';
+import { PagedResult } from '../../types/common.types';
 
 @Injectable({ providedIn: 'root' })
 export class ChannelService {
