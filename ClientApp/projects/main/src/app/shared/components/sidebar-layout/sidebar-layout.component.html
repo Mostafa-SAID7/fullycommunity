@@ -1,5 +1,6 @@
-<div class="min-h-[calc(100vh-56px)] overflow-x-hidden">
-  <!-- Left Sidebar (Fixed - pushes content on lg screens) -->
+<!-- Facebook-style Layout: Fixed sidebars with centered feed -->
+<div class="min-h-[calc(100vh-56px)] overflow-hidden max-w-full">
+  <!-- Left Sidebar (Fixed - Facebook style) -->
   @if (showLeftSidebar) {
     <app-left-sidebar 
       [menuItems]="leftMenuItems"
@@ -10,7 +11,7 @@
     </app-left-sidebar>
   }
 
-  <!-- Right Sidebar (Fixed overlay) -->
+  <!-- Right Sidebar (Fixed - Facebook style) -->
   @if (showRightSidebar) {
     <app-right-sidebar
       [sponsoredItems]="sponsoredItems"
@@ -22,13 +23,24 @@
     </app-right-sidebar>
   }
 
-  <!-- Main Content Area - Adjusts margin based on sidebar state on lg screens -->
-  <!-- Sidebar widths: Rail=48px, Panel=208px, Total=256px, Right=288px -->
+  <!-- Main Content Area - Responsive Facebook style -->
+  <!-- Sidebar widths: Rail=48px(ml-12), Expanded=256px(ml-64), Right=288px(mr-72) -->
   <main 
-    class="min-h-[calc(100vh-56px)] w-full overflow-x-hidden transition-all duration-300"
-    [style.margin-left.px]="showLeftSidebar ? (isSidebarExpanded() ? 256 : 48) : 0"
+    class="min-h-[calc(100vh-56px)] overflow-x-hidden overflow-y-auto transition-all duration-300 box-border pt-5 sm:pt-6 lg:pt-8"
+    [class.ml-12]="showLeftSidebar"
+    [class.lg:ml-64]="showLeftSidebar && sidebarExpanded"
+    [class.lg:ml-12]="showLeftSidebar && !sidebarExpanded"
     [class.xl:mr-72]="showRightSidebar">
-    <div class="w-full px-2 py-3 sm:p-4 lg:p-6">
+    <!-- Responsive content container - prevents overflow -->
+    <div 
+      class="w-full max-w-full py-3 px-2 sm:py-4 sm:px-3 md:px-4 lg:py-5 lg:px-6 xl:py-6 overflow-x-hidden box-border"
+      [class.lg:mx-auto]="centerContent"
+      [class.lg:max-w-[590px]]="contentWidth === 'narrow'"
+      [class.xl:max-w-[680px]]="contentWidth === 'narrow'"
+      [class.lg:max-w-[800px]]="contentWidth === 'medium'"
+      [class.xl:max-w-[900px]]="contentWidth === 'medium'"
+      [class.lg:max-w-[1000px]]="contentWidth === 'wide'"
+      [class.xl:max-w-[1200px]]="contentWidth === 'wide'">
       <ng-content></ng-content>
     </div>
   </main>

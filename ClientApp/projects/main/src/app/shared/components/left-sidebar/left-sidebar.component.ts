@@ -50,12 +50,21 @@ export class LeftSidebarComponent {
   
   @Output() expandedChange = new EventEmitter<boolean>();
   
-  // Sidebar state - always visible and expanded by default
-  isExpanded = signal(true);
+  // Sidebar state - collapsed on small screens, expanded on large screens
+  isExpanded = signal(this.getInitialExpandedState());
   hoveredItem = signal<string | null>(null);
   activeCatalogue = signal<string | null>(null);
+  isMobileOpen = signal(false);
   
   user = this.authService.currentUser;
+
+  private getInitialExpandedState(): boolean {
+    // Check if we're in browser and screen is large (lg breakpoint = 1024px)
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1024;
+    }
+    return true; // Default to expanded for SSR
+  }
 
   // Catalogue items with sub-items for each section
   catalogueItems: CatalogueItem[] = [
@@ -132,6 +141,20 @@ export class LeftSidebarComponent {
   toggleSidebar() {
     this.isExpanded.update(v => !v);
     this.expandedChange.emit(this.isExpanded());
+  }
+
+  isMobileOverlayVisible(): boolean {
+    // Show overlay on mobile when expanded panel is open
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 1024;
+    }
+    return false;
+  }
+
+  closeMobilePanel() {
+    // Close the expanded panel on mobile
+    this.isExpanded.set(false);
+    this.expandedChange.emit(false);
   }
 
   setHoveredItem(item: string | null) {

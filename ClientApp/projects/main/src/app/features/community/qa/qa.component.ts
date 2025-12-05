@@ -1,266 +1,198 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+
 import { FormsModule } from '@angular/forms';
 import { QAService, QuestionListItem, QuestionCategory, QuestionStatus } from '../../../core/services/qa.service';
+import { ThemeService } from '../../../core/services/theme.service';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+
+// Import child components
+import { QAHeaderComponent } from './components/qa-header/qa-header.component';
+import { QASearchFiltersComponent } from './components/qa-search-filters/qa-search-filters.component';
+import { QuestionListComponent } from './components/question-list/question-list.component';
+import { AskQuestionModalComponent, NewQuestionForm } from './components/ask-question-modal/ask-question-modal.component';
 
 @Component({
   selector: 'app-qa',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [
+    CommonModule, 
+    FormsModule,
+    QAHeaderComponent,
+    QASearchFiltersComponent,
+    QuestionListComponent,
+    AskQuestionModalComponent
+  ],
   template: `
-    <div class="max-w-7xl mx-auto px-4 py-6">
-      <!-- Header -->
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-        <div>
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Q&A Forum</h1>
-          <p class="mt-2 text-gray-600 dark:text-gray-400">Ask questions, share knowledge, help the community</p>
-        </div>
-        <button (click)="showAskModal = true" 
-                class="mt-4 md:mt-0 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
-          Ask Question
-        </button>
-      </div>
+    <!-- Microsoft Fluent Design Q&A Community Page -->
+    <div class="microsoft-bg min-h-screen">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+        
+        <!-- Header Component -->
+        <app-qa-header
+          [totalQuestions]="totalQuestions()"
+          [answeredCount]="answeredCount()"
+          [unansweredCount]="unansweredCount()"
+          [bountyCount]="bountyCount()"
+          (askQuestion)="showAskModal = true"
+          (toggleFilters)="toggleAdvancedFilters()">
+        </app-qa-header>
 
-      <!-- Stats Bar -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-          <p class="text-2xl font-bold text-blue-600">{{ totalQuestions() }}</p>
-          <p class="text-sm text-gray-500">Questions</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-          <p class="text-2xl font-bold text-green-600">{{ answeredCount() }}</p>
-          <p class="text-sm text-gray-500">Answered</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-          <p class="text-2xl font-bold text-orange-600">{{ unansweredCount() }}</p>
-          <p class="text-sm text-gray-500">Unanswered</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-          <p class="text-2xl font-bold text-purple-600">{{ bountyCount() }}</p>
-          <p class="text-sm text-gray-500">With Bounty</p>
-        </div>
-      </div>
+        <!-- Search and Filters Component -->
+        <app-qa-search-filters
+          [categories]="categories()"
+          [showAdvancedFilters]="showAdvancedFilters()"
+          [sortOptions]="sortOptions"
+          [popularTags]="popularTags"
+          [(searchTerm)]="searchTerm"
+          [(sortBy)]="sortBy"
+          [(viewMode)]="viewMode"
+          [(selectedStatus)]="selectedStatus"
+          [(selectedCategory)]="selectedCategory"
+          [(selectedTag)]="selectedTag"
+          [(dateFilter)]="dateFilter"
+          [(bountyFilter)]="bountyFilter"
+          (searchInput)="onSearchInput($event)"
+          (filtersChanged)="loadQuestions()"
+          (tagSelected)="filterByTag($event)"
+          (viewModeChanged)="viewMode = $event"
+          (sortChanged)="selectSort($event)">
+        </app-qa-search-filters>
 
-      <!-- Filters -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl p-4 mb-6">
-        <div class="flex flex-wrap gap-4">
-          <!-- Search -->
-          <div class="flex-1 min-w-[250px]">
-            <input type="text" [(ngModel)]="searchTerm" (keyup.enter)="loadQuestions()" 
-                   placeholder="Search questions..."
-                   class="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+        <!-- Results Summary -->
+        <div class="flex items-center justify-between mb-6">
+          <div class="text-sm text-gray-600 dark:text-gray-400">
+            Showing {{ questions().length }} of {{ totalQuestions() }} questions
+            <span *ngIf="searchTerm || hasActiveFilters()" class="ml-2">
+              • <button (click)="clearAllFilters()" class="hover:underline font-medium" style="color: var(--color-primary)">Clear all filters</button>
+            </span>
           </div>
           
-          <!-- Sort Tabs -->
-          <div class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
-            @for (sort of sortOptions; track sort.value) {
-              <button (click)="sortBy = sort.value; loadQuestions()"
-                      [class]="sortBy === sort.value ? 'bg-white dark:bg-gray-600 shadow' : ''"
-                      class="px-4 py-2 rounded-lg text-sm font-medium transition">
-                {{ sort.label }}
-              </button>
-            }
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-500 dark:text-gray-400">{{ questions().length }} results</span>
           </div>
-          
-          <!-- Filter Dropdown -->
-          <select [(ngModel)]="selectedStatus" (change)="loadQuestions()" 
-                  class="px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
-            <option value="">All Status</option>
-            <option value="Open">Open</option>
-            <option value="Answered">Answered</option>
-            <option value="Closed">Closed</option>
-          </select>
         </div>
 
-        <!-- Tags -->
-        <div class="flex flex-wrap gap-2 mt-4">
-          <span class="text-sm text-gray-500 mr-2">Popular tags:</span>
-          @for (tag of popularTags; track tag) {
-            <button (click)="filterByTag(tag)"
-                    [class]="selectedTag === tag ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700'"
-                    class="px-3 py-1 rounded-full text-sm transition">
-              {{ tag }}
-            </button>
-          }
-        </div>
+        <!-- Question List Component -->
+        <app-question-list
+          [questions]="questions()"
+          [loading]="loading()"
+          [viewMode]="viewMode"
+          [hasFilters]="hasActiveFilters()"
+          (clearFilters)="clearAllFilters()"
+          (askQuestion)="showAskModal = true">
+        </app-question-list>
+
+        <!-- Ask Question Modal Component -->
+        <app-ask-question-modal
+          [show]="showAskModal"
+          [categories]="categories()"
+          [popularTags]="popularTags"
+          [(formData)]="newQuestion"
+          (closed)="showAskModal = false"
+          (submitted)="submitQuestion($event)">
+        </app-ask-question-modal>
       </div>
-
-      <!-- Questions List -->
-      @if (loading()) {
-        <div class="flex justify-center py-12">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        </div>
-      } @else {
-        <div class="space-y-4">
-          @for (question of questions(); track question.id) {
-            <div class="bg-white dark:bg-gray-800 rounded-xl p-5 hover:shadow-md transition cursor-pointer"
-                 [routerLink]="['/community/qa', question.slug]">
-              <div class="flex gap-4">
-                <!-- Vote/Answer Stats -->
-                <div class="hidden md:flex flex-col items-center gap-2 min-w-[80px]">
-                  <div class="text-center p-2 rounded-lg" 
-                       [class]="question.voteCount > 0 ? 'bg-green-50 dark:bg-green-900/20' : 'bg-gray-50 dark:bg-gray-700'">
-                    <p class="text-lg font-bold" [class]="question.voteCount > 0 ? 'text-green-600' : ''">
-                      {{ question.voteCount }}
-                    </p>
-                    <p class="text-xs text-gray-500">votes</p>
-                  </div>
-                  <div class="text-center p-2 rounded-lg"
-                       [class]="question.hasAcceptedAnswer ? 'bg-green-500 text-white' : question.answerCount > 0 ? 'border-2 border-green-500' : 'bg-gray-50 dark:bg-gray-700'">
-                    <p class="text-lg font-bold">{{ question.answerCount }}</p>
-                    <p class="text-xs" [class]="question.hasAcceptedAnswer ? 'text-green-100' : 'text-gray-500'">answers</p>
-                  </div>
-                  <div class="text-center text-xs text-gray-500">
-                    {{ question.viewCount }} views
-                  </div>
-                </div>
-
-                <!-- Question Content -->
-                <div class="flex-1">
-                  <div class="flex items-start justify-between gap-2 mb-2">
-                    <h3 class="text-lg font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 line-clamp-2">
-                      {{ question.title }}
-                    </h3>
-                    @if (question.bountyPoints) {
-                      <span class="px-2 py-1 bg-blue-600 text-white text-xs font-bold rounded-full whitespace-nowrap">
-                        +{{ question.bountyPoints }} bounty
-                      </span>
-                    }
-                  </div>
-
-                  <!-- Tags -->
-                  <div class="flex flex-wrap gap-2 mb-3">
-                    @for (tag of question.tags; track tag) {
-                      <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded">
-                        {{ tag }}
-                      </span>
-                    }
-                  </div>
-
-                  <!-- Meta -->
-                  <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                    <!-- Mobile Stats -->
-                    <div class="flex md:hidden gap-3">
-                      <span>{{ question.voteCount }} votes</span>
-                      <span [class]="question.hasAcceptedAnswer ? 'text-green-600 font-medium' : ''">
-                        {{ question.answerCount }} answers
-                      </span>
-                    </div>
-                    
-                    <div class="flex items-center gap-2">
-                      <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs">
-                        {{ question.author.firstName[0] }}{{ question.author.lastName[0] }}
-                      </div>
-                      <span>{{ question.author.firstName }} {{ question.author.lastName }}</span>
-                      @if (question.author.isVerified) {
-                        <span class="text-blue-500">✓</span>
-                      }
-                      <span class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">
-                        {{ question.author.reputation }} rep
-                      </span>
-                    </div>
-                    <span>asked {{ question.createdAt | date:'MMM d' }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          }
-        </div>
-      }
-
-      @if (questions().length === 0 && !loading()) {
-        <div class="text-center py-12 bg-white dark:bg-gray-800 rounded-xl">
-          <p class="text-4xl mb-4">❓</p>
-          <p class="text-gray-500 mb-4">No questions found</p>
-          <button (click)="showAskModal = true" class="px-4 py-2 bg-blue-600 text-white rounded-lg">
-            Ask the first question
-          </button>
-        </div>
-      }
-
-      <!-- Ask Question Modal -->
-      @if (showAskModal) {
-        <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div class="bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-              <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">Ask a Question</h2>
-                <button (click)="showAskModal = false" class="text-gray-500 hover:text-gray-700">✕</button>
-              </div>
-              
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium mb-2">Title</label>
-                  <input type="text" [(ngModel)]="newQuestion.title" 
-                         placeholder="What's your question? Be specific."
-                         class="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
-                </div>
-                
-                <div>
-                  <label class="block text-sm font-medium mb-2">Details</label>
-                  <textarea [(ngModel)]="newQuestion.content" rows="6"
-                            placeholder="Include all the information someone would need to answer your question"
-                            class="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"></textarea>
-                </div>
-                
-                <div>
-                  <label class="block text-sm font-medium mb-2">Tags (comma separated)</label>
-                  <input type="text" [(ngModel)]="newQuestion.tagsInput" 
-                         placeholder="e.g., maintenance, oil-change, toyota"
-                         class="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
-                </div>
-              </div>
-              
-              <div class="flex justify-end gap-3 mt-6">
-                <button (click)="showAskModal = false" 
-                        class="px-4 py-2 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
-                  Cancel
-                </button>
-                <button (click)="submitQuestion()" 
-                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                  Post Question
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
     </div>
   `
 })
 export class QAComponent implements OnInit {
   private qaService = inject(QAService);
+  private themeService = inject(ThemeService);
 
+  // Core data
   questions = signal<QuestionListItem[]>([]);
   categories = signal<QuestionCategory[]>([]);
   loading = signal(false);
   
+  // Statistics
   totalQuestions = signal(0);
   answeredCount = signal(0);
   unansweredCount = signal(0);
   bountyCount = signal(0);
 
+  // Search & Filters
   searchTerm = '';
+  private searchSubject = new Subject<string>();
   sortBy = 'newest';
+  viewMode: 'card' | 'compact' = 'card';
   selectedStatus = '';
+  selectedCategory = '';
   selectedTag = '';
+  dateFilter = 'all';
+  bountyFilter = '';
   showAskModal = false;
+  showAdvancedFilters = signal(false);
 
-  newQuestion = { title: '', content: '', tagsInput: '' };
+  // New question form
+  newQuestion: NewQuestionForm = { 
+    title: '', 
+    content: '', 
+    tagsInput: '',
+    categoryId: ''
+  };
 
+  // Enhanced sort options with icons
   sortOptions = [
-    { value: 'newest', label: 'Newest' },
-    { value: 'votes', label: 'Votes' },
-    { value: 'unanswered', label: 'Unanswered' },
-    { value: 'active', label: 'Active' }
+    { 
+      value: 'newest', 
+      label: 'Newest',
+      icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
+    },
+    { 
+      value: 'votes', 
+      label: 'Most Votes',
+      icon: 'M5 15l7-7 7 7'
+    },
+    { 
+      value: 'unanswered', 
+      label: 'Unanswered',
+      icon: 'M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+    },
+    { 
+      value: 'active', 
+      label: 'Most Active',
+      icon: 'M13 10V3L4 14h7v7l9-11h-7z'
+    },
+    { 
+      value: 'bounty', 
+      label: 'Bounty',
+      icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1'
+    }
   ];
 
-  popularTags = ['maintenance', 'electric', 'brakes', 'engine', 'oil-change', 'tires', 'battery'];
+  popularTags = [
+    'maintenance', 'electric', 'brakes', 'engine', 'oil-change', 
+    'tires', 'battery', 'transmission', 'suspension', 'diagnostics',
+    'hybrid', 'tesla', 'bmw', 'mercedes', 'toyota', 'honda'
+  ];
+
+  // Tag counts for popular tags
+  tagCounts = new Map<string, number>();
+
+  constructor() {
+    // Setup search debouncing
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(() => {
+      this.loadQuestions();
+    });
+  }
 
   ngOnInit() {
     this.loadQuestions();
     this.loadCategories();
+    this.loadTagCounts();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    // Close dropdowns when clicking outside
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown-container')) {
+      // Close any open dropdowns
+    }
   }
 
   loadQuestions() {
@@ -293,22 +225,78 @@ export class QAComponent implements OnInit {
     this.bountyCount.set(questions.filter(q => q.bountyPoints).length);
   }
 
+  // Enhanced UI Actions
+  toggleAdvancedFilters() {
+    this.showAdvancedFilters.update(v => !v);
+  }
+
+  selectSort(value: string) {
+    this.sortBy = value;
+    this.loadQuestions();
+  }
+
+  onSearchInput(event: any) {
+    this.searchTerm = event.target.value;
+    this.searchSubject.next(this.searchTerm);
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.loadQuestions();
+  }
+
+  clearAllFilters() {
+    this.searchTerm = '';
+    this.selectedStatus = '';
+    this.selectedCategory = '';
+    this.selectedTag = '';
+    this.dateFilter = 'all';
+    this.bountyFilter = '';
+    this.sortBy = 'newest';
+    this.loadQuestions();
+  }
+
+  hasActiveFilters(): boolean {
+    return this.selectedStatus !== '' || 
+           this.selectedCategory !== '' || 
+           this.selectedTag !== '' || 
+           this.dateFilter !== 'all' || 
+           this.bountyFilter !== '';
+  }
+
   filterByTag(tag: string) {
     this.selectedTag = this.selectedTag === tag ? '' : tag;
     this.loadQuestions();
   }
 
-  submitQuestion() {
-    if (!this.newQuestion.title || !this.newQuestion.content) return;
+  getTagCount(tag: string): number {
+    return this.tagCounts.get(tag) || 0;
+  }
+
+  // Enhanced data loading
+  loadTagCounts() {
+    // This would typically come from the API
+    this.popularTags.forEach(tag => {
+      this.tagCounts.set(tag, Math.floor(Math.random() * 100) + 1);
+    });
+  }
+
+
+
+
+
+  submitQuestion(formData: NewQuestionForm) {
+    if (!formData.title || !formData.content) return;
     
     this.qaService.createQuestion({
-      title: this.newQuestion.title,
-      content: this.newQuestion.content,
-      tags: this.newQuestion.tagsInput.split(',').map(t => t.trim()).filter(t => t)
+      title: formData.title,
+      content: formData.content,
+      tags: formData.tagsInput.split(',').map(t => t.trim()).filter(t => t),
+      categoryId: formData.categoryId || undefined
     }).subscribe({
       next: () => {
         this.showAskModal = false;
-        this.newQuestion = { title: '', content: '', tagsInput: '' };
+        this.newQuestion = { title: '', content: '', tagsInput: '', categoryId: '' };
         this.loadQuestions();
       }
     });

@@ -13,6 +13,7 @@ import { SidebarMenuItem, SidebarShortcut } from '../../../shared/components/lef
       [leftMenuItems]="menuItems"
       [shortcuts]="shortcuts"
       [showRightSidebar]="true"
+      contentWidth="wide"
     >
       <router-outlet></router-outlet>
     </app-sidebar-layout>

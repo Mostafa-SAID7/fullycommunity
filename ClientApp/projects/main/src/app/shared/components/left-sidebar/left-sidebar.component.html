@@ -1,8 +1,15 @@
-<!-- Sidebar Container - Fixed on all screens -->
+<!-- Mobile Overlay (when expanded panel is open on mobile) -->
+<div 
+  *ngIf="isExpanded() && isMobileOverlayVisible()"
+  (click)="closeMobilePanel()"
+  class="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-30">
+</div>
+
+<!-- Sidebar Container - Always visible -->
 <aside 
   class="fixed top-14 left-0 h-[calc(100vh-56px)] z-40 flex border-r border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 overflow-hidden">
-  
-  <!-- Catalogue Rail -->
+
+  <!-- Catalogue Rail - Always visible -->
   <div class="w-12 bg-gray-50/80 dark:bg-gray-900/80 backdrop-blur-sm flex flex-col items-center py-2 gap-1 overflow-y-auto overflow-x-hidden scrollbar-none">
     <!-- Toggle Button -->
     <button 

@@ -22,6 +22,7 @@ import { SponsoredItem, EventReminder, Contact } from '../../../shared/component
       [showEvents]="true"
       [showContacts]="true"
       [showRightSidebar]="true"
+      contentWidth="wide"
     >
       <router-outlet></router-outlet>
     </app-sidebar-layout>

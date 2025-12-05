@@ -1,141 +1,141 @@
-<div class="min-h-screen bg-background dark:bg-background-dark p-6">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-secondary dark:text-background mb-4">Fuel & Charging</h1>
-      <p class="text-lg text-gray-600 dark:text-gray-400">Find fuel stations and EV charging points</p>
-    </div>
-    
-    <!-- Search Section -->
-    <div class="bg-background dark:bg-secondary rounded-xl p-6 mb-8 border border-border dark:border-gray-600">
-      <div class="flex flex-col md:flex-row gap-4">
-        <div class="flex-1">
-          <label class="block text-sm font-medium text-secondary dark:text-background mb-2">Location</label>
-          <div class="relative">
-            <input type="text" placeholder="Enter your location..." 
-              class="w-full px-4 py-3 pl-10 rounded-lg border border-border dark:border-gray-600 bg-background dark:bg-background-dark text-secondary dark:text-background focus:ring-2 focus:ring-primary">
-            <svg class="absolute left-3 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-          </div>
-        </div>
-        <div class="flex-1">
-          <label class="block text-sm font-medium text-secondary dark:text-background mb-2">Fuel Type</label>
-          <select class="w-full px-4 py-3 rounded-lg border border-border dark:border-gray-600 bg-background dark:bg-background-dark text-secondary dark:text-background focus:ring-2 focus:ring-primary">
-            <option>All Types</option>
-            <option>Petrol</option>
-            <option>Diesel</option>
-            <option>Electric (EV)</option>
-            <option>Hybrid</option>
-            <option>LPG</option>
-          </select>
-        </div>
-        <div class="flex items-end">
-          <button class="px-6 py-3 bg-primary text-background rounded-lg hover:bg-primary-hover font-medium">
-            Search
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Fuel Types Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-      <div class="bg-background dark:bg-secondary rounded-xl p-6 text-center border border-border dark:border-gray-600 hover:shadow-lg transition-shadow">
-        <div class="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-          <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.172V5L8 4z"/>
+<!-- Microsoft Fluent Design Fuel & Charging -->
+<div class="min-h-screen">
+  <!-- Page Header -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Fuel & Charging</h1>
+    <p class="text-sm text-gray-500 dark:text-gray-400">Find fuel stations and EV charging points</p>
+  </div>
+  
+  <!-- Search Section - Fluent Form -->
+  <div class="bg-white dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50 p-5 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location</label>
+        <div class="relative">
+          <input type="text" placeholder="Enter your location..." 
+            class="w-full h-10 px-4 pl-10 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
           </svg>
         </div>
-        <h3 class="text-lg font-semibold text-secondary dark:text-background mb-2">Petrol Stations</h3>
-        <p class="text-gray-600 dark:text-gray-400">Find nearby petrol stations</p>
       </div>
-
-      <div class="bg-background dark:bg-secondary rounded-xl p-6 text-center border border-border dark:border-gray-600 hover:shadow-lg transition-shadow">
-        <div class="w-16 h-16 mx-auto mb-4 bg-success/10 rounded-full flex items-center justify-center">
-          <svg class="w-8 h-8 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-        </div>
-        <h3 class="text-lg font-semibold text-secondary dark:text-background mb-2">EV Charging</h3>
-        <p class="text-gray-600 dark:text-gray-400">Electric vehicle charging points</p>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fuel Type</label>
+        <select class="w-full h-10 px-3 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+          <option>All Types</option>
+          <option>Petrol</option>
+          <option>Diesel</option>
+          <option>Electric (EV)</option>
+          <option>Hybrid</option>
+          <option>LPG</option>
+        </select>
       </div>
-
-      <div class="bg-background dark:bg-secondary rounded-xl p-6 text-center border border-border dark:border-gray-600 hover:shadow-lg transition-shadow">
-        <div class="w-16 h-16 mx-auto mb-4 bg-warning/10 rounded-full flex items-center justify-center">
-          <svg class="w-8 h-8 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-          </svg>
-        </div>
-        <h3 class="text-lg font-semibold text-secondary dark:text-background mb-2">Diesel Stations</h3>
-        <p class="text-gray-600 dark:text-gray-400">Diesel fuel stations</p>
-      </div>
-
-      <div class="bg-background dark:bg-secondary rounded-xl p-6 text-center border border-border dark:border-gray-600 hover:shadow-lg transition-shadow">
-        <div class="w-16 h-16 mx-auto mb-4 bg-info/10 rounded-full flex items-center justify-center">
-          <svg class="w-8 h-8 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-        </div>
-        <h3 class="text-lg font-semibold text-secondary dark:text-background mb-2">Alternative Fuels</h3>
-        <p class="text-gray-600 dark:text-gray-400">LPG and other alternatives</p>
-      </div>
-    </div>
-
-    <!-- Coming Soon Placeholder -->
-    <div class="bg-background dark:bg-secondary rounded-xl p-12 text-center border border-border dark:border-gray-600">
-      <div class="w-24 h-24 mx-auto mb-6 bg-success/10 rounded-full flex items-center justify-center">
-        <svg class="w-12 h-12 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-        </svg>
-      </div>
-      <h3 class="text-xl font-semibold text-secondary dark:text-background mb-4">Fuel Finder Coming Soon</h3>
-      <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-        We're building a comprehensive fuel and charging station finder with real-time prices, 
-        availability, and route planning.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <button class="px-6 py-3 bg-primary text-background rounded-lg hover:bg-primary-hover font-medium">
-          Get Notified
+      <div class="flex items-end">
+        <button class="w-full h-10 px-4 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-md transition-colors">
+          Search
         </button>
-        <button class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-secondary dark:text-background rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 font-medium">
-          View Features
-        </button>
-      </div>
-    </div>
-
-    <!-- Features Preview -->
-    <div class="mt-12">
-      <h2 class="text-2xl font-bold text-secondary dark:text-background mb-6 text-center">Upcoming Features</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-background dark:bg-secondary rounded-xl p-6 text-center border border-border dark:border-gray-600">
-          <div class="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-            <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-          <h3 class="text-lg font-semibold text-secondary dark:text-background mb-2">Real-time Prices</h3>
-          <p class="text-gray-600 dark:text-gray-400">Live fuel prices from stations</p>
-        </div>
-
-        <div class="bg-background dark:bg-secondary rounded-xl p-6 text-center border border-border dark:border-gray-600">
-          <div class="w-16 h-16 mx-auto mb-4 bg-success/10 rounded-full flex items-center justify-center">
-            <svg class="w-8 h-8 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-            </svg>
-          </div>
-          <h3 class="text-lg font-semibold text-secondary dark:text-background mb-2">Route Planning</h3>
-          <p class="text-gray-600 dark:text-gray-400">Plan routes with fuel stops</p>
-        </div>
-
-        <div class="bg-background dark:bg-secondary rounded-xl p-6 text-center border border-border dark:border-gray-600">
-          <div class="w-16 h-16 mx-auto mb-4 bg-info/10 rounded-full flex items-center justify-center">
-            <svg class="w-8 h-8 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-          <h3 class="text-lg font-semibold text-secondary dark:text-background mb-2">Availability Status</h3>
-          <p class="text-gray-600 dark:text-gray-400">Real-time availability updates</p>
-        </div>
       </div>
     </div>
   </div>
+
+  <!-- Fuel Types Grid - Fluent Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+    <div class="group flex flex-col items-center p-5 bg-white dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-md transition-all cursor-pointer">
+      <div class="w-14 h-14 rounded-full bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center mb-4 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/30 transition-colors">
+        <svg class="w-7 h-7 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.172V5L8 4z"/>
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">Petrol Stations</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 text-center">Find nearby petrol stations</p>
+    </div>
+
+    <div class="group flex flex-col items-center p-5 bg-white dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:border-green-300 dark:hover:border-green-700 hover:shadow-md transition-all cursor-pointer">
+      <div class="w-14 h-14 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center mb-4 group-hover:bg-green-100 dark:group-hover:bg-green-900/30 transition-colors">
+        <svg class="w-7 h-7 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">EV Charging</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 text-center">Electric vehicle charging points</p>
+    </div>
+
+    <div class="group flex flex-col items-center p-5 bg-white dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-md transition-all cursor-pointer">
+      <div class="w-14 h-14 rounded-full bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center mb-4 group-hover:bg-orange-100 dark:group-hover:bg-orange-900/30 transition-colors">
+        <svg class="w-7 h-7 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">Diesel Stations</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 text-center">Diesel fuel stations</p>
+    </div>
+
+    <div class="group flex flex-col items-center p-5 bg-white dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md transition-all cursor-pointer">
+      <div class="w-14 h-14 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mb-4 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30 transition-colors">
+        <svg class="w-7 h-7 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Alternative Fuels</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 text-center">LPG and other alternatives</p>
+    </div>
+  </div>
+
+  <!-- Coming Soon Section - Fluent Message Card -->
+  <div class="bg-white dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50 p-8 text-center mb-10">
+    <div class="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+      </svg>
+    </div>
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Fuel Finder Coming Soon</h3>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
+      We're building a comprehensive fuel and charging station finder with real-time prices, 
+      availability, and route planning.
+    </p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <button class="px-5 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-md transition-colors">
+        Get Notified
+      </button>
+      <button class="px-5 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors">
+        View Features
+      </button>
+    </div>
+  </div>
+
+  <!-- Upcoming Features - Fluent Cards -->
+  <section>
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-5 text-center">Upcoming Features</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="flex flex-col items-center p-5 bg-white dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50 text-center">
+        <div class="w-12 h-12 rounded-full bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center mb-3">
+          <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">Real-time Prices</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Live fuel prices from stations</p>
+      </div>
+
+      <div class="flex flex-col items-center p-5 bg-white dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50 text-center">
+        <div class="w-12 h-12 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center mb-3">
+          <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+          </svg>
+        </div>
+        <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">Route Planning</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Plan routes with fuel stops</p>
+      </div>
+
+      <div class="flex flex-col items-center p-5 bg-white dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50 text-center">
+        <div class="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mb-3">
+          <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">Availability Status</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Real-time availability updates</p>
+      </div>
+    </div>
+  </section>
 </div>

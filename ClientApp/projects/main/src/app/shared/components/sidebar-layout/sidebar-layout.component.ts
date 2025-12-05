@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, signal } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LeftSidebarComponent, type SidebarMenuItem, type SidebarShortcut } from '../left-sidebar/left-sidebar.component';
@@ -11,8 +11,6 @@ import { RightSidebarComponent, type SponsoredItem, type EventReminder, type Con
   templateUrl: './sidebar-layout.component.html'
 })
 export class SidebarLayoutComponent {
-  @ViewChild(LeftSidebarComponent) leftSidebar?: LeftSidebarComponent;
-  
   // Left sidebar props
   @Input() leftMenuItems: SidebarMenuItem[] = [];
   @Input() shortcuts: SidebarShortcut[] = [];
@@ -29,10 +27,25 @@ export class SidebarLayoutComponent {
   @Input() showContacts = true;
   @Input() showRightSidebar = true;
 
+  // Layout props
+  @Input() contentWidth: 'narrow' | 'medium' | 'wide' | 'full' = 'medium';
+  @Input() centerContent = true;
+
   // Track sidebar expanded state for margin calculation
-  isSidebarExpanded = signal(true);
+  // Default to collapsed on small screens, expanded on large screens
+  sidebarExpanded = typeof window !== 'undefined' ? window.innerWidth >= 1024 : true;
+
+  getContentMaxWidth(): string {
+    switch (this.contentWidth) {
+      case 'narrow': return '680px';  // Facebook feed style
+      case 'medium': return '900px';  // Default
+      case 'wide': return '1200px';   // Videos/grid style
+      case 'full': return '100%';     // Full width
+      default: return '900px';
+    }
+  }
 
   onSidebarToggle(expanded: boolean) {
-    this.isSidebarExpanded.set(expanded);
+    this.sidebarExpanded = expanded;
   }
 }
