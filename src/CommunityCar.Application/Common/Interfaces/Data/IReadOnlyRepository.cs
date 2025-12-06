@@ -4,10 +4,10 @@ using CommunityCar.Application.Common.Specifications;
 namespace CommunityCar.Application.Common.Interfaces.Data;
 
 /// <summary>
-/// Generic repository interface for data access operations
+/// Read-only repository interface for query operations only
 /// </summary>
 /// <typeparam name="T">Entity type</typeparam>
-public interface IRepository<T> where T : class
+public interface IReadOnlyRepository<T> where T : class
 {
     // Query Operations
     Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
@@ -51,15 +51,6 @@ public interface IRepository<T> where T : class
     Task<bool> AllAsync(
         Expression<Func<T, bool>> predicate,
         CancellationToken cancellationToken = default);
-    
-    // Command Operations
-    Task<T> AddAsync(T entity, CancellationToken cancellationToken = default);
-    Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
-    void Update(T entity);
-    void UpdateRange(IEnumerable<T> entities);
-    void Delete(T entity);
-    void DeleteRange(IEnumerable<T> entities);
-    Task<int> DeleteAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
     
     // Queryable for advanced scenarios
     IQueryable<T> AsQueryable();

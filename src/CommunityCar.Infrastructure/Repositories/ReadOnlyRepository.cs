@@ -7,15 +7,15 @@ using Microsoft.EntityFrameworkCore;
 namespace CommunityCar.Infrastructure.Repositories;
 
 /// <summary>
-/// Generic repository implementation for data access operations
+/// Read-only repository implementation for query operations only
 /// </summary>
 /// <typeparam name="T">Entity type</typeparam>
-public class Repository<T> : IRepository<T> where T : class
+public class ReadOnlyRepository<T> : IReadOnlyRepository<T> where T : class
 {
     protected readonly AppDbContext _context;
     protected readonly DbSet<T> _dbSet;
 
-    public Repository(AppDbContext context)
+    public ReadOnlyRepository(AppDbContext context)
     {
         _context = context;
         _dbSet = context.Set<T>();
@@ -24,48 +24,48 @@ public class Repository<T> : IRepository<T> where T : class
     #region Query Operations
 
     public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+        => await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id, cancellationToken);
 
     public virtual async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-        => await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+        => await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id, cancellationToken);
 
     public virtual async Task<T?> GetByIdAsync(
         Guid id,
         params Expression<Func<T, object>>[] includes)
     {
-        IQueryable<T> query = _dbSet;
+        IQueryable<T> query = _dbSet.AsNoTracking();
         query = includes.Aggregate(query, (current, include) => current.Include(include));
         return await query.FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
     }
 
     public virtual async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken cancellationToken = default)
-        => await _dbSet.ToListAsync(cancellationToken);
+        => await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
 
     public virtual async Task<IReadOnlyList<T>> GetAsync(
         Expression<Func<T, bool>> predicate,
         CancellationToken cancellationToken = default)
-        => await _dbSet.Where(predicate).ToListAsync(cancellationToken);
+        => await _dbSet.AsNoTracking().Where(predicate).ToListAsync(cancellationToken);
 
     public virtual async Task<IReadOnlyList<T>> GetAsync(
         ISpecification<T> spec,
         CancellationToken cancellationToken = default)
-        => await ApplySpecification(spec).ToListAsync(cancellationToken);
+        => await ApplySpecification(spec).AsNoTracking().ToListAsync(cancellationToken);
 
     public virtual async Task<T?> FirstOrDefaultAsync(
         Expression<Func<T, bool>> predicate,
         CancellationToken cancellationToken = default)
-        => await _dbSet.FirstOrDefaultAsync(predicate, cancellationToken);
+        => await _dbSet.AsNoTracking().FirstOrDefaultAsync(predicate, cancellationToken);
 
     public virtual async Task<T?> SingleOrDefaultAsync(
         Expression<Func<T, bool>> predicate,
         CancellationToken cancellationToken = default)
-        => await _dbSet.SingleOrDefaultAsync(predicate, cancellationToken);
+        => await _dbSet.AsNoTracking().SingleOrDefaultAsync(predicate, cancellationToken);
 
     public virtual async Task<IReadOnlyList<T>> GetWithIncludesAsync(
         Expression<Func<T, bool>>? predicate = null,
         params Expression<Func<T, object>>[] includes)
     {
-        IQueryable<T> query = _dbSet;
+        IQueryable<T> query = _dbSet.AsNoTracking();
         
         if (includes != null)
         {
@@ -92,7 +92,7 @@ public class Repository<T> : IRepository<T> where T : class
         bool ascending = true,
         CancellationToken cancellationToken = default)
     {
-        IQueryable<T> query = _dbSet;
+        IQueryable<T> query = _dbSet.AsNoTracking();
 
         if (predicate != null)
         {
@@ -137,46 +137,10 @@ public class Repository<T> : IRepository<T> where T : class
 
     #endregion
 
-    #region Command Operations
-
-    public virtual async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
-    {
-        await _dbSet.AddAsync(entity, cancellationToken);
-        return entity;
-    }
-
-    public virtual async Task AddRangeAsync(
-        IEnumerable<T> entities,
-        CancellationToken cancellationToken = default)
-        => await _dbSet.AddRangeAsync(entities, cancellationToken);
-
-    public virtual void Update(T entity)
-        => _dbSet.Update(entity);
-
-    public virtual void UpdateRange(IEnumerable<T> entities)
-        => _dbSet.UpdateRange(entities);
-
-    public virtual void Delete(T entity)
-        => _dbSet.Remove(entity);
-
-    public virtual void DeleteRange(IEnumerable<T> entities)
-        => _dbSet.RemoveRange(entities);
-
-    public virtual async Task<int> DeleteAsync(
-        Expression<Func<T, bool>> predicate,
-        CancellationToken cancellationToken = default)
-    {
-        var entities = await _dbSet.Where(predicate).ToListAsync(cancellationToken);
-        _dbSet.RemoveRange(entities);
-        return entities.Count;
-    }
-
-    #endregion
-
     #region Queryable
 
     public virtual IQueryable<T> AsQueryable()
-        => _dbSet.AsQueryable();
+        => _dbSet.AsNoTracking().AsQueryable();
 
     #endregion
 
