@@ -112,6 +112,15 @@ public class UnitOfWork : IUnitOfWork
 
     #endregion
 
+    #region Context Access
+
+    /// <summary>
+    /// Gets the underlying DbContext (use with caution)
+    /// </summary>
+    internal AppDbContext GetContext() => _context;
+
+    #endregion
+
     #region Dispose
 
     public void Dispose()
