@@ -1,5 +1,6 @@
 using CommunityCar.Application.Common.Interfaces.Community;
-using CommunityCar.Application.Features.Community.Guides.DTOs;
+using CommunityCar.Application.DTOs.Response.Community.Guides;
+using CommunityCar.Application.DTOs.Requests.Community.Guides;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

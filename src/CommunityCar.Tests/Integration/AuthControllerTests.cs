@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
-using CommunityCar.Application.DTOs.Identity;
+using CommunityCar.Application.DTOs.Response.Identity;
+using CommunityCar.Application.DTOs.Requests.Identity;
 using CommunityCar.Infrastructure.Data;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;

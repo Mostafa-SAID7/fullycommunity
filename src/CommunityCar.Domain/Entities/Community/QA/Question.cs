@@ -1,5 +1,6 @@
 using CommunityCar.Domain.Common;
 using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Domain.Enums.Community.QA;
 
 namespace CommunityCar.Domain.Entities.Community.QA;
 
@@ -40,45 +41,3 @@ public class Question : BaseEntity
     public List<QuestionVote> Votes { get; set; } = [];
     public List<QuestionBookmark> Bookmarks { get; set; } = [];
 }
-
-public enum QuestionStatus { Open, Answered, Closed, Duplicate }
-
-public class QuestionCategory
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public string Name { get; set; } = string.Empty;
-    public string? Slug { get; set; }
-    public string? Description { get; set; }
-    public string? IconUrl { get; set; }
-    public int QuestionCount { get; set; }
-    public bool IsActive { get; set; } = true;
-}
-
-public class QuestionTag
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid QuestionId { get; set; }
-    public Question Question { get; set; } = null!;
-    public string Tag { get; set; } = string.Empty;
-}
-
-public class QuestionVote
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid QuestionId { get; set; }
-    public Question Question { get; set; } = null!;
-    public Guid UserId { get; set; }
-    public VoteType Type { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-}
-
-public class QuestionBookmark
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid QuestionId { get; set; }
-    public Question Question { get; set; } = null!;
-    public Guid UserId { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-}
-
-public enum VoteType { Up = 1, Down = -1 }

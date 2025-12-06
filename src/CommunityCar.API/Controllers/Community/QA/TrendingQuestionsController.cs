@@ -1,9 +1,12 @@
+using CommunityCar.Application.DTOs.Response.Community.QA;
+using CommunityCar.Application.DTOs.Requests.Community.QA;
 using CommunityCar.Domain.Entities.Community.QA;
+using CommunityCar.Domain.Enums.Community.QA;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace CommunityCar.API.Controllers.Community;
+namespace CommunityCar.API.Controllers.Community.QA;
 
 [ApiController]
 [Route("api/community/trending-questions")]
@@ -75,27 +78,3 @@ public class TrendingQuestionsController : ControllerBase
         return Ok();
     }
 }
-
-public record TrendingQuestionDto(
-    Guid Id,
-    string Title,
-    string Slug,
-    string Content,
-    QuestionAuthorDto Author,
-    int VoteCount,
-    int AnswerCount,
-    int ViewCount,
-    bool HasAcceptedAnswer,
-    List<string> Tags,
-    DateTime CreatedAt
-);
-
-public record QuestionAuthorDto(
-    Guid Id,
-    string FirstName,
-    string LastName,
-    string? AvatarUrl,
-    string UserType
-);
-
-public record VoteRequest(string Type);

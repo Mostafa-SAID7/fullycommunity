@@ -1,6 +1,8 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Community.Events.DTOs;
+using CommunityCar.Application.DTOs.Response.Community.Events;
+using CommunityCar.Application.DTOs.Requests.Community.Events;
 using CommunityCar.Domain.Entities.Community.Events;
+using CommunityCar.Domain.Enums.Community.Events;
 
 namespace CommunityCar.Application.Common.Interfaces.Community;
 

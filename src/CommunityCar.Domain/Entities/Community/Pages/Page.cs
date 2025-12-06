@@ -1,6 +1,7 @@
 using CommunityCar.Domain.Common;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Domain.Entities.Home;
+using CommunityCar.Domain.Enums.Community.Pages;
 
 namespace CommunityCar.Domain.Entities.Community.Pages;
 
@@ -57,85 +58,4 @@ public class Page : BaseEntity
     public ICollection<PageAdmin> Admins { get; set; } = new List<PageAdmin>();
     public ICollection<Story> Stories { get; set; } = new List<Story>();
     public ICollection<PageReview> Reviews { get; set; } = new List<PageReview>();
-}
-
-public enum PageCategory
-{
-    Automotive,
-    CarDealer,
-    AutoRepair,
-    CarWash,
-    GasStation,
-    CarRental,
-    AutoParts,
-    Insurance,
-    Financing,
-    CarClub,
-    RacingTeam,
-    Blogger,
-    Influencer,
-    Media,
-    Other
-}
-
-public enum PageType
-{
-    Business,
-    Brand,
-    Community,
-    PublicFigure,
-    Organization,
-    LocalBusiness
-}
-
-public class PageFollower : BaseEntity
-{
-    public Guid PageId { get; set; }
-    public Page Page { get; set; } = null!;
-    
-    public Guid UserId { get; set; }
-    public ApplicationUser User { get; set; } = null!;
-    
-    public DateTime FollowedAt { get; set; } = DateTime.UtcNow;
-    public bool IsNotificationEnabled { get; set; } = true;
-}
-
-public class PageAdmin : BaseEntity
-{
-    public Guid PageId { get; set; }
-    public Page Page { get; set; } = null!;
-    
-    public Guid UserId { get; set; }
-    public ApplicationUser User { get; set; } = null!;
-    
-    public PageRole Role { get; set; } = PageRole.Admin;
-    public DateTime AssignedAt { get; set; } = DateTime.UtcNow;
-    public Guid AssignedById { get; set; }
-}
-
-public enum PageRole
-{
-    Owner,
-    Admin,
-    Editor,
-    Moderator,
-    Analyst
-}
-
-public class PageReview : BaseEntity
-{
-    public Guid PageId { get; set; }
-    public Page Page { get; set; } = null!;
-    
-    public Guid UserId { get; set; }
-    public ApplicationUser User { get; set; } = null!;
-    
-    public int Rating { get; set; } // 1-5 stars
-    public string? Title { get; set; }
-    public string Content { get; set; } = string.Empty;
-    public List<string> ImageUrls { get; set; } = new();
-    
-    public int HelpfulCount { get; set; } = 0;
-    public string? OwnerResponse { get; set; }
-    public DateTime? OwnerResponseAt { get; set; }
 }

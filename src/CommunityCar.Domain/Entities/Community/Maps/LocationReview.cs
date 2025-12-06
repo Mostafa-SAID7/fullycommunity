@@ -39,32 +39,6 @@ public class LocationReview
     public DateTime? OwnerResponseAt { get; set; }
 }
 
-public class LocationReviewMedia
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid LocationReviewId { get; set; }
-    public LocationReview LocationReview { get; set; } = null!;
-    public string Url { get; set; } = string.Empty;
-    public string? Caption { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-}
-
-public class LocationCheckIn
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    
-    public Guid LocationId { get; set; }
-    public MapLocation Location { get; set; } = null!;
-    
-    public Guid UserId { get; set; }
-    public ApplicationUser User { get; set; } = null!;
-    
-    public string? Note { get; set; }
-    public string? PhotoUrl { get; set; }
-    
-    public DateTime CheckedInAt { get; set; } = DateTime.UtcNow;
-}
-
 public class SavedLocation
 {
     public Guid Id { get; set; } = Guid.NewGuid();

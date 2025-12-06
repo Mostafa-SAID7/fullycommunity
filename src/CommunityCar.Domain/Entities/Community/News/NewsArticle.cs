@@ -1,5 +1,6 @@
 using CommunityCar.Domain.Common;
 using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Domain.Enums.Community.News;
 
 namespace CommunityCar.Domain.Entities.Community.News;
 
@@ -48,39 +49,4 @@ public class NewsArticle : BaseEntity
     public string? SourceUrl { get; set; }
     
     public List<NewsComment> Comments { get; set; } = [];
-}
-
-public enum NewsStatus { Draft, Published, Scheduled, Archived }
-
-public class NewsCategory
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public string Name { get; set; } = string.Empty;
-    public string? Slug { get; set; }
-    public string? Description { get; set; }
-    public string? IconUrl { get; set; }
-    public int SortOrder { get; set; }
-    public bool IsActive { get; set; } = true;
-}
-
-public class NewsTag
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid ArticleId { get; set; }
-    public NewsArticle Article { get; set; } = null!;
-    public string Tag { get; set; } = string.Empty;
-}
-
-public class NewsComment
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid ArticleId { get; set; }
-    public NewsArticle Article { get; set; } = null!;
-    public Guid AuthorId { get; set; }
-    public ApplicationUser Author { get; set; } = null!;
-    public string Content { get; set; } = string.Empty;
-    public Guid? ParentId { get; set; }
-    public NewsComment? Parent { get; set; }
-    public int LikeCount { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

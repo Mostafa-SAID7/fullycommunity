@@ -1,5 +1,6 @@
 using CommunityCar.Domain.Common;
 using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Domain.Enums.Community.Events;
 
 namespace CommunityCar.Domain.Entities.Community.Events;
 
@@ -61,9 +62,3 @@ public class Event : BaseEntity
     public List<EventAttendee> Attendees { get; set; } = [];
     public List<EventComment> Comments { get; set; } = [];
 }
-
-public enum EventLocationType { InPerson, Online, Hybrid }
-public enum EventType { Meetup, CarShow, RoadTrip, Workshop, Race, Auction, Other }
-public enum EventStatus { Draft, Upcoming, Ongoing, Completed, Cancelled }
-public enum EventVisibility { Public, Private, InviteOnly }
-public enum RecurrencePattern { Daily, Weekly, BiWeekly, Monthly, Yearly }

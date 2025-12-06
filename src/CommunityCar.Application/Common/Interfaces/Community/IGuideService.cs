@@ -1,5 +1,6 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Community.Guides.DTOs;
+using CommunityCar.Application.DTOs.Response.Community.Guides;
+using CommunityCar.Application.DTOs.Requests.Community.Guides;
 using CommunityCar.Domain.Entities.Community.Guides;
 
 namespace CommunityCar.Application.Common.Interfaces.Community;

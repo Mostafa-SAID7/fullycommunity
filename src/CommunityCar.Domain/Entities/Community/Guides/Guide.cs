@@ -1,5 +1,6 @@
 using CommunityCar.Domain.Common;
 using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Domain.Enums.Community.Guides;
 
 namespace CommunityCar.Domain.Entities.Community.Guides;
 
@@ -51,29 +52,4 @@ public class Guide : BaseEntity
     public List<GuideStep> Steps { get; set; } = [];
     public List<GuideRating> Ratings { get; set; } = [];
     public List<GuideComment> Comments { get; set; } = [];
-}
-
-public enum GuideType { HowTo, Maintenance, Repair, Modification, Buying, Review }
-public enum GuideDifficulty { Beginner, Intermediate, Advanced, Expert }
-public enum GuideStatus { Draft, Published, UnderReview, Archived }
-
-public class GuideCategory
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public string Name { get; set; } = string.Empty;
-    public string? Slug { get; set; }
-    public string? Description { get; set; }
-    public string? IconUrl { get; set; }
-    public Guid? ParentId { get; set; }
-    public GuideCategory? Parent { get; set; }
-    public int SortOrder { get; set; }
-    public bool IsActive { get; set; } = true;
-}
-
-public class GuideTag
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid GuideId { get; set; }
-    public Guide Guide { get; set; } = null!;
-    public string Tag { get; set; } = string.Empty;
 }

@@ -1,5 +1,6 @@
 using CommunityCar.Application.Common.Interfaces.Community;
-using CommunityCar.Application.Features.Community.Friendships.DTOs;
+using CommunityCar.Application.DTOs.Response.Community.Friendships;
+using CommunityCar.Application.DTOs.Requests.Community.Friendships;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -36,7 +37,7 @@ public class FriendshipsController : ControllerBase
 
     // Friend Requests
     [HttpPost("requests")]
-    public async Task<IActionResult> SendFriendRequest(CommunityCar.Application.Features.Community.Friendships.DTOs.SendFriendRequestRequest request)
+    public async Task<IActionResult> SendFriendRequest(SendFriendRequestRequest request)
         => await _friendshipService.SendFriendRequestAsync(GetUserId(), request.AddresseeId) ? Ok() : BadRequest();
 
     [HttpGet("requests/pending")]
@@ -92,7 +93,7 @@ public class FriendshipsController : ControllerBase
 
     // Blocking
     [HttpPost("block")]
-    public async Task<IActionResult> BlockUser(CommunityCar.Application.Features.Community.Friendships.DTOs.BlockUserRequest request)
+    public async Task<IActionResult> BlockUser(BlockUserRequest request)
         => await _friendshipService.BlockUserAsync(GetUserId(), request.UserId, request.Reason) ? Ok() : BadRequest();
 
     [HttpDelete("block/{userId:guid}")]

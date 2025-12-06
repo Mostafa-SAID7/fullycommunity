@@ -1,5 +1,6 @@
 using CommunityCar.Domain.Common;
 using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Domain.Enums.Community.Maps;
 
 namespace CommunityCar.Domain.Entities.Community.Maps;
 
@@ -54,33 +55,4 @@ public class MapLocation : BaseEntity
     
     public List<LocationReview> Reviews { get; set; } = [];
     public List<LocationCheckIn> CheckIns { get; set; } = [];
-}
-
-public enum LocationType
-{
-    GasStation, ChargingStation, CarWash, Garage, Dealership,
-    PartsStore, ParkingLot, ScenicRoute, MeetupSpot, RaceTrack,
-    CarMuseum, DrivingSchool, InspectionCenter, Other
-}
-
-public enum LocationStatus { Pending, Active, Closed, Removed }
-
-public class LocationMedia
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid LocationId { get; set; }
-    public MapLocation Location { get; set; } = null!;
-    public Guid? UploadedById { get; set; }
-    public string Url { get; set; } = string.Empty;
-    public string? Caption { get; set; }
-    public int SortOrder { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-}
-
-public class LocationFeature
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid LocationId { get; set; }
-    public MapLocation Location { get; set; } = null!;
-    public string Feature { get; set; } = string.Empty; // e.g., "WiFi", "EV Charging", "Air Pump"
 }

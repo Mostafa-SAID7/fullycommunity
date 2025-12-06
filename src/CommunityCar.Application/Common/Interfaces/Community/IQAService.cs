@@ -1,6 +1,8 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Community.QA.DTOs;
+using CommunityCar.Application.DTOs.Response.Community.QA;
+using CommunityCar.Application.DTOs.Requests.Community.QA;
 using CommunityCar.Domain.Entities.Community.QA;
+using CommunityCar.Domain.Enums.Community.QA;
 
 namespace CommunityCar.Application.Common.Interfaces.Community;
 
@@ -37,13 +39,3 @@ public interface IQAService
     // User bookmarks
     Task<PagedResult<QuestionListDto>> GetUserBookmarksAsync(Guid userId, int page = 1, int pageSize = 20);
 }
-
-public record QuestionFilter(
-    QuestionStatus? Status = null,
-    Guid? CategoryId = null,
-    string? SearchTerm = null,
-    string? Tag = null,
-    bool? HasAcceptedAnswer = null,
-    bool? HasBounty = null,
-    string? SortBy = null // newest, votes, unanswered, active
-);

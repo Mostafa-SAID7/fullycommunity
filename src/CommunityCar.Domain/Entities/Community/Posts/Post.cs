@@ -1,5 +1,6 @@
 using CommunityCar.Domain.Common;
 using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Domain.Enums.Community.Posts;
 
 namespace CommunityCar.Domain.Entities.Community.Posts;
 
@@ -45,7 +46,3 @@ public class Post : BaseEntity
     public List<PostComment> Comments { get; set; } = [];
     public List<PostLike> Likes { get; set; } = [];
 }
-
-public enum PostType { General, Article, Question, Poll, Announcement }
-public enum PostStatus { Draft, Published, Archived, Removed }
-public enum PostVisibility { Public, FriendsOnly, GroupOnly, Private }

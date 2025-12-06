@@ -1,7 +1,8 @@
 
 
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Community.Maps.DTOs;
+using CommunityCar.Application.DTOs.Response.Community.Maps;
+using CommunityCar.Application.DTOs.Requests.Community.Maps;
 using CommunityCar.Domain.Entities.Community.Maps;
 
 namespace CommunityCar.Application.Common.Interfaces.Community;

@@ -1,4 +1,5 @@
 using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Domain.Enums.Community.Friendships;
 
 namespace CommunityCar.Domain.Entities.Community.Friendships;
 
@@ -18,10 +19,6 @@ public class Friendship
     public DateTime? AcceptedAt { get; set; }
     public DateTime? BlockedAt { get; set; }
 }
-
-public enum FriendshipStatus { Pending, Accepted, Declined, Blocked }
-
-public class UserFollow
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     
@@ -31,20 +28,4 @@ public class UserFollow
     public Guid FollowingId { get; set; }
     public ApplicationUser Following { get; set; } = null!;
     
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public bool NotificationsEnabled { get; set; } = true;
-}
 
-public class UserBlock
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    
-    public Guid BlockerId { get; set; }
-    public ApplicationUser Blocker { get; set; } = null!;
-    
-    public Guid BlockedUserId { get; set; }
-    public ApplicationUser BlockedUser { get; set; } = null!;
-    
-    public string? Reason { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-}

@@ -1,6 +1,8 @@
 using CommunityCar.Application.Common.Interfaces.Community;
-using CommunityCar.Application.Features.Community.QA.DTOs;
+using CommunityCar.Application.DTOs.Response.Community.QA;
+using CommunityCar.Application.DTOs.Requests.Community.QA;
 using CommunityCar.Domain.Entities.Community.QA;
+using CommunityCar.Domain.Enums.Community.QA;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

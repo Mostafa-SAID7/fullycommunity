@@ -1,6 +1,7 @@
 using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Common.Models;
-using CommunityCar.Application.DTOs.Identity;
+using CommunityCar.Application.DTOs.Response.Identity;
+using CommunityCar.Application.DTOs.Requests.Identity;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Domain.Enums;
 using CommunityCar.Infrastructure.Services.Identity;

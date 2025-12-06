@@ -1,5 +1,6 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Community.Friendships.DTOs;
+using CommunityCar.Application.DTOs.Response.Community.Friendships;
+using CommunityCar.Application.DTOs.Requests.Community.Friendships;
 using CommunityCar.Domain.Entities.Community.Friendships;
 
 namespace CommunityCar.Application.Common.Interfaces.Community;

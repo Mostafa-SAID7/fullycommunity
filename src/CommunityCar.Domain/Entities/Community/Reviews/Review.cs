@@ -1,5 +1,6 @@
 using CommunityCar.Domain.Common;
 using CommunityCar.Domain.Entities.Identity;
+using CommunityCar.Domain.Enums.Community.Reviews;
 
 namespace CommunityCar.Domain.Entities.Community.Reviews;
 
@@ -61,62 +62,4 @@ public class Review : BaseEntity
     
     public List<ReviewComment> Comments { get; set; } = [];
     public List<ReviewHelpful> HelpfulVotes { get; set; } = [];
-}
-
-public enum ReviewSubjectType { Car, Product, Service, Garage, Dealership }
-public enum OwnershipStatus { CurrentOwner, PreviousOwner, TestDrive, Rented }
-public enum ReviewStatus { Draft, Published, UnderReview, Rejected, Archived }
-
-public class ReviewPro
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid ReviewId { get; set; }
-    public Review Review { get; set; } = null!;
-    public string Text { get; set; } = string.Empty;
-    public int SortOrder { get; set; }
-}
-
-public class ReviewCon
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid ReviewId { get; set; }
-    public Review Review { get; set; } = null!;
-    public string Text { get; set; } = string.Empty;
-    public int SortOrder { get; set; }
-}
-
-public class ReviewMedia
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid ReviewId { get; set; }
-    public Review Review { get; set; } = null!;
-    public string Url { get; set; } = string.Empty;
-    public string? ThumbnailUrl { get; set; }
-    public string? Caption { get; set; }
-    public int SortOrder { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-}
-
-public class ReviewComment
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid ReviewId { get; set; }
-    public Review Review { get; set; } = null!;
-    public Guid AuthorId { get; set; }
-    public ApplicationUser Author { get; set; } = null!;
-    public string Content { get; set; } = string.Empty;
-    public Guid? ParentId { get; set; }
-    public ReviewComment? Parent { get; set; }
-    public int LikeCount { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-}
-
-public class ReviewHelpful
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid ReviewId { get; set; }
-    public Review Review { get; set; } = null!;
-    public Guid UserId { get; set; }
-    public bool IsHelpful { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

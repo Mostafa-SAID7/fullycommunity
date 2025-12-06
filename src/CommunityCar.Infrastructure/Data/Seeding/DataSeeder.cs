@@ -2,7 +2,15 @@ using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data.Seeding.Core;
 using CommunityCar.Infrastructure.Data.Seeding.Identity;
 using CommunityCar.Infrastructure.Data.Seeding.Content;
-using CommunityCar.Infrastructure.Data.Seeding.Community;
+using CommunityCar.Infrastructure.Data.Seeding.Community.QA;
+using CommunityCar.Infrastructure.Data.Seeding.Community.Posts;
+using CommunityCar.Infrastructure.Data.Seeding.Community.Reviews;
+using CommunityCar.Infrastructure.Data.Seeding.Community.Guides;
+using CommunityCar.Infrastructure.Data.Seeding.Community.Groups;
+using CommunityCar.Infrastructure.Data.Seeding.Community.News;
+using CommunityCar.Infrastructure.Data.Seeding.Community.Maps;
+using CommunityCar.Infrastructure.Data.Seeding.Community.Pages;
+using CommunityCar.Infrastructure.Data.Seeding.Community.Friendships;
 using CommunityCar.Infrastructure.Data.Seeding.Home;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -45,7 +53,9 @@ public class DataSeeder
             // Content seeders (depend on users)
             new GroupSeeder(_context, _loggerFactory.CreateLogger<GroupSeeder>()),
             new PostCategorySeeder(_context, _loggerFactory.CreateLogger<PostCategorySeeder>()),
-            new CommunityContentSeeder(_context, _loggerFactory.CreateLogger<CommunityContentSeeder>()),
+            new QuestionsSeeder(_context, _loggerFactory.CreateLogger<QuestionsSeeder>()),
+            new ReviewsSeeder(_context, _loggerFactory.CreateLogger<ReviewsSeeder>()),
+            new GuidesSeeder(_context, _loggerFactory.CreateLogger<GuidesSeeder>()),
             new PostSeeder(_context, _loggerFactory.CreateLogger<PostSeeder>()),
             new NewsSeeder(_context, _loggerFactory.CreateLogger<NewsSeeder>()),
             new MapsSeeder(_context, _loggerFactory.CreateLogger<MapsSeeder>()),
@@ -68,7 +78,6 @@ public class DataSeeder
         // Add static seeders that don't implement ISeeder
         _staticSeeders = new List<Func<Task>>
         {
-            () => PopularCategoriesSeeder.SeedAsync(_context),
             () => FeaturedPostSeeder.SeedAsync(_context),
             () => QuestionCategorySeeder.SeedAsync(_context),
             () => TrendingQuestionsSeeder.SeedAsync(_context),
@@ -136,7 +145,6 @@ public class DataSeeder
             // Run essential content seeders for production
             var essentialSeeders = new List<Func<Task>>
             {
-                () => PopularCategoriesSeeder.SeedAsync(_context),
                 () => FeaturedPostSeeder.SeedAsync(_context),
                 () => QuestionCategorySeeder.SeedAsync(_context),
                 () => TrendingQuestionsSeeder.SeedAsync(_context)

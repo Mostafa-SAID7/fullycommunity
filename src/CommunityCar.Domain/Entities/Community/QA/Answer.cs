@@ -23,24 +23,3 @@ public class Answer : BaseEntity
     public List<AnswerVote> Votes { get; set; } = [];
     public List<AnswerComment> Comments { get; set; } = [];
 }
-
-public class AnswerVote
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid AnswerId { get; set; }
-    public Answer Answer { get; set; } = null!;
-    public Guid UserId { get; set; }
-    public VoteType Type { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-}
-
-public class AnswerComment
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid AnswerId { get; set; }
-    public Answer Answer { get; set; } = null!;
-    public Guid AuthorId { get; set; }
-    public ApplicationUser Author { get; set; } = null!;
-    public string Content { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-}
