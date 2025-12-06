@@ -2,12 +2,13 @@ using CommunityCar.Domain.Entities.Videos.Content;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CommunityCar.Infrastructure.Data.Configurations;
+namespace CommunityCar.Infrastructure.Data.Configurations.Videos;
 
 public class VideoConfiguration : IEntityTypeConfiguration<Video>
 {
     public void Configure(EntityTypeBuilder<Video> builder)
     {
+        builder.ToTable("Videos", "videos");
         builder.HasKey(v => v.Id);
 
         // Self-referencing relationship for Duets
