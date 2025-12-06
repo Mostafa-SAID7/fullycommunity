@@ -8,6 +8,7 @@ namespace CommunityCar.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[ApiExplorerSettings(GroupName = "community")]
 public class StoriesController : ControllerBase
 {
     [HttpGet]

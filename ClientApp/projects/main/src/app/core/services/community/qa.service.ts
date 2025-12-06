@@ -75,6 +75,8 @@ export interface QAAuthor {
   id: string;
   firstName: string;
   lastName: string;
+  name: string; // Computed property for display
+  avatar: string; // For compatibility
   avatarUrl?: string;
   reputation: number;
   isVerified: boolean;
@@ -113,6 +115,10 @@ export interface CreateAnswerRequest {
   content: string;
 }
 
+export interface QuestionDetail extends Question {
+  answers: Answer[];
+}
+
 
 @Injectable({ providedIn: 'root' })
 export class QAService {
@@ -138,6 +144,10 @@ export class QAService {
 
   getQuestion(id: string): Observable<Question> {
     return this.http.get<Question>(`${this.apiUrl}/questions/${id}`);
+  }
+
+  getQuestionById(id: string): Observable<QuestionDetail> {
+    return this.http.get<QuestionDetail>(`${this.apiUrl}/questions/${id}/detail`);
   }
 
   getQuestionBySlug(slug: string): Observable<Question> {

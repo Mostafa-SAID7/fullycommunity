@@ -13,7 +13,7 @@ import { Product, MarketplaceService } from '../../../core/services/commerce/mar
       <a [routerLink]="['/marketplace/product', product.id]" class="block">
         <!-- Image Container -->
         <div class="relative aspect-square bg-gray-100 dark:bg-gray-800 overflow-hidden">
-          <img [src]="product.images[0]?.url || 'assets/product-placeholder.png'" [alt]="product.title"
+          <img [src]="product.images[0].url || 'assets/product-placeholder.png'" [alt]="product.title"
             class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-200 ease-out">
           
           <!-- Badges -->

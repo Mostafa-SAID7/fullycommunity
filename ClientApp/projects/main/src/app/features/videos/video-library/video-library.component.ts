@@ -50,7 +50,7 @@ import { VideoService, Video, VideoCollection } from '../../../core/services/med
               </div>
               <div class="video-info">
                 <h3>{{ video.title }}</h3>
-                <span class="channel">{{ video.channel?.displayName }}</span>
+                <span class="channel">{{ video.channel.displayName }}</span>
               </div>
             </a>
           }
@@ -71,7 +71,7 @@ import { VideoService, Video, VideoCollection } from '../../../core/services/med
               </div>
               <div class="video-info">
                 <h3>{{ video.title }}</h3>
-                <span class="channel">{{ video.channel?.displayName }}</span>
+                <span class="channel">{{ video.channel.displayName }}</span>
               </div>
             </a>
           }

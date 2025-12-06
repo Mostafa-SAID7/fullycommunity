@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { CommunityService, Post } from '../../../../core/services/community/community.service';
+import { FeaturedPostsService, FeaturedPost } from '../../../../core/services/home/featured-posts.service';
 
 export interface LoadingState {
   isLoading: boolean;
@@ -15,9 +15,9 @@ export interface LoadingState {
   templateUrl: './featured-posts.component.html'
 })
 export class FeaturedPostsComponent implements OnInit {
-  private communityService = inject(CommunityService);
+  private featuredPostsService = inject(FeaturedPostsService);
 
-  posts = signal<Post[]>([]);
+  posts = signal<FeaturedPost[]>([]);
   loadingState = signal<LoadingState>({ isLoading: true, error: null });
 
   ngOnInit(): void {
@@ -27,9 +27,9 @@ export class FeaturedPostsComponent implements OnInit {
   loadPosts(): void {
     this.loadingState.set({ isLoading: true, error: null });
 
-    this.communityService.getPosts({ isFeatured: true }, 1, 6).subscribe({
-      next: (result: any) => {
-        this.posts.set(result.items || []);
+    this.featuredPostsService.getFeaturedPosts().subscribe({
+      next: (posts) => {
+        this.posts.set(posts);
         this.loadingState.set({ isLoading: false, error: null });
       },
       error: (error) => {

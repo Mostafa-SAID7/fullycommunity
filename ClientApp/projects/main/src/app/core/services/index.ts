@@ -7,12 +7,16 @@ export * from './auth/role.service';
 
 // Community
 export * from './community/community.service';
+export * from './home/featured-posts.service';
+export * from './community/friends.service';
 export * from './community/groups.service';
 export * from './community/guides.service';
 export * from './community/news.service';
 export * from './community/pages.service';
+export * from './home/popular-categories.service';
 export * from './community/qa.service';
 export * from './community/reviews.service';
+export * from './home/trending-questions.service';
 
 // Media
 export * from './media/channel.service';

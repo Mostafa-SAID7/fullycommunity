@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, computed, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { QAService, QuestionListItem, QuestionCategory, QuestionStatus } from '../../../core/services/community/qa.service';
 import { ThemeService } from '../../../core/services/ui/theme.service';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
@@ -10,7 +10,13 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { QAHeaderComponent } from './components/qa-header/qa-header.component';
 import { QASearchFiltersComponent } from './components/qa-search-filters/qa-search-filters.component';
 import { QuestionListComponent } from './components/question-list/question-list.component';
-import { AskQuestionModalComponent, NewQuestionForm } from './components/ask-question-modal/ask-question-modal.component';
+// Modal component will be added later
+export interface NewQuestionForm {
+  title: string;
+  content: string;
+  tagsInput: string;
+  categoryId: string;
+}
 
 @Component({
   selector: 'app-qa',
@@ -20,86 +26,75 @@ import { AskQuestionModalComponent, NewQuestionForm } from './components/ask-que
     FormsModule,
     QAHeaderComponent,
     QASearchFiltersComponent,
-    QuestionListComponent,
-    AskQuestionModalComponent
+    QuestionListComponent
   ],
   template: `
-    <!-- Microsoft Fluent Design Q&A Community Page -->
-    <div class="microsoft-bg min-h-screen">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-        
-        <!-- Header Component -->
-        <app-qa-header
-          [totalQuestions]="totalQuestions()"
-          [answeredCount]="answeredCount()"
-          [unansweredCount]="unansweredCount()"
-          [bountyCount]="bountyCount()"
-          (askQuestion)="showAskModal = true"
-          (toggleFilters)="toggleAdvancedFilters()">
-        </app-qa-header>
+    <div class="w-full max-w-4xl mx-auto space-y-6 p-6">
+      
+      <!-- Header Component -->
+      <app-qa-header
+        [totalQuestions]="totalQuestions()"
+        [answeredCount]="answeredCount()"
+        [unansweredCount]="unansweredCount()"
+        [bountyCount]="bountyCount()"
+        (askQuestion)="navigateToAskQuestion()"
+        (toggleFilters)="toggleAdvancedFilters()">
+      </app-qa-header>
 
-        <!-- Search and Filters Component -->
-        <app-qa-search-filters
-          [categories]="categories()"
-          [showAdvancedFilters]="showAdvancedFilters()"
-          [sortOptions]="sortOptions"
-          [popularTags]="popularTags"
-          [(searchTerm)]="searchTerm"
-          [(sortBy)]="sortBy"
-          [(viewMode)]="viewMode"
-          [(selectedStatus)]="selectedStatus"
-          [(selectedCategory)]="selectedCategory"
-          [(selectedTag)]="selectedTag"
-          [(dateFilter)]="dateFilter"
-          [(bountyFilter)]="bountyFilter"
-          (searchInput)="onSearchInput($event)"
-          (filtersChanged)="loadQuestions()"
-          (tagSelected)="filterByTag($event)"
-          (viewModeChanged)="viewMode = $event"
-          (sortChanged)="selectSort($event)">
-        </app-qa-search-filters>
+      <!-- Search and Filters Component -->
+      <app-qa-search-filters
+        [categories]="categories()"
+        [showAdvancedFilters]="showAdvancedFilters()"
+        [sortOptions]="sortOptions"
+        [popularTags]="popularTags"
+        [(searchTerm)]="searchTerm"
+        [(sortBy)]="sortBy"
+        [(viewMode)]="viewMode"
+        [(selectedStatus)]="selectedStatus"
+        [(selectedCategory)]="selectedCategory"
+        [(selectedTag)]="selectedTag"
+        [(dateFilter)]="dateFilter"
+        [(bountyFilter)]="bountyFilter"
+        (searchInput)="onSearchInput($event)"
+        (filtersChanged)="loadQuestions()"
+        (tagSelected)="filterByTag($event)"
+        (viewModeChanged)="viewMode = $event"
+        (sortChanged)="selectSort($event)">
+      </app-qa-search-filters>
 
-        <!-- Results Summary -->
-        <div class="flex items-center justify-between mb-6">
-          <div class="text-sm text-gray-600 dark:text-gray-400">
-            Showing {{ questions().length }} of {{ totalQuestions() }} questions
-            <span *ngIf="searchTerm || hasActiveFilters()" class="ml-2">
-              • <button (click)="clearAllFilters()" class="hover:underline font-medium" style="color: var(--color-primary)">Clear all filters</button>
-            </span>
-          </div>
-          
-          <div class="flex items-center gap-2">
-            <span class="text-sm text-gray-500 dark:text-gray-400">{{ questions().length }} results</span>
-          </div>
+      <!-- Results Summary -->
+      <div class="flex items-center justify-between mb-6">
+        <div class="text-sm text-gray-600 dark:text-gray-400">
+          Showing {{ questions().length }} of {{ totalQuestions() }} questions
+          <span *ngIf="searchTerm || hasActiveFilters()" class="ml-2">
+            • <button (click)="clearAllFilters()" class="hover:underline font-medium text-blue-600 dark:text-blue-400">Clear all filters</button>
+          </span>
         </div>
-
-        <!-- Question List Component -->
-        <app-question-list
-          [questions]="questions()"
-          [loading]="loading()"
-          [error]="error()"
-          [viewMode]="viewMode"
-          [hasFilters]="hasActiveFilters()"
-          (clearFilters)="clearAllFilters()"
-          (askQuestion)="showAskModal = true">
-        </app-question-list>
-
-        <!-- Ask Question Modal Component -->
-        <app-ask-question-modal
-          [show]="showAskModal"
-          [categories]="categories()"
-          [popularTags]="popularTags"
-          [(formData)]="newQuestion"
-          (closed)="showAskModal = false"
-          (submitted)="submitQuestion($event)">
-        </app-ask-question-modal>
+        
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-gray-500 dark:text-gray-400">{{ questions().length }} results</span>
+        </div>
       </div>
+
+      <!-- Question List Component -->
+      <app-question-list
+        [questions]="questions()"
+        [loading]="loading()"
+        [error]="error()"
+        [viewMode]="viewMode"
+        [hasFilters]="hasActiveFilters()"
+        (clearFilters)="clearAllFilters()"
+        (askQuestion)="navigateToAskQuestion()">
+      </app-question-list>
+
+      <!-- Ask Question Modal will be added later -->
     </div>
   `
 })
 export class QAComponent implements OnInit {
   private qaService = inject(QAService);
   private themeService = inject(ThemeService);
+  private router = inject(Router);
 
   // Core data
   questions = signal<QuestionListItem[]>([]);
@@ -123,7 +118,7 @@ export class QAComponent implements OnInit {
   selectedTag = '';
   dateFilter = 'all';
   bountyFilter = '';
-  showAskModal = false;
+
   showAdvancedFilters = signal(false);
 
   // New question form
@@ -289,24 +284,7 @@ export class QAComponent implements OnInit {
     });
   }
 
-
-
-
-
-  submitQuestion(formData: NewQuestionForm) {
-    if (!formData.title || !formData.content) return;
-
-    this.qaService.createQuestion({
-      title: formData.title,
-      content: formData.content,
-      tags: formData.tagsInput.split(',').map(t => t.trim()).filter(t => t),
-      categoryId: formData.categoryId || undefined
-    }).subscribe({
-      next: () => {
-        this.showAskModal = false;
-        this.newQuestion = { title: '', content: '', tagsInput: '', categoryId: '' };
-        this.loadQuestions();
-      }
-    });
+  navigateToAskQuestion() {
+    this.router.navigate(['/community/qa/ask']);
   }
 }

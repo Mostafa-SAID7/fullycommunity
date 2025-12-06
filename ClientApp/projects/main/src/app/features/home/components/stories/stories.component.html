@@ -223,3 +223,10 @@
   (close)="closeStoryViewer()"
   (storyChanged)="onStoryChanged($event)">
 </app-story-viewer>
+
+<!-- Create Story Modal -->
+<app-create-story-modal 
+  *ngIf="showCreateModal()"
+  (storyCreated)="onStoryCreated()"
+  (modalClosed)="closeCreateModal()">
+</app-create-story-modal>

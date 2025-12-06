@@ -42,7 +42,7 @@ public class Page : BaseEntity
     public string? LinkedInUrl { get; set; }
     
     // Owner/Admin
-    public string OwnerId { get; set; } = string.Empty;
+    public Guid OwnerId { get; set; }
     public ApplicationUser Owner { get; set; } = null!;
     
     // Stats
@@ -90,10 +90,10 @@ public enum PageType
 
 public class PageFollower : BaseEntity
 {
-    public string PageId { get; set; } = string.Empty;
+    public Guid PageId { get; set; }
     public Page Page { get; set; } = null!;
     
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
     public ApplicationUser User { get; set; } = null!;
     
     public DateTime FollowedAt { get; set; } = DateTime.UtcNow;
@@ -102,15 +102,15 @@ public class PageFollower : BaseEntity
 
 public class PageAdmin : BaseEntity
 {
-    public string PageId { get; set; } = string.Empty;
+    public Guid PageId { get; set; }
     public Page Page { get; set; } = null!;
     
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
     public ApplicationUser User { get; set; } = null!;
     
     public PageRole Role { get; set; } = PageRole.Admin;
     public DateTime AssignedAt { get; set; } = DateTime.UtcNow;
-    public string AssignedById { get; set; } = string.Empty;
+    public Guid AssignedById { get; set; }
 }
 
 public enum PageRole
@@ -124,10 +124,10 @@ public enum PageRole
 
 public class PageReview : BaseEntity
 {
-    public string PageId { get; set; } = string.Empty;
+    public Guid PageId { get; set; }
     public Page Page { get; set; } = null!;
     
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
     public ApplicationUser User { get; set; } = null!;
     
     public int Rating { get; set; } // 1-5 stars

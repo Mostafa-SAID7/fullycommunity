@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { QAService, QuestionListItem } from '../../../../core/services/community/qa.service';
+import { TrendingQuestionsService, TrendingQuestion } from '../../../../core/services/home/trending-questions.service';
 
 export interface LoadingState {
   isLoading: boolean;
@@ -15,9 +15,9 @@ export interface LoadingState {
   templateUrl: './trending-questions.component.html'
 })
 export class TrendingQuestionsComponent implements OnInit {
-  private qaService = inject(QAService);
+  private trendingQuestionsService = inject(TrendingQuestionsService);
 
-  questions = signal<QuestionListItem[]>([]);
+  questions = signal<TrendingQuestion[]>([]);
   loadingState = signal<LoadingState>({ isLoading: true, error: null });
 
   ngOnInit(): void {
@@ -27,9 +27,9 @@ export class TrendingQuestionsComponent implements OnInit {
   loadQuestions(): void {
     this.loadingState.set({ isLoading: true, error: null });
 
-    this.qaService.getQuestions({ sortBy: 'active' }, 1, 5).subscribe({
-      next: (result: any) => {
-        this.questions.set(result.items || []);
+    this.trendingQuestionsService.getTrendingQuestions().subscribe({
+      next: (questions) => {
+        this.questions.set(questions);
         this.loadingState.set({ isLoading: false, error: null });
       },
       error: (error) => {

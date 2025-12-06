@@ -32,7 +32,7 @@ import { MarketplaceService, WishlistItem } from '../../../core/services/commerc
               <div class="bg-white dark:bg-gray-800 rounded-xl p-4">
                 <div class="flex gap-4">
                   <a [routerLink]="['/marketplace/product', item.productId]">
-                    <img [src]="item.product.images[0]?.url || 'assets/product-placeholder.png'" 
+                    <img [src]="item.product.images[0].url || 'assets/product-placeholder.png'" 
                       class="w-24 h-24 rounded-lg object-cover">
                   </a>
                   <div class="flex-1 min-w-0">

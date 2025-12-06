@@ -12,11 +12,11 @@ import { slideInAnimation, fadeAnimation, getRouteAnimationData } from './core/a
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, HeaderComponent, ToastContainerComponent, ScrollToTopComponent, ChatAssistantComponent],
-  animations: [slideInAnimation, fadeAnimation],
+  // animations: [slideInAnimation, fadeAnimation], // Temporarily disabled to fix double-click issue
   template: `
     <div class="app-layout" [class.rtl]="localization.isRtl()">
       <app-header />
-      <main class="main-content" [@fadeAnimation]="getRouteAnimationData(outlet)">
+      <main class="main-content">
         <router-outlet #outlet="outlet" />
       </main>
       <app-toast-container />
@@ -34,6 +34,7 @@ import { slideInAnimation, fadeAnimation, getRouteAnimationData } from './core/a
       min-height: calc(100vh - 56px);
       position: relative;
       overflow: hidden;
+      pointer-events: auto;
     }
     .app-layout.rtl {
       direction: rtl;

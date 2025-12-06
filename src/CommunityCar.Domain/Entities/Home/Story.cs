@@ -6,10 +6,10 @@ namespace CommunityCar.Domain.Entities.Home;
 
 public class Story : BaseEntity
 {
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
     public ApplicationUser User { get; set; } = null!;
     
-    public string? PageId { get; set; }
+    public Guid? PageId { get; set; }
     public Page? Page { get; set; }
     
     public string MediaUrl { get; set; } = string.Empty;
@@ -25,7 +25,7 @@ public class Story : BaseEntity
     
     // Privacy settings
     public StoryVisibility Visibility { get; set; } = StoryVisibility.Public;
-    public List<string> ViewerIds { get; set; } = new();
+    public List<Guid> ViewerIds { get; set; } = new();
     
     // Engagement
     public int ViewCount { get; set; } = 0;
@@ -57,10 +57,10 @@ public enum StoryVisibility
 
 public class StoryView : BaseEntity
 {
-    public string StoryId { get; set; } = string.Empty;
+    public Guid StoryId { get; set; }
     public Story Story { get; set; } = null!;
     
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
     public ApplicationUser User { get; set; } = null!;
     
     public DateTime ViewedAt { get; set; } = DateTime.UtcNow;
@@ -68,10 +68,10 @@ public class StoryView : BaseEntity
 
 public class StoryLike : BaseEntity
 {
-    public string StoryId { get; set; } = string.Empty;
+    public Guid StoryId { get; set; }
     public Story Story { get; set; } = null!;
     
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
     public ApplicationUser User { get; set; } = null!;
     
     public DateTime LikedAt { get; set; } = DateTime.UtcNow;
@@ -79,10 +79,10 @@ public class StoryLike : BaseEntity
 
 public class StoryReply : BaseEntity
 {
-    public string StoryId { get; set; } = string.Empty;
+    public Guid StoryId { get; set; }
     public Story Story { get; set; } = null!;
     
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
     public ApplicationUser User { get; set; } = null!;
     
     public string Content { get; set; } = string.Empty;

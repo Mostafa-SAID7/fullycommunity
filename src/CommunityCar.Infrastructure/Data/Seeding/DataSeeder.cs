@@ -20,6 +20,7 @@ public class DataSeeder
     private readonly ILogger<DataSeeder> _logger;
     private readonly ILoggerFactory _loggerFactory;
     private readonly List<ISeeder> _seeders;
+    private readonly List<Func<Task>> _staticSeeders;
 
     public DataSeeder(
         AppDbContext context,
@@ -63,6 +64,16 @@ public class DataSeeder
             new PageSeeder(_context, _loggerFactory.CreateLogger<PageSeeder>()),
             new StorySeeder(_context, _loggerFactory.CreateLogger<StorySeeder>())
         };
+
+        // Add static seeders that don't implement ISeeder
+        _staticSeeders = new List<Func<Task>>
+        {
+            () => PopularCategoriesSeeder.SeedAsync(_context),
+            () => FeaturedPostSeeder.SeedAsync(_context),
+            () => QuestionCategorySeeder.SeedAsync(_context),
+            () => TrendingQuestionsSeeder.SeedAsync(_context),
+            () => FriendsSeeder.SeedAsync(_context)
+        };
     }
 
     /// <summary>
@@ -85,6 +96,12 @@ public class DataSeeder
                 await seeder.SeedAsync();
             }
 
+            // Run static seeders
+            foreach (var seeder in _staticSeeders)
+            {
+                await seeder();
+            }
+
             _logger.LogInformation("Database seeding completed successfully");
         }
         catch (Exception ex)
@@ -95,7 +112,7 @@ public class DataSeeder
     }
 
     /// <summary>
-    /// Run only identity seeders (for production)
+    /// Run only identity seeders and essential content (for production)
     /// </summary>
     public async Task SeedProductionAsync()
     {
@@ -105,7 +122,7 @@ public class DataSeeder
         {
             await _context.Database.EnsureCreatedAsync();
 
-            // Only run identity seeders for production
+            // Run identity seeders for production
             var identitySeeders = _seeders
                 .Where(s => s.GetType().Namespace!.Contains("Identity"))
                 .OrderBy(s => s.Order)
@@ -114,6 +131,24 @@ public class DataSeeder
             foreach (var seeder in identitySeeders)
             {
                 await seeder.SeedAsync();
+            }
+
+            // Run essential content seeders for production
+            var essentialSeeders = new List<Func<Task>>
+            {
+                () => PopularCategoriesSeeder.SeedAsync(_context),
+                () => FeaturedPostSeeder.SeedAsync(_context),
+                () => QuestionCategorySeeder.SeedAsync(_context),
+                () => TrendingQuestionsSeeder.SeedAsync(_context)
+            };
+
+            // Also run story seeder for production
+            var storySeeder = new StorySeeder(_context, _loggerFactory.CreateLogger<StorySeeder>());
+            await storySeeder.SeedAsync();
+
+            foreach (var seeder in essentialSeeders)
+            {
+                await seeder();
             }
 
             _logger.LogInformation("Production database seeding completed successfully");

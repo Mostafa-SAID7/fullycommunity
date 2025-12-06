@@ -42,57 +42,28 @@
 
     <!-- Friends Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      @for (friend of filteredFriends(); track friend.id) {
-        <ui-card variant="elevated" [hover]="true">
-          <!-- Friend Avatar -->
-          <div class="flex items-center gap-4 mb-4">
-            <ui-avatar 
-              [src]="friend.avatarUrl || ''" 
-              [name]="friend.firstName + ' ' + friend.lastName"
-              size="lg">
-            </ui-avatar>
-            <div class="flex-1">
-              <a [routerLink]="['/profile', friend.id]" 
-                class="font-semibold text-lg text-secondary-900 dark:text-secondary-100 hover:text-primary block">
-                {{ friend.firstName }} {{ friend.lastName }}
-              </a>
-              <p class="text-caption">{{ friend.mutualFriends }} mutual friends</p>
+      @if (activeTab() === 'all') {
+        @for (friend of friends(); track friend.id) {
+          <ui-card variant="elevated" [hover]="true">
+            <!-- Friend Avatar -->
+            <div class="flex items-center gap-4 mb-4">
+              <ui-avatar 
+                [src]="friend.avatarUrl || ''" 
+                [name]="friend.firstName + ' ' + friend.lastName"
+                size="lg">
+              </ui-avatar>
+              <div class="flex-1">
+                <a [routerLink]="['/profile', friend.id]" 
+                  class="font-semibold text-lg text-secondary-900 dark:text-secondary-100 hover:text-primary block">
+                  {{ friend.firstName }} {{ friend.lastName }}
+                </a>
+                <p class="text-caption">{{ friend.mutualFriends }} mutual friends</p>
+                <p class="text-caption text-secondary-500">Friends since {{ getTimeAgo(friend.friendsSince) }}</p>
+              </div>
             </div>
-          </div>
 
-          <!-- Actions -->
-          <div class="flex gap-2">
-            @if (activeTab() === 'requests') {
-              <ui-button 
-                variant="success" 
-                size="sm" 
-                [fullWidth]="true"
-                icon="M5 13l4 4L19 7"
-                (clicked)="acceptRequest(friend)">
-                Confirm
-              </ui-button>
-              <ui-button 
-                variant="outline" 
-                size="sm" 
-                (clicked)="declineRequest(friend)">
-                Delete
-              </ui-button>
-            } @else if (activeTab() === 'suggestions') {
-              <ui-button 
-                variant="primary" 
-                size="sm" 
-                [fullWidth]="true"
-                icon="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                (clicked)="sendRequest(friend)">
-                Add Friend
-              </ui-button>
-              <ui-button 
-                variant="outline" 
-                size="sm" 
-                (clicked)="removeSuggestion(friend)">
-                Remove
-              </ui-button>
-            } @else {
+            <!-- Actions -->
+            <div class="flex gap-2">
               <ui-button 
                 variant="outline" 
                 size="sm" 
@@ -101,14 +72,92 @@
                 (clicked)="unfriend(friend)">
                 Friends
               </ui-button>
-            }
-          </div>
-        </ui-card>
+            </div>
+          </ui-card>
+        }
+      } @else if (activeTab() === 'requests') {
+        @for (request of friendRequests(); track request.requestId) {
+          <ui-card variant="elevated" [hover]="true">
+            <!-- Friend Avatar -->
+            <div class="flex items-center gap-4 mb-4">
+              <ui-avatar 
+                [src]="request.avatarUrl || ''" 
+                [name]="request.firstName + ' ' + request.lastName"
+                size="lg">
+              </ui-avatar>
+              <div class="flex-1">
+                <a [routerLink]="['/profile', request.userId]" 
+                  class="font-semibold text-lg text-secondary-900 dark:text-secondary-100 hover:text-primary block">
+                  {{ request.firstName }} {{ request.lastName }}
+                </a>
+                <p class="text-caption">{{ request.mutualFriends }} mutual friends</p>
+                <p class="text-caption text-secondary-500">{{ getTimeAgo(request.requestedAt) }}</p>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-2">
+              <ui-button 
+                variant="success" 
+                size="sm" 
+                [fullWidth]="true"
+                icon="M5 13l4 4L19 7"
+                (clicked)="acceptRequest(request)">
+                Confirm
+              </ui-button>
+              <ui-button 
+                variant="outline" 
+                size="sm" 
+                (clicked)="declineRequest(request)">
+                Delete
+              </ui-button>
+            </div>
+          </ui-card>
+        }
+      } @else if (activeTab() === 'suggestions') {
+        @for (suggestion of friendSuggestions(); track suggestion.id) {
+          <ui-card variant="elevated" [hover]="true">
+            <!-- Friend Avatar -->
+            <div class="flex items-center gap-4 mb-4">
+              <ui-avatar 
+                [src]="suggestion.avatarUrl || ''" 
+                [name]="suggestion.firstName + ' ' + suggestion.lastName"
+                size="lg">
+              </ui-avatar>
+              <div class="flex-1">
+                <a [routerLink]="['/profile', suggestion.id]" 
+                  class="font-semibold text-lg text-secondary-900 dark:text-secondary-100 hover:text-primary block">
+                  {{ suggestion.firstName }} {{ suggestion.lastName }}
+                </a>
+                <p class="text-caption">{{ suggestion.mutualFriends }} mutual friends</p>
+                <p class="text-caption text-secondary-500">{{ suggestion.reason }}</p>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-2">
+              <ui-button 
+                variant="primary" 
+                size="sm" 
+                [fullWidth]="true"
+                icon="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                (clicked)="sendRequest(suggestion)">
+                Add Friend
+              </ui-button>
+              <ui-button 
+                variant="outline" 
+                size="sm" 
+                (clicked)="removeSuggestion(suggestion)">
+                Remove
+              </ui-button>
+            </div>
+          </ui-card>
+        }
       }
     </div>
 
     <!-- Empty State -->
-    @if (filteredFriends().length === 0) {
+    @if (getCurrentTabData().length === 0) {
       <ui-card variant="filled">
         <div class="text-center py-12">
           <div class="w-24 h-24 mx-auto mb-6 bg-secondary-100 dark:bg-secondary-800 rounded-full flex items-center justify-center">

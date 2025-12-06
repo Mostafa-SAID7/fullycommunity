@@ -26,7 +26,7 @@ import { VideoService, Video } from '../../../core/services/media/video.service'
                 </div>
                 <div class="video-info">
                   <h3>{{ video.title }}</h3>
-                  <span class="channel">{{ video.channel?.displayName }}</span>
+                  <span class="channel">{{ video.channel.displayName }}</span>
                   <span class="meta">{{ video.viewCount | number }} views</span>
                 </div>
               </a>

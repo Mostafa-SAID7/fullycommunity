@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { StoriesComponent } from './components/stories/stories.component';
-import { WelcomeBannerComponent } from './components/welcome-banner/welcome-banner.component';
 import { QuickActionsComponent } from './components/quick-actions/quick-actions.component';
 import { FeaturedPostsComponent } from './components/featured-posts/featured-posts.component';
 import { TrendingQuestionsComponent } from './components/trending-questions/trending-questions.component';
@@ -25,8 +24,7 @@ export interface CommunityStats {
   imports: [
     CommonModule, 
     RouterLink, 
-    StoriesComponent, 
-    WelcomeBannerComponent,
+    StoriesComponent,
     QuickActionsComponent,
     FeaturedPostsComponent,
     TrendingQuestionsComponent,

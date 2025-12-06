@@ -3,6 +3,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, from, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+// lottie-web is now properly installed with types
+
 export interface LottieAnimation {
   id: string;
   name: string;

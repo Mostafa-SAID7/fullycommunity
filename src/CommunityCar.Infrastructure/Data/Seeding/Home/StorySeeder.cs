@@ -41,7 +41,7 @@ public class StorySeeder : BaseSeeder
             new()
             {
                 Id = Guid.NewGuid(),
-                UserId = users[0].Id.ToString(),
+                UserId = users[0].Id,
                 MediaUrl = "https://images.unsplash.com/photo-1549927681-0b673b922a7b?w=400&h=600&fit=crop",
                 ThumbnailUrl = "https://images.unsplash.com/photo-1549927681-0b673b922a7b?w=200&h=300&fit=crop",
                 Type = StoryType.Image,
@@ -57,7 +57,7 @@ public class StorySeeder : BaseSeeder
             new()
             {
                 Id = Guid.NewGuid(),
-                UserId = users[1].Id.ToString(),
+                UserId = users[1].Id,
                 MediaUrl = "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&h=600&fit=crop",
                 ThumbnailUrl = "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&h=300&fit=crop",
                 Type = StoryType.Image,
@@ -73,7 +73,7 @@ public class StorySeeder : BaseSeeder
             new()
             {
                 Id = Guid.NewGuid(),
-                UserId = users[2].Id.ToString(),
+                UserId = users[2].Id,
                 MediaUrl = "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&h=600&fit=crop",
                 ThumbnailUrl = "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=200&h=300&fit=crop",
                 Type = StoryType.Image,
@@ -89,7 +89,7 @@ public class StorySeeder : BaseSeeder
             new()
             {
                 Id = Guid.NewGuid(),
-                UserId = users[3].Id.ToString(),
+                UserId = users[3].Id,
                 MediaUrl = "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=600&fit=crop",
                 ThumbnailUrl = "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=300&fit=crop",
                 Type = StoryType.Image,
@@ -105,7 +105,7 @@ public class StorySeeder : BaseSeeder
             new()
             {
                 Id = Guid.NewGuid(),
-                UserId = users[4].Id.ToString(),
+                UserId = users[4].Id,
                 MediaUrl = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&h=600&fit=crop",
                 ThumbnailUrl = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=200&h=300&fit=crop",
                 Type = StoryType.Image,
@@ -130,8 +130,8 @@ public class StorySeeder : BaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    UserId = users[0].Id.ToString(),
-                    PageId = pages[0].Id.ToString(),
+                    UserId = users[0].Id,
+                    PageId = pages[0].Id,
                     MediaUrl = "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=600&fit=crop",
                     ThumbnailUrl = "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=200&h=300&fit=crop",
                     Type = StoryType.Image,
@@ -147,8 +147,8 @@ public class StorySeeder : BaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    UserId = users[1].Id.ToString(),
-                    PageId = pages[1].Id.ToString(),
+                    UserId = users[1].Id,
+                    PageId = pages[1].Id,
                     MediaUrl = "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=600&fit=crop",
                     ThumbnailUrl = "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=200&h=300&fit=crop",
                     Type = StoryType.Image,
@@ -164,8 +164,8 @@ public class StorySeeder : BaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    UserId = users[2].Id.ToString(),
-                    PageId = pages[2].Id.ToString(),
+                    UserId = users[2].Id,
+                    PageId = pages[2].Id,
                     MediaUrl = "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400&h=600&fit=crop",
                     ThumbnailUrl = "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=200&h=300&fit=crop",
                     Type = StoryType.Image,
@@ -181,8 +181,8 @@ public class StorySeeder : BaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    UserId = users[3].Id.ToString(),
-                    PageId = pages[3].Id.ToString(),
+                    UserId = users[3].Id,
+                    PageId = pages[3].Id,
                     MediaUrl = "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=600&fit=crop",
                     ThumbnailUrl = "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=300&fit=crop",
                     Type = StoryType.Image,
@@ -198,8 +198,8 @@ public class StorySeeder : BaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    UserId = users[4].Id.ToString(),
-                    PageId = pages[4].Id.ToString(),
+                    UserId = users[4].Id,
+                    PageId = pages[4].Id,
                     MediaUrl = "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&h=600&fit=crop",
                     ThumbnailUrl = "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&h=300&fit=crop",
                     Type = StoryType.Image,
@@ -231,13 +231,13 @@ public class StorySeeder : BaseSeeder
             for (int i = 0; i < Math.Min(viewCount, users.Count); i++)
             {
                 var viewer = users[i % users.Count];
-                if (viewer.Id.ToString() != story.UserId) // Don't view own story
+                if (viewer.Id != story.UserId) // Don't view own story
                 {
                     storyViews.Add(new StoryView
                     {
                         Id = Guid.NewGuid(),
-                        StoryId = story.Id.ToString(),
-                        UserId = viewer.Id.ToString(),
+                        StoryId = story.Id,
+                        UserId = viewer.Id,
                         ViewedAt = DateTime.UtcNow.AddMinutes(-Random.Shared.Next(1, 480))
                     });
                 }
@@ -248,13 +248,13 @@ public class StorySeeder : BaseSeeder
             for (int i = 0; i < Math.Min(likeCount, users.Count); i++)
             {
                 var liker = users[i % users.Count];
-                if (liker.Id.ToString() != story.UserId) // Don't like own story
+                if (liker.Id != story.UserId) // Don't like own story
                 {
                     storyLikes.Add(new StoryLike
                     {
                         Id = Guid.NewGuid(),
-                        StoryId = story.Id.ToString(),
-                        UserId = liker.Id.ToString(),
+                        StoryId = story.Id,
+                        UserId = liker.Id,
                         LikedAt = DateTime.UtcNow.AddMinutes(-Random.Shared.Next(1, 480))
                     });
                 }

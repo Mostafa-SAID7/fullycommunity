@@ -1,10 +1,17 @@
 <!-- Popular Categories Section -->
-<section class="space-y-4">
-  <div class="flex justify-between items-center">
-    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Popular Categories</h2>
-    <a routerLink="/community/categories" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium text-sm transition-colors">
-      View All →
-    </a>
+<section class="space-y-4 mt-8">
+  <!-- Title and link on same line with maximum adhesive primary background -->
+  <div class="relative -mx-16 mb-6">
+    <div class="flex justify-between items-center">
+      <div class="bg-primary pl-16 pr-16 py-4 rounded-r-xl shadow-lg">
+        <h2 class="text-2xl font-bold text-white tracking-wide">Popular Categories</h2>
+      </div>
+      <div class="px-16">
+        <a routerLink="/community/categories" class="text-primary hover:text-primary-hover font-semibold text-sm transition-colors px-2 py-1">
+          View All →
+        </a>
+      </div>
+    </div>
   </div>
 
   <!-- Loading State -->

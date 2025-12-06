@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ChannelService } from '../../../core/services/media/channel.service';
 import { VideoService, Video, Channel } from '../../../core/services/media/video.service';
 import { VideoCardComponent } from '../shared/video-card.component';
@@ -8,7 +8,7 @@ import { VideoCardComponent } from '../shared/video-card.component';
 @Component({
   selector: 'app-channel-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, VideoCardComponent],
+  imports: [CommonModule, VideoCardComponent],
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       @if (loading()) {

@@ -272,15 +272,11 @@ export class SignalRService implements OnDestroy {
   }
 
   private setupAuthListener(): void {
-    this.authService.isAuthenticated$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(isAuthenticated => {
-        if (isAuthenticated) {
-          this.connect();
-        } else {
-          this.disconnect();
-        }
-      });
+    // Check authentication status periodically or on user changes
+    // Since AuthService uses signals, we'll check on connection attempts
+    if (this.authService.isAuthenticated()) {
+      this.connect();
+    }
   }
 
   private setupNetworkListener(): void {

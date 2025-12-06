@@ -2,881 +2,111 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Custom Properties for Enhanced Color System */
-:root {
-  /* Primary Colors */
-  --color-primary: rgb(141, 7, 7);
-  --color-primary-hover: rgb(187, 6, 6);
-  --color-secondary: #2E2E2E;
-  --color-accent: #FF6B35;
-  
-  /* Background Colors */
-  --color-background: #FFFFFF;
-  --color-background-dark: #121212;
-  --color-background-secondary: #F8F9FA;
-  --color-background-secondary-dark: #1A1A1A;
-  
-  /* Border Colors */
-  --color-border: #E5E7EB;
-  --color-border-dark: #374151;
-  
-  /* Status Colors */
-  --color-success: #00C853;
-  --color-error: rgb(255, 10, 5);
-  --color-warning: #FFC107;
-  --color-info: #1E88E5;
-  
-  /* Text Colors */
-  --color-text-primary: #1A1A1A;
-  --color-text-secondary: #6B7280;
-  --color-text-dark: #FFFFFF;
-  --color-text-dark-secondary: #D1D5DB;
+/* Smooth scrolling for the entire document */
+html {
+  scroll-behavior: smooth;
 }
 
-/* Enhanced CSS Custom Properties for Theming */
+/* Essential CSS Custom Properties for Dynamic Theming */
 :root {
-  /* Primary Colors - Deep Automotive Red */
-  --color-primary: rgb(141, 7, 7);
-  --color-primary-hover: rgb(187, 6, 6);
-  --color-primary-light: rgb(254, 242, 242);
-  --color-primary-dark: rgb(69, 10, 10);
-  --color-primary-50: #FEF2F2;
-  --color-primary-100: #FEE2E2;
-  --color-primary-200: #FECACA;
-  --color-primary-300: #FCA5A5;
-  --color-primary-400: #F87171;
-  --color-primary-500: rgb(141, 7, 7);
-  --color-primary-600: rgb(187, 6, 6);
-  --color-primary-700: #B91C1C;
-  --color-primary-800: #991B1B;
-  --color-primary-900: #7F1D1D;
+  /* Primary Colors - Can be overridden by JavaScript theming */
+  --color-primary: rgb(59, 130, 246); /* Blue-500 */
+  --color-primary-hover: rgb(37, 99, 235); /* Blue-600 */
   
-  /* Secondary Colors - Rich Charcoal */
-  --color-secondary: #2E2E2E;
-  --color-secondary-light: #404040;
-  --color-secondary-dark: #1A1A1A;
+  /* Secondary Colors */
+  --color-secondary: #6B7280; /* Gray-500 */
   
-  /* Accent Colors - Vibrant Orange-Red */
-  --color-accent: #FF6B35;
-  --color-accent-hover: #E63E00;
-  --color-accent-light: #FFF4F0;
-  --color-accent-dark: #CC3700;
-  
-  /* Background Colors */
-  --color-background: #FFFFFF;
-  --color-background-dark: #121212;
-  --color-background-secondary: #F8F9FA;
-  --color-background-secondary-dark: #1A1A1A;
-  --color-surface: #FFFFFF;
-  --color-surface-dark: #1C1C1C;
-  
-  /* Border Colors */
-  --color-border: #E5E7EB;
-  --color-border-dark: #374151;
-  --color-border-light: #F3F4F6;
+  /* Accent Colors */
+  --color-accent: #F59E0B; /* Amber-500 */
   
   /* Status Colors */
-  --color-success: #00C853;
-  --color-error: rgb(255, 10, 5);
-  --color-warning: #FFC107;
-  --color-info: #1E88E5;
-  
-  /* Text Colors */
-  --color-text-primary: #1A1A1A;
-  --color-text-secondary: #6B7280;
-  --color-text-dark: #FFFFFF;
-  --color-text-dark-secondary: #D1D5DB;
-  --color-text-muted: #9CA3AF;
-  
-  /* Automotive Theme Colors */
-  --color-automotive-chrome: #C0C0C0;
-  --color-automotive-steel: #71797E;
-  --color-automotive-carbon: #2C2C2C;
-  --color-automotive-gold: #FFD700;
-  --color-automotive-copper: #B87333;
-  
-  /* Performance Colors */
-  --color-performance-turbo: #00FFFF;
-  --color-performance-nitro: #FF1493;
-  --color-performance-racing: #FF4500;
-  --color-performance-electric: #00FF00;
-  --color-performance-hybrid: #32CD32;
-  
-  /* Shadow Colors */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  
-  /* Fluent Design Shadows with Primary Color */
-  --shadow-fluent: 0 0.25rem 0.5rem rgba(141, 7, 7, 0.1);
-  --shadow-fluent-lg: 0 0.5rem 1rem rgba(141, 7, 7, 0.15);
-  --shadow-fluent-xl: 0 1rem 2rem rgba(141, 7, 7, 0.2);
+  --color-success: #10B981; /* Emerald-500 */
+  --color-error: #EF4444; /* Red-500 */
+  --color-warning: #F59E0B; /* Amber-500 */
+  --color-info: #3B82F6; /* Blue-500 */
 }
 
-/* Enhanced Microsoft Fluent Design Components */
+/* Dark mode color overrides */
+.dark {
+  --color-primary: rgb(96, 165, 250); /* Blue-400 */
+  --color-primary-hover: rgb(59, 130, 246); /* Blue-500 */
+}
+
+/* Essential component styles that can't be handled by Tailwind alone */
 @layer components {
-  /* Fluent Cards with Enhanced Styling */
-  .fluent-card {
-    @apply bg-white dark:bg-gray-800 rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg backdrop-blur-sm;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    &:hover {
-      @apply shadow-xl;
-      box-shadow: 0 20px 25px -5px rgba(141, 7, 7, 0.1), 0 10px 10px -5px rgba(141, 7, 7, 0.04);
-      transform: translateY(-2px);
-    }
-    
-    .dark & {
-      background: rgba(31, 41, 55, 0.95);
-    }
-  }
-  
-  /* Enhanced Fluent Buttons */
-  .fluent-button {
-    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
-    
-    &.primary {
-      background: var(--color-primary);
-      @apply text-white shadow-md;
-      
-      &:hover {
-        background: var(--color-primary-hover);
-        @apply shadow-lg;
-        transform: translateY(-1px);
-      }
-      
-      &:focus {
-        @apply ring-red-500;
-      }
-      
-      &:active {
-        transform: translateY(0);
-      }
-    }
-    
-    &.secondary {
-      @apply bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600;
-      
-      &:hover {
-        @apply bg-gray-200 dark:bg-gray-600 shadow-md;
-        transform: translateY(-1px);
-      }
-      
-      &:focus {
-        @apply ring-gray-500;
-      }
-    }
-    
-    &.accent {
-      background: var(--color-accent);
-      @apply text-white shadow-md;
-      
-      &:hover {
-        background: var(--color-accent-hover);
-        @apply shadow-lg;
-        transform: translateY(-1px);
-      }
-      
-      &:focus {
-        @apply ring-orange-500;
-      }
-    }
-  }
-  
-  /* Enhanced Fluent Inputs */
-  .fluent-input {
-    @apply w-full px-4 py-3 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg transition-all duration-200 focus:outline-none;
-    
-    &:focus {
-      border-color: var(--color-primary);
-      @apply ring-2 ring-red-500/20 shadow-md;
-    }
-    
-    &::placeholder {
-      @apply text-gray-500 dark:text-gray-400;
-    }
-  }
-  
-  /* Statistics Cards */
-  .stat-card {
-    @apply bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 hover:shadow-lg;
-    
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px -5px rgba(141, 7, 7, 0.1);
-    }
-    
-    .stat-icon {
-      @apply w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-all duration-200;
-    }
-    
-    .stat-value {
-      @apply text-3xl font-bold text-gray-900 dark:text-white mb-2;
-    }
-    
-    .stat-label {
-      @apply text-sm text-gray-600 dark:text-gray-400 font-medium;
-    }
-  }
-  
-  /* Status Indicators */
-  .status-indicator {
-    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold;
-    
-    &.online {
-      @apply bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400;
-    }
-    
-    &.offline {
-      @apply bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400;
-    }
-    
-    &.busy {
-      @apply bg-orange-100 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400;
-    }
-    
-    &.away {
-      @apply bg-yellow-100 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400;
-    }
-  }
-  
-  /* Loading Skeleton */
+  /* Loading skeleton animation */
   .loading-skeleton {
-    @apply bg-gray-200 dark:bg-gray-700 animate-pulse;
-    background: linear-gradient(90deg, 
-      rgba(229, 231, 235, 0.4) 25%, 
-      rgba(229, 231, 235, 0.8) 50%, 
-      rgba(229, 231, 235, 0.4) 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
-    
-    .dark & {
-      background: linear-gradient(90deg, 
-        rgba(55, 65, 81, 0.4) 25%, 
-        rgba(55, 65, 81, 0.8) 50%, 
-        rgba(55, 65, 81, 0.4) 75%
-      );
-      background-size: 200% 100%;
-    }
+    @apply bg-gray-200 dark:bg-gray-700 animate-pulse rounded;
   }
   
-  /* Error State */
-  .error-state {
-    @apply text-center py-12;
-    
-    .error-icon {
-      @apply w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-600;
-    }
-    
-    .error-title {
-      @apply text-xl font-semibold text-gray-900 dark:text-white mb-2;
-    }
-    
-    .error-message {
-      @apply text-gray-600 dark:text-gray-400 mb-6;
-    }
-  }
-  
-  /* Microsoft Background */
-  .microsoft-bg {
-    background: 
-      linear-gradient(135deg, rgba(248, 249, 250, 0.9) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(248, 249, 250, 0.9) 100%),
-      radial-gradient(ellipse at top left, rgba(141, 7, 7, 0.02) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom right, rgba(255, 107, 53, 0.02) 0%, transparent 50%);
-    
-    .dark & {
-      background: 
-        linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(31, 41, 55, 0.9) 50%, rgba(17, 24, 39, 0.95) 100%),
-        radial-gradient(ellipse at top left, rgba(141, 7, 7, 0.05) 0%, transparent 50%),
-        radial-gradient(ellipse at bottom right, rgba(255, 107, 53, 0.03) 0%, transparent 50%);
-    }
-  }
-}
-
-/* Global Base Styles */
-@layer base {
-  * {
-    @apply border-gray-200 dark:border-gray-800;
-    box-sizing: border-box;
-  }
-  
-  html {
-    overflow-x: hidden;
-    max-width: 100vw;
-  }
-  
-  body {
-    @apply text-gray-900 dark:text-gray-100 font-segoe;
-    overflow-x: hidden;
-    max-width: 100vw;
-    margin: 0;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    
-    /* Microsoft Fluent Design Background - Light Mode */
-    background: 
-      linear-gradient(135deg, rgba(243, 244, 246, 0.8) 0%, rgba(249, 250, 251, 0.9) 50%, rgba(243, 244, 246, 0.8) 100%),
-      radial-gradient(ellipse at top left, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
-    background-color: #f3f4f6;
-    background-attachment: fixed;
-  }
-  
-  .dark body,
-  body.dark {
-    /* Microsoft Fluent Design Background - Dark Mode */
-    background: 
-      linear-gradient(135deg, rgba(3, 7, 18, 0.95) 0%, rgba(17, 24, 39, 0.9) 50%, rgba(3, 7, 18, 0.95) 100%),
-      radial-gradient(ellipse at top left, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
-    background-color: #030712;
-    background-attachment: fixed;
-  }
-  
-  /* Alternative: Apply dark background when html has dark class */
-  html.dark body {
-    background: 
-      linear-gradient(135deg, rgba(3, 7, 18, 0.95) 0%, rgba(17, 24, 39, 0.9) 50%, rgba(3, 7, 18, 0.95) 100%),
-      radial-gradient(ellipse at top left, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
-    background-color: #030712;
-    background-attachment: fixed;
-  }
-  
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  button {
-    font-family: inherit;
-  }
-  
-  /* Microsoft Fluent Design Scrollbar Styling */
-  
-  /* Default scrollbar - thin and subtle */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300/60 dark:bg-gray-600/40 rounded-full;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-    transition: all 200ms ease;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400/80 dark:bg-gray-500/60;
-  }
-  
-  ::-webkit-scrollbar-corner {
-    @apply bg-transparent;
-  }
-
-  /* Firefox scrollbar */
-  * {
+  /* Custom scrollbar for webkit browsers */
+  .scrollbar-custom {
     scrollbar-width: thin;
-    scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
+    scrollbar-color: theme('colors.gray.400') transparent;
   }
   
-  .dark * {
-    scrollbar-color: rgba(75, 85, 99, 0.4) transparent;
+  .scrollbar-custom::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    @apply bg-gray-400 rounded-full;
+  }
+  
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-500;
+  }
+  
+  /* Dark mode scrollbar */
+  .dark .scrollbar-custom {
+    scrollbar-color: theme('colors.gray.600') transparent;
+  }
+  
+  .dark .scrollbar-custom::-webkit-scrollbar-thumb {
+    @apply bg-gray-600;
+  }
+  
+  .dark .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-500;
   }
 }
 
-/* Microsoft Fluent Scrollbar Variants */
+/* Essential utility classes */
 @layer utilities {
-  /* Fluent scrollbar - appears on hover only */
-  .scrollbar-fluent {
-    &::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-    }
-    
-    &::-webkit-scrollbar-thumb {
-      @apply bg-transparent rounded-full;
-      transition: background 200ms ease;
-    }
-    
-    &:hover::-webkit-scrollbar-thumb {
-      @apply bg-gray-300/70 dark:bg-gray-600/50;
-    }
-    
-    &::-webkit-scrollbar-thumb:hover {
-      @apply bg-gray-400/90 dark:bg-gray-500/70;
-    }
+  /* Text selection styling */
+  ::selection {
+    @apply bg-blue-100 text-blue-900;
   }
   
-  /* Thin scrollbar for sidebars */
-  .scrollbar-sidebar {
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-    
-    &::-webkit-scrollbar-track {
-      @apply bg-transparent;
-      margin: 4px 0;
-    }
-    
-    &::-webkit-scrollbar-thumb {
-      @apply bg-gray-200/0 dark:bg-gray-700/0 rounded-full;
-      transition: background 300ms ease;
-    }
-    
-    &:hover::-webkit-scrollbar-thumb {
-      @apply bg-gray-300/60 dark:bg-gray-600/40;
-    }
-    
-    &::-webkit-scrollbar-thumb:hover {
-      @apply bg-gray-400/80 dark:bg-gray-500/60;
-    }
-    
-    /* Firefox */
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-    
-    &:hover {
-      scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
-    }
+  .dark ::selection {
+    @apply bg-blue-900 text-blue-100;
   }
   
-  /* Hidden scrollbar but still scrollable */
-  .scrollbar-none {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    
-    &::-webkit-scrollbar {
-      display: none;
-    }
+  /* Focus visible styling for accessibility */
+  .focus-visible {
+    @apply outline-none ring-2 ring-blue-500 ring-offset-2;
   }
   
-  /* Overlay scrollbar (doesn't take space) */
-  .scrollbar-overlay {
-    overflow: overlay;
-    
-    &::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+  .dark .focus-visible {
+    @apply ring-offset-gray-900;
+  }
+  
+  /* Print styles */
+  @media print {
+    .no-print {
+      display: none !important;
     }
     
-    &::-webkit-scrollbar-thumb {
-      @apply bg-gray-400/50 dark:bg-gray-500/40 rounded-full;
+    .print-break-before {
+      page-break-before: always;
     }
     
-    &::-webkit-scrollbar-thumb:hover {
-      @apply bg-gray-500/70 dark:bg-gray-400/60;
+    .print-break-after {
+      page-break-after: always;
     }
-  }
-
-  /* Scrollbar on left side (for right sidebar) */
-  .scrollbar-left {
-    direction: rtl;
-    
-    & > * {
-      direction: ltr;
-    }
-    
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-    
-    &::-webkit-scrollbar-track {
-      @apply bg-transparent;
-      margin: 4px 0;
-    }
-    
-    &::-webkit-scrollbar-thumb {
-      @apply bg-gray-200/0 dark:bg-gray-700/0 rounded-full;
-      transition: background 300ms ease;
-    }
-    
-    &:hover::-webkit-scrollbar-thumb {
-      @apply bg-gray-300/60 dark:bg-gray-600/40;
-    }
-    
-    &::-webkit-scrollbar-thumb:hover {
-      @apply bg-gray-400/80 dark:bg-gray-500/60;
-    }
-    
-    /* Firefox */
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-    
-    &:hover {
-      scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
-    }
-  }
-}
-
-@layer components {
-  /* Microsoft Fluent Design Background */
-  .microsoft-bg {
-    position: relative;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  }
-  
-  :host-context(.dark) .microsoft-bg {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-  }
-  
-  .microsoft-bg::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-      radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 40% 20%, rgba(236, 72, 153, 0.06) 0%, transparent 50%);
-    pointer-events: none;
-  }
-  
-  :host-context(.dark) .microsoft-bg::before {
-    background-image: 
-      radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 40% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
-  }
-  
-  .microsoft-bg::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-    pointer-events: none;
-    opacity: 0.5;
-  }
-  
-  :host-context(.dark) .microsoft-bg::after {
-    background-image: 
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
-  }
-
-  /* Error State Component */
-  .error-state {
-    @apply flex flex-col items-center justify-center p-8 text-center;
-    
-    .error-icon {
-      @apply w-16 h-16 text-error-500 mb-4;
-    }
-    
-    .error-title {
-      @apply text-lg font-semibold text-gray-900 dark:text-white mb-2;
-    }
-    
-    .error-message {
-      @apply text-sm text-gray-500 dark:text-gray-400 mb-4 max-w-md;
-    }
-    
-    .error-actions {
-      @apply flex gap-3;
-    }
-  }
-
-  /* Stat Card Component */
-  .stat-card {
-    @apply bg-white dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50 p-6 transition-all hover:shadow-md;
-    
-    .stat-icon {
-      @apply w-12 h-12 rounded-full flex items-center justify-center mb-4;
-    }
-    
-    .stat-value {
-      @apply text-2xl font-bold text-gray-900 dark:text-white mb-1;
-    }
-    
-    .stat-label {
-      @apply text-sm text-gray-500 dark:text-gray-400 mb-2;
-    }
-    
-    .stat-change {
-      @apply text-xs font-medium flex items-center gap-1;
-      
-      &.positive {
-        @apply text-success-600 dark:text-success-400;
-      }
-      
-      &.negative {
-        @apply text-error-600 dark:text-error-400;
-      }
-      
-      &.neutral {
-        @apply text-gray-500 dark:text-gray-400;
-      }
-    }
-  }
-
-  /* Fluent Design component classes */
-  .focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900;
-  }
-  
-  .surface {
-    @apply bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg;
-  }
-  
-  .surface-elevated {
-    @apply bg-white dark:bg-gray-900 shadow-lg rounded-lg;
-  }
-  
-  .interactive {
-    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:shadow;
-  }
-
-  /* Loading States */
-  .loading-skeleton {
-    @apply animate-pulse bg-gray-200 dark:bg-gray-700 rounded;
-  }
-  
-  .loading-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-  }
-  
-  /* Toast Notifications */
-  .toast {
-    @apply fixed top-4 right-4 z-50 max-w-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4;
-    animation: slide-in-right 0.3s ease-out;
-    
-    &.success {
-      @apply border-success-200 dark:border-success-800;
-      
-      .toast-icon {
-        @apply text-success-500;
-      }
-    }
-    
-    &.error {
-      @apply border-error-200 dark:border-error-800;
-      
-      .toast-icon {
-        @apply text-error-500;
-      }
-    }
-    
-    &.warning {
-      @apply border-warning-200 dark:border-warning-800;
-      
-      .toast-icon {
-        @apply text-warning-500;
-      }
-    }
-    
-    &.info {
-      @apply border-info-200 dark:border-info-800;
-      
-      .toast-icon {
-        @apply text-info-500;
-      }
-    }
-  }
-}
-
-/* Dark mode improvements */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-  }
-}
-
-/* RTL Support */
-html[dir="rtl"] {
-  direction: rtl;
-  text-align: right;
-}
-
-/* Sidebar utilities */
-body.mobile-sidebar-open {
-  overflow: hidden;
-}
-
-/* Enhanced Animations */
-@keyframes bounce-slow {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes fade-in {
-  from { 
-    opacity: 0; 
-    transform: translateY(6px); 
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
-  }
-}
-
-@keyframes slide-in-right {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-/* Animation Classes */
-.animate-fade-in { 
-  animation: fade-in 220ms ease-out; 
-}
-
-.animate-bounce-slow {
-  animation: bounce-slow 2s infinite;
-}
-
-/* FAB (Floating Action Button) States */
-.fab-hidden { 
-  opacity: 0; 
-  transform: translateY(6px); 
-  pointer-events: none; 
-  transition: all 220ms ease-out;
-}
-
-.fab-visible { 
-  opacity: 1; 
-  transform: translateY(0); 
-  pointer-events: auto; 
-  transition: all 220ms ease-out;
-}
-
-/* Microsoft Fluent Design Utilities */
-.fluent-card {
-  @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-lg shadow-sm;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    @apply shadow-md border-gray-300/50 dark:border-gray-600/50;
-    transform: translateY(-1px);
-  }
-}
-
-.fluent-button {
-  @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-offset-2;
-  
-  &.primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
-  }
-  
-  &.secondary {
-    @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 focus:ring-gray-500;
-  }
-  
-  &.ghost {
-    @apply bg-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:ring-gray-500;
-  }
-}
-
-.fluent-input {
-  @apply w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all;
-  
-  &::placeholder {
-    @apply text-gray-400 dark:text-gray-500;
-  }
-  
-  &:disabled {
-    @apply bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-600 cursor-not-allowed;
-  }
-}
-
-/* Status Indicators */
-.status-indicator {
-  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-  
-  &.online {
-    @apply bg-success-100 dark:bg-success-900/20 text-success-800 dark:text-success-400;
-  }
-  
-  &.offline {
-    @apply bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-400;
-  }
-  
-  &.busy {
-    @apply bg-error-100 dark:bg-error-900/20 text-error-800 dark:text-error-400;
-  }
-  
-  &.away {
-    @apply bg-warning-100 dark:bg-warning-900/20 text-warning-800 dark:text-warning-400;
-  }
-}
-
-/* Progress Indicators */
-.progress-bar {
-  @apply w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden;
-  
-  .progress-fill {
-    @apply h-full bg-primary-600 rounded-full transition-all duration-300 ease-out;
-  }
-}
-
-.progress-ring {
-  transform: rotate(-90deg);
-  
-  .progress-circle {
-    fill: none;
-    stroke-width: 4;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 0.3s ease;
-  }
-  
-  .progress-background {
-    @apply stroke-gray-200 dark:stroke-gray-700;
-  }
-  
-  .progress-foreground {
-    @apply stroke-primary-600;
-  }
-}
-
-/* Responsive design */
-@media (max-width: 1024px) {
-  .main-content-wrapper {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  
-  .fluent-card {
-    @apply mx-2;
-  }
-  
-  .toast {
-    @apply left-4 right-4 max-w-none;
   }
 }

@@ -6,7 +6,8 @@ using CommunityCar.Domain.Entities.Community.Pages;
 namespace CommunityCar.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/community/[controller]")]
+[ApiExplorerSettings(GroupName = "community")]
 public class PagesController : ControllerBase
 {
     [HttpGet]

@@ -2,6 +2,7 @@ using CommunityCar.Domain.Entities.Community.Posts;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static CommunityCar.API.Controllers.Community.FeaturedPostsController;
 
 namespace CommunityCar.API.Controllers.Community;
 
@@ -101,4 +102,3 @@ public class TrendingController : ControllerBase
 public record TrendingTopicDto(string Id, string Name, int PostCount, string Category);
 public record SuggestedUserDto(Guid Id, string FirstName, string LastName, string? AvatarUrl, string UserType, int MutualFriends);
 public record CommunityStatsDto(int Members, int Posts, int Experts, int Groups);
-public record FeaturedPostDto(Guid Id, string Title, string Excerpt, string AuthorName, int LikeCount, int CommentCount, DateTime CreatedAt);

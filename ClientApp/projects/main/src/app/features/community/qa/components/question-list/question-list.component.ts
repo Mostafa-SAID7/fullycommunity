@@ -1,188 +1,128 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { QuestionCardComponent } from '../question-card/question-card.component';
-
-export interface QuestionListItem {
-  id: string;
-  title: string;
-  content?: string;
-  slug: string;
-  status: string;
-  tags: string[];
-  viewCount: number;
-  answerCount: number;
-  voteCount: number;
-  hasAcceptedAnswer: boolean;
-  bountyPoints?: number;
-  createdAt: string;
-  author: {
-    firstName: string;
-    lastName: string;
-    isVerified: boolean;
-    reputation: number;
-  };
-}
+import { RouterModule } from '@angular/router';
+import { QuestionListItem } from '../../../../../core/services/community/qa.service';
+import { LoadingStateComponent } from '../../../../../shared/components/loading-state/loading-state.component';
+import { EmptyStateComponent } from '../../../../../shared/components/empty-state/empty-state.component';
 
 @Component({
-  selector: 'app-question-list',
-  standalone: true,
-  imports: [CommonModule, RouterLink, QuestionCardComponent],
-  template: `
+    selector: 'app-question-list',
+    standalone: true,
+    imports: [CommonModule, RouterModule, LoadingStateComponent, EmptyStateComponent],
+    template: `
     <!-- Loading State -->
-    <div *ngIf="loading()" class="space-y-6">
-      <div *ngFor="let i of [1,2,3,4,5]" class="fluent-card p-6">
-        <div class="flex gap-6">
-          <div class="flex flex-col gap-3 shrink-0">
-            <div class="loading-skeleton w-20 h-16 rounded-lg"></div>
-            <div class="loading-skeleton w-20 h-16 rounded-lg"></div>
-            <div class="loading-skeleton w-20 h-8 rounded-lg"></div>
-          </div>
-          <div class="flex-1 space-y-4">
-            <div class="loading-skeleton h-7 w-3/4 rounded"></div>
-            <div class="loading-skeleton h-4 w-full rounded"></div>
-            <div class="loading-skeleton h-4 w-2/3 rounded"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-loading-state 
+      *ngIf="loading()" 
+      type="card" 
+      count="3"
+      message="Loading questions...">
+    </app-loading-state>
 
     <!-- Error State -->
-    <div *ngIf="!loading() && error()" class="text-center py-16 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/20">
-      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-        <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-        </svg>
-      </div>
-      <h3 class="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">Something went wrong</h3>
-      <p class="text-red-600 dark:text-red-300 mb-6 max-w-md mx-auto">{{ error() }}</p>
-      <button (click)="clearFilters.emit()" class="px-6 py-2 bg-white dark:bg-gray-800 border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-300 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors font-medium text-sm shadow-sm">
-        Try Again
-      </button>
-    </div>
+    <app-empty-state 
+      *ngIf="error() && !loading()"
+      icon="error"
+      title="Failed to load questions"
+      [description]="error()!"
+      actionText="Try Again"
+      actionIcon="refresh"
+      variant="error"
+      (actionClicked)="askQuestion.emit()"> <!-- Reusing emit for retry logic or simple refresh -->
+    </app-empty-state>
 
-    <!-- Card View -->
-    <div *ngIf="!loading() && viewMode() === 'card'" class="space-y-6">
-      <app-question-card 
-        *ngFor="let question of questions(); trackBy: trackByQuestionId" 
-        [question]="question">
-      </app-question-card>
-    </div>
+    <!-- Empty State -->
+    <app-empty-state 
+      *ngIf="!loading() && !error() && questions().length === 0"
+      icon="questions"
+      [title]="hasFilters() ? 'No matching questions found' : 'No questions yet'"
+      [description]="hasFilters() ? 'Try adjusting your filters to see more results.' : 'Be the first to ask a question in the community!'"
+      [actionText]="hasFilters() ? 'Clear Filters' : 'Ask Question'"
+      [actionIcon]="hasFilters() ? 'filter_off' : 'add'"
+      (actionClicked)="hasFilters() ? clearFilters.emit() : askQuestion.emit()">
+    </app-empty-state>
 
-    <!-- Compact View -->
-    <div *ngIf="!loading() && viewMode() === 'compact'" class="fluent-card overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <thead class="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
-            <tr>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Question</th>
-              <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider w-24">Votes</th>
-              <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider w-24">Answers</th>
-              <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider w-24">Views</th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider w-48">Author</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-            <tr *ngFor="let question of questions(); trackBy: trackByQuestionId" 
-                class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer"
-                [routerLink]="['/community/qa', question.slug]">
-              <td class="px-6 py-4">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ question.title }}</h3>
-                <div class="flex flex-wrap gap-1.5">
-                  <span *ngFor="let tag of question.tags.slice(0, 4)" 
-                        class="inline-block px-2 py-0.5 text-xs font-medium rounded"
-                        style="background-color: var(--color-primary-100); color: var(--color-primary)">
+    <!-- Questions List -->
+    <div *ngIf="!loading() && !error() && questions().length > 0" class="space-y-4">
+      <div *ngFor="let question of questions()" 
+           class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-all hover:shadow-md">
+        
+        <div class="flex items-start gap-4">
+          <!-- Stats Column -->
+          <div class="flex flex-col items-center gap-2 min-w-[60px] text-sm hidden sm:flex">
+            <div class="flex flex-col items-center p-2 rounded-lg bg-gray-50 dark:bg-gray-700/50 min-w-[60px]">
+              <span class="font-bold text-lg" [class.text-green-600]="question.voteCount > 0">{{ question.voteCount }}</span>
+              <span class="text-xs text-gray-500">votes</span>
+            </div>
+            
+            <div class="flex flex-col items-center p-2 rounded-lg min-w-[60px]"
+                 [ngClass]="{
+                   'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-green-200': question.hasAcceptedAnswer,
+                   'bg-gray-50 dark:bg-gray-700/50 border': !question.hasAcceptedAnswer && question.answerCount > 0
+                 }">
+              <span class="font-bold text-lg">{{ question.answerCount }}</span>
+              <span class="text-xs">answers</span>
+            </div>
+
+            <div class="flex flex-col items-center p-2 text-gray-500 dark:text-gray-400">
+              <span class="font-medium">{{ question.viewCount }}</span>
+              <span class="text-xs">views</span>
+            </div>
+          </div>
+
+          <!-- Content Column -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-4 mb-2">
+              <div class="space-y-1">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white leading-tight">
+                  <a [routerLink]="['/community/qa', question.id]" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                    {{ question.title }}
+                  </a>
+                </h3>
+                
+                <div class="flex flex-wrap items-center gap-2 mt-2">
+                  <span *ngFor="let tag of question.tags" 
+                        class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
                     {{ tag }}
                   </span>
                 </div>
-              </td>
-              <td class="px-6 py-4 text-center">
-                <span class="text-lg font-bold">{{ formatNumber(question.voteCount) }}</span>
-              </td>
-              <td class="px-6 py-4 text-center">
-                <span class="inline-flex items-center justify-center w-10 h-10 text-sm font-bold rounded-full"
-                      [class.bg-primary-500]="question.hasAcceptedAnswer"
-                      [class.text-white]="question.hasAcceptedAnswer"
-                      [class.bg-gray-100]="!question.hasAcceptedAnswer">
-                  {{ question.answerCount }}
-                </span>
-              </td>
-              <td class="px-6 py-4 text-center">
-                <span class="text-sm text-gray-600 dark:text-gray-400">{{ formatNumber(question.viewCount) }}</span>
-              </td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs"
-                       style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%)">
-                    {{ question.author.firstName[0] }}{{ question.author.lastName[0] }}
-                  </div>
-                  <div>
-                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ question.author.firstName }} {{ question.author.lastName }}</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ getRelativeTime(question.createdAt) }}</p>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+              </div>
 
-    <!-- Empty State -->
-    <div *ngIf="!loading() && questions().length === 0" class="text-center py-20">
-      <div class="w-24 h-24 mx-auto mb-8 rounded-full flex items-center justify-center"
-           style="background: linear-gradient(135deg, var(--color-primary-100) 0%, var(--color-primary-200) 100%)">
-        <svg class="w-12 h-12" style="color: var(--color-primary)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-      </div>
-      <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-        {{ hasFilters() ? 'No questions found' : 'No questions yet' }}
-      </h3>
-      <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
-        {{ hasFilters() ? 'Try adjusting your search or filters.' : 'Be the first to ask a question!' }}
-      </p>
-      <div class="flex gap-4 justify-center">
-        <button *ngIf="hasFilters()" (click)="clearFilters.emit()" class="fluent-button secondary px-6 py-3">
-          Clear All Filters
-        </button>
-        <button (click)="askQuestion.emit()" class="fluent-button primary px-8 py-3">
-          Ask Question
-        </button>
+              <!-- Bounty Badge -->
+              <div *ngIf="question.bountyPoints" class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border border-purple-200 dark:border-purple-800 text-xs font-semibold whitespace-nowrap">
+                <span>+{{ question.bountyPoints }}</span>
+                <span>bounty</span>
+              </div>
+            </div>
+
+            <!-- Meta -->
+            <div class="flex items-center justify-between mt-4 text-sm text-gray-500 dark:text-gray-400">
+              <div class="flex items-center gap-2">
+                <div *ngIf="question.category" class="flex items-center gap-1.5 px-2 py-1 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer">
+                  <span>{{ question.category.name }}</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <img [src]="question.author.avatar" [alt]="question.author.name" class="w-5 h-5 rounded-full ring-2 ring-white dark:ring-gray-800">
+                <span class="font-medium text-gray-900 dark:text-gray-300 hover:underline cursor-pointer">{{ question.author.name }}</span>
+                <span>asked {{ question.createdAt | date:'mediumDate' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   `
 })
 export class QuestionListComponent {
-  questions = input.required<QuestionListItem[]>();
-  loading = input.required<boolean>();
-  error = input<string | null>(null);
-  viewMode = input.required<'card' | 'compact'>();
-  hasFilters = input.required<boolean>();
+    // Inputs
+    questions = input.required<QuestionListItem[]>();
+    loading = input.required<boolean>();
+    error = input.required<string | null>();
+    viewMode = input.required<'card' | 'compact'>();
+    hasFilters = input.required<boolean>();
 
-  clearFilters = output<void>();
-  askQuestion = output<void>();
-
-  formatNumber(num: number): string {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-    return num.toString();
-  }
-
-  getRelativeTime(dateString: string): string {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-    if (diffInSeconds < 60) return 'just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-
-    return date.toLocaleDateString();
-  }
-
-  trackByQuestionId(index: number, question: QuestionListItem): string {
-    return question.id;
-  }
+    // Outputs
+    clearFilters = output<void>();
+    askQuestion = output<void>();
 }

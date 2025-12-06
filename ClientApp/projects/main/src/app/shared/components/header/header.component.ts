@@ -65,6 +65,8 @@ export class HeaderComponent {
     this.showUserMenu.set(false);
   }
 
+
+
   toggleLanguageMenu() {
     this.showLanguageMenu.update(v => !v);
     this.showNotifications.set(false);

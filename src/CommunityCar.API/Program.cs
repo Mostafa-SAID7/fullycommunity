@@ -165,8 +165,8 @@ try
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     
-    // Only migrate if we can connect
-    if (await context.Database.CanConnectAsync())
+    // Always migrate for SQLite (it will create the database if it doesn't exist)
+    try
     {
         await context.Database.MigrateAsync();
 
@@ -192,9 +192,14 @@ try
         
         Console.WriteLine("✅ Database seeding completed successfully");
     }
-    else
+    catch (Exception ex)
     {
-        Console.WriteLine("⚠️ Database not available. Skipping migrations and seeding.");
+        Console.WriteLine($"⚠️ Database initialization error: {ex.Message}");
+        // Don't throw in production to prevent startup failures
+        if (!app.Environment.IsProduction())
+        {
+            throw;
+        }
     }
 }
 catch (Exception ex)

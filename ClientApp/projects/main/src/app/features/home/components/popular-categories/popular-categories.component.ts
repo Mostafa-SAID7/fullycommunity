@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { CommunityService, PostCategory } from '../../../../core/services/community/community.service';
+import { PopularCategoriesService, PopularCategory } from '../../../../core/services/home/popular-categories.service';
 
 export interface LoadingState {
   isLoading: boolean;
@@ -15,9 +15,9 @@ export interface LoadingState {
   templateUrl: './popular-categories.component.html'
 })
 export class PopularCategoriesComponent implements OnInit {
-  private communityService = inject(CommunityService);
+  private popularCategoriesService = inject(PopularCategoriesService);
 
-  categories = signal<PostCategory[]>([]);
+  categories = signal<PopularCategory[]>([]);
   loadingState = signal<LoadingState>({ isLoading: true, error: null });
 
   ngOnInit(): void {
@@ -27,9 +27,9 @@ export class PopularCategoriesComponent implements OnInit {
   loadCategories(): void {
     this.loadingState.set({ isLoading: true, error: null });
 
-    this.communityService.getCategories().subscribe({
-      next: (categories: any) => {
-        this.categories.set(categories || []);
+    this.popularCategoriesService.getPopularCategories().subscribe({
+      next: (categories) => {
+        this.categories.set(categories);
         this.loadingState.set({ isLoading: false, error: null });
       },
       error: (error) => {
@@ -47,8 +47,12 @@ export class PopularCategoriesComponent implements OnInit {
     this.loadCategories();
   }
 
-  getCategoryIcon(category: PostCategory): string {
-    // Return appropriate icon based on category name or use default
+  getCategoryIcon(category: PopularCategory): string {
+    // Return the icon from the category or use default based on name
+    if (category.icon) {
+      return category.icon;
+    }
+
     const iconMap: { [key: string]: string } = {
       'general': '💬',
       'maintenance': '🔧',
@@ -63,7 +67,11 @@ export class PopularCategoriesComponent implements OnInit {
       'classic': '🏛️',
       'racing': '🏁',
       'diy': '🔨',
-      'safety': '🦺'
+      'safety': '🦺',
+      'performance': '🏎️',
+      'troubleshooting': '🔍',
+      'off-road': '🏔️',
+      'luxury': '💎'
     };
 
     const categoryName = category.name.toLowerCase();
@@ -73,7 +81,7 @@ export class PopularCategoriesComponent implements OnInit {
       }
     }
     
-    return category.icon || '📂';
+    return '📂';
   }
 
   getCategoryGradient(index: number): string {

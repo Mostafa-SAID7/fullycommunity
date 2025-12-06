@@ -1,8 +1,9 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 import { StoriesService, Story, StoryType } from '../../../../core/services/home/stories.service';
 import { StoryViewerComponent } from '../../../../shared/components/story-viewer/story-viewer.component';
+import { CreateStoryModalComponent } from '../../../../shared/components/create-story-modal/create-story-modal.component';
 
 export interface LoadingState {
   isLoading: boolean;
@@ -12,10 +13,10 @@ export interface LoadingState {
 @Component({
   selector: 'app-stories',
   standalone: true,
-  imports: [CommonModule, StoryViewerComponent],
+  imports: [CommonModule, StoryViewerComponent, CreateStoryModalComponent],
   templateUrl: './stories.component.html'
 })
-export class StoriesComponent implements OnInit {
+export class StoriesComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private storiesService = inject(StoriesService);
   
@@ -26,9 +27,21 @@ export class StoriesComponent implements OnInit {
   // Story viewer state
   showStoryViewer = signal(false);
   currentStoryIndex = signal(0);
+  
+  // Create story modal state
+  showCreateModal = signal(false);
+  
+  // Story timer for auto-progression
+  private storyTimer?: number;
 
   ngOnInit(): void {
     this.loadStories();
+  }
+
+  ngOnDestroy(): void {
+    if (this.storyTimer) {
+      clearInterval(this.storyTimer);
+    }
   }
 
   loadStories(): void {
@@ -108,8 +121,16 @@ export class StoriesComponent implements OnInit {
   }
 
   createStory(): void {
-    // TODO: Open story creation modal
-    console.log('Creating new story');
+    this.showCreateModal.set(true);
+  }
+
+  closeCreateModal(): void {
+    this.showCreateModal.set(false);
+  }
+
+  onStoryCreated(): void {
+    this.showCreateModal.set(false);
+    this.loadStories(); // Refresh stories after creation
   }
 
   getUserInitials(): string {

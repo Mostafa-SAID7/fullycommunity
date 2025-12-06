@@ -10,6 +10,8 @@ export * from './scroll-to-top/scroll-to-top.component';
 export * from './chat-assistant/chat-assistant.component';
 export * from './search-box/search-box.component';
 export * from './story-viewer/story-viewer.component';
+export * from './create-story-modal/create-story-modal.component';
+// Skeleton and loading components are in different locations
 
 // Component Array for easy importing
 import { EmptyStateComponent } from './empty-state/empty-state.component';
@@ -23,6 +25,8 @@ import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 import { ChatAssistantComponent } from './chat-assistant/chat-assistant.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { StoryViewerComponent } from './story-viewer/story-viewer.component';
+import { CreateStoryModalComponent } from './create-story-modal/create-story-modal.component';
+// Skeleton and loading components imports removed
 
 export const SHARED_COMPONENTS = [
   EmptyStateComponent,
@@ -36,4 +40,5 @@ export const SHARED_COMPONENTS = [
   ChatAssistantComponent,
   SearchBoxComponent,
   StoryViewerComponent,
+  CreateStoryModalComponent,
 ] as const;
