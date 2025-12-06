@@ -9,6 +9,7 @@ public static class DbSchemas
     public const string Security = "security";
     public const string Profiles = "profiles";
     public const string Community = "community";
+    public const string Home = "home";
     public const string Videos = "videos";
     public const string Podcasts = "podcasts";
     public const string Localization = "localization";
