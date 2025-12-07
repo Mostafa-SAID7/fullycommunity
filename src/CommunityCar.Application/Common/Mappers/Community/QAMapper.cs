@@ -62,6 +62,36 @@ public static class QAMapper
         );
     }
 
+    /// <summary>
+    /// Maps Question entity to TrendingQuestionDto
+    /// </summary>
+    public static TrendingQuestionDto ToTrendingDto(Question question)
+    {
+        var content = question.Content.Length > 200 
+            ? question.Content.Substring(0, 200) + "..." 
+            : question.Content;
+
+        return new TrendingQuestionDto(
+            Id: question.Id,
+            Title: question.Title,
+            Slug: question.Slug ?? question.Id.ToString(),
+            Content: content,
+            Author: new QuestionAuthorDto(
+                Id: question.Author?.Id ?? Guid.Empty,
+                FirstName: question.Author?.FirstName ?? "",
+                LastName: question.Author?.LastName ?? "",
+                AvatarUrl: question.Author?.AvatarUrl,
+                UserType: question.Author?.UserType.ToString() ?? "User"
+            ),
+            VoteCount: question.VoteCount,
+            AnswerCount: question.AnswerCount,
+            ViewCount: question.ViewCount,
+            HasAcceptedAnswer: question.AcceptedAnswerId.HasValue,
+            Tags: question.Tags?.Select(t => t.Tag).ToList() ?? [],
+            CreatedAt: question.CreatedAt
+        );
+    }
+
     #endregion
 
     #region Answer Mapping

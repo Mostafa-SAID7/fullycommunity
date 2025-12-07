@@ -1,80 +1,69 @@
-using CommunityCar.Application.DTOs.Response.Community.QA;
-using CommunityCar.Application.DTOs.Requests.Community.QA;
-using CommunityCar.Domain.Entities.Community.QA;
-using CommunityCar.Domain.Enums.Community.QA;
-using CommunityCar.Infrastructure.Data;
+using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Community;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace CommunityCar.API.Controllers.Community.QA;
 
 [ApiController]
 [Route("api/community/trending-questions")]
 [ApiExplorerSettings(GroupName = "community")]
+[Produces("application/json")]
 public class TrendingQuestionsController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IQAService _qaService;
+    private readonly ILocalizationService _localization;
+    private readonly ILogger<TrendingQuestionsController> _logger;
 
-    public TrendingQuestionsController(AppDbContext context) => _context = context;
+    public TrendingQuestionsController(
+        IQAService qaService,
+        ILocalizationService localization,
+        ILogger<TrendingQuestionsController> logger)
+    {
+        _qaService = qaService;
+        _localization = localization;
+        _logger = logger;
+    }
 
+    /// <summary>
+    /// Get trending questions based on votes, views, and activity
+    /// </summary>
     [HttpGet]
-    public async Task<IActionResult> GetTrendingQuestions()
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetTrendingQuestions([FromQuery] int count = 5, CancellationToken ct = default)
     {
-        var trendingQuestions = await _context.Questions
-            .Include(q => q.Author)
-            .Include(q => q.Tags)
-            .Where(q => !q.IsDeleted && q.Status != QuestionStatus.Closed)
-            .OrderByDescending(q => q.VoteCount)
-            .ThenByDescending(q => q.ViewCount)
-            .ThenByDescending(q => q.CreatedAt)
-            .Take(5)
-            .Select(q => new TrendingQuestionDto(
-                q.Id,
-                q.Title,
-                q.Slug ?? q.Id.ToString(),
-                q.Content.Length > 200 ? q.Content.Substring(0, 200) + "..." : q.Content,
-                new QuestionAuthorDto(
-                    q.Author.Id,
-                    q.Author.FirstName ?? "",
-                    q.Author.LastName ?? "",
-                    q.Author.AvatarUrl,
-                    q.Author.UserType.ToString()
-                ),
-                q.VoteCount,
-                q.AnswerCount,
-                q.ViewCount,
-                q.AcceptedAnswerId != null,
-                q.Tags.Select(t => t.Tag).ToList(),
-                q.CreatedAt
-            ))
-            .ToListAsync();
+        try
+        {
+            if (count < 1 || count > 20)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = _localization.Get("QA.Errors.InvalidCount"),
+                    messageAr = _localization.Get("QA.Errors.InvalidCount", "ar"),
+                    errors = new[] { "Count must be between 1 and 20" }
+                });
+            }
 
-        return Ok(trendingQuestions);
-    }
+            var trendingQuestions = await _qaService.GetTrendingQuestionsAsync(count);
 
-    [HttpPost("{id:guid}/vote")]
-    public async Task<IActionResult> VoteQuestion(Guid id, [FromBody] VoteRequest request)
-    {
-        var question = await _context.Questions.FindAsync(id);
-        if (question == null) return NotFound();
-
-        // Here you would implement voting logic
-        // For now, just increment vote count
-        question.VoteCount += request.Type == "up" ? 1 : -1;
-        await _context.SaveChangesAsync();
-
-        return Ok();
-    }
-
-    [HttpPost("{id:guid}/bookmark")]
-    public async Task<IActionResult> BookmarkQuestion(Guid id)
-    {
-        var question = await _context.Questions.FindAsync(id);
-        if (question == null) return NotFound();
-
-        question.BookmarkCount++;
-        await _context.SaveChangesAsync();
-
-        return Ok();
+            return Ok(new
+            {
+                success = true,
+                data = trendingQuestions,
+                message = _localization.Get("QA.Success.TrendingQuestionsRetrieved"),
+                messageAr = _localization.Get("QA.Success.TrendingQuestionsRetrieved", "ar")
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving trending questions");
+            return StatusCode(500, new
+            {
+                success = false,
+                message = _localization.Get("QA.Errors.RetrieveQuestionsFailed"),
+                messageAr = _localization.Get("QA.Errors.RetrieveQuestionsFailed", "ar")
+            });
+        }
     }
 }

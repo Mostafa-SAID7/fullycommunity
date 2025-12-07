@@ -7,69 +7,166 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Essential CSS Custom Properties for Dynamic Theming */
-:root {
-  /* Primary Colors - Can be overridden by JavaScript theming */
-  --color-primary: rgb(59, 130, 246); /* Blue-500 */
-  --color-primary-hover: rgb(37, 99, 235); /* Blue-600 */
-  
-  /* Secondary Colors */
-  --color-secondary: #6B7280; /* Gray-500 */
-  
-  /* Accent Colors */
-  --color-accent: #F59E0B; /* Amber-500 */
-  
-  /* Status Colors */
-  --color-success: #10B981; /* Emerald-500 */
-  --color-error: #EF4444; /* Red-500 */
-  --color-warning: #F59E0B; /* Amber-500 */
-  --color-info: #3B82F6; /* Blue-500 */
+/* RTL/LTR Direction Switching Animation */
+html.switching-direction {
+
+  /* Apply smooth transitions to all elements */
+  *,
+  *::before,
+  *::after {
+    transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      margin 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      margin-inline-start 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      margin-inline-end 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      padding 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      padding-inline-start 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      padding-inline-end 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      left 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      right 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      inset-inline-start 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      inset-inline-end 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+      border-radius 0.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+      text-align 0s linear,
+      direction 0s linear !important;
+  }
+
+  /* Prevent layout jumps during transition */
+  body {
+    overflow-x: hidden !important;
+  }
 }
 
-/* Dark mode color overrides */
-.dark {
-  --color-primary: rgb(96, 165, 250); /* Blue-400 */
-  --color-primary-hover: rgb(59, 130, 246); /* Blue-500 */
+/* Smooth animation overlay during direction switch */
+html.switching-direction::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg,
+      rgba(209, 52, 56, 0.08) 0%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(209, 52, 56, 0.05) 100%);
+  pointer-events: none;
+  z-index: 9999;
+  animation: direction-switch-fade 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes direction-switch-fade {
+  0% {
+    opacity: 1;
+    backdrop-filter: blur(2px);
+  }
+
+  50% {
+    opacity: 0.6;
+    backdrop-filter: blur(1px);
+  }
+
+  100% {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+}
+
+@layer base {
+
+  html,
+  body {
+    @apply font-sans text-gray-900 antialiased bg-gray-50;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Essential CSS Custom Properties for Dynamic Theming */
+  :root {
+    /* Primary Colors - Modern Red Theme */
+    --color-primary: rgb(209, 52, 56);
+    /* Microsoft/Fluent Red */
+    --color-primary-hover: rgb(164, 38, 44);
+
+    /* Secondary Colors */
+    --color-secondary: #6B7280;
+    /* Gray-500 */
+
+    /* Accent Colors */
+    --color-accent: #F59E0B;
+    /* Amber-500 */
+
+    /* Status Colors */
+    --color-success: #10B981;
+    /* Emerald-500 */
+    --color-error: #EF4444;
+    /* Red-500 */
+    --color-warning: #F59E0B;
+    /* Amber-500 */
+    --color-info: #3B82F6;
+    /* Blue-500 */
+  }
+
+  /* Dark mode color overrides */
+  .dark {
+    /* Red-400 for contrast */
+    --color-primary: rgb(248, 113, 113);
+    /* Red-500 */
+    --color-primary-hover: rgb(239, 68, 68);
+  }
 }
 
 /* Essential component styles that can't be handled by Tailwind alone */
 @layer components {
+
   /* Loading skeleton animation */
   .loading-skeleton {
     @apply bg-gray-200 dark:bg-gray-700 animate-pulse rounded;
   }
-  
-  /* Custom scrollbar for webkit browsers */
+
+  /* Custom scrollbar */
   .scrollbar-custom {
     scrollbar-width: thin;
     scrollbar-color: theme('colors.gray.400') transparent;
   }
-  
+
   .scrollbar-custom::-webkit-scrollbar {
     @apply w-2 h-2;
   }
-  
+
+  /* Utilities for left-side scrollbar */
+  .scrollbar-left {
+    direction: rtl;
+    /* Forces scrollbar to left */
+  }
+
+  .reset-direction {
+    direction: ltr;
+    /* Default LTR for content */
+  }
+
+  html[dir="rtl"] .reset-direction {
+    direction: rtl;
+    /* RTL for content in Arabic */
+  }
+
+
+
   .scrollbar-custom::-webkit-scrollbar-track {
     @apply bg-transparent;
   }
-  
+
   .scrollbar-custom::-webkit-scrollbar-thumb {
     @apply bg-gray-400 rounded-full;
   }
-  
+
   .scrollbar-custom::-webkit-scrollbar-thumb:hover {
     @apply bg-gray-500;
   }
-  
+
   /* Dark mode scrollbar */
   .dark .scrollbar-custom {
     scrollbar-color: theme('colors.gray.600') transparent;
   }
-  
+
   .dark .scrollbar-custom::-webkit-scrollbar-thumb {
     @apply bg-gray-600;
   }
-  
+
   .dark .scrollbar-custom::-webkit-scrollbar-thumb:hover {
     @apply bg-gray-500;
   }
@@ -77,36 +174,98 @@ html {
 
 /* Essential utility classes */
 @layer utilities {
-  /* Text selection styling */
-  ::selection {
-    @apply bg-blue-100 text-blue-900;
-  }
-  
-  .dark ::selection {
-    @apply bg-blue-900 text-blue-100;
-  }
-  
+
   /* Focus visible styling for accessibility */
   .focus-visible {
     @apply outline-none ring-2 ring-blue-500 ring-offset-2;
   }
-  
-  .dark .focus-visible {
-    @apply ring-offset-gray-900;
-  }
-  
+
   /* Print styles */
   @media print {
     .no-print {
       display: none !important;
     }
-    
+
     .print-break-before {
       page-break-before: always;
     }
-    
+
     .print-break-after {
       page-break-after: always;
     }
   }
+}
+
+/* ==========================================================================
+    Fluent Design System - Microsoft Modern Style
+    ========================================================================== */
+
+.acrylic-light {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px) saturate(125%);
+  -webkit-backdrop-filter: blur(20px) saturate(125%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.acrylic-dark {
+  background-color: rgba(32, 32, 32, 0.7);
+  backdrop-filter: blur(20px) saturate(125%);
+  -webkit-backdrop-filter: blur(20px) saturate(125%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mica {
+  background-color: rgba(255, 255, 255, 0.05);
+  /* Subtle tint */
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+}
+
+/* --- Refined Typography --- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-sans tracking-tight text-gray-900;
+  font-feature-settings: "cv11", "ss01";
+  /* Enable stylistic sets if available */
+}
+
+h1 {
+  @apply text-4xl font-bold mb-4;
+}
+
+h2 {
+  @apply text-3xl font-semibold mb-3;
+}
+
+h3 {
+  @apply text-2xl font-semibold mb-3;
+}
+
+/* Utility: Selection Color - RED THEME */
+::selection {
+  background-color: rgba(209, 52, 56, 0.2);
+  color: rgb(140, 30, 33);
+}
+
+/* Scrollbar Refinement to match global theme (Gray/Red hints if needed) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
 }

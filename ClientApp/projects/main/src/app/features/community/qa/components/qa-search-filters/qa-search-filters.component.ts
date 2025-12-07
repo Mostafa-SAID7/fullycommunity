@@ -12,7 +12,7 @@ export interface QuestionCategory {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200/50 dark:border-gray-700/50 p-6 mb-6">
       <div class="flex flex-col lg:flex-row gap-6">
         <!-- Search Bar -->
         <div class="flex-1">
@@ -160,7 +160,7 @@ export class QASearchFiltersComponent {
   showAdvancedFilters = input.required<boolean>();
   sortOptions = input.required<any[]>();
   popularTags = input.required<string[]>();
-  
+
   // Two-way bindings
   searchTerm = model.required<string>();
   sortBy = model.required<string>();
@@ -170,7 +170,7 @@ export class QASearchFiltersComponent {
   selectedTag = model.required<string>();
   dateFilter = model.required<string>();
   bountyFilter = model.required<string>();
-  
+
   // Outputs
   searchInput = output<Event>();
   filtersChanged = output<void>();

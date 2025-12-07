@@ -6,10 +6,10 @@ import { LoadingStateComponent } from '../../../../../shared/components/loading-
 import { EmptyStateComponent } from '../../../../../shared/components/empty-state/empty-state.component';
 
 @Component({
-    selector: 'app-question-list',
-    standalone: true,
-    imports: [CommonModule, RouterModule, LoadingStateComponent, EmptyStateComponent],
-    template: `
+  selector: 'app-question-list',
+  standalone: true,
+  imports: [CommonModule, RouterModule, LoadingStateComponent, EmptyStateComponent],
+  template: `
     <!-- Loading State -->
     <app-loading-state 
       *ngIf="loading()" 
@@ -44,7 +44,7 @@ import { EmptyStateComponent } from '../../../../../shared/components/empty-stat
     <!-- Questions List -->
     <div *ngIf="!loading() && !error() && questions().length > 0" class="space-y-4">
       <div *ngFor="let question of questions()" 
-           class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 transition-all hover:shadow-md">
+           class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200/50 dark:border-gray-700/50 p-6 transition-all hover:shadow-md">
         
         <div class="flex items-start gap-4">
           <!-- Stats Column -->
@@ -115,14 +115,14 @@ import { EmptyStateComponent } from '../../../../../shared/components/empty-stat
   `
 })
 export class QuestionListComponent {
-    // Inputs
-    questions = input.required<QuestionListItem[]>();
-    loading = input.required<boolean>();
-    error = input.required<string | null>();
-    viewMode = input.required<'card' | 'compact'>();
-    hasFilters = input.required<boolean>();
+  // Inputs
+  questions = input.required<QuestionListItem[]>();
+  loading = input.required<boolean>();
+  error = input.required<string | null>();
+  viewMode = input.required<'card' | 'compact'>();
+  hasFilters = input.required<boolean>();
 
-    // Outputs
-    clearFilters = output<void>();
-    askQuestion = output<void>();
+  // Outputs
+  clearFilters = output<void>();
+  askQuestion = output<void>();
 }

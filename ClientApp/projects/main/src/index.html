@@ -1,5 +1,8 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="ltr"></html>
+<html lang="en" dir="ltr" class="ltr">
+
+</html>
+
 <head>
   <meta charset="utf-8">
   <title>CommunityCar</title>
@@ -9,9 +12,32 @@
   <!-- Preload Arabic font for RTL support -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playpen+Sans+Arabic:wght@100..800&family=Stack+Sans+Notch:wght@200..700&display=swap"
+    rel="stylesheet">
+  <script>
+    (function () {
+      try {
+        var lang = localStorage.getItem('language') || 'en';
+        var isRtl = lang === 'ar';
+        document.documentElement.lang = lang;
+        document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+        if (isRtl) {
+          document.documentElement.classList.add('rtl');
+          document.documentElement.classList.remove('ltr');
+        } else {
+          document.documentElement.classList.add('ltr');
+          document.documentElement.classList.remove('rtl');
+        }
+      } catch (e) {
+        console.error('Error setting initial language:', e);
+      }
+    })();
+  </script>
 </head>
+
 <body>
   <app-root></app-root>
 </body>
+
 </html>

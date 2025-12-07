@@ -26,15 +26,17 @@ import { CommonModule } from '@angular/common';
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background: #FF6900;
+      background: rgba(209, 52, 56, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       color: white;
-      border: none;
+      border: 1px solid rgba(255, 255, 255, 0.2);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(255, 105, 0, 0.3);
-      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(209, 52, 56, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 1000;
       animation: fadeInUp 0.3s ease;
 
@@ -44,13 +46,14 @@ import { CommonModule } from '@angular/common';
       }
 
       &:hover {
-        background: #E85F00;
+        background: rgb(209, 52, 56);
         transform: translateY(-4px);
-        box-shadow: 0 6px 16px rgba(255, 105, 0, 0.4);
+        box-shadow: 0 8px 24px rgba(209, 52, 56, 0.4);
       }
 
       &:active {
-        transform: translateY(-2px);
+        transform: scale(0.95);
+        opacity: 0.95;
       }
     }
 
@@ -67,24 +70,27 @@ import { CommonModule } from '@angular/common';
 
     @media (max-width: 768px) {
       .scroll-to-top-btn {
-        bottom: 1rem;
-        right: 1rem;
-        width: 40px;
-        height: 40px;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 44px;
+        height: 44px;
 
         svg {
-          width: 20px;
-          height: 20px;
+          width: 22px;
+          height: 22px;
         }
       }
     }
 
     @media (prefers-color-scheme: dark) {
       .scroll-to-top-btn {
-        box-shadow: 0 4px 12px rgba(255, 105, 0, 0.5);
+        background: rgba(248, 113, 113, 0.9);
+        box-shadow: 0 4px 12px rgba(248, 113, 113, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
 
         &:hover {
-          box-shadow: 0 6px 16px rgba(255, 105, 0, 0.6);
+          background: rgb(248, 113, 113);
+          box-shadow: 0 8px 24px rgba(248, 113, 113, 0.4);
         }
       }
     }

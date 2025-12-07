@@ -63,7 +63,8 @@ public class DataSeeder
             new EventSeeder(_context, _loggerFactory.CreateLogger<EventSeeder>()),
             
             // Media content seeders
-            new VideoSeeder(_context, _loggerFactory.CreateLogger<VideoSeeder>()),
+            // Temporarily disabled due to concurrency issues
+            // new VideoSeeder(_context, _loggerFactory.CreateLogger<VideoSeeder>()),
             new PodcastSeeder(_context, _loggerFactory.CreateLogger<PodcastSeeder>()),
             
             // Marketplace seeders
@@ -72,8 +73,15 @@ public class DataSeeder
             // Services seeders
             new ServicesSeeder(_context, _loggerFactory.CreateLogger<ServicesSeeder>()),
             
-            // Community seeders
+            // Community interaction seeders (must run after content seeders)
+            new AnswersSeeder(_context, _loggerFactory.CreateLogger<AnswersSeeder>()),
+            new PostInteractionsSeeder(_context, _loggerFactory.CreateLogger<PostInteractionsSeeder>()),
+            new FriendshipsSeeder(_context, _loggerFactory.CreateLogger<FriendshipsSeeder>()),
+            
+            // Community pages
             new PageSeeder(_context, _loggerFactory.CreateLogger<PageSeeder>()),
+            
+            // Home seeders
             new StorySeeder(_context, _loggerFactory.CreateLogger<StorySeeder>())
         };
 

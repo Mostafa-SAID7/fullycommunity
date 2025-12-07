@@ -1,14 +1,21 @@
 <!-- Featured Posts Section -->
 <section class="space-y-4 mt-8">
   <!-- Title and link on same line with maximum adhesive primary background -->
-  <div class="relative -mx-16 mb-6">
+  <!-- Extended negative margins on larger screens to reach sidebar edge -->
+  <div class="relative -mx-4 sm:-mx-8 md:-mx-12 lg:-mx-16 xl:-mx-24 2xl:-mx-32 mb-6">
     <div class="flex justify-between items-center">
-      <div class="bg-primary pl-16 pr-16 py-4 rounded-r-xl shadow-lg">
-        <h2 class="text-2xl font-bold text-white tracking-wide">Featured Posts</h2>
+      <!-- Title bar - sticks to start (left in LTR, right in RTL) -->
+      <div
+        class="bg-primary ps-4 sm:ps-8 md:ps-12 lg:ps-16 xl:ps-24 2xl:ps-32 pe-6 sm:pe-8 md:pe-10 lg:pe-12 py-3 sm:py-4 ltr:rounded-e-xl rtl:rounded-s-xl shadow-lg transform hover:scale-[1.01] transition-transform">
+        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-wide">Featured Posts</h2>
       </div>
-      <div class="px-16">
-        <a routerLink="/community" class="text-primary hover:text-primary-hover font-semibold text-sm transition-colors px-2 py-1">
-          View All Posts →
+      <!-- Link - sticks to end (right in LTR, left in RTL) -->
+      <div class="px-4 sm:px-8 md:px-12 lg:px-16">
+        <a routerLink="/community"
+          class="text-primary hover:text-primary-hover font-semibold text-xs sm:text-sm transition-colors px-2 py-1 flex items-center gap-1 whitespace-nowrap">
+          View All Posts
+          <span class="ltr:inline rtl:hidden">→</span>
+          <span class="rtl:inline ltr:hidden">←</span>
         </a>
       </div>
     </div>
@@ -16,125 +23,138 @@
 
   <!-- Loading State -->
   @if (loadingState().isLoading) {
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      @for (i of [1,2,3]; track i) {
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden animate-pulse">
-          <div class="aspect-video bg-gray-200 dark:bg-gray-700"></div>
-          <div class="p-4 space-y-3">
-            <div class="flex items-center gap-2">
-              <div class="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
-              <div class="flex-1 space-y-1">
-                <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-24"></div>
-                <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
-              </div>
-              <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
-            </div>
-            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
-            <div class="flex justify-between">
-              <div class="flex gap-4">
-                <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-8"></div>
-                <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-8"></div>
-              </div>
-              <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
-            </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (i of [1,2,3]; track i) {
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden animate-pulse">
+      <div class="aspect-video bg-gray-200 dark:bg-gray-700"></div>
+      <div class="p-4 space-y-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+          <div class="flex-1 space-y-1">
+            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-24"></div>
+            <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
           </div>
+          <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
         </div>
-      }
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+        <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+        <div class="flex justify-between">
+          <div class="flex gap-4">
+            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-8"></div>
+            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-8"></div>
+          </div>
+          <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
+        </div>
+      </div>
     </div>
+    }
+  </div>
   }
 
   <!-- Error State -->
   @else if (loadingState().error) {
-    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
-      <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-        </svg>
-      </div>
-      <h3 class="text-lg font-semibold text-red-900 dark:text-red-100 mb-2">Unable to Load Posts</h3>
-      <p class="text-red-700 dark:text-red-300 mb-4">{{ loadingState().error }}</p>
-      <button 
-        (click)="retryLoad()"
-        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
-        Try Again
-      </button>
+  <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
+    <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z">
+        </path>
+      </svg>
     </div>
+    <h3 class="text-lg font-semibold text-red-900 dark:text-red-100 mb-2">Unable to Load Posts</h3>
+    <p class="text-red-700 dark:text-red-300 mb-4">{{ loadingState().error }}</p>
+    <button (click)="retryLoad()"
+      class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
+      Try Again
+    </button>
+  </div>
   }
 
   <!-- Success State -->
   @else if (posts().length > 0) {
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      @for (post of posts().slice(0, 3); track post.id) {
-        <article class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
-          <div class="aspect-video bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-            <svg class="aspect-12 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-            </svg>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (post of posts().slice(0, 3); track post.id) {
+    <article
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
+      <div class="aspect-video bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+        <svg class="aspect-12 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+          </path>
+        </svg>
+      </div>
+
+      <div class="p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div
+            class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+            {{ post.authorName.split(' ')[0][0] }}
           </div>
-          
-          <div class="p-4">
-            <div class="flex items-center gap-2 mb-3">
-              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
-                {{ post.authorName.split(' ')[0][0] }}
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                  {{ post.authorName }}
-                </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
-                  {{ getTimeAgo(post.createdAt) }}
-                </p>
-              </div>
-              <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded-full">
-                Featured
-              </span>
-            </div>
-            
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-              <a [routerLink]="['/community/post', post.id]">{{ post.title }}</a>
-            </h3>
-            
-            <p class="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mb-3">
-              {{ post.excerpt }}
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+              {{ post.authorName }}
             </p>
-            
-            <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-              <div class="flex items-center gap-4">
-                <span class="flex items-center gap-1 hover:text-red-500 transition-colors cursor-pointer">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                  </svg>
-                  {{ formatNumber(post.likeCount) }}
-                </span>
-                <span class="flex items-center gap-1 hover:text-blue-500 transition-colors cursor-pointer">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                  </svg>
-                  {{ formatNumber(post.commentCount) }}
-                </span>
-              </div>
-            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              {{ getTimeAgo(post.createdAt) }}
+            </p>
           </div>
-        </article>
-      }
-    </div>
+          <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded-full">
+            Featured
+          </span>
+        </div>
+
+        <h3
+          class="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          <a [routerLink]="['/community/post', post.id]">{{ post.title }}</a>
+        </h3>
+
+        <p class="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mb-3">
+          {{ post.excerpt }}
+        </p>
+
+        <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+          <div class="flex items-center gap-4">
+            <span class="flex items-center gap-1 hover:text-red-500 transition-colors cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                </path>
+              </svg>
+              {{ formatNumber(post.likeCount) }}
+            </span>
+            <span class="flex items-center gap-1 hover:text-blue-500 transition-colors cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                </path>
+              </svg>
+              {{ formatNumber(post.commentCount) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </article>
+    }
+  </div>
   }
 
   <!-- Empty State -->
   @else {
-    <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-8 text-center">
-      <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
-        </svg>
-      </div>
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Featured Posts</h3>
-      <p class="text-gray-600 dark:text-gray-400 mb-4">Check back later for featured content from our community!</p>
-      <a routerLink="/community" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-        Browse Community
-      </a>
+  <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-8 text-center">
+    <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z">
+        </path>
+      </svg>
     </div>
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Featured Posts</h3>
+    <p class="text-gray-600 dark:text-gray-400 mb-4">Check back later for featured content from our community!</p>
+    <a routerLink="/community"
+      class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+      Browse Community
+    </a>
+  </div>
   }
 </section>

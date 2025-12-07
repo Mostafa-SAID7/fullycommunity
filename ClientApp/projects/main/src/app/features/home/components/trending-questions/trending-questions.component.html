@@ -1,14 +1,21 @@
 <!-- Trending Questions Section -->
 <section class="space-y-4 mt-8">
   <!-- Title and link on same line with maximum adhesive primary background -->
-  <div class="relative -mx-16 mb-6">
+  <!-- Extended negative margins on larger screens to reach sidebar edge -->
+  <div class="relative -mx-4 sm:-mx-8 md:-mx-12 lg:-mx-16 xl:-mx-24 2xl:-mx-32 mb-6">
     <div class="flex justify-between items-center">
-      <div class="bg-primary pl-16 pr-16 py-4 rounded-r-xl shadow-lg">
-        <h2 class="text-2xl font-bold text-white tracking-wide">Trending Questions</h2>
+      <!-- Title bar - sticks to start (left in LTR, right in RTL) -->
+      <div
+        class="bg-primary ps-4 sm:ps-8 md:ps-12 lg:ps-16 xl:ps-24 2xl:ps-32 pe-6 sm:pe-8 md:pe-10 lg:pe-12 py-3 sm:py-4 ltr:rounded-e-xl rtl:rounded-s-xl shadow-lg transform hover:scale-[1.01] transition-transform">
+        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-wide">Trending Questions</h2>
       </div>
-      <div class="px-16">
-        <a routerLink="/community/qa" class="text-primary hover:text-primary-hover font-semibold text-sm transition-colors px-2 py-1">
-          View All Questions →
+      <!-- Link - sticks to end (right in LTR, left in RTL) -->
+      <div class="px-4 sm:px-8 md:px-12 lg:px-16">
+        <a routerLink="/community/qa"
+          class="text-primary hover:text-primary-hover font-semibold text-xs sm:text-sm transition-colors px-2 py-1 flex items-center gap-1 whitespace-nowrap">
+          View All Questions
+          <span class="ltr:inline rtl:hidden">→</span>
+          <span class="rtl:inline ltr:hidden">←</span>
         </a>
       </div>
     </div>
@@ -16,101 +23,109 @@
 
   <!-- Loading State -->
   @if (loadingState().isLoading) {
-    <div class="space-y-3">
-      @for (i of [1,2,3,4,5]; track i) {
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 animate-pulse">
-          <div class="flex gap-4">
-            <div class="w-12 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
-            <div class="flex-1 space-y-3">
-              <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-              <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-              <div class="flex gap-2">
-                <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
-                <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
-                <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-12"></div>
-              </div>
-            </div>
+  <div class="space-y-3">
+    @for (i of [1,2,3,4,5]; track i) {
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 animate-pulse">
+      <div class="flex gap-4">
+        <div class="w-12 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+        <div class="flex-1 space-y-3">
+          <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+          <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+          <div class="flex gap-2">
+            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
+            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
+            <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-12"></div>
           </div>
         </div>
-      }
+      </div>
     </div>
+    }
+  </div>
   }
 
   <!-- Error State -->
   @else if (loadingState().error) {
-    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
-      <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-        </svg>
-      </div>
-      <h3 class="text-lg font-semibold text-red-900 dark:text-red-100 mb-2">Unable to Load Questions</h3>
-      <p class="text-red-700 dark:text-red-300 mb-4">{{ loadingState().error }}</p>
-      <button 
-        (click)="retryLoad()"
-        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
-        Try Again
-      </button>
+  <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
+    <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z">
+        </path>
+      </svg>
     </div>
+    <h3 class="text-lg font-semibold text-red-900 dark:text-red-100 mb-2">Unable to Load Questions</h3>
+    <p class="text-red-700 dark:text-red-300 mb-4">{{ loadingState().error }}</p>
+    <button (click)="retryLoad()"
+      class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
+      Try Again
+    </button>
+  </div>
   }
 
   <!-- Success State -->
   @else if (questions().length > 0) {
-    <div class="space-y-3">
-      @for (question of questions(); track question.id) {
-        <article class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 hover:shadow-md transition-all duration-200 group">
-          <div class="flex gap-4">
-            <!-- Vote Count -->
-            <div class="flex flex-col items-center justify-center min-w-[3rem] px-2 py-1 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-              <span class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ question.voteCount }}</span>
-              <span class="text-xs text-gray-500 dark:text-gray-400">votes</span>
-            </div>
-            
-            <!-- Content -->
-            <div class="flex-1 min-w-0">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                <a [routerLink]="['/community/qa', question.slug]">{{ question.title }}</a>
-              </h3>
-              
-              <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                <span [class]="question.hasAcceptedAnswer ? 'text-green-600 dark:text-green-400 font-medium' : ''">
-                  @if (question.hasAcceptedAnswer) { 
-                    <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                    </svg>
-                  }
-                  {{ question.answerCount }} answers
-                </span>
-                <span class="hidden sm:inline">•</span>
-                <div class="flex items-center gap-1.5 truncate">
-                  <div class="w-5 h-5 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white text-[10px] font-bold">
-                    {{ question.author.firstName[0] }}
-                  </div>
-                  <span>{{ question.author.firstName }} {{ question.author.lastName }}</span>
-                </div>
-                <span class="hidden sm:inline">•</span>
-                <span>{{ getTimeAgo(question.createdAt) }}</span>
+  <div class="space-y-3">
+    @for (question of questions(); track question.id) {
+    <article
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 hover:shadow-md transition-all duration-200 group">
+      <div class="flex gap-4">
+        <!-- Vote Count -->
+        <div
+          class="flex flex-col items-center justify-center min-w-[3rem] px-2 py-1 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+          <span class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ question.voteCount }}</span>
+          <span class="text-xs text-gray-500 dark:text-gray-400">votes</span>
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 min-w-0">
+          <h3
+            class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            <a [routerLink]="['/community/qa', question.slug]">{{ question.title }}</a>
+          </h3>
+
+          <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+            <span [class]="question.hasAcceptedAnswer ? 'text-green-600 dark:text-green-400 font-medium' : ''">
+              @if (question.hasAcceptedAnswer) {
+              <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg>
+              }
+              {{ question.answerCount }} answers
+            </span>
+            <span class="hidden sm:inline">•</span>
+            <div class="flex items-center gap-1.5 truncate">
+              <div
+                class="w-5 h-5 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white text-[10px] font-bold">
+                {{ question.author.firstName[0] }}
               </div>
+              <span>{{ question.author.firstName }} {{ question.author.lastName }}</span>
             </div>
+            <span class="hidden sm:inline">•</span>
+            <span>{{ getTimeAgo(question.createdAt) }}</span>
           </div>
-        </article>
-      }
-    </div>
+        </div>
+      </div>
+    </article>
+    }
+  </div>
   }
 
   <!-- Empty State -->
   @else {
-    <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-8 text-center">
-      <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-      </div>
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Questions Yet</h3>
-      <p class="text-gray-600 dark:text-gray-400 mb-4">Be the first to ask a question in our community!</p>
-      <a routerLink="/community/qa/ask" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-        Ask a Question
-      </a>
+  <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-8 text-center">
+    <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+        </path>
+      </svg>
     </div>
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Questions Yet</h3>
+    <p class="text-gray-600 dark:text-gray-400 mb-4">Be the first to ask a question in our community!</p>
+    <a routerLink="/community/qa/ask"
+      class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+      Ask a Question
+    </a>
+  </div>
   }
 </section>

@@ -21,11 +21,10 @@ export interface SearchConfig {
   template: `
     <div class="relative" [ngClass]="containerClass">
       <!-- Search Input Wrapper -->
-      <div class="relative flex items-center" [ngClass]="getWrapperClasses()">
+      <div class="relative flex items-center group" [ngClass]="getWrapperClasses()">
         <!-- Search Icon -->
-        <div *ngIf="config.showSearchIcon !== false" class="absolute left-3 pointer-events-none">
+        <div *ngIf="config.showSearchIcon !== false" class="absolute left-3 pointer-events-none transition-colors duration-300" [class.text-primary]="isFocused" [class.text-gray-400]="!isFocused">
           <svg 
-            class="text-gray-400 dark:text-gray-500" 
             [ngClass]="getIconSize()"
             fill="none" 
             stroke="currentColor" 
@@ -42,7 +41,7 @@ export interface SearchConfig {
         <input
           #searchInput
           type="text"
-          class="w-full outline-none transition-all"
+          class="w-full outline-none transition-all placeholder-transition"
           [ngClass]="getInputClasses()"
           [placeholder]="config.placeholder || 'Search...'"
           [(ngModel)]="searchTerm"
@@ -57,7 +56,7 @@ export interface SearchConfig {
         <button
           *ngIf="config.showClearButton !== false && searchTerm"
           type="button"
-          class="absolute right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          class="absolute right-3 text-gray-400 hover:text-primary transition-colors animate-fade-in-fast"
           (click)="clearSearch()"
           [attr.aria-label]="'Clear search'">
           <svg 
@@ -77,22 +76,32 @@ export interface SearchConfig {
       <!-- Search Suggestions -->
       <div 
         *ngIf="showSuggestions && suggestions.length > 0 && isFocused" 
-        class="absolute z-50 w-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden backdrop-blur-sm">
+        class="absolute z-50 w-full mt-2 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-fluent-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden backdrop-blur-md animate-slide-down">
         <div
           *ngFor="let suggestion of suggestions; trackBy: trackBySuggestion"
-          class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-all border-b border-gray-100/50 dark:border-gray-700/50 last:border-b-0"
+          class="flex items-center justify-between px-4 py-3 hover:bg-gray-50/80 dark:hover:bg-gray-700/50 cursor-pointer transition-all border-b border-gray-100/50 dark:border-gray-700/50 last:border-b-0 group"
           (click)="selectSuggestion(suggestion)">
-          <span class="text-sm text-gray-700 dark:text-gray-300 font-medium">{{ suggestion.text }}</span>
+          <div class="flex items-center gap-2">
+             <svg class="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+             <span class="text-sm text-gray-700 dark:text-gray-300 font-medium group-hover:text-primary transition-colors">{{ suggestion.text }}</span>
+          </div>
           <span 
             *ngIf="suggestion.count" 
-            class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+            class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full group-hover:bg-white dark:group-hover:bg-gray-600 transition-colors">
             {{ suggestion.count }}
           </span>
         </div>
       </div>
     </div>
   `,
-  styles: []
+  styles: [`
+    .placeholder-transition::placeholder {
+      transition: color 0.3s ease;
+    }
+    :host.focused .placeholder-transition::placeholder {
+      color: #9ca3af;
+    }
+  `]
 })
 export class SearchBoxComponent implements OnInit, OnDestroy {
   @ViewChild('searchInput', { static: true }) searchInput!: ElementRef<HTMLInputElement>;
@@ -195,21 +204,23 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     // Variant styles
     switch (this.variant) {
       case 'outlined':
-        classes.push('border-2 border-gray-300 dark:border-gray-600');
+        classes.push('border-2 border-gray-300 dark:border-gray-600 bg-transparent');
         break;
       case 'filled':
-        classes.push('bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700');
+        classes.push('bg-gray-100/50 dark:bg-gray-800/50 border border-transparent backdrop-blur-sm');
         break;
       default:
-        classes.push('bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700');
+        // Default is now slightly transparent/glassy
+        classes.push('bg-white/80 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-700 backdrop-blur-sm shadow-sm');
     }
 
-    classes.push('rounded-lg transition-all');
-    
+    classes.push('rounded-lg transition-all duration-300');
+
     if (this.isFocused) {
-      classes.push('ring-2 ring-primary/20 border-primary dark:border-primary');
+      // Fluent focus: Primary ring + Border
+      classes.push('ring-2 ring-primary/20 border-primary dark:border-primary shadow-fluent');
     } else {
-      classes.push('hover:border-gray-300 dark:hover:border-gray-600');
+      classes.push('hover:border-gray-300 dark:hover:border-gray-500 hover:shadow-sm');
     }
 
     return classes.join(' ');

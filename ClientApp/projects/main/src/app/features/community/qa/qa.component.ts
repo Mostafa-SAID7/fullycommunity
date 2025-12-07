@@ -122,44 +122,44 @@ export class QAComponent implements OnInit {
   showAdvancedFilters = signal(false);
 
   // New question form
-  newQuestion: NewQuestionForm = { 
-    title: '', 
-    content: '', 
+  newQuestion: NewQuestionForm = {
+    title: '',
+    content: '',
     tagsInput: '',
     categoryId: ''
   };
 
   // Enhanced sort options with icons
   sortOptions = [
-    { 
-      value: 'newest', 
+    {
+      value: 'newest',
       label: 'Newest',
       icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
     },
-    { 
-      value: 'votes', 
+    {
+      value: 'votes',
       label: 'Most Votes',
       icon: 'M5 15l7-7 7 7'
     },
-    { 
-      value: 'unanswered', 
+    {
+      value: 'unanswered',
       label: 'Unanswered',
       icon: 'M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
     },
-    { 
-      value: 'active', 
+    {
+      value: 'active',
       label: 'Most Active',
       icon: 'M13 10V3L4 14h7v7l9-11h-7z'
     },
-    { 
-      value: 'bounty', 
+    {
+      value: 'bounty',
       label: 'Bounty',
       icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1'
     }
   ];
 
   popularTags = [
-    'maintenance', 'electric', 'brakes', 'engine', 'oil-change', 
+    'maintenance', 'electric', 'brakes', 'engine', 'oil-change',
     'tires', 'battery', 'transmission', 'suspension', 'diagnostics',
     'hybrid', 'tesla', 'bmw', 'mercedes', 'toyota', 'honda'
   ];

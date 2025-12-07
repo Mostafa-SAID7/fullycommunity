@@ -17,6 +17,7 @@ public class AnswerService
     private readonly IRepository<Answer> _answerRepository;
     private readonly IRepository<AnswerVote> _voteRepository;
     private readonly IRepository<Question> _questionRepository;
+    private readonly IRepository<AnswerComment> _commentRepository;
 
     public AnswerService(IUnitOfWork unitOfWork)
     {
@@ -24,6 +25,7 @@ public class AnswerService
         _answerRepository = unitOfWork.Repository<Answer>();
         _voteRepository = unitOfWork.Repository<AnswerVote>();
         _questionRepository = unitOfWork.Repository<Question>();
+        _commentRepository = unitOfWork.Repository<AnswerComment>();
     }
 
     #region Query
@@ -227,6 +229,81 @@ public class AnswerService
         await _unitOfWork.SaveChangesAsync();
 
         return answer.VoteCount;
+    }
+
+    #endregion
+
+    #region Comments
+
+    public async Task<IEnumerable<AnswerCommentDto>> GetCommentsAsync(Guid answerId)
+    {
+        var comments = await _commentRepository
+            .GetWithIncludesAsync(
+                c => c.AnswerId == answerId,
+                c => c.Author
+            );
+
+        return comments
+            .OrderBy(c => c.CreatedAt)
+            .Select(QAMapper.ToAnswerCommentDto);
+    }
+
+    public async Task<AnswerCommentDto> AddCommentAsync(Guid answerId, Guid authorId, CreateCommentRequest request)
+    {
+        var answer = await _answerRepository.FirstOrDefaultAsync(a => a.Id == answerId)
+            ?? throw new InvalidOperationException("Answer not found");
+
+        var comment = new AnswerComment
+        {
+            AnswerId = answerId,
+            AuthorId = authorId,
+            Content = request.Content
+        };
+
+        await _commentRepository.AddAsync(comment);
+        await _unitOfWork.SaveChangesAsync();
+
+        // Reload with author
+        var savedComment = await _commentRepository
+            .GetWithIncludesAsync(c => c.Id == comment.Id, c => c.Author);
+
+        return QAMapper.ToAnswerCommentDto(savedComment.First());
+    }
+
+    public async Task<AnswerCommentDto?> UpdateCommentAsync(Guid commentId, Guid userId, UpdateCommentRequest request)
+    {
+        var comment = await _commentRepository
+            .GetWithIncludesAsync(
+                c => c.Id == commentId,
+                c => c.Author
+            );
+
+        if (!comment.Any()) return null;
+
+        var commentEntity = comment.First();
+
+        if (commentEntity.AuthorId != userId)
+            throw new UnauthorizedAccessException("You can only edit your own comments");
+
+        commentEntity.Content = request.Content;
+        _commentRepository.Update(commentEntity);
+        await _unitOfWork.SaveChangesAsync();
+
+        return QAMapper.ToAnswerCommentDto(commentEntity);
+    }
+
+    public async Task<bool> DeleteCommentAsync(Guid commentId, Guid userId)
+    {
+        var comment = await _commentRepository.FirstOrDefaultAsync(c => c.Id == commentId);
+        if (comment == null) return false;
+
+        if (comment.AuthorId != userId)
+            throw new UnauthorizedAccessException("You can only delete your own comments");
+
+        _commentRepository.Delete(comment);
+        await _unitOfWork.SaveChangesAsync();
+
+        return true;
     }
 
     #endregion

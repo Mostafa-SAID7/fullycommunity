@@ -2,44 +2,30 @@
 <div class="min-h-[calc(100vh-56px)] overflow-hidden max-w-full">
   <!-- Left Sidebar (Fixed - Facebook style) -->
   @if (showLeftSidebar) {
-    <app-left-sidebar 
-      [menuItems]="leftMenuItems"
-      [shortcuts]="shortcuts"
-      [showUserProfile]="showUserProfile"
-      [showFooter]="showFooter"
-      (expandedChange)="onSidebarToggle($event)">
-    </app-left-sidebar>
+  <app-left-sidebar [menuItems]="leftMenuItems" [shortcuts]="shortcuts" [showUserProfile]="showUserProfile"
+    [showFooter]="showFooter" (expandedChange)="onSidebarToggle($event)">
+  </app-left-sidebar>
   }
 
   <!-- Right Sidebar (Fixed - Facebook style) -->
   @if (showRightSidebar) {
-    <app-right-sidebar
-      [sponsoredItems]="sponsoredItems"
-      [events]="events"
-      [contacts]="contacts"
-      [showSponsored]="showSponsored"
-      [showEvents]="showEvents"
-      [showContacts]="showContacts">
-    </app-right-sidebar>
+  <app-right-sidebar [sponsoredItems]="sponsoredItems" [events]="events" [contacts]="contacts"
+    [showSponsored]="showSponsored" [showEvents]="showEvents" [showContacts]="showContacts">
+  </app-right-sidebar>
   }
 
   <!-- Main Content Area - Responsive Facebook style -->
-  <!-- Sidebar widths: Rail=48px(ml-12), Expanded=256px(ml-64), Right=288px(mr-72) -->
-  <main 
+  <!-- Sidebar widths: Rail=48px(ms-12), Expanded=256px(ms-64), Right=288px(me-72) -->
+  <main
     class="min-h-[calc(100vh-56px)] overflow-x-hidden overflow-y-auto transition-all duration-300 box-border pt-5 sm:pt-6 lg:pt-8"
-    [class.ml-12]="showLeftSidebar"
-    [class.lg:ml-64]="showLeftSidebar && sidebarExpanded"
-    [class.lg:ml-12]="showLeftSidebar && !sidebarExpanded"
-    [class.xl:mr-72]="showRightSidebar">
+    [class.ms-12]="showLeftSidebar" [class.lg:ms-64]="showLeftSidebar && sidebarExpanded"
+    [class.lg:ms-12]="showLeftSidebar && !sidebarExpanded" [class.xl:me-72]="showRightSidebar">
     <!-- Responsive content container - prevents overflow -->
-    <div 
+    <div
       class="w-full max-w-full py-3 px-2 sm:py-4 sm:px-3 md:px-4 lg:py-5 lg:px-6 xl:py-6 overflow-x-hidden box-border"
-      [class.lg:mx-auto]="centerContent"
-      [class.lg:max-w-[590px]]="contentWidth === 'narrow'"
-      [class.xl:max-w-[680px]]="contentWidth === 'narrow'"
-      [class.lg:max-w-[800px]]="contentWidth === 'medium'"
-      [class.xl:max-w-[900px]]="contentWidth === 'medium'"
-      [class.lg:max-w-[1000px]]="contentWidth === 'wide'"
+      [class.lg:mx-auto]="centerContent" [class.lg:max-w-[590px]]="contentWidth === 'narrow'"
+      [class.xl:max-w-[680px]]="contentWidth === 'narrow'" [class.lg:max-w-[800px]]="contentWidth === 'medium'"
+      [class.xl:max-w-[900px]]="contentWidth === 'medium'" [class.lg:max-w-[1000px]]="contentWidth === 'wide'"
       [class.xl:max-w-[1200px]]="contentWidth === 'wide'">
       <ng-content></ng-content>
     </div>

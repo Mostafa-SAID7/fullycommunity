@@ -47,20 +47,38 @@ export class LocalizationService {
     return 'en';
   }
 
+  private _transitionTimeout: any;
+
   async setLanguage(langCode: string): Promise<void> {
     if (langCode === this._currentLang()) return;
 
     this._isLoading.set(true);
+
+    // Clear any existing transition timeout
+    if (this._transitionTimeout) {
+      clearTimeout(this._transitionTimeout);
+      this._transitionTimeout = null;
+    }
+
+    // Add transition class for smooth RTL/LTR switch
+    const html = this.document.documentElement;
+    html.classList.add('switching-direction');
+
+    // Small delay for transition class to take effect
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     this._currentLang.set(langCode);
     localStorage.setItem('language', langCode);
-    
+
     await this.loadTranslations(langCode);
     this.applyDirection(langCode);
-    
-    // Trigger page reload for better RTL/LTR transition
-    if (typeof window !== 'undefined') {
-      window.location.reload();
-    }
+
+    // Remove transition class after animation completes (match CSS duration of 800ms)
+    this._transitionTimeout = setTimeout(() => {
+      html.classList.remove('switching-direction');
+      this._isLoading.set(false);
+      this._transitionTimeout = null;
+    }, 850);
   }
 
   private async loadTranslations(langCode: string): Promise<void> {
@@ -90,14 +108,14 @@ export class LocalizationService {
       // Ultimate fallback translations
       const fallback: Record<string, Translations> = {
         en: {
-          common: { 
-            home: 'Home', search: 'Search', login: 'Login', logout: 'Logout', 
+          common: {
+            home: 'Home', search: 'Search', login: 'Login', logout: 'Logout',
             settings: 'Settings', profile: 'Profile', loading: 'Loading...',
             save: 'Save', cancel: 'Cancel', edit: 'Edit', delete: 'Delete',
             create: 'Create', update: 'Update', back: 'Back', next: 'Next'
           },
-          navigation: { 
-            community: 'Community', videos: 'Videos', marketplace: 'Marketplace', 
+          navigation: {
+            community: 'Community', videos: 'Videos', marketplace: 'Marketplace',
             podcasts: 'Podcasts', services: 'Services', news: 'News', events: 'Events'
           },
           podcasts: {
@@ -110,14 +128,14 @@ export class LocalizationService {
           }
         },
         ar: {
-          common: { 
-            home: 'الرئيسية', search: 'بحث', login: 'تسجيل الدخول', logout: 'تسجيل الخروج', 
+          common: {
+            home: 'الرئيسية', search: 'بحث', login: 'تسجيل الدخول', logout: 'تسجيل الخروج',
             settings: 'الإعدادات', profile: 'الملف الشخصي', loading: 'جاري التحميل...',
             save: 'حفظ', cancel: 'إلغاء', edit: 'تعديل', delete: 'حذف',
             create: 'إنشاء', update: 'تحديث', back: 'رجوع', next: 'التالي'
           },
-          navigation: { 
-            community: 'المجتمع', videos: 'الفيديوهات', marketplace: 'السوق', 
+          navigation: {
+            community: 'المجتمع', videos: 'الفيديوهات', marketplace: 'السوق',
             podcasts: 'البودكاست', services: 'الخدمات', news: 'الأخبار', events: 'الفعاليات'
           },
           podcasts: {
@@ -137,10 +155,10 @@ export class LocalizationService {
   private applyDirection(langCode: string): void {
     const isRtl = langCode === 'ar';
     const html = this.document.documentElement;
-    
+
     html.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
     html.setAttribute('lang', langCode);
-    
+
     if (isRtl) {
       html.classList.add('rtl');
       html.classList.remove('ltr');

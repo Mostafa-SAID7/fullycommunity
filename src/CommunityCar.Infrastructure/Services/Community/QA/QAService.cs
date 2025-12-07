@@ -55,6 +55,9 @@ public class QAService : IQAService
     public Task<IEnumerable<QuestionListDto>> GetRelatedQuestionsAsync(Guid questionId, int count = 5)
         => _questionQueryService.GetRelatedQuestionsAsync(questionId, count);
 
+    public Task<IEnumerable<TrendingQuestionDto>> GetTrendingQuestionsAsync(int count = 5)
+        => _questionQueryService.GetTrendingQuestionsAsync(count);
+
     #endregion
 
     #region Question Command Operations
@@ -130,6 +133,22 @@ public class QAService : IQAService
 
     public Task<IEnumerable<QuestionCategoryDto>> GetCategoriesAsync()
         => _categoryService.GetCategoriesAsync();
+
+    #endregion
+
+    #region Answer Comment Operations
+
+    public Task<IEnumerable<AnswerCommentDto>> GetAnswerCommentsAsync(Guid answerId)
+        => _answerService.GetCommentsAsync(answerId);
+
+    public Task<AnswerCommentDto> AddAnswerCommentAsync(Guid answerId, Guid authorId, CreateCommentRequest request)
+        => _answerService.AddCommentAsync(answerId, authorId, request);
+
+    public Task<AnswerCommentDto?> UpdateAnswerCommentAsync(Guid commentId, Guid userId, UpdateCommentRequest request)
+        => _answerService.UpdateCommentAsync(commentId, userId, request);
+
+    public Task<bool> DeleteAnswerCommentAsync(Guid commentId, Guid userId)
+        => _answerService.DeleteCommentAsync(commentId, userId);
 
     #endregion
 }

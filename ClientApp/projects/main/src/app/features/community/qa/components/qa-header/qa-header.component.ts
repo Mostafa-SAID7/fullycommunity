@@ -2,11 +2,11 @@ import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-qa-header',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+  selector: 'app-qa-header',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
       <div>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Community Q&A</h1>
         <p class="text-gray-600 dark:text-gray-400">Ask questions, share knowledge, and help others with their car issues.</p>
@@ -48,13 +48,13 @@ import { CommonModule } from '@angular/common';
   `
 })
 export class QAHeaderComponent {
-    // Inputs
-    totalQuestions = input.required<number>();
-    answeredCount = input.required<number>();
-    unansweredCount = input.required<number>();
-    bountyCount = input.required<number>();
+  // Inputs
+  totalQuestions = input.required<number>();
+  answeredCount = input.required<number>();
+  unansweredCount = input.required<number>();
+  bountyCount = input.required<number>();
 
-    // Outputs
-    askQuestion = output<void>();
-    toggleFilters = output<void>();
+  // Outputs
+  askQuestion = output<void>();
+  toggleFilters = output<void>();
 }

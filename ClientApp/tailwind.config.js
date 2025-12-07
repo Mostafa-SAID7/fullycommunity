@@ -142,6 +142,7 @@ module.exports = {
         },
       },
       fontFamily: {
+        'sans': ['"Stack Sans Notch"', '"Playpen Sans Arabic"', 'system-ui', '-apple-system', 'sans-serif'],
         'segoe': ['Segoe UI', 'system-ui', '-apple-system', 'sans-serif'],
       },
       boxShadow: {
@@ -159,7 +160,8 @@ module.exports = {
         'fade-out': 'fadeOut 0.3s ease-in-out',
         'fade-in-fast': 'fadeIn 0.15s ease-in-out',
         'fade-in-slow': 'fadeIn 0.5s ease-in-out',
-        
+        'press': 'press 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+
         // Slide animations
         'slide-up': 'slideUp 0.3s ease-out',
         'slide-down': 'slideDown 0.3s ease-out',
@@ -167,63 +169,63 @@ module.exports = {
         'slide-right': 'slideRight 0.3s ease-out',
         'slide-up-fast': 'slideUp 0.2s ease-out',
         'slide-up-slow': 'slideUp 0.5s ease-out',
-        
+
         // Scale animations
         'scale-in': 'scaleIn 0.2s ease-out',
         'scale-out': 'scaleOut 0.2s ease-in',
         'scale-bounce': 'scaleBounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
         'scale-pulse': 'scalePulse 2s infinite',
-        
+
         // Bounce animations
         'bounce-in': 'bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
         'bounce-gentle': 'bounceGentle 0.4s ease-out',
         'bounce-dot': 'bounceDot 1.4s infinite ease-in-out both',
-        
+
         // Rotation animations
         'spin-slow': 'spin 3s linear infinite',
         'spin-fast': 'spin 0.5s linear infinite',
         'rotate-in': 'rotateIn 0.4s ease-out',
         'wiggle': 'wiggle 1s ease-in-out infinite',
-        
+
         // Flip animations
         'flip-in': 'flipIn 0.6s ease-in-out',
         'flip-out': 'flipOut 0.6s ease-in-out',
         'flip-x': 'flipX 0.4s ease-in-out',
         'flip-y': 'flipY 0.4s ease-in-out',
-        
+
         // Zoom animations
         'zoom-in': 'zoomIn 0.3s ease-out',
         'zoom-out': 'zoomOut 0.3s ease-in',
         'zoom-in-bounce': 'zoomInBounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        
+
         // Shake and vibrate
         'shake': 'shake 0.5s ease-in-out',
         'vibrate': 'vibrate 0.3s ease-in-out',
         'wobble': 'wobble 1s ease-in-out',
-        
+
         // Loading animations
         'shimmer': 'shimmer 2s infinite linear',
         'pulse-slow': 'pulse 3s infinite',
         'pulse-fast': 'pulse 1s infinite',
         'loading-dots': 'loadingDots 1.5s infinite ease-in-out',
-        
+
         // Hover effects
         'float': 'float 3s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite alternate',
         'heartbeat': 'heartbeat 1.5s ease-in-out infinite',
-        
+
         // Entrance animations
         'slide-in-bottom': 'slideInBottom 0.4s ease-out',
         'slide-in-top': 'slideInTop 0.4s ease-out',
         'slide-in-left': 'slideInLeft 0.4s ease-out',
         'slide-in-right': 'slideInRight 0.4s ease-out',
-        
+
         // Exit animations
         'slide-out-bottom': 'slideOutBottom 0.3s ease-in',
         'slide-out-top': 'slideOutTop 0.3s ease-in',
         'slide-out-left': 'slideOutLeft 0.3s ease-in',
         'slide-out-right': 'slideOutRight 0.3s ease-in',
-        
+
         // Special effects
         'typewriter': 'typewriter 3s steps(40) infinite',
         'gradient-shift': 'gradientShift 3s ease-in-out infinite',
@@ -239,7 +241,11 @@ module.exports = {
           '0%': { opacity: '1' },
           '100%': { opacity: '0' },
         },
-        
+        press: {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(0.95)' },
+        },
+
         // Slide animations
         slideUp: {
           '0%': { transform: 'translateY(20px)', opacity: '0' },
@@ -257,7 +263,7 @@ module.exports = {
           '0%': { transform: 'translateX(-20px)', opacity: '0' },
           '100%': { transform: 'translateX(0)', opacity: '1' },
         },
-        
+
         // Scale animations
         scaleIn: {
           '0%': { transform: 'scale(0.9)', opacity: '0' },
@@ -277,7 +283,7 @@ module.exports = {
           '0%, 100%': { transform: 'scale(1)' },
           '50%': { transform: 'scale(1.05)' },
         },
-        
+
         // Bounce animations
         bounceIn: {
           '0%': { transform: 'scale(0.3)', opacity: '0' },
@@ -295,7 +301,7 @@ module.exports = {
           '0%, 80%, 100%': { transform: 'scale(0)' },
           '40%': { transform: 'scale(1)' },
         },
-        
+
         // Rotation animations
         rotateIn: {
           '0%': { transform: 'rotate(-200deg)', opacity: '0' },
@@ -310,7 +316,7 @@ module.exports = {
           '35%': { transform: 'rotateZ(-4deg)' },
           '40%, 100%': { transform: 'rotateZ(0)' },
         },
-        
+
         // Flip animations
         flipIn: {
           '0%': { transform: 'perspective(400px) rotateY(90deg)', opacity: '0' },
@@ -331,7 +337,7 @@ module.exports = {
           '0%': { transform: 'perspective(400px) rotateY(90deg)', opacity: '0' },
           '100%': { transform: 'perspective(400px) rotateY(0deg)', opacity: '1' },
         },
-        
+
         // Zoom animations
         zoomIn: {
           '0%': { transform: 'scale(0.5)', opacity: '0' },
@@ -346,7 +352,7 @@ module.exports = {
           '60%': { transform: 'scale(1.2)', opacity: '1' },
           '100%': { transform: 'scale(1)' },
         },
-        
+
         // Shake and vibrate
         shake: {
           '0%, 100%': { transform: 'translateX(0)' },
@@ -369,7 +375,7 @@ module.exports = {
           '75%': { transform: 'translateX(-5%) rotate(-1deg)' },
           '100%': { transform: 'translateX(0%)' },
         },
-        
+
         // Loading animations
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
@@ -379,7 +385,7 @@ module.exports = {
           '0%, 80%, 100%': { transform: 'scale(0)', opacity: '0.5' },
           '40%': { transform: 'scale(1)', opacity: '1' },
         },
-        
+
         // Hover effects
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
@@ -393,7 +399,7 @@ module.exports = {
           '0%, 50%, 100%': { transform: 'scale(1)' },
           '25%, 75%': { transform: 'scale(1.1)' },
         },
-        
+
         // Entrance animations
         slideInBottom: {
           '0%': { transform: 'translateY(100%)', opacity: '0' },
@@ -411,7 +417,7 @@ module.exports = {
           '0%': { transform: 'translateX(100%)', opacity: '0' },
           '100%': { transform: 'translateX(0)', opacity: '1' },
         },
-        
+
         // Exit animations
         slideOutBottom: {
           '0%': { transform: 'translateY(0)', opacity: '1' },
@@ -429,7 +435,7 @@ module.exports = {
           '0%': { transform: 'translateX(0)', opacity: '1' },
           '100%': { transform: 'translateX(100%)', opacity: '0' },
         },
-        
+
         // Special effects
         typewriter: {
           '0%': { width: '0' },
@@ -461,7 +467,7 @@ module.exports = {
     },
   },
   plugins: [
-    function({ addUtilities, addComponents, theme }) {
+    function ({ addUtilities, addComponents, theme }) {
       // Enhanced utilities for SCSS integration
       const newUtilities = {
         '.line-clamp-1': {
@@ -574,7 +580,7 @@ module.exports = {
           marginRight: '320px',
         },
       }
-      
+
       // Enhanced components for SCSS integration
       const newComponents = {
         '.btn': {
@@ -585,7 +591,7 @@ module.exports = {
           fontSize: theme('fontSize.sm'),
           fontWeight: theme('fontWeight.medium'),
           borderRadius: theme('borderRadius.fluent'),
-          transition: 'all 0.2s ease',
+          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
           cursor: 'pointer',
           border: 'none',
           textDecoration: 'none',
@@ -593,12 +599,20 @@ module.exports = {
             outline: 'none',
             boxShadow: `0 0 0 2px ${theme('colors.primary.DEFAULT')}40`,
           },
+          '&:active': {
+            transform: 'scale(0.98)',
+            opacity: '0.9',
+          }
         },
         '.btn-primary': {
           backgroundColor: theme('colors.primary.DEFAULT'),
           color: 'white',
+          background: `linear-gradient(135deg, ${theme('colors.primary.DEFAULT')} 0%, ${theme('colors.primary.hover')} 100%)`,
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
           '&:hover': {
-            backgroundColor: theme('colors.primary.hover'),
+            background: `linear-gradient(135deg, ${theme('colors.primary.600')} 0%, ${theme('colors.primary.800')} 100%)`,
+            transform: 'translateY(-1px)',
+            boxShadow: `0 4px 12px ${theme('colors.primary.DEFAULT')}40`,
           },
         },
         '.btn-secondary': {
@@ -609,26 +623,42 @@ module.exports = {
           },
         },
         '.card': {
-          backgroundColor: theme('colors.background.DEFAULT'),
-          border: `1px solid ${theme('colors.border.DEFAULT')}`,
-          borderRadius: theme('borderRadius.fluent-lg'),
+          backgroundColor: theme('colors.white'),
+          border: `1px solid ${theme('colors.gray.100')}`,
+          borderRadius: theme('borderRadius.lg'),
           padding: theme('spacing.6'),
-          boxShadow: theme('boxShadow.fluent'),
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+          transition: 'box-shadow 0.3s ease, transform 0.3s ease',
+          '&:hover': {
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+          },
+          '.dark &': {
+            backgroundColor: theme('colors.gray.800'),
+            borderColor: theme('colors.gray.700'),
+            boxShadow: 'none',
+          }
         },
         '.input': {
           width: '100%',
           padding: `${theme('spacing.2')} ${theme('spacing.3')}`,
-          border: `1px solid ${theme('colors.border.DEFAULT')}`,
+          border: `1px solid ${theme('colors.gray.300')}`,
           borderRadius: theme('borderRadius.fluent'),
           fontSize: theme('fontSize.sm'),
+          backgroundColor: theme('colors.white'),
+          transition: 'all 0.2s ease',
           '&:focus': {
             outline: 'none',
             borderColor: theme('colors.primary.DEFAULT'),
             boxShadow: `0 0 0 2px ${theme('colors.primary.DEFAULT')}20`,
           },
+          '.dark &': {
+            backgroundColor: theme('colors.gray.800'),
+            borderColor: theme('colors.gray.600'),
+            color: theme('colors.white'),
+          }
         },
       }
-      
+
       addUtilities(newUtilities)
       addComponents(newComponents)
     }

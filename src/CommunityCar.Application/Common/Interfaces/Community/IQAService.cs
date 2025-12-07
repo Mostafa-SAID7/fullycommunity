@@ -14,6 +14,7 @@ public interface IQAService
     Task<PagedResult<QuestionListDto>> GetQuestionsAsync(QuestionFilter filter, int page = 1, int pageSize = 20);
     Task<PagedResult<QuestionListDto>> GetUserQuestionsAsync(Guid userId, int page = 1, int pageSize = 20);
     Task<IEnumerable<QuestionListDto>> GetRelatedQuestionsAsync(Guid questionId, int count = 5);
+    Task<IEnumerable<TrendingQuestionDto>> GetTrendingQuestionsAsync(int count = 5);
     Task<QuestionDto> CreateQuestionAsync(Guid authorId, CreateQuestionRequest request);
     Task<QuestionDto> UpdateQuestionAsync(Guid questionId, Guid userId, UpdateQuestionRequest request);
     Task<bool> DeleteQuestionAsync(Guid questionId, Guid userId);
@@ -38,4 +39,10 @@ public interface IQAService
     
     // User bookmarks
     Task<PagedResult<QuestionListDto>> GetUserBookmarksAsync(Guid userId, int page = 1, int pageSize = 20);
+    
+    // Answer Comments
+    Task<IEnumerable<AnswerCommentDto>> GetAnswerCommentsAsync(Guid answerId);
+    Task<AnswerCommentDto> AddAnswerCommentAsync(Guid answerId, Guid authorId, CreateCommentRequest request);
+    Task<AnswerCommentDto?> UpdateAnswerCommentAsync(Guid commentId, Guid userId, UpdateCommentRequest request);
+    Task<bool> DeleteAnswerCommentAsync(Guid commentId, Guid userId);
 }
