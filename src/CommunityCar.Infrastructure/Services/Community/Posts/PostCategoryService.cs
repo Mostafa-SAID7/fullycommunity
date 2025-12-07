@@ -6,7 +6,7 @@ using CommunityCar.Domain.Entities.Community.Posts;
 namespace CommunityCar.Infrastructure.Services.Community.Posts;
 
 /// <summary>
-/// Service for post category operations
+/// /// Service for post category operations
 /// </summary>
 public class PostCategoryService
 {

@@ -8,6 +8,8 @@ public class CommentLikeConfiguration : IEntityTypeConfiguration<CommentLike>
 {
     public void Configure(EntityTypeBuilder<CommentLike> builder)
     {
+        builder.ToTable("CommentLike", "community");
+
         builder.HasOne(l => l.Comment)
               .WithMany(c => c.Likes)
               .HasForeignKey(l => l.CommentId)

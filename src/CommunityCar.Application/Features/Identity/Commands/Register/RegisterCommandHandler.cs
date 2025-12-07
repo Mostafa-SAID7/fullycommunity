@@ -1,4 +1,6 @@
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Identity;
+using CommunityCar.Application.Common.Interfaces.Security;
 using CommunityCar.Application.Features.Identity.Commands.Login;
 using CommunityCar.Domain.Enums;
 using CommunityCar.Domain.Entities.Identity;

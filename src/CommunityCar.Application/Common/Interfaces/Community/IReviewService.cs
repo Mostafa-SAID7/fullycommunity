@@ -2,6 +2,7 @@ using CommunityCar.Application.Common.Pagination;
 using CommunityCar.Application.DTOs.Response.Community.Reviews;
 using CommunityCar.Application.DTOs.Requests.Community.Reviews;
 using CommunityCar.Domain.Entities.Community.Reviews;
+using CommunityCar.Domain.Enums.Community.Reviews;
 
 namespace CommunityCar.Application.Common.Interfaces.Community;
 

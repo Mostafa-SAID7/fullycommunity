@@ -9,6 +9,9 @@ public class PostCategoryConfiguration : IEntityTypeConfiguration<PostCategory>
     public void Configure(EntityTypeBuilder<PostCategory> builder)
     {
         builder.ToTable("PostCategories", "community");
-        builder.HasIndex(e => e.Slug).IsUnique();
+
+        builder.HasKey(pc => pc.Id);
+
+        builder.HasIndex(pc => pc.Slug).IsUnique();
     }
 }

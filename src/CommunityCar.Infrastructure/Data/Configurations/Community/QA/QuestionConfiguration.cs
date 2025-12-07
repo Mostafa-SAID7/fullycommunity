@@ -8,6 +8,8 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
 {
     public void Configure(EntityTypeBuilder<Question> builder)
     {
+        builder.ToTable("Questions", "community");
+
         builder.HasOne(q => q.AcceptedAnswer)
               .WithOne()
               .HasForeignKey<Question>(q => q.AcceptedAnswerId)

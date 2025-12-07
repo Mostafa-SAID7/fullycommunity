@@ -9,6 +9,9 @@ public class NewsCategoryConfiguration : IEntityTypeConfiguration<NewsCategory>
     public void Configure(EntityTypeBuilder<NewsCategory> builder)
     {
         builder.ToTable("NewsCategories", "community");
-        builder.HasIndex(e => e.Slug).IsUnique();
+
+        builder.HasKey(nc => nc.Id);
+
+        builder.HasIndex(nc => nc.Slug).IsUnique();
     }
 }

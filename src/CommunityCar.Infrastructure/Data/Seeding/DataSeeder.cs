@@ -11,6 +11,7 @@ using CommunityCar.Infrastructure.Data.Seeding.Community.News;
 using CommunityCar.Infrastructure.Data.Seeding.Community.Maps;
 using CommunityCar.Infrastructure.Data.Seeding.Community.Pages;
 using CommunityCar.Infrastructure.Data.Seeding.Community.Friendships;
+using CommunityCar.Infrastructure.Data.Seeding.Community.Events;
 using CommunityCar.Infrastructure.Data.Seeding.Home;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -59,6 +60,7 @@ public class DataSeeder
             new PostSeeder(_context, _loggerFactory.CreateLogger<PostSeeder>()),
             new NewsSeeder(_context, _loggerFactory.CreateLogger<NewsSeeder>()),
             new MapsSeeder(_context, _loggerFactory.CreateLogger<MapsSeeder>()),
+            new EventSeeder(_context, _loggerFactory.CreateLogger<EventSeeder>()),
             
             // Media content seeders
             new VideoSeeder(_context, _loggerFactory.CreateLogger<VideoSeeder>()),

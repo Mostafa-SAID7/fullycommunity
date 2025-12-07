@@ -1,5 +1,7 @@
 using System.Security.Claims;
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Identity;
+using CommunityCar.Application.Common.Interfaces.Security;
 using Microsoft.AspNetCore.Http;
 
 namespace CommunityCar.Infrastructure.Services.Identity;

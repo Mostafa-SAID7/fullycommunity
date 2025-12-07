@@ -2,6 +2,7 @@ using CommunityCar.Application.Common.Interfaces.Community;
 using CommunityCar.Application.DTOs.Response.Community.Maps;
 using CommunityCar.Application.DTOs.Requests.Community.Maps;
 using CommunityCar.Domain.Entities.Community.Maps;
+using CommunityCar.Domain.Enums.Community.Maps;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

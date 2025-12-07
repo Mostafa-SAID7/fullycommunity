@@ -9,9 +9,12 @@ public class NewsTagConfiguration : IEntityTypeConfiguration<NewsTag>
     public void Configure(EntityTypeBuilder<NewsTag> builder)
     {
         builder.ToTable("NewsTags", "community");
-        builder.HasOne(t => t.Article)
-              .WithMany(a => a.Tags)
-              .HasForeignKey(t => t.ArticleId)
-              .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasKey(nt => nt.Id);
+
+        builder.HasOne(nt => nt.Article)
+            .WithMany(a => a.Tags)
+            .HasForeignKey(nt => nt.ArticleId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

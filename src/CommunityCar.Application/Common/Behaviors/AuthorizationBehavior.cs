@@ -1,6 +1,7 @@
 using System.Reflection;
 using CommunityCar.Application.Common.Exceptions;
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Identity;
 using CommunityCar.Application.Common.Security;
 using MediatR;
 

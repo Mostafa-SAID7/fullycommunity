@@ -8,6 +8,8 @@ public class GuideCommentConfiguration : IEntityTypeConfiguration<GuideComment>
 {
     public void Configure(EntityTypeBuilder<GuideComment> builder)
     {
+        builder.ToTable("GuideComment", "community");
+
         builder.HasOne(c => c.Guide)
               .WithMany(g => g.Comments)
               .HasForeignKey(c => c.GuideId)

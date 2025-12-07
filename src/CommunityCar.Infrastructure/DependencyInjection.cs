@@ -1,6 +1,11 @@
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Data;
+using CommunityCar.Application.Common.Interfaces.Identity;
+using CommunityCar.Application.Common.Interfaces.Infrastructure;
+using CommunityCar.Application.Common.Interfaces.Security;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data;
+using CommunityCar.Infrastructure.Repositories;
 using CommunityCar.Infrastructure.Services.Identity;
 using CommunityCar.Infrastructure.Services.Notification;
 using CommunityCar.Infrastructure.Services.Security;
@@ -20,11 +25,16 @@ public static class DependencyInjection
     {
         // Database
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlite(configuration.GetConnectionString("DefaultConnection"),
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName))
             .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
 
         services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
+        
+        // Repository Pattern
+        services.AddScoped(typeof(Application.Common.Interfaces.Data.IRepository<>), typeof(Repositories.Repository<>));
+        services.AddScoped(typeof(Application.Common.Interfaces.Data.IReadOnlyRepository<>), typeof(Repositories.ReadOnlyRepository<>));
+        services.AddScoped<Application.Common.Interfaces.Data.IUnitOfWork, Repositories.UnitOfWork>();
 
         // Identity
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -109,8 +119,46 @@ public static class DependencyInjection
         // Messaging
         services.AddScoped<Application.Common.Interfaces.Messaging.IChatService, Services.Messaging.ChatService>();
 
-        // Community Services
-        services.AddScoped<Application.Common.Interfaces.Community.IPostService, Services.Community.PostService>();
+        // Community Services - Posts
+        services.AddScoped<Services.Community.Posts.PostQueryService>();
+        services.AddScoped<Services.Community.Posts.PostCommandService>();
+        services.AddScoped<Services.Community.Posts.PostEngagementService>();
+        services.AddScoped<Services.Community.Posts.PostCommentService>();
+        services.AddScoped<Services.Community.Posts.PostCategoryService>();
+        services.AddScoped<Application.Common.Interfaces.Community.IPostService, Services.Community.Posts.PostService>();
+
+        // Community Services - QA
+        services.AddScoped<Services.Community.QA.QuestionQueryService>();
+        services.AddScoped<Services.Community.QA.QuestionCommandService>();
+        services.AddScoped<Services.Community.QA.QuestionVotingService>();
+        services.AddScoped<Services.Community.QA.AnswerService>();
+        services.AddScoped<Services.Community.QA.QACategoryService>();
+        services.AddScoped<Application.Common.Interfaces.Community.IQAService, Services.Community.QA.QAService>();
+
+        // Community Services - Events
+        services.AddScoped<Services.Community.Events.EventQueryService>();
+        services.AddScoped<Services.Community.Events.EventCommandService>();
+        services.AddScoped<Services.Community.Events.EventRSVPService>();
+        services.AddScoped<Services.Community.Events.EventAttendeeService>();
+        services.AddScoped<Application.Common.Interfaces.Community.IEventService, Services.Community.Events.EventService>();
+
+        // Community Services - Groups
+        services.AddScoped<Application.Common.Interfaces.Community.IGroupService, Services.Community.Groups.GroupService>();
+
+        // Community Services - Guides
+        services.AddScoped<Application.Common.Interfaces.Community.IGuideService, Services.Community.Guides.GuideService>();
+
+        // Community Services - News
+        services.AddScoped<Application.Common.Interfaces.Community.INewsService, Services.Community.News.NewsService>();
+
+        // Community Services - Reviews
+        services.AddScoped<Application.Common.Interfaces.Community.IReviewService, Services.Community.Reviews.ReviewService>();
+
+        // Community Services - Maps
+        services.AddScoped<Application.Common.Interfaces.Community.IMapService, Services.Community.Maps.MapService>();
+
+        // Community Services - Friendships
+        services.AddScoped<Application.Common.Interfaces.Community.IFriendshipService, Services.Community.Friendships.FriendshipService>();
 
         // Video Services
         services.AddScoped<Application.Common.Interfaces.Videos.IVideoService, Services.Videos.VideoService>();

@@ -32,6 +32,6 @@ public class AuctionConfiguration : IEntityTypeConfiguration<Auction>
         builder.HasOne(e => e.WinningBid)
             .WithMany()
             .HasForeignKey(e => e.WinningBidId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

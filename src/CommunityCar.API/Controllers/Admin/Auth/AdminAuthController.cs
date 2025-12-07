@@ -1,4 +1,4 @@
-using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Identity;
 using CommunityCar.Application.Features.Admin.Auth.DTOs;
 using CommunityCar.Application.DTOs.Response.Identity;
 using CommunityCar.Application.DTOs.Requests.Identity;

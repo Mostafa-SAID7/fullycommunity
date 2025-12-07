@@ -77,7 +77,7 @@ public class DashboardController : ControllerBase
                     PendingModeration = await _context.Posts.CountAsync(
                         p =>
                             !p.IsDeleted
-                            && p.Status == Domain.Entities.Community.Posts.PostStatus.Draft
+                            && p.Status == PostStatus.Draft
                     ),
                 },
                 Community = new CommunityStatistics

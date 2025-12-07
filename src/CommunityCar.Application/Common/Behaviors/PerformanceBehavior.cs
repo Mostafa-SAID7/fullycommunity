@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Identity;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

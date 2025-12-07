@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using CommunityCar.Application.DTOs.Response.Community.Pages;
 using CommunityCar.Application.DTOs.Requests.Community.Pages;
 using CommunityCar.Domain.Entities.Community.Pages;
+using CommunityCar.Domain.Enums.Community.Pages;
 
 namespace CommunityCar.API.Controllers;
 

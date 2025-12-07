@@ -10,8 +10,8 @@ public class TimeSlotConfiguration : IEntityTypeConfiguration<TimeSlot>
     {
         builder.ToTable("TimeSlots", "services");
         
-        builder.HasIndex(e => new { e.ProviderId, e.StartTime, e.IsAvailable });
-        builder.HasIndex(e => new { e.ProviderId, e.DayOfWeek });
+        builder.HasIndex(e => new { e.ProviderId, e.StartTime, e.Status });
+        builder.HasIndex(e => new { e.ProviderId, e.Date });
         
         builder.HasOne(e => e.Provider)
             .WithMany()

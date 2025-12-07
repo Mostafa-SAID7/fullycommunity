@@ -9,9 +9,22 @@ public class NewsCommentConfiguration : IEntityTypeConfiguration<NewsComment>
     public void Configure(EntityTypeBuilder<NewsComment> builder)
     {
         builder.ToTable("NewsComments", "community");
-        builder.HasOne(c => c.Article)
-              .WithMany(a => a.Comments)
-              .HasForeignKey(c => c.ArticleId)
-              .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasKey(nc => nc.Id);
+
+        builder.HasOne(nc => nc.Article)
+            .WithMany(a => a.Comments)
+            .HasForeignKey(nc => nc.ArticleId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(nc => nc.Author)
+            .WithMany()
+            .HasForeignKey(nc => nc.AuthorId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasOne(nc => nc.Parent)
+            .WithMany()
+            .HasForeignKey(nc => nc.ParentId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

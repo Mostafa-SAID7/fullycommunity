@@ -9,14 +9,19 @@ public class NewsArticleConfiguration : IEntityTypeConfiguration<NewsArticle>
     public void Configure(EntityTypeBuilder<NewsArticle> builder)
     {
         builder.ToTable("NewsArticles", "community");
-        builder.HasIndex(e => e.Slug).IsUnique();
-        builder.HasOne(e => e.Author)
-              .WithMany()
-              .HasForeignKey(e => e.AuthorId)
-              .OnDelete(DeleteBehavior.NoAction);
-        builder.HasOne(e => e.Category)
-              .WithMany()
-              .HasForeignKey(e => e.CategoryId)
-              .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasKey(na => na.Id);
+
+        builder.HasIndex(na => na.Slug).IsUnique();
+
+        builder.HasOne(na => na.Author)
+            .WithMany()
+            .HasForeignKey(na => na.AuthorId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasOne(na => na.Category)
+            .WithMany()
+            .HasForeignKey(na => na.CategoryId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

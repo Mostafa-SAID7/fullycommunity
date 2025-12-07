@@ -8,6 +8,8 @@ public class QuestionCategoryConfiguration : IEntityTypeConfiguration<QuestionCa
 {
     public void Configure(EntityTypeBuilder<QuestionCategory> builder)
     {
+        builder.ToTable("QuestionCategories", "community");
+
         builder.HasIndex(e => e.Slug).IsUnique();
     }
 }

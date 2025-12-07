@@ -1,4 +1,5 @@
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Data;
 using CommunityCar.Application.Features.Videos.DTOs;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

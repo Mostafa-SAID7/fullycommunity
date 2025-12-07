@@ -1,6 +1,7 @@
 using Azure.Communication.Email;
 using Azure.Communication.Sms;
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models = CommunityCar.Application.Common.Models;

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Infrastructure;
 
 namespace CommunityCar.API.Controllers.Common;
 

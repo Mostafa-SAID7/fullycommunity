@@ -8,9 +8,15 @@ public class QuestionBookmarkConfiguration : IEntityTypeConfiguration<QuestionBo
 {
     public void Configure(EntityTypeBuilder<QuestionBookmark> builder)
     {
-        builder.HasOne(b => b.Question)
-              .WithMany(q => q.Bookmarks)
-              .HasForeignKey(b => b.QuestionId)
-              .OnDelete(DeleteBehavior.Cascade);
+        builder.ToTable("QuestionBookmarks", "community");
+
+        builder.HasKey(qb => qb.Id);
+
+        builder.HasOne(qb => qb.Question)
+            .WithMany(q => q.Bookmarks)
+            .HasForeignKey(qb => qb.QuestionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex(qb => new { qb.QuestionId, qb.UserId }).IsUnique();
     }
 }

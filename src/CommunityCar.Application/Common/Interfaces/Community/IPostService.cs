@@ -2,6 +2,7 @@ using CommunityCar.Application.Common.Pagination;
 using CommunityCar.Application.DTOs.Response.Community.Posts;
 using CommunityCar.Application.DTOs.Requests.Community.Posts;
 using CommunityCar.Domain.Entities.Community.Posts;
+using CommunityCar.Domain.Enums.Community.Posts;
 
 namespace CommunityCar.Application.Common.Interfaces.Community;
 

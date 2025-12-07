@@ -1,4 +1,6 @@
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Identity;
+using CommunityCar.Application.Common.Interfaces.Security;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data;
 

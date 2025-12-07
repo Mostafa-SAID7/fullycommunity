@@ -1,4 +1,5 @@
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Infrastructure;
 using CommunityCar.Domain.Entities.Community.Posts;
 using CommunityCar.Domain.Entities.Community.Groups;
 using CommunityCar.Domain.Entities.Community.Events;

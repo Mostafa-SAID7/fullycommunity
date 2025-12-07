@@ -2,6 +2,7 @@ using CommunityCar.Application.Common.Pagination;
 using CommunityCar.Application.DTOs.Response.Community.Friendships;
 using CommunityCar.Application.DTOs.Requests.Community.Friendships;
 using CommunityCar.Domain.Entities.Community.Friendships;
+using CommunityCar.Domain.Enums.Community.Friendships;
 
 namespace CommunityCar.Application.Common.Interfaces.Community;
 

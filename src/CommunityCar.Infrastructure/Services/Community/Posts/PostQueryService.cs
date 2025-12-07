@@ -1,8 +1,10 @@
+using CommunityCar.Application.Common.Interfaces.Community;
 using CommunityCar.Application.Common.Interfaces.Data;
 using CommunityCar.Application.Common.Mappers.Community;
 using CommunityCar.Application.Common.Pagination;
 using CommunityCar.Application.DTOs.Response.Community.Posts;
 using CommunityCar.Domain.Entities.Community.Posts;
+using CommunityCar.Domain.Enums.Community.Posts;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommunityCar.Infrastructure.Services.Community.Posts;

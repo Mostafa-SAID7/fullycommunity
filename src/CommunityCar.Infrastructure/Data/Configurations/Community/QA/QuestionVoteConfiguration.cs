@@ -8,6 +8,8 @@ public class QuestionVoteConfiguration : IEntityTypeConfiguration<QuestionVote>
 {
     public void Configure(EntityTypeBuilder<QuestionVote> builder)
     {
+        builder.ToTable("QuestionVotes", "community");
+
         builder.HasOne(v => v.Question)
               .WithMany(q => q.Votes)
               .HasForeignKey(v => v.QuestionId)

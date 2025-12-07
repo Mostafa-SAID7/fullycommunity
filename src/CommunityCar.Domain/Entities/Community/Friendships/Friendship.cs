@@ -19,13 +19,3 @@ public class Friendship
     public DateTime? AcceptedAt { get; set; }
     public DateTime? BlockedAt { get; set; }
 }
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    
-    public Guid FollowerId { get; set; }
-    public ApplicationUser Follower { get; set; } = null!;
-    
-    public Guid FollowingId { get; set; }
-    public ApplicationUser Following { get; set; } = null!;
-    
-

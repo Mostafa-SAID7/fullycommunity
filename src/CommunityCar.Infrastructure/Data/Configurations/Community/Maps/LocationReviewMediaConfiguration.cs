@@ -9,9 +9,12 @@ public class LocationReviewMediaConfiguration : IEntityTypeConfiguration<Locatio
     public void Configure(EntityTypeBuilder<LocationReviewMedia> builder)
     {
         builder.ToTable("LocationReviewMedia", "community");
-        builder.HasOne(m => m.LocationReview)
-              .WithMany(r => r.Media)
-              .HasForeignKey(m => m.LocationReviewId)
-              .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasKey(lrm => lrm.Id);
+
+        builder.HasOne(lrm => lrm.LocationReview)
+            .WithMany(r => r.Media)
+            .HasForeignKey(lrm => lrm.LocationReviewId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -1,6 +1,7 @@
 using CommunityCar.Domain.Entities.Videos.Playlists;
 using CommunityCar.Domain.Entities.Videos.Common;
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Data;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;

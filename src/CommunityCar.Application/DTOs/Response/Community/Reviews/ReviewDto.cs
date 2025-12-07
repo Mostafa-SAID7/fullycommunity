@@ -1,4 +1,5 @@
 using CommunityCar.Domain.Entities.Community.Reviews;
+using CommunityCar.Domain.Enums.Community.Reviews;
 
 namespace CommunityCar.Application.DTOs.Response.Community.Reviews;
 

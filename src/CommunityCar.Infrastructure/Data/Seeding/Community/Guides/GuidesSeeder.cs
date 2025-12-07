@@ -108,7 +108,47 @@ public class GuidesSeeder : BaseSeeder
         }
 
         await Context.SaveChangesAsync();
-        Logger.LogInformation("Seeded {Count} guides", guides.Length);
+
+        // Add guide steps
+        var createdGuides = await Context.Set<Guide>().ToListAsync();
+        var steps = new List<GuideStep>();
+
+        foreach (var guide in createdGuides)
+        {
+            var stepCount = Random.Shared.Next(3, 8);
+            for (int i = 1; i <= stepCount; i++)
+            {
+                steps.Add(new GuideStep
+                {
+                    GuideId = guide.Id,
+                    StepNumber = i,
+                    Title = $"Step {i}: {GetStepTitle(i)}",
+                    Content = $"Detailed instructions for step {i}. Follow these carefully for best results.",
+                    EstimatedMinutes = Random.Shared.Next(5, 20)
+                });
+            }
+        }
+
+        Context.Set<GuideStep>().AddRange(steps);
+        await Context.SaveChangesAsync();
+
+        Logger.LogInformation("Seeded {Count} guides with {StepCount} steps", guides.Length, steps.Count);
+    }
+
+    private static string GetStepTitle(int stepNumber)
+    {
+        var titles = new[]
+        {
+            "Gather Required Tools",
+            "Prepare the Work Area",
+            "Remove Old Components",
+            "Clean and Inspect",
+            "Install New Parts",
+            "Test and Verify",
+            "Final Adjustments",
+            "Clean Up"
+        };
+        return titles[Math.Min(stepNumber - 1, titles.Length - 1)];
     }
 
     private static string GenerateSlug(string title)

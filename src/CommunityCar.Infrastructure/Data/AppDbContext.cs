@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using CommunityCar.Domain.Entities.Videos.Content;
 using CommunityCar.Domain.Entities.Videos.Playlists;
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Data;
 
 namespace CommunityCar.Infrastructure.Data;
 

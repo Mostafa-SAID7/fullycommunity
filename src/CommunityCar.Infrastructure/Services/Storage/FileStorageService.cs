@@ -1,4 +1,5 @@
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Infrastructure;
 using CommunityCar.Domain.Entities.Storage;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.AspNetCore.Http;

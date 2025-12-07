@@ -79,36 +79,39 @@ public class SeedingController : ControllerBase
     [HttpPost("content")]
     public async Task<ActionResult<object>> SeedContent()
     {
-        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.Equals("Production", StringComparison.OrdinalIgnoreCase) == true)
-        {
-            return BadRequest("Content seeding is not available in production");
-        }
+        // TODO: Implement CommunityContentSeeder
+        return BadRequest("Content seeding not yet implemented");
+        
+        // if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.Equals("Production", StringComparison.OrdinalIgnoreCase) == true)
+        // {
+        //     return BadRequest("Content seeding is not available in production");
+        // }
 
-        try
-        {
-            using var scope = _services.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<Infrastructure.Data.AppDbContext>();
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Infrastructure.Data.Seeding.Content.CommunityContentSeeder>>();
-            
-            var seeder = new Infrastructure.Data.Seeding.Content.CommunityContentSeeder(context, logger);
-            await seeder.SeedAsync();
-            
-            return Ok(new { 
-                Success = true, 
-                Message = "Content seeded successfully",
-                Stats = new {
-                    Posts = await context.Posts.CountAsync(),
-                    Reviews = await context.Reviews.CountAsync(),
-                    Guides = await context.Guides.CountAsync(),
-                    Questions = await context.Questions.CountAsync()
-                }
-            });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error seeding content");
-            return StatusCode(500, new { Success = false, Message = ex.Message });
-        }
+        // try
+        // {
+        //     using var scope = _services.CreateScope();
+        //     var context = scope.ServiceProvider.GetRequiredService<Infrastructure.Data.AppDbContext>();
+        //     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Infrastructure.Data.Seeding.Content.CommunityContentSeeder>>();
+        //     
+        //     var seeder = new Infrastructure.Data.Seeding.Content.CommunityContentSeeder(context, logger);
+        //     await seeder.SeedAsync();
+        //     
+        //     return Ok(new { 
+        //         Success = true, 
+        //         Message = "Content seeded successfully",
+        //         Stats = new {
+        //             Posts = await context.Posts.CountAsync(),
+        //             Reviews = await context.Reviews.CountAsync(),
+        //             Guides = await context.Guides.CountAsync(),
+        //             Questions = await context.Questions.CountAsync()
+        //         }
+        //     });
+        // }
+        // catch (Exception ex)
+        // {
+        //     _logger.LogError(ex, "Error seeding content");
+        //     return StatusCode(500, new { Success = false, Message = ex.Message });
+        // }
     }
 
     /// <summary>

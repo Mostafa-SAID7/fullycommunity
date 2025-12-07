@@ -84,6 +84,44 @@ public class GroupSeeder : BaseSeeder
 
         await Context.Groups.AddRangeAsync(groups);
         await Context.SaveChangesAsync();
-        Logger.LogInformation("Seeded {Count} groups", groups.Count);
+
+        // Add group members
+        var members = new List<GroupMember>();
+        foreach (var group in groups)
+        {
+            // Add owner as admin
+            members.Add(new GroupMember
+            {
+                GroupId = group.Id,
+                UserId = group.OwnerId,
+                Role = GroupRole.Admin,
+                Status = MemberStatus.Active,
+                JoinedAt = group.CreatedAt
+            });
+
+            // Add other users as members
+            var memberCount = Random.Shared.Next(2, Math.Min(users.Count, 5));
+            var groupMembers = users.Where(u => u.Id != group.OwnerId)
+                                   .OrderBy(x => Random.Shared.Next())
+                                   .Take(memberCount)
+                                   .ToList();
+
+            foreach (var user in groupMembers)
+            {
+                members.Add(new GroupMember
+                {
+                    GroupId = group.Id,
+                    UserId = user.Id,
+                    Role = GroupRole.Member,
+                    Status = MemberStatus.Active,
+                    JoinedAt = group.CreatedAt.AddDays(Random.Shared.Next(1, 30))
+                });
+            }
+        }
+
+        Context.Set<GroupMember>().AddRange(members);
+        await Context.SaveChangesAsync();
+
+        Logger.LogInformation("Seeded {Count} groups with {MemberCount} members", groups.Count, members.Count);
     }
 }

@@ -83,6 +83,13 @@ public class ReviewsSeeder : BaseSeeder
                 CarMake = r.CarMake,
                 CarModel = r.CarModel,
                 CarYear = r.CarYear,
+                OwnershipStatus = r.SubjectType == "Car" ? OwnershipStatus.CurrentOwner : null,
+                OwnershipMonths = r.SubjectType == "Car" ? Random.Shared.Next(3, 36) : null,
+                PerformanceRating = r.SubjectType == "Car" ? Random.Shared.Next(7, 11) : null,
+                ComfortRating = r.SubjectType == "Car" ? Random.Shared.Next(7, 11) : null,
+                ReliabilityRating = r.SubjectType == "Car" ? Random.Shared.Next(7, 11) : null,
+                ValueRating = r.SubjectType == "Car" ? Random.Shared.Next(7, 11) : null,
+                FuelEconomyRating = r.SubjectType == "Car" ? Random.Shared.Next(7, 11) : null,
                 CreatedAt = DateTime.UtcNow.AddDays(-Random.Shared.Next(1, 60)),
                 IsVerifiedPurchase = Random.Shared.Next(1, 100) > 30,
                 IsExpertReview = r.IsExpert,
@@ -94,6 +101,27 @@ public class ReviewsSeeder : BaseSeeder
             };
 
             Context.Set<Review>().Add(review);
+            await Context.SaveChangesAsync();
+
+            // Add pros and cons for car reviews
+            if (r.SubjectType == "Car")
+            {
+                var pros = new List<ReviewPro>
+                {
+                    new() { ReviewId = review.Id, Text = "Excellent fuel economy", SortOrder = 1 },
+                    new() { ReviewId = review.Id, Text = "Comfortable ride quality", SortOrder = 2 },
+                    new() { ReviewId = review.Id, Text = "Advanced safety features", SortOrder = 3 }
+                };
+
+                var cons = new List<ReviewCon>
+                {
+                    new() { ReviewId = review.Id, Text = "Higher maintenance costs", SortOrder = 1 },
+                    new() { ReviewId = review.Id, Text = "Limited cargo space", SortOrder = 2 }
+                };
+
+                Context.Set<ReviewPro>().AddRange(pros);
+                Context.Set<ReviewCon>().AddRange(cons);
+            }
         }
 
         await Context.SaveChangesAsync();

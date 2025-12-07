@@ -8,6 +8,8 @@ public class EventAttendeeConfiguration : IEntityTypeConfiguration<EventAttendee
 {
     public void Configure(EntityTypeBuilder<EventAttendee> builder)
     {
+        builder.ToTable("EventAttendee", "community");
+
         builder.HasOne(e => e.Event)
               .WithMany(ev => ev.Attendees)
               .HasForeignKey(e => e.EventId)

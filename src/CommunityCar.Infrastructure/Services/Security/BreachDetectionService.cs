@@ -1,4 +1,5 @@
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Security;
 using CommunityCar.Application.Common.Models;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;

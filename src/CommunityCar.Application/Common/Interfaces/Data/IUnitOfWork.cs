@@ -1,6 +1,4 @@
-using CommunityCar.Application.Common.Interfaces.Data;
-
-namespace CommunityCar.Application.Common.Interfaces;
+namespace CommunityCar.Application.Common.Interfaces.Data;
 
 /// <summary>
 /// Unit of Work pattern for managing database transactions and repositories

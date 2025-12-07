@@ -1,4 +1,5 @@
 using CommunityCar.Domain.Entities.Community.Guides;
+using CommunityCar.Domain.Enums.Community.Guides;
 
 namespace CommunityCar.Application.DTOs.Requests.Community.Guides;
 

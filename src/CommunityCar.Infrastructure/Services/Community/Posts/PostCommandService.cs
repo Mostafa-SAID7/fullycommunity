@@ -3,6 +3,7 @@ using CommunityCar.Application.Common.Interfaces.Data;
 using CommunityCar.Application.DTOs.Requests.Community.Posts;
 using CommunityCar.Application.DTOs.Response.Community.Posts;
 using CommunityCar.Domain.Entities.Community.Posts;
+using CommunityCar.Domain.Enums.Community.Posts;
 
 namespace CommunityCar.Infrastructure.Services.Community.Posts;
 

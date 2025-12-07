@@ -10,9 +10,9 @@ public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
     {
         builder.ToTable("ProductImages", "marketplace");
         
-        builder.HasIndex(e => new { e.ProductId, e.DisplayOrder });
+        builder.HasIndex(e => new { e.ProductId, e.SortOrder });
         
-        builder.Property(e => e.ImageUrl).HasMaxLength(500).IsRequired();
+        builder.Property(e => e.Url).HasMaxLength(500).IsRequired();
         builder.Property(e => e.ThumbnailUrl).HasMaxLength(500);
         builder.Property(e => e.AltText).HasMaxLength(200);
         

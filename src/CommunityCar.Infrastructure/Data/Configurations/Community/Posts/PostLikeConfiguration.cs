@@ -9,13 +9,19 @@ public class PostLikeConfiguration : IEntityTypeConfiguration<PostLike>
     public void Configure(EntityTypeBuilder<PostLike> builder)
     {
         builder.ToTable("PostLikes", "community");
-        builder.HasOne(l => l.Post)
-              .WithMany(p => p.Likes)
-              .HasForeignKey(l => l.PostId)
-              .OnDelete(DeleteBehavior.NoAction);
-        builder.HasOne(l => l.User)
-              .WithMany()
-              .HasForeignKey(l => l.UserId)
-              .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasKey(pl => pl.Id);
+
+        builder.HasOne(pl => pl.Post)
+            .WithMany(p => p.Likes)
+            .HasForeignKey(pl => pl.PostId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(pl => pl.User)
+            .WithMany()
+            .HasForeignKey(pl => pl.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasIndex(pl => new { pl.PostId, pl.UserId }).IsUnique();
     }
 }

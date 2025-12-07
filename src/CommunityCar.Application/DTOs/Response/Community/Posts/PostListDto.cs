@@ -1,4 +1,5 @@
 using CommunityCar.Domain.Entities.Community.Posts;
+using CommunityCar.Domain.Enums.Community.Posts;
 
 namespace CommunityCar.Application.DTOs.Response.Community.Posts;
 

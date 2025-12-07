@@ -8,6 +8,8 @@ public class GroupMemberConfiguration : IEntityTypeConfiguration<GroupMember>
 {
     public void Configure(EntityTypeBuilder<GroupMember> builder)
     {
+        builder.ToTable("GroupMember", "community");
+
         builder.HasOne(m => m.Group)
               .WithMany(g => g.Members)
               .HasForeignKey(m => m.GroupId)

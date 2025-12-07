@@ -1,4 +1,5 @@
 using CommunityCar.Domain.Entities.Community.Pages;
+using CommunityCar.Domain.Enums.Community.Pages;
 
 namespace CommunityCar.Application.DTOs.Response.Community.Pages;
 

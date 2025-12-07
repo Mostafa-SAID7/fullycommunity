@@ -9,10 +9,14 @@ public class PageConfiguration : IEntityTypeConfiguration<Page>
     public void Configure(EntityTypeBuilder<Page> builder)
     {
         builder.ToTable("Pages", "community");
-        builder.HasIndex(e => e.Username).IsUnique();
+
+        builder.HasKey(p => p.Id);
+
+        builder.HasIndex(p => p.Username).IsUnique();
+
         builder.HasOne(p => p.Owner)
-              .WithMany()
-              .HasForeignKey(p => p.OwnerId)
-              .OnDelete(DeleteBehavior.NoAction);
+            .WithMany()
+            .HasForeignKey(p => p.OwnerId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

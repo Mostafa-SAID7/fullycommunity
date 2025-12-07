@@ -1,5 +1,7 @@
 using System.Text.Json;
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Identity;
+using CommunityCar.Application.Common.Interfaces.Security;
 using CommunityCar.Application.Common.Models;
 using CommunityCar.Domain.Enums;
 using CommunityCar.Domain.Entities.Identity;

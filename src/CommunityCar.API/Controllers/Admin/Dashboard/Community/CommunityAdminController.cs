@@ -37,7 +37,7 @@ public class CommunityAdminController : ControllerBase
                 TotalGuides = await _context.Guides.CountAsync(g => !g.IsDeleted),
                 TotalQuestions = await _context.Questions.CountAsync(q => !q.IsDeleted),
                 TotalPodcasts = await _context.PodcastShows.CountAsync(p => !p.IsDeleted),
-                PendingApproval = await _context.Posts.CountAsync(p => !p.IsDeleted && p.Status == Domain.Entities.Community.Posts.PostStatus.Draft)
+                PendingApproval = await _context.Posts.CountAsync(p => !p.IsDeleted && p.Status == PostStatus.Draft)
             };
 
             return Ok(stats);
@@ -106,7 +106,7 @@ public class CommunityAdminController : ControllerBase
         var post = await _context.Posts.FindAsync(id);
         if (post == null) return NotFound();
 
-        post.Status = Domain.Entities.Community.Posts.PostStatus.Published;
+        post.Status = PostStatus.Published;
         await _context.SaveChangesAsync();
 
         return Ok(new { message = "Post approved" });
@@ -118,7 +118,7 @@ public class CommunityAdminController : ControllerBase
         var post = await _context.Posts.FindAsync(id);
         if (post == null) return NotFound();
 
-        post.Status = Domain.Entities.Community.Posts.PostStatus.Draft;
+        post.Status = PostStatus.Archived;
         await _context.SaveChangesAsync();
 
         return Ok(new { message = "Post rejected" });
@@ -252,7 +252,7 @@ public class CommunityAdminController : ControllerBase
         var guide = await _context.Guides.FindAsync(id);
         if (guide == null) return NotFound();
 
-        guide.Status = Domain.Entities.Community.Guides.GuideStatus.Published;
+        guide.Status = GuideStatus.Published;
         guide.PublishedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
 

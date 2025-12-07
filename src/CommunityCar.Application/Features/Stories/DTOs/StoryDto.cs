@@ -1,5 +1,6 @@
 using CommunityCar.Domain.Entities.Home;
 using CommunityCar.Domain.Entities.Community.Pages;
+using CommunityCar.Domain.Enums.Community.Pages;
 
 namespace CommunityCar.Application.Features.Stories.DTOs;
 

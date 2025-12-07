@@ -56,7 +56,69 @@ public class PostSeeder : BaseSeeder
         }
 
         await Context.SaveChangesAsync();
-        Logger.LogInformation("Seeded {Count} posts", posts.Count);
+
+        // Add comments and likes to posts
+        var createdPosts = await Context.Posts.Include(p => p.Author).ToListAsync();
+        var comments = new List<PostComment>();
+        var likes = new List<PostLike>();
+
+        foreach (var post in createdPosts.Take(10))
+        {
+            // Add likes
+            var likeCount = random.Next(3, Math.Min(users.Count, 8));
+            var likedUsers = users.OrderBy(x => random.Next()).Take(likeCount).ToList();
+            foreach (var user in likedUsers)
+            {
+                if (user.Id != post.AuthorId)
+                {
+                    likes.Add(new PostLike
+                    {
+                        PostId = post.Id,
+                        UserId = user.Id,
+                        CreatedAt = post.CreatedAt.AddHours(random.Next(1, 48))
+                    });
+                }
+            }
+
+            // Add comments
+            var commentCount = random.Next(0, 6);
+            for (int i = 0; i < commentCount; i++)
+            {
+                var commenter = users[random.Next(users.Count)];
+                comments.Add(new PostComment
+                {
+                    PostId = post.Id,
+                    AuthorId = commenter.Id,
+                    Content = GetRandomCommentContent(),
+                    CreatedAt = post.CreatedAt.AddHours(random.Next(1, 72))
+                });
+            }
+        }
+
+        Context.Set<PostLike>().AddRange(likes);
+        Context.Set<PostComment>().AddRange(comments);
+        await Context.SaveChangesAsync();
+
+        Logger.LogInformation("Seeded {Count} posts with {CommentCount} comments and {LikeCount} likes", 
+            posts.Count, comments.Count, likes.Count);
+    }
+
+    private static string GetRandomCommentContent()
+    {
+        var comments = new[]
+        {
+            "Great post! Thanks for sharing this.",
+            "I had the same experience with my car!",
+            "This is really helpful, appreciate the detailed explanation.",
+            "Totally agree with this!",
+            "Thanks for the tip, will definitely try this.",
+            "Interesting perspective, never thought about it that way.",
+            "Where did you get this done? Looking for recommendations.",
+            "How much did this cost you in total?",
+            "Been thinking about doing this myself, this convinced me!",
+            "Nice! Keep us updated on how it goes."
+        };
+        return comments[Random.Shared.Next(comments.Length)];
     }
 
 
