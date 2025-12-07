@@ -15,7 +15,7 @@ public class QuestionViewConfiguration : IEntityTypeConfiguration<QuestionView>
         builder.HasOne(qv => qv.Question)
             .WithMany()
             .HasForeignKey(qv => qv.QuestionId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(qv => qv.User)
             .WithMany()
