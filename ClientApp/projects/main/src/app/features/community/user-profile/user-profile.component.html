@@ -9,7 +9,7 @@
     <app-empty-state 
       [icon]="'error'" 
       [title]="'Error Loading Profile'" 
-      [message]="error()!">
+      [description]="error()!">
     </app-empty-state>
   }
 
@@ -88,7 +88,7 @@
               <app-empty-state 
                 [icon]="'question'" 
                 [title]="'No Questions Yet'" 
-                [message]="profile()!.userName + ' hasn\\'t asked any questions yet.'">
+                [description]="profile()!.userName + ' hasn\'t asked any questions yet.'">
               </app-empty-state>
             } @else {
               <div class="space-y-4">
@@ -141,7 +141,7 @@
             <app-empty-state 
               [icon]="'answer'" 
               [title]="'No Answers Yet'" 
-              [message]="profile()!.userName + ' hasn\\'t answered any questions yet.'">
+              [description]="profile()!.userName + ' hasn\'t answered any questions yet.'">
             </app-empty-state>
           }
         </div>

@@ -17,19 +17,22 @@ public class QAService : IQAService
     private readonly QuestionVotingService _questionVotingService;
     private readonly AnswerService _answerService;
     private readonly QACategoryService _categoryService;
+    private readonly QuestionQuotaService _quotaService;
 
     public QAService(
         QuestionQueryService questionQueryService,
         QuestionCommandService questionCommandService,
         QuestionVotingService questionVotingService,
         AnswerService answerService,
-        QACategoryService categoryService)
+        QACategoryService categoryService,
+        QuestionQuotaService quotaService)
     {
         _questionQueryService = questionQueryService;
         _questionCommandService = questionCommandService;
         _questionVotingService = questionVotingService;
         _answerService = answerService;
         _categoryService = categoryService;
+        _quotaService = quotaService;
     }
 
     #region Question Query Operations
@@ -149,6 +152,13 @@ public class QAService : IQAService
 
     public Task<bool> DeleteAnswerCommentAsync(Guid commentId, Guid userId)
         => _answerService.DeleteCommentAsync(commentId, userId);
+
+    #endregion
+
+    #region User Quota Operations
+
+    public Task<UserQuotaDto> GetUserQuotaAsync(Guid userId)
+        => _quotaService.GetUserQuotaAsync(userId);
 
     #endregion
 }

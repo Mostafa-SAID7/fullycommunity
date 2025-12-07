@@ -69,6 +69,9 @@ public class AnswerService
         if (question.IsClosed)
             throw new InvalidOperationException("Cannot answer a closed question");
 
+        // Check rate limits based on user type
+        await CheckAnswerLimitAsync(authorId);
+
         var answer = new Answer
         {
             QuestionId = questionId,
@@ -87,6 +90,48 @@ public class AnswerService
         await _unitOfWork.SaveChangesAsync();
 
         return QAMapper.ToAnswerDto(answer, 0);
+    }
+
+    private async Task CheckAnswerLimitAsync(Guid authorId)
+    {
+        var userRepository = _unitOfWork.Repository<Domain.Entities.Identity.ApplicationUser>();
+        var user = await userRepository.FirstOrDefaultAsync(u => u.Id == authorId);
+
+        if (user == null)
+            throw new UnauthorizedAccessException("User not found");
+
+        // Get user's answer count
+        var answerCount = await _answerRepository.AsQueryable()
+            .Where(a => a.AuthorId == authorId && !a.IsDeleted)
+            .CountAsync();
+
+        // Check limits based on user type
+        var (hasLimit, limit, limitName) = GetAnswerLimit(user.UserType);
+
+        if (hasLimit && answerCount >= limit)
+        {
+            throw new InvalidOperationException(
+                $"You have reached your answer limit ({limit} answers for {limitName}). " +
+                $"Please upgrade your account or wait for your limit to reset.");
+        }
+    }
+
+    private (bool hasLimit, int limit, string limitName) GetAnswerLimit(Domain.Enums.UserType userType)
+    {
+        return userType switch
+        {
+            Domain.Enums.UserType.Student => (true, 5, "Student"),
+            Domain.Enums.UserType.User => (true, 5, "User"),
+            // Unlimited for these roles
+            Domain.Enums.UserType.Expert => (false, 0, "Expert"),
+            Domain.Enums.UserType.Reviewer => (false, 0, "Reviewer"),
+            Domain.Enums.UserType.Author => (false, 0, "Author"),
+            Domain.Enums.UserType.Moderator => (false, 0, "Moderator"),
+            Domain.Enums.UserType.Admin => (false, 0, "Admin"),
+            Domain.Enums.UserType.SuperAdmin => (false, 0, "SuperAdmin"),
+            Domain.Enums.UserType.Instructor => (false, 0, "Instructor"),
+            _ => (true, 5, "User")
+        };
     }
 
     #endregion

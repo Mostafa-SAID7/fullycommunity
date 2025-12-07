@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { QAService, QuestionDto, AnswerDto } from '../../../../core/services/community/qa.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
@@ -10,7 +10,7 @@ import { EmptyStateComponent } from '../../../../shared/components/empty-state/e
 @Component({
   selector: 'app-question-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingStateComponent, EmptyStateComponent],
+  imports: [CommonModule, FormsModule, RouterLink, LoadingStateComponent, EmptyStateComponent],
   templateUrl: './question-detail.component.html'
 })
 export class QuestionDetailComponent implements OnInit {

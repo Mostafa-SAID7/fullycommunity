@@ -264,7 +264,7 @@ public class AnswersController : ControllerBase
     /// <summary>
     /// Delete an answer
     /// </summary>
-    /// [HttpDelete("answers/{id:guid}")]
+    [HttpDelete("answers/{id:guid}")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

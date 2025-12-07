@@ -133,6 +133,7 @@ public static class DependencyInjection
         services.AddScoped<Services.Community.QA.QuestionVotingService>();
         services.AddScoped<Services.Community.QA.AnswerService>();
         services.AddScoped<Services.Community.QA.QACategoryService>();
+        services.AddScoped<Services.Community.QA.QuestionQuotaService>();
         services.AddScoped<Application.Common.Interfaces.Community.IQAService, Services.Community.QA.QAService>();
 
         // Community Services - Events

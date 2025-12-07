@@ -437,6 +437,51 @@ public class QuestionsController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get current user's Q&A quota information
+    /// </summary>
+    [HttpGet("quota")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetUserQuota(CancellationToken ct = default)
+    {
+        try
+        {
+            var userId = GetUserId();
+            if (!userId.HasValue)
+            {
+                return Unauthorized(new
+                {
+                    success = false,
+                    message = _localization.Get("QA.Errors.Unauthorized"),
+                    messageAr = _localization.Get("QA.Errors.Unauthorized", "ar")
+                });
+            }
+
+            var quota = await _qaService.GetUserQuotaAsync(userId.Value);
+            
+            return Ok(new
+            {
+                success = true,
+                data = quota,
+                message = _localization.Get("QA.Success.QuotaRetrieved"),
+                messageAr = _localization.Get("QA.Success.QuotaRetrieved", "ar")
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving quota for user: {UserId}", GetUserId());
+            return StatusCode(500, new
+            {
+                success = false,
+                message = _localization.Get("QA.Errors.RetrieveQuotaFailed"),
+                messageAr = _localization.Get("QA.Errors.RetrieveQuotaFailed", "ar")
+            });
+        }
+    }
+
     private Guid? GetUserId() => User.Identity?.IsAuthenticated == true
         ? Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!)
         : null;

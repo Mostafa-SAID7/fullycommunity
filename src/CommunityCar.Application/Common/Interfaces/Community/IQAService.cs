@@ -45,4 +45,7 @@ public interface IQAService
     Task<AnswerCommentDto> AddAnswerCommentAsync(Guid answerId, Guid authorId, CreateCommentRequest request);
     Task<AnswerCommentDto?> UpdateAnswerCommentAsync(Guid commentId, Guid userId, UpdateCommentRequest request);
     Task<bool> DeleteAnswerCommentAsync(Guid commentId, Guid userId);
+    
+    // User Quota
+    Task<UserQuotaDto> GetUserQuotaAsync(Guid userId);
 }
