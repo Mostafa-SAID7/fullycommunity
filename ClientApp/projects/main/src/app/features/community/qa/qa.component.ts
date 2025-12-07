@@ -1,16 +1,13 @@
-import { Component, inject, OnInit, signal, computed, HostListener } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { QAService, QuestionListItem, QuestionCategory, QuestionStatus } from '../../../core/services/community/qa.service';
-import { ThemeService } from '../../../core/services/ui/theme.service';
+import { QAService, QuestionListDto, QuestionCategory, QuestionStatus } from '../../../core/services/community/qa.service';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { StatsCardComponent, AskQuestionModalComponent } from '../../../shared/components';
 
 // Import child components
-import { QAHeaderComponent } from './components/qa-header/qa-header.component';
-import { QASearchFiltersComponent } from './components/qa-search-filters/qa-search-filters.component';
 import { QuestionListComponent } from './components/question-list/question-list.component';
-// Modal component will be added later
+
 export interface NewQuestionForm {
   title: string;
   content: string;
@@ -24,83 +21,23 @@ export interface NewQuestionForm {
   imports: [
     CommonModule,
     FormsModule,
-    QAHeaderComponent,
-    QASearchFiltersComponent,
+    StatsCardComponent,
+    AskQuestionModalComponent,
     QuestionListComponent
   ],
-  template: `
-    <div class="w-full max-w-4xl mx-auto space-y-6 p-6">
-      
-      <!-- Header Component -->
-      <app-qa-header
-        [totalQuestions]="totalQuestions()"
-        [answeredCount]="answeredCount()"
-        [unansweredCount]="unansweredCount()"
-        [bountyCount]="bountyCount()"
-        (askQuestion)="navigateToAskQuestion()"
-        (toggleFilters)="toggleAdvancedFilters()">
-      </app-qa-header>
-
-      <!-- Search and Filters Component -->
-      <app-qa-search-filters
-        [categories]="categories()"
-        [showAdvancedFilters]="showAdvancedFilters()"
-        [sortOptions]="sortOptions"
-        [popularTags]="popularTags"
-        [(searchTerm)]="searchTerm"
-        [(sortBy)]="sortBy"
-        [(viewMode)]="viewMode"
-        [(selectedStatus)]="selectedStatus"
-        [(selectedCategory)]="selectedCategory"
-        [(selectedTag)]="selectedTag"
-        [(dateFilter)]="dateFilter"
-        [(bountyFilter)]="bountyFilter"
-        (searchInput)="onSearchInput($event)"
-        (filtersChanged)="loadQuestions()"
-        (tagSelected)="filterByTag($event)"
-        (viewModeChanged)="viewMode = $event"
-        (sortChanged)="selectSort($event)">
-      </app-qa-search-filters>
-
-      <!-- Results Summary -->
-      <div class="flex items-center justify-between mb-6">
-        <div class="text-sm text-gray-600 dark:text-gray-400">
-          Showing {{ questions().length }} of {{ totalQuestions() }} questions
-          <span *ngIf="searchTerm || hasActiveFilters()" class="ml-2">
-            • <button (click)="clearAllFilters()" class="hover:underline font-medium text-blue-600 dark:text-blue-400">Clear all filters</button>
-          </span>
-        </div>
-        
-        <div class="flex items-center gap-2">
-          <span class="text-sm text-gray-500 dark:text-gray-400">{{ questions().length }} results</span>
-        </div>
-      </div>
-
-      <!-- Question List Component -->
-      <app-question-list
-        [questions]="questions()"
-        [loading]="loading()"
-        [error]="error()"
-        [viewMode]="viewMode"
-        [hasFilters]="hasActiveFilters()"
-        (clearFilters)="clearAllFilters()"
-        (askQuestion)="navigateToAskQuestion()">
-      </app-question-list>
-
-      <!-- Ask Question Modal will be added later -->
-    </div>
-  `
+  templateUrl: './qa.component.html'
 })
 export class QAComponent implements OnInit {
   private qaService = inject(QAService);
-  private themeService = inject(ThemeService);
-  private router = inject(Router);
 
   // Core data
-  questions = signal<QuestionListItem[]>([]);
+  questions = signal<QuestionListDto[]>([]);
   categories = signal<QuestionCategory[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
+
+  // Modal state
+  showAskModal = signal(false);
 
   // Statistics
   totalQuestions = signal(0);
@@ -183,25 +120,30 @@ export class QAComponent implements OnInit {
     this.loadTagCounts();
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event) {
-    // Close dropdowns when clicking outside
-    const target = event.target as HTMLElement;
-    if (!target.closest('.dropdown-container')) {
-      // Close any open dropdowns
-    }
-  }
-
   loadQuestions() {
     this.loading.set(true);
     this.error.set(null);
 
-    this.qaService.getQuestions({
-      status: this.selectedStatus as QuestionStatus || undefined,
+    const filter: any = {
       searchTerm: this.searchTerm || undefined,
       tag: this.selectedTag || undefined,
-      sortBy: this.sortBy
-    }).subscribe({
+      sortBy: this.sortBy as any
+    };
+
+    if (this.selectedStatus) {
+      filter.status = this.selectedStatus as QuestionStatus;
+    }
+    if (this.selectedCategory) {
+      filter.categoryId = this.selectedCategory;
+    }
+    if (this.bountyFilter === 'bounty') {
+      filter.hasBounty = true;
+    }
+    if (this.bountyFilter === 'answered') {
+      filter.hasAcceptedAnswer = true;
+    }
+
+    this.qaService.getQuestions(filter).subscribe({
       next: (result) => {
         this.questions.set(result.items);
         this.totalQuestions.set(result.totalCount);
@@ -218,14 +160,17 @@ export class QAComponent implements OnInit {
 
   loadCategories() {
     this.qaService.getCategories().subscribe({
-      next: (cats) => this.categories.set(cats)
+      next: (cats) => this.categories.set(cats),
+      error: (err) => console.error('Failed to load categories:', err)
     });
   }
 
-  updateStats(questions: QuestionListItem[]) {
+  updateStats(questions: QuestionListDto[]) {
     this.answeredCount.set(questions.filter(q => q.hasAcceptedAnswer).length);
     this.unansweredCount.set(questions.filter(q => q.answerCount === 0).length);
-    this.bountyCount.set(questions.filter(q => q.bountyPoints).length);
+    // Note: bountyPoints is not available in QuestionListDto, only in full QuestionDto
+    // To get accurate bounty count, we would need to fetch full details or add it to the list DTO
+    this.bountyCount.set(0);
   }
 
   // Enhanced UI Actions
@@ -285,6 +230,15 @@ export class QAComponent implements OnInit {
   }
 
   navigateToAskQuestion() {
-    this.router.navigate(['/community/qa/ask']);
+    this.showAskModal.set(true);
+  }
+
+  onQuestionCreated() {
+    this.showAskModal.set(false);
+    this.loadQuestions(); // Refresh the questions list
+  }
+
+  onModalClosed() {
+    this.showAskModal.set(false);
   }
 }

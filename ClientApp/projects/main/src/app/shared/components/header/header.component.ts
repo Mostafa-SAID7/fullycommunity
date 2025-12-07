@@ -5,6 +5,7 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { LocalizationService } from '../../../core/services/ui/localization.service';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
 import { SearchBoxComponent } from '../search-box/search-box.component';
+import { BrandLogoComponent } from '../brand-logo/brand-logo.component';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +15,8 @@ import { SearchBoxComponent } from '../search-box/search-box.component';
     RouterLink, 
     RouterLinkActive, 
     LanguageSwitcherComponent,
-    SearchBoxComponent
+    SearchBoxComponent,
+    BrandLogoComponent
   ],
   templateUrl: './header.component.html'
 })

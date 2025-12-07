@@ -90,8 +90,8 @@ public class QAService : IQAService
     public Task<bool> UnbookmarkQuestionAsync(Guid questionId, Guid userId)
         => _questionVotingService.UnbookmarkAsync(questionId, userId);
 
-    public Task IncrementViewAsync(Guid questionId)
-        => _questionVotingService.IncrementViewAsync(questionId);
+    public Task<bool> RecordViewAsync(Guid questionId, Guid? userId = null, string? anonymousId = null)
+        => _questionVotingService.RecordViewAsync(questionId, userId, anonymousId);
 
     public Task<PagedResult<QuestionListDto>> GetUserBookmarksAsync(
         Guid userId,

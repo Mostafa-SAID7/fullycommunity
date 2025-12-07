@@ -96,7 +96,12 @@ public class QuestionsController : ControllerBase
                 });
             }
 
-            var question = await _qaService.GetQuestionByIdAsync(id, GetUserId());
+            // Record unique view (one per user)
+            var userId = GetUserId();
+            var anonymousId = GetAnonymousId();
+            await _qaService.RecordViewAsync(id, userId, anonymousId);
+
+            var question = await _qaService.GetQuestionByIdAsync(id, userId);
             
             if (question is null)
             {
@@ -435,4 +440,23 @@ public class QuestionsController : ControllerBase
     private Guid? GetUserId() => User.Identity?.IsAuthenticated == true
         ? Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!)
         : null;
+
+    /// <summary>
+    /// Gets an anonymous identifier for view tracking (IP hash)
+    /// </summary>
+    private string? GetAnonymousId()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+            return null; // Use user ID instead for authenticated users
+
+        var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+        if (string.IsNullOrEmpty(ip))
+            return null;
+
+        // Hash the IP for privacy
+        using var sha256 = System.Security.Cryptography.SHA256.Create();
+        var bytes = System.Text.Encoding.UTF8.GetBytes(ip);
+        var hash = sha256.ComputeHash(bytes);
+        return Convert.ToBase64String(hash)[..32]; // First 32 chars of hash
+    }
 }

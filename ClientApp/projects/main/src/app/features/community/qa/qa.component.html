@@ -1,0 +1,197 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Q&A Community</h1>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">
+          Ask questions, share knowledge, and help fellow car enthusiasts
+        </p>
+      </div>
+      <button
+        (click)="navigateToAskQuestion()"
+        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Ask Question
+      </button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+      <app-stats-card 
+        [value]="totalQuestions()" 
+        label="Total Questions" 
+        color="default" />
+      <app-stats-card 
+        [value]="answeredCount()" 
+        label="Answered" 
+        color="success" />
+      <app-stats-card 
+        [value]="unansweredCount()" 
+        label="Unanswered" 
+        color="warning" />
+      <app-stats-card 
+        [value]="bountyCount()" 
+        label="With Bounty" 
+        color="purple" />
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Search Questions
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="onSearchInput($event)"
+          placeholder="Search by title or content..."
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+        />
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Category
+        </label>
+        <select
+          [(ngModel)]="selectedCategory"
+          (change)="loadQuestions()"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+        >
+          <option value="">All Categories</option>
+          @for (cat of categories(); track cat.id) {
+          <option [value]="cat.id">{{ cat.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Sort By
+        </label>
+        <select
+          [(ngModel)]="sortBy"
+          (change)="selectSort(sortBy)"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+        >
+          @for (option of sortOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <!-- Advanced Filters Toggle -->
+    <button
+      (click)="toggleAdvancedFilters()"
+      class="mt-4 text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+      </svg>
+      {{ showAdvancedFilters() ? 'Hide' : 'Show' }} Advanced Filters
+    </button>
+
+    <!-- Advanced Filters -->
+    @if (showAdvancedFilters()) {
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Status
+        </label>
+        <select
+          [(ngModel)]="selectedStatus"
+          (change)="loadQuestions()"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+        >
+          <option value="">All Status</option>
+          <option value="Open">Open</option>
+          <option value="Answered">Answered</option>
+          <option value="Closed">Closed</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Filter
+        </label>
+        <select
+          [(ngModel)]="bountyFilter"
+          (change)="loadQuestions()"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white transition-all"
+        >
+          <option value="">All Questions</option>
+          <option value="bounty">With Bounty</option>
+          <option value="answered">Has Accepted Answer</option>
+        </select>
+      </div>
+
+      <div class="flex items-end">
+        @if (hasActiveFilters()) {
+        <button
+          (click)="clearAllFilters()"
+          class="w-full px-4 py-2.5 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors font-medium">
+          Clear All Filters
+        </button>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- Popular Tags -->
+    <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+        Popular Tags
+      </label>
+      <div class="flex flex-wrap gap-2">
+        @for (tag of popularTags.slice(0, 10); track tag) {
+        <button
+          (click)="filterByTag(tag)"
+          [class.bg-blue-600]="selectedTag === tag"
+          [class.text-white]="selectedTag === tag"
+          [class.bg-gray-100]="selectedTag !== tag"
+          [class.dark:bg-gray-700]="selectedTag !== tag"
+          [class.text-gray-700]="selectedTag !== tag"
+          [class.dark:text-gray-300]="selectedTag !== tag"
+          [class.hover:bg-gray-200]="selectedTag !== tag"
+          [class.dark:hover:bg-gray-600]="selectedTag !== tag"
+          class="px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105">
+          {{ tag }}
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Summary -->
+  <div class="flex items-center justify-between mb-6">
+    <div class="text-sm text-gray-600 dark:text-gray-400">
+      Showing <span class="font-semibold text-gray-900 dark:text-white">{{ questions().length }}</span> of <span class="font-semibold text-gray-900 dark:text-white">{{ totalQuestions() }}</span> questions
+    </div>
+  </div>
+
+  <!-- Question List Component -->
+  <app-question-list
+    [questions]="questions()"
+    [loading]="loading()"
+    [error]="error()"
+    [viewMode]="viewMode"
+    [hasFilters]="hasActiveFilters()"
+    (clearFilters)="clearAllFilters()"
+    (askQuestion)="navigateToAskQuestion()">
+  </app-question-list>
+</div>
+
+<!-- Ask Question Modal -->
+@if (showAskModal()) {
+<app-ask-question-modal
+  (questionCreated)="onQuestionCreated()"
+  (modalClosed)="onModalClosed()">
+</app-ask-question-modal>
+}

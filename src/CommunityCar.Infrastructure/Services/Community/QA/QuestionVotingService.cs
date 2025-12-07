@@ -9,7 +9,7 @@ using CommunityCar.Application.Common.Mappers.Community;
 namespace CommunityCar.Infrastructure.Services.Community.QA;
 
 /// <summary>
-/// Service for question voting and bookmark operations
+/// Service for question voting, bookmark, and view operations
 /// </summary>
 public class QuestionVotingService
 {
@@ -17,6 +17,7 @@ public class QuestionVotingService
     private readonly IRepository<Question> _questionRepository;
     private readonly IRepository<QuestionVote> _voteRepository;
     private readonly IRepository<QuestionBookmark> _bookmarkRepository;
+    private readonly IRepository<QuestionView> _viewRepository;
 
     public QuestionVotingService(IUnitOfWork unitOfWork)
     {
@@ -24,6 +25,7 @@ public class QuestionVotingService
         _questionRepository = unitOfWork.Repository<Question>();
         _voteRepository = unitOfWork.Repository<QuestionVote>();
         _bookmarkRepository = unitOfWork.Repository<QuestionBookmark>();
+        _viewRepository = unitOfWork.Repository<QuestionView>();
     }
 
     #region Voting
@@ -156,14 +158,59 @@ public class QuestionVotingService
 
     #region View Count
 
-    public async Task IncrementViewAsync(Guid questionId)
+    /// <summary>
+    /// Records a unique view for a question. Each user (authenticated or anonymous) can only count once.
+    /// </summary>
+    /// <param name="questionId">The question ID</param>
+    /// <param name="userId">The authenticated user ID (optional)</param>
+    /// <param name="anonymousId">Anonymous identifier like IP hash or session ID (optional)</param>
+    /// <returns>True if this was a new view, false if already viewed</returns>
+    public async Task<bool> RecordViewAsync(Guid questionId, Guid? userId = null, string? anonymousId = null)
     {
         var question = await _questionRepository.FirstOrDefaultAsync(q => q.Id == questionId);
-        if (question == null) return;
+        if (question == null) return false;
 
+        // Check if user already viewed this question
+        bool alreadyViewed;
+        
+        if (userId.HasValue && userId.Value != Guid.Empty)
+        {
+            // Check by authenticated user ID
+            alreadyViewed = await _viewRepository.AsQueryable()
+                .AnyAsync(v => v.QuestionId == questionId && v.UserId == userId.Value);
+        }
+        else if (!string.IsNullOrEmpty(anonymousId))
+        {
+            // Check by anonymous ID (IP hash or session)
+            alreadyViewed = await _viewRepository.AsQueryable()
+                .AnyAsync(v => v.QuestionId == questionId && v.AnonymousId == anonymousId);
+        }
+        else
+        {
+            // No identifier provided - always count as new view
+            alreadyViewed = false;
+        }
+
+        if (alreadyViewed)
+            return false;
+
+        // Record the new view
+        var view = new QuestionView
+        {
+            QuestionId = questionId,
+            UserId = userId.HasValue && userId.Value != Guid.Empty ? userId : null,
+            AnonymousId = string.IsNullOrEmpty(anonymousId) ? null : anonymousId,
+            ViewedAt = DateTime.UtcNow
+        };
+
+        await _viewRepository.AddAsync(view);
+        
+        // Increment view count
         question.ViewCount++;
         _questionRepository.Update(question);
+        
         await _unitOfWork.SaveChangesAsync();
+        return true;
     }
 
     #endregion

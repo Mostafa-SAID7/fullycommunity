@@ -24,7 +24,7 @@ public interface IQAService
     Task<int> VoteQuestionAsync(Guid questionId, Guid userId, VoteType type);
     Task<bool> BookmarkQuestionAsync(Guid questionId, Guid userId);
     Task<bool> UnbookmarkQuestionAsync(Guid questionId, Guid userId);
-    Task IncrementViewAsync(Guid questionId);
+    Task<bool> RecordViewAsync(Guid questionId, Guid? userId = null, string? anonymousId = null);
     
     // Answers
     Task<IEnumerable<AnswerDto>> GetAnswersAsync(Guid questionId, Guid? currentUserId = null);

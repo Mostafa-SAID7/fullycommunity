@@ -75,6 +75,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<CommunityCar.Domain.Entities.Community.QA.QuestionTag> QuestionTags => Set<CommunityCar.Domain.Entities.Community.QA.QuestionTag>();
     public DbSet<CommunityCar.Domain.Entities.Community.QA.QuestionVote> QuestionVotes => Set<CommunityCar.Domain.Entities.Community.QA.QuestionVote>();
     public DbSet<CommunityCar.Domain.Entities.Community.QA.QuestionBookmark> QuestionBookmarks => Set<CommunityCar.Domain.Entities.Community.QA.QuestionBookmark>();
+    public DbSet<CommunityCar.Domain.Entities.Community.QA.QuestionView> QuestionViews => Set<CommunityCar.Domain.Entities.Community.QA.QuestionView>();
     public DbSet<CommunityCar.Domain.Entities.Community.Reviews.Review> Reviews => Set<CommunityCar.Domain.Entities.Community.Reviews.Review>();
     public DbSet<CommunityCar.Domain.Entities.Community.Guides.Guide> Guides => Set<CommunityCar.Domain.Entities.Community.Guides.Guide>();
     public DbSet<CommunityCar.Domain.Entities.Community.Guides.GuideStep> GuideSteps => Set<CommunityCar.Domain.Entities.Community.Guides.GuideStep>();

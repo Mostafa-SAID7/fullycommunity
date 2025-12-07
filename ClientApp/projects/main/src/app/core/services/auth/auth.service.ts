@@ -12,15 +12,17 @@ export interface User {
 }
 
 export interface AuthResponse {
-  token: string;
+  accessToken: string;
   refreshToken: string;
-  expiration: string;
+  expiresAt: string;
   user: User;
+  requiresTwoFactor?: boolean;
+  requiresVerification?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly apiUrl = `${environment.apiUrl}/auth`;
+  private readonly apiUrl = `${environment.apiUrl}/api/auth`;
   currentUser = signal<User | null>(null);
 
   constructor(private http: HttpClient) {
@@ -34,6 +36,11 @@ export class AuthService {
 
   register(data: { email: string; password: string; firstName: string; lastName: string }) {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data)
+      .pipe(tap(res => this.setSession(res)));
+  }
+
+  externalLogin(data: { provider: string; providerKey: string; email?: string; firstName?: string; lastName?: string; deviceId?: string }) {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login/external`, data)
       .pipe(tap(res => this.setSession(res)));
   }
 
@@ -65,7 +72,7 @@ export class AuthService {
   }
 
   private setSession(res: AuthResponse) {
-    localStorage.setItem('token', res.token);
+    localStorage.setItem('token', res.accessToken);
     localStorage.setItem('user', JSON.stringify(res.user));
     this.currentUser.set(res.user);
   }

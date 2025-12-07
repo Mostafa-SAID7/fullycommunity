@@ -1,13 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 export interface TrendingQuestion {
   id: string;
   title: string;
   slug: string;
-  content: string;
+  content: string; // Backend sends full content, not excerpt
   author: QuestionAuthor;
   voteCount: number;
   answerCount: number;
@@ -25,14 +25,26 @@ export interface QuestionAuthor {
   userType: string;
 }
 
+// Backend response wrapper
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+  messageAr?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class TrendingQuestionsService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/api/community`;
 
-  getTrendingQuestions(): Observable<TrendingQuestion[]> {
-    return this.http.get<TrendingQuestion[]>(`${this.apiUrl}/trending-questions`);
+  /**
+   * Get trending questions
+   * @param count Number of trending questions to fetch (1-20, default 5)
+   */
+  getTrendingQuestions(count = 5): Observable<TrendingQuestion[]> {
+    const validCount = Math.min(Math.max(count, 1), 20);
+    return this.http.get<ApiResponse<TrendingQuestion[]>>(`${this.apiUrl}/trending-questions?count=${validCount}`)
+      .pipe(map(response => response.data));
   }
-
-
 }

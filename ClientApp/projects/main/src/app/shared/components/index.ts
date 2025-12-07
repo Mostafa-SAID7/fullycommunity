@@ -11,7 +11,13 @@ export * from './chat-assistant/chat-assistant.component';
 export * from './search-box/search-box.component';
 export * from './story-viewer/story-viewer.component';
 export * from './create-story-modal/create-story-modal.component';
-// Skeleton and loading components are in different locations
+export * from './ask-question-modal/ask-question-modal.component';
+export * from './loading-state/loading-state.component';
+export * from './user-avatar/user-avatar.component';
+export * from './stats-card/stats-card.component';
+export * from './tag-list/tag-list.component';
+export * from './vote-button/vote-button.component';
+export * from './brand-logo/brand-logo.component';
 
 // Component Array for easy importing
 import { EmptyStateComponent } from './empty-state/empty-state.component';
@@ -26,7 +32,13 @@ import { ChatAssistantComponent } from './chat-assistant/chat-assistant.componen
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { StoryViewerComponent } from './story-viewer/story-viewer.component';
 import { CreateStoryModalComponent } from './create-story-modal/create-story-modal.component';
-// Skeleton and loading components imports removed
+import { AskQuestionModalComponent } from './ask-question-modal/ask-question-modal.component';
+import { LoadingStateComponent } from './loading-state/loading-state.component';
+import { UserAvatarComponent } from './user-avatar/user-avatar.component';
+import { StatsCardComponent } from './stats-card/stats-card.component';
+import { TagListComponent } from './tag-list/tag-list.component';
+import { VoteButtonComponent } from './vote-button/vote-button.component';
+import { BrandLogoComponent } from './brand-logo/brand-logo.component';
 
 export const SHARED_COMPONENTS = [
   EmptyStateComponent,
@@ -41,4 +53,11 @@ export const SHARED_COMPONENTS = [
   SearchBoxComponent,
   StoryViewerComponent,
   CreateStoryModalComponent,
+  AskQuestionModalComponent,
+  LoadingStateComponent,
+  UserAvatarComponent,
+  StatsCardComponent,
+  TagListComponent,
+  VoteButtonComponent,
+  BrandLogoComponent,
 ] as const;
