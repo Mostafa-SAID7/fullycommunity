@@ -4,6 +4,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { QAService, QuestionDto, AnswerDto } from '../../../../core/services/community/qa.service';
 import { AuthService } from '../../../../core/services/auth/auth.service';
+import { CommentService } from '../../../../core/services/community/qa/comment.service';
+import { AnswerComment } from '../../../../core/interfaces/community/qa/comment.interface';
 import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 
@@ -18,6 +20,7 @@ export class QuestionDetailComponent implements OnInit {
   private router = inject(Router);
   private qaService = inject(QAService);
   private authService = inject(AuthService);
+  private commentService = inject(CommentService);
 
   question = signal<QuestionDto | null>(null);
   answers = signal<AnswerDto[]>([]);
@@ -25,6 +28,13 @@ export class QuestionDetailComponent implements OnInit {
   error = signal<string | null>(null);
   submitting = signal(false);
   submitError = signal<string | null>(null);
+
+  // Comment management
+  showCommentForm = signal<string | null>(null); // answerId
+  newComment = signal<{ [answerId: string]: string }>({});
+  commentSubmitting = signal<string | null>(null);
+  editingComment = signal<string | null>(null); // commentId
+  editCommentContent = signal<string>('');
 
   newAnswer = '';
 
@@ -189,5 +199,137 @@ export class QuestionDetailComponent implements OnInit {
         }
       }
     });
+  }
+
+  // Comment methods
+  toggleCommentForm(answerId: string) {
+    const current = this.showCommentForm();
+    this.showCommentForm.set(current === answerId ? null : answerId);
+    
+    // Initialize comment content if not exists
+    if (!this.newComment()[answerId]) {
+      this.newComment.set({ ...this.newComment(), [answerId]: '' });
+    }
+  }
+
+  updateCommentContent(answerId: string, content: string) {
+    this.newComment.set({ ...this.newComment(), [answerId]: content });
+  }
+
+  submitComment(answerId: string) {
+    const content = this.newComment()[answerId]?.trim();
+    if (!content) return;
+
+    if (!this.isAuthenticated) {
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: this.router.url }
+      });
+      return;
+    }
+
+    this.commentSubmitting.set(answerId);
+
+    this.commentService.addComment(answerId, { content }).subscribe({
+      next: (comment) => {
+        // Add comment to the answer
+        const currentAnswers = this.answers();
+        const updatedAnswers = currentAnswers.map(a => {
+          if (a.id === answerId) {
+            return {
+              ...a,
+              comments: [...(a.comments || []), comment]
+            };
+          }
+          return a;
+        });
+        this.answers.set(updatedAnswers);
+
+        // Reset form
+        this.newComment.set({ ...this.newComment(), [answerId]: '' });
+        this.showCommentForm.set(null);
+        this.commentSubmitting.set(null);
+      },
+      error: (err) => {
+        console.error('Failed to add comment:', err);
+        this.commentSubmitting.set(null);
+        
+        if (err.status === 401) {
+          this.router.navigate(['/login'], {
+            queryParams: { returnUrl: this.router.url }
+          });
+        } else {
+          this.submitError.set('Failed to add comment. Please try again.');
+        }
+      }
+    });
+  }
+
+  startEditComment(comment: AnswerComment) {
+    this.editingComment.set(comment.id);
+    this.editCommentContent.set(comment.content);
+  }
+
+  cancelEditComment() {
+    this.editingComment.set(null);
+    this.editCommentContent.set('');
+  }
+
+  saveEditComment(answerId: string, commentId: string) {
+    const content = this.editCommentContent().trim();
+    if (!content) return;
+
+    this.commentService.updateComment(commentId, { content }).subscribe({
+      next: (updatedComment) => {
+        // Update comment in the answer
+        const currentAnswers = this.answers();
+        const updatedAnswers = currentAnswers.map(a => {
+          if (a.id === answerId) {
+            return {
+              ...a,
+              comments: a.comments?.map(c => c.id === commentId ? updatedComment : c) || []
+            };
+          }
+          return a;
+        });
+        this.answers.set(updatedAnswers);
+
+        this.editingComment.set(null);
+        this.editCommentContent.set('');
+      },
+      error: (err) => {
+        console.error('Failed to update comment:', err);
+        this.submitError.set('Failed to update comment. Please try again.');
+      }
+    });
+  }
+
+  deleteComment(answerId: string, commentId: string) {
+    if (!confirm('Are you sure you want to delete this comment?')) return;
+
+    this.commentService.deleteComment(commentId).subscribe({
+      next: () => {
+        // Remove comment from the answer
+        const currentAnswers = this.answers();
+        const updatedAnswers = currentAnswers.map(a => {
+          if (a.id === answerId) {
+            return {
+              ...a,
+              comments: a.comments?.filter(c => c.id !== commentId) || []
+            };
+          }
+          return a;
+        });
+        this.answers.set(updatedAnswers);
+      },
+      error: (err) => {
+        console.error('Failed to delete comment:', err);
+        this.submitError.set('Failed to delete comment. Please try again.');
+      }
+    });
+  }
+
+  isCommentAuthor(comment: AnswerComment): boolean {
+    const currentUser = this.authService.currentUser();
+    return currentUser?.id === comment.authorId;
   }
 }

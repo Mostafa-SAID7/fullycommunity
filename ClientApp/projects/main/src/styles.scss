@@ -180,6 +180,14 @@ html.switching-direction::before {
     @apply outline-none ring-2 ring-blue-500 ring-offset-2;
   }
 
+  /* Word breaking for long text */
+  .break-words {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
   /* Print styles */
   @media print {
     .no-print {

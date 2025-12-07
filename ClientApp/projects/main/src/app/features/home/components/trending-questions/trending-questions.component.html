@@ -79,8 +79,8 @@
         <!-- Content -->
         <div class="flex-1 min-w-0">
           <h3
-            class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-            <a [routerLink]="['/community/qa', question.slug]">{{ question.title }}</a>
+            class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors break-words">
+            <a [routerLink]="['/community/qa', question.slug]" class="break-words">{{ question.title }}</a>
           </h3>
 
           <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">

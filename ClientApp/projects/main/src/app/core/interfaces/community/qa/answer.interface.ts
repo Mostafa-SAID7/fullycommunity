@@ -2,7 +2,7 @@
  * Answer-related interfaces matching backend DTOs
  */
 
-import { AnswerCommentDto } from './comment.interface';
+import { AnswerComment } from './comment.interface';
 
 export interface AnswerDto {
   id: string;
@@ -18,5 +18,5 @@ export interface AnswerDto {
   isEdited: boolean;
   createdAt: string;
   updatedAt?: string; // For edited timestamp
-  comments: AnswerCommentDto[];
+  comments: AnswerComment[];
 }
