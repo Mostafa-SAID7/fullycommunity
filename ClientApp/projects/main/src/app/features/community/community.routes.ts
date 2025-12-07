@@ -14,6 +14,7 @@ export const communityRoutes: Routes = [
       { path: 'qa', loadComponent: () => import('./qa/qa.component').then(m => m.QAComponent) },
       { path: 'qa/ask', loadComponent: () => import('./qa/ask-question/ask-question.component').then(m => m.AskQuestionComponent) },
       { path: 'qa/:id', loadComponent: () => import('./qa/question-detail/question-detail.component').then(m => m.QuestionDetailComponent) },
+      { path: 'user/:id', loadComponent: () => import('./user-profile/user-profile.component').then(m => m.UserProfileComponent) },
       { path: 'guides', loadComponent: () => import('./guides/guides.component').then(m => m.GuidesComponent) },
       { path: 'guides/:slug', loadComponent: () => import('./guides/guide-detail.component').then(m => m.GuideDetailComponent) },
       { path: 'reviews', loadComponent: () => import('./reviews/reviews.component').then(m => m.ReviewsComponent) },

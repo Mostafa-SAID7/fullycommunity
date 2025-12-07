@@ -151,9 +151,9 @@
               <div class="w-6 h-6 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white text-[10px] font-bold">
                 {{ question.authorName[0] }}
               </div>
-              <span class="font-medium text-gray-900 dark:text-gray-300 hover:underline cursor-pointer">
+              <a [routerLink]="['/community/user', question.authorId]" class="font-medium text-gray-900 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:underline cursor-pointer">
                 {{ question.authorName }}
-              </span>
+              </a>
             </div>
           </div>
         </div>

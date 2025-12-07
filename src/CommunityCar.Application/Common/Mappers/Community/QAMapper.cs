@@ -18,7 +18,7 @@ public static class QAMapper
         return new QuestionDto(
             Id: question.Id,
             AuthorId: question.AuthorId,
-            AuthorName: question.Author?.UserName ?? "Unknown",
+            AuthorName: question.Author?.FirstName ?? "Unknown",
             AuthorAvatarUrl: question.Author?.AvatarUrl,
             Title: question.Title,
             Content: question.Content,
@@ -50,7 +50,7 @@ public static class QAMapper
             Id: question.Id,
             Title: question.Title,
             AuthorId: question.AuthorId,
-            AuthorName: question.Author?.UserName ?? "Unknown",
+            AuthorName: question.Author?.FirstName ?? "Unknown",
             AuthorAvatarUrl: question.Author?.AvatarUrl,
             Status: question.Status,
             AnswerCount: question.AnswerCount,
@@ -105,7 +105,7 @@ public static class QAMapper
             Id: answer.Id,
             QuestionId: answer.QuestionId,
             AuthorId: answer.AuthorId,
-            AuthorName: answer.Author?.UserName ?? "Unknown",
+            AuthorName: answer.Author?.FirstName ?? "Unknown",
             AuthorAvatarUrl: answer.Author?.AvatarUrl,
             Content: answer.Content,
             VoteCount: answer.VoteCount,
@@ -126,7 +126,7 @@ public static class QAMapper
         return new AnswerCommentDto(
             Id: comment.Id,
             AuthorId: comment.AuthorId,
-            AuthorName: comment.Author?.UserName ?? "Unknown",
+            AuthorName: comment.Author?.FirstName ?? "Unknown",
             Content: comment.Content,
             CreatedAt: comment.CreatedAt
         );
