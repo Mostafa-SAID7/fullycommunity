@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminContentService, ContentItem, ContentStats } from '../../../core/services/admin-content.service';
+import { AdminContentService, ContentItem, ContentStats } from '../../../core/services/content/admin-content.service';
 
 @Component({
   selector: 'content-management',

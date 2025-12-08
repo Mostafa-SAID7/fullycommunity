@@ -116,9 +116,8 @@ export class QuestionService {
    * Vote on question (auth required)
    */
   voteQuestion(id: string, voteType: 1 | -1): Observable<{ voteCount: number }> {
-    return this.http.post<ApiResponse<{ voteCount: number }>>(`${this.apiUrl}/${id}/vote`, voteType, {
-      headers: { 'Content-Type': 'application/json' }
-    }).pipe(map(response => response.data));
+    return this.http.post<ApiResponse<{ voteCount: number }>>(`${this.apiUrl}/${id}/vote`, voteType)
+      .pipe(map(response => response.data));
   }
 
   /**

@@ -1,0 +1,148 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  
+  <!-- Header -->
+  <div class="mb-8">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
+      <button (click)="goBack()" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1 group">
+        <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Q&A
+      </button>
+      <span>/</span>
+      <span class="text-gray-900 dark:text-white">All Tags</span>
+    </nav>
+
+    <div class="flex items-start justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Browse Tags</h1>
+        <p class="text-gray-600 dark:text-gray-400">
+          Explore questions by topic. Click on a tag to see all related questions.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search and Sort -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+    <div class="flex flex-col md:flex-row gap-4">
+      <!-- Search -->
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Search Tags
+        </label>
+        <div class="relative">
+          <input
+            type="text"
+            [value]="searchTerm()"
+            (input)="onSearchChange($any($event.target).value)"
+            placeholder="Search by tag name or description..."
+            class="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Sort -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Sort By
+        </label>
+        <div class="flex gap-2">
+          <button
+            (click)="onSortChange('popular')"
+            [class.bg-blue-600]="sortBy() === 'popular'"
+            [class.text-white]="sortBy() === 'popular'"
+            [class.bg-gray-100]="sortBy() !== 'popular'"
+            [class.dark:bg-gray-700]="sortBy() !== 'popular'"
+            [class.text-gray-700]="sortBy() !== 'popular'"
+            [class.dark:text-gray-300]="sortBy() !== 'popular'"
+            class="px-4 py-3 rounded-lg font-medium text-sm transition-all hover:scale-105 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+            </svg>
+            Popular
+          </button>
+          <button
+            (click)="onSortChange('name')"
+            [class.bg-blue-600]="sortBy() === 'name'"
+            [class.text-white]="sortBy() === 'name'"
+            [class.bg-gray-100]="sortBy() !== 'name'"
+            [class.dark:bg-gray-700]="sortBy() !== 'name'"
+            [class.text-gray-700]="sortBy() !== 'name'"
+            [class.dark:text-gray-300]="sortBy() !== 'name'"
+            class="px-4 py-3 rounded-lg font-medium text-sm transition-all hover:scale-105 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/>
+            </svg>
+            Name
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+  <app-loading-state message="Loading tags..." />
+  }
+
+  <!-- Error State -->
+  @else if (error()) {
+  <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-8 text-center">
+    <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+    </div>
+    <h3 class="text-xl font-semibold text-red-900 dark:text-red-100 mb-2">Error Loading Tags</h3>
+    <p class="text-red-700 dark:text-red-300 mb-6">{{ error() }}</p>
+    <button 
+      (click)="loadTags()"
+      class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
+      Try Again
+    </button>
+  </div>
+  }
+
+  <!-- Tags Grid -->
+  @else if (filteredTags().length === 0) {
+  <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl p-12 text-center">
+    <div class="w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
+      <svg class="w-10 h-10 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+      </svg>
+    </div>
+    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">No tags found</h3>
+    <p class="text-gray-600 dark:text-gray-400 mb-6">Try adjusting your search to find what you're looking for.</p>
+  </div>
+  }
+  @else {
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    @for (tag of filteredTags(); track tag.name) {
+    <button
+      (click)="navigateToTag(tag.name)"
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-200 text-left group">
+      <div class="flex items-start justify-between mb-3">
+        <div class="px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-lg font-semibold rounded-full border border-blue-200 dark:border-blue-800 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
+          {{ tag.name }}
+        </div>
+        <div class="flex items-center gap-1 text-gray-600 dark:text-gray-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="text-sm font-semibold">{{ tag.count }}</span>
+        </div>
+      </div>
+      @if (tag.description) {
+      <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+        {{ tag.description }}
+      </p>
+      }
+    </button>
+    }
+  </div>
+  }
+</div>

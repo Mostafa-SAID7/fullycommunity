@@ -53,12 +53,6 @@ export const routes: Routes = [
     loadChildren: () => import('./features/services/services.routes').then(m => m.servicesRoutes),
     data: { animation: 'ServicesPage' }
   },
-  {
-    path: 'dashboard',
-    loadChildren: () => import('./features/dashboard/dashboard.routes').then(m => m.dashboardRoutes),
-    canActivate: [authGuard],
-    data: { animation: 'DashboardPage' }
-  },
   // Error pages
   { 
     path: 'error', 

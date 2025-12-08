@@ -1,0 +1,328 @@
+<div class="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
+  <!-- Header -->
+  <div class="mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Q&A Management</h1>
+    <p class="text-sm md:text-base text-gray-600 mt-1">Manage questions, answers, and categories</p>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="mb-6 border-b border-gray-200">
+    <nav class="flex gap-4 overflow-x-auto">
+      <a routerLink="/admin/qa/questions" routerLinkActive="border-blue-600 text-blue-600" [routerLinkActiveOptions]="{exact: true}"
+         class="px-4 py-2 border-b-2 border-transparent text-gray-600 hover:text-gray-900 whitespace-nowrap">
+        Questions
+      </a>
+      <a routerLink="/admin/qa/analytics" routerLinkActive="border-blue-600 text-blue-600"
+         class="px-4 py-2 border-b-2 border-transparent text-gray-600 hover:text-gray-900 whitespace-nowrap">
+        Analytics
+      </a>
+      <a routerLink="/admin/qa/tags" routerLinkActive="border-blue-600 text-blue-600"
+         class="px-4 py-2 border-b-2 border-transparent text-gray-600 hover:text-gray-900 whitespace-nowrap">
+        Tags
+      </a>
+    </nav>
+  </div>
+
+  <!-- Stats Cards -->
+  @if (stats()) {
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4 mb-6">
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-xs md:text-sm text-gray-600">Total Questions</div>
+        <div class="text-xl md:text-2xl font-bold text-gray-900 mt-1">{{ stats()!.totalQuestions }}</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-xs md:text-sm text-gray-600">Total Answers</div>
+        <div class="text-xl md:text-2xl font-bold text-gray-900 mt-1">{{ stats()!.totalAnswers }}</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-xs md:text-sm text-gray-600">Open</div>
+        <div class="text-xl md:text-2xl font-bold text-green-600 mt-1">{{ stats()!.openQuestions }}</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-xs md:text-sm text-gray-600">Answered</div>
+        <div class="text-xl md:text-2xl font-bold text-blue-600 mt-1">{{ stats()!.answeredQuestions }}</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-xs md:text-sm text-gray-600">Closed</div>
+        <div class="text-xl md:text-2xl font-bold text-gray-600 mt-1">{{ stats()!.closedQuestions }}</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-xs md:text-sm text-gray-600">This Week</div>
+        <div class="text-xl md:text-2xl font-bold text-purple-600 mt-1">{{ stats()!.questionsThisWeek }}</div>
+      </div>
+    </div>
+  }
+
+  <!-- Filters -->
+  <div class="bg-white rounded-lg shadow p-4 mb-6">
+    <div class="flex flex-col md:flex-row gap-4">
+      <!-- Search -->
+      <div class="flex-1">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          placeholder="Search questions..."
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+
+      <!-- Status Filter -->
+      <div class="w-full md:w-48">
+        <select
+          [(ngModel)]="selectedStatus"
+          (change)="onStatusChange($any($event.target).value)"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+          <option value="">All Status</option>
+          <option value="Open">Open</option>
+          <option value="Closed">Closed</option>
+        </select>
+      </div>
+
+      <!-- Search Button -->
+      <button
+        (click)="onSearch()"
+        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        Search
+      </button>
+    </div>
+  </div>
+
+  <!-- Questions Table -->
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    @if (loading()) {
+      <div class="p-8 text-center">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <p class="mt-2 text-gray-600">Loading questions...</p>
+      </div>
+    } @else if (questions().length === 0) {
+      <div class="p-8 text-center text-gray-500">
+        <p>No questions found</p>
+      </div>
+    } @else {
+      <!-- Desktop Table -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Question</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stats</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            @for (question of questions(); track question.id) {
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4">
+                  <div class="max-w-md">
+                    <div class="text-sm font-medium text-gray-900 truncate">{{ question.title }}</div>
+                    <div class="text-xs text-gray-500 mt-1 line-clamp-2">{{ question.content }}</div>
+                    @if (question.tags.length > 0) {
+                      <div class="flex flex-wrap gap-1 mt-2">
+                        @for (tag of question.tags.slice(0, 3); track tag) {
+                          <span class="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded">{{ tag }}</span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">{{ question.authorName }}</div>
+                  <div class="text-xs text-gray-500">{{ question.authorEmail }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">{{ question.categoryName }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span [class]="'px-2 py-1 text-xs font-medium rounded-full ' + getStatusBadgeClass(question.status)">
+                    {{ question.status }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-xs text-gray-600 space-y-1">
+                    <div>👁️ {{ question.viewCount }} views</div>
+                    <div>👍 {{ question.voteCount }} votes</div>
+                    <div>💬 {{ question.answerCount }} answers</div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ formatDate(question.createdAt) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex justify-end gap-2">
+                    <button
+                      (click)="viewQuestion(question)"
+                      class="text-blue-600 hover:text-blue-900"
+                      title="View"
+                    >
+                      👁️
+                    </button>
+                    @if (question.status === 'Open') {
+                      <button
+                        (click)="openCloseModal(question)"
+                        class="text-yellow-600 hover:text-yellow-900"
+                        title="Close"
+                      >
+                        🔒
+                      </button>
+                    } @else {
+                      <button
+                        (click)="reopenQuestion(question)"
+                        class="text-green-600 hover:text-green-900"
+                        title="Reopen"
+                      >
+                        🔓
+                      </button>
+                    }
+                    <button
+                      (click)="deleteQuestion(question)"
+                      class="text-red-600 hover:text-red-900"
+                      title="Delete"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Cards -->
+      <div class="md:hidden divide-y divide-gray-200">
+        @for (question of questions(); track question.id) {
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-sm font-medium text-gray-900 flex-1 pr-2">{{ question.title }}</h3>
+              <span [class]="'px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ' + getStatusBadgeClass(question.status)">
+                {{ question.status }}
+              </span>
+            </div>
+            <p class="text-xs text-gray-600 mb-2 line-clamp-2">{{ question.content }}</p>
+            
+            @if (question.tags.length > 0) {
+              <div class="flex flex-wrap gap-1 mb-2">
+                @for (tag of question.tags.slice(0, 3); track tag) {
+                  <span class="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded">{{ tag }}</span>
+                }
+              </div>
+            }
+
+            <div class="flex items-center gap-4 text-xs text-gray-500 mb-2">
+              <span>👁️ {{ question.viewCount }}</span>
+              <span>👍 {{ question.voteCount }}</span>
+              <span>💬 {{ question.answerCount }}</span>
+            </div>
+
+            <div class="text-xs text-gray-500 mb-3">
+              <div>{{ question.authorName }} • {{ question.categoryName }}</div>
+              <div>{{ formatDate(question.createdAt) }}</div>
+            </div>
+
+            <div class="flex gap-2">
+              <button
+                (click)="viewQuestion(question)"
+                class="flex-1 px-3 py-2 bg-blue-50 text-blue-600 text-xs rounded hover:bg-blue-100"
+              >
+                View
+              </button>
+              @if (question.status === 'Open') {
+                <button
+                  (click)="openCloseModal(question)"
+                  class="flex-1 px-3 py-2 bg-yellow-50 text-yellow-600 text-xs rounded hover:bg-yellow-100"
+                >
+                  Close
+                </button>
+              } @else {
+                <button
+                  (click)="reopenQuestion(question)"
+                  class="flex-1 px-3 py-2 bg-green-50 text-green-600 text-xs rounded hover:bg-green-100"
+                >
+                  Reopen
+                </button>
+              }
+              <button
+                (click)="deleteQuestion(question)"
+                class="px-3 py-2 bg-red-50 text-red-600 text-xs rounded hover:bg-red-100"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Pagination -->
+      @if (totalPages() > 1) {
+        <div class="px-4 py-3 bg-gray-50 border-t border-gray-200">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="text-sm text-gray-700">
+              Showing page {{ currentPage() }} of {{ totalPages() }} ({{ totalCount() }} total)
+            </div>
+            <div class="flex gap-2">
+              <button
+                (click)="goToPage(currentPage() - 1)"
+                [disabled]="currentPage() === 1"
+                class="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+              >
+                Previous
+              </button>
+              <button
+                (click)="goToPage(currentPage() + 1)"
+                [disabled]="currentPage() === totalPages()"
+                class="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>
+
+<!-- Close Question Modal -->
+@if (showCloseModal()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-lg max-w-md w-full p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Close Question</h3>
+      <p class="text-sm text-gray-600 mb-4">
+        Please provide a reason for closing this question:
+      </p>
+      <textarea
+        [(ngModel)]="closeReason"
+        rows="4"
+        placeholder="Enter reason..."
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      ></textarea>
+      <div class="flex gap-3 mt-6">
+        <button
+          (click)="closeModal()"
+          [disabled]="actionLoading()"
+          class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+        >
+          Cancel
+        </button>
+        <button
+          (click)="confirmCloseQuestion()"
+          [disabled]="!closeReason().trim() || actionLoading()"
+          class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        >
+          @if (actionLoading()) {
+            <span>Closing...</span>
+          } @else {
+            <span>Close Question</span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}

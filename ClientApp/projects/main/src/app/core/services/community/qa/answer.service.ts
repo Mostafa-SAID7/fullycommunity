@@ -4,7 +4,7 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import {
   AnswerDto,
-  AnswerCommentDto,
+  AnswerComment,
   CreateAnswerRequest,
   UpdateAnswerRequest,
   CreateCommentRequest,
@@ -71,9 +71,8 @@ export class AnswerService {
    * Vote on answer (auth required)
    */
   voteAnswer(id: string, voteType: 1 | -1): Observable<{ voteCount: number }> {
-    return this.http.post<ApiResponse<{ voteCount: number }>>(`${this.apiUrl}/answers/${id}/vote`, voteType, {
-      headers: { 'Content-Type': 'application/json' }
-    }).pipe(map(response => response.data));
+    return this.http.post<ApiResponse<{ voteCount: number }>>(`${this.apiUrl}/answers/${id}/vote`, voteType)
+      .pipe(map(response => response.data));
   }
 
   // ============================================================================
@@ -83,24 +82,24 @@ export class AnswerService {
   /**
    * Get comments for an answer
    */
-  getAnswerComments(answerId: string): Observable<AnswerCommentDto[]> {
-    return this.http.get<ApiResponse<AnswerCommentDto[]>>(`${this.apiUrl}/answers/${answerId}/comments`)
+  getAnswerComments(answerId: string): Observable<AnswerComment[]> {
+    return this.http.get<ApiResponse<AnswerComment[]>>(`${this.apiUrl}/answers/${answerId}/comments`)
       .pipe(map(response => response.data));
   }
 
   /**
    * Add comment to answer (auth required)
    */
-  createAnswerComment(answerId: string, request: CreateCommentRequest): Observable<AnswerCommentDto> {
-    return this.http.post<ApiResponse<AnswerCommentDto>>(`${this.apiUrl}/answers/${answerId}/comments`, request)
+  createAnswerComment(answerId: string, request: CreateCommentRequest): Observable<AnswerComment> {
+    return this.http.post<ApiResponse<AnswerComment>>(`${this.apiUrl}/answers/${answerId}/comments`, request)
       .pipe(map(response => response.data));
   }
 
   /**
    * Update comment (auth required, owner only)
    */
-  updateAnswerComment(commentId: string, request: UpdateCommentRequest): Observable<AnswerCommentDto> {
-    return this.http.put<ApiResponse<AnswerCommentDto>>(`${this.apiUrl}/answers/comments/${commentId}`, request)
+  updateAnswerComment(commentId: string, request: UpdateCommentRequest): Observable<AnswerComment> {
+    return this.http.put<ApiResponse<AnswerComment>>(`${this.apiUrl}/answers/comments/${commentId}`, request)
       .pipe(map(response => response.data));
   }
 

@@ -1,0 +1,123 @@
+<div class="p-6">
+  <div class="mb-6 flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">Videos Management</h1>
+      <p class="text-gray-600">Manage video content, moderate submissions, and track performance</p>
+    </div>
+    <a
+      routerLink="/admin/content/videos/pending"
+      class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
+    >
+      Pending Videos ({{ pendingCount() }})
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+    <div class="flex flex-col md:flex-row gap-4">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
+        placeholder="Search videos..."
+        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+      />
+      <select
+        [(ngModel)]="selectedStatus"
+        (change)="onStatusChange($any($event.target).value)"
+        class="px-4 py-2 border border-gray-300 rounded-lg"
+      >
+        <option value="">All Status</option>
+        <option value="published">Published</option>
+        <option value="unlisted">Unlisted</option>
+        <option value="private">Private</option>
+      </select>
+      <button
+        (click)="onSearch()"
+        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+      >
+        Search
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="flex justify-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>
+  }
+
+  @if (!loading() && videos().length > 0) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      @for (video of videos(); track video.id) {
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+          <div class="relative aspect-video bg-gray-200">
+            @if (video.thumbnailUrl) {
+              <img [src]="video.thumbnailUrl" [alt]="video.title" class="w-full h-full object-cover" />
+            } @else {
+              <div class="flex items-center justify-center h-full text-gray-400">
+                🎥
+              </div>
+            }
+            <div class="absolute bottom-2 right-2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
+              {{ formatDuration(video.duration) }}
+            </div>
+          </div>
+          
+          <div class="p-4">
+            <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">{{ video.title }}</h3>
+            <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ video.description }}</p>
+            
+            <div class="flex items-center gap-3 text-xs text-gray-500 mb-3">
+              <span>👁️ {{ video.viewCount }}</span>
+              <span>❤️ {{ video.likeCount }}</span>
+            </div>
+
+            <div class="text-xs text-gray-500 mb-3">
+              By {{ video.uploaderName }} • {{ formatDate(video.uploadedAt) }}
+            </div>
+
+            <div class="flex gap-2">
+              <button
+                (click)="deleteVideo(video)"
+                class="flex-1 px-3 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 text-sm"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex justify-between items-center">
+      <div class="text-sm text-gray-700">
+        Page {{ currentPage() }} of {{ totalPages() }} ({{ totalCount() }} total)
+      </div>
+      <div class="flex gap-2">
+        <button
+          (click)="goToPage(currentPage() - 1)"
+          [disabled]="currentPage() === 1"
+          class="px-4 py-2 border rounded-lg disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <button
+          (click)="goToPage(currentPage() + 1)"
+          [disabled]="currentPage() === totalPages()"
+          class="px-4 py-2 border rounded-lg disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (!loading() && videos().length === 0) {
+    <div class="bg-white rounded-lg shadow-sm p-12 text-center">
+      <div class="text-gray-400 text-6xl mb-4">🎥</div>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No videos found</h3>
+    </div>
+  }
+</div>

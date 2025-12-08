@@ -1,0 +1,71 @@
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+  <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+    </svg>
+    Related Questions
+  </h3>
+
+  <!-- Loading State -->
+  @if (loading()) {
+  <div class="space-y-3">
+    @for (i of [1,2,3]; track i) {
+    <div class="animate-pulse">
+      <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2"></div>
+      <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- Error State -->
+  @else if (error()) {
+  <p class="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
+    {{ error() }}
+  </p>
+  }
+
+  <!-- Empty State -->
+  @else if (relatedQuestions().length === 0) {
+  <p class="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
+    No related questions found
+  </p>
+  }
+
+  <!-- Related Questions List -->
+  @else {
+  <div class="space-y-3">
+    @for (question of relatedQuestions(); track question.id) {
+    <a 
+      [routerLink]="['/community/qa', question.id]"
+      class="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
+    >
+      <h4 class="text-sm font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 mb-2 break-words line-clamp-2">
+        {{ question.title }}
+      </h4>
+      <div class="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+        <span class="flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+          </svg>
+          {{ question.voteCount }}
+        </span>
+        <span class="flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+          </svg>
+          {{ question.answerCount }}
+        </span>
+        <span class="flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+          {{ question.viewCount }}
+        </span>
+      </div>
+    </a>
+    }
+  </div>
+  }
+</div>

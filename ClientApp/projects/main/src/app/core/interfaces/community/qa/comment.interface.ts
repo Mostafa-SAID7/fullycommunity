@@ -5,11 +5,3 @@ export interface AnswerComment {
   content: string;
   createdAt: string;
 }
-
-export interface CreateCommentRequest {
-  content: string;
-}
-
-export interface UpdateCommentRequest {
-  content: string;
-}

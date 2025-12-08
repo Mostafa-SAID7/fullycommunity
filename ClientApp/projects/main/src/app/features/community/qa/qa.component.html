@@ -146,9 +146,19 @@
 
     <!-- Popular Tags -->
     <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-        Popular Tags
-      </label>
+      <div class="flex items-center justify-between mb-3">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Popular Tags
+        </label>
+        <a 
+          routerLink="/community/qa/tags"
+          class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center gap-1 transition-colors">
+          View All
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
       <div class="flex flex-wrap gap-2">
         @for (tag of popularTags.slice(0, 10); track tag) {
         <button

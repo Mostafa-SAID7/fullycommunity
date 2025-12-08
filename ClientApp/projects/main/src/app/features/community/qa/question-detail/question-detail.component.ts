@@ -1,46 +1,36 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { QAService, QuestionDto, AnswerDto } from '../../../../core/services/community/qa.service';
-import { AuthService } from '../../../../core/services/auth/auth.service';
-import { CommentService } from '../../../../core/services/community/qa/comment.service';
-import { AnswerComment } from '../../../../core/interfaces/community/qa/comment.interface';
 import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
-import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
+import { QuestionHeaderComponent } from '../components/question-header/question-header.component';
+import { AnswerListComponent } from '../components/answer-list/answer-list.component';
+import { AnswerFormComponent } from '../components/answer-form/answer-form.component';
+import { RelatedQuestionsComponent } from '../components/related-questions/related-questions.component';
 
 @Component({
   selector: 'app-question-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LoadingStateComponent, EmptyStateComponent],
+  imports: [
+    CommonModule,
+    LoadingStateComponent,
+    QuestionHeaderComponent,
+    AnswerListComponent,
+    AnswerFormComponent,
+    RelatedQuestionsComponent
+  ],
   templateUrl: './question-detail.component.html'
 })
 export class QuestionDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private qaService = inject(QAService);
-  private authService = inject(AuthService);
-  private commentService = inject(CommentService);
 
   question = signal<QuestionDto | null>(null);
   answers = signal<AnswerDto[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
-  submitting = signal(false);
   submitError = signal<string | null>(null);
-
-  // Comment management
-  showCommentForm = signal<string | null>(null); // answerId
-  newComment = signal<{ [answerId: string]: string }>({});
-  commentSubmitting = signal<string | null>(null);
-  editingComment = signal<string | null>(null); // commentId
-  editCommentContent = signal<string>('');
-
-  newAnswer = '';
-
-  get isAuthenticated(): boolean {
-    return this.authService.isAuthenticated();
-  }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -79,48 +69,15 @@ export class QuestionDetailComponent implements OnInit {
     });
   }
 
-  submitAnswer() {
-    if (!this.newAnswer.trim() || !this.question()?.id) return;
-
-    // Check authentication before submitting
-    if (!this.isAuthenticated) {
-      this.router.navigate(['/login'], {
-        queryParams: { returnUrl: this.router.url }
-      });
-      return;
+  onAnswerSubmitted() {
+    const questionId = this.question()?.id;
+    if (questionId) {
+      this.loadQuestion(questionId);
     }
+  }
 
-    this.submitting.set(true);
-    this.submitError.set(null);
-
-    this.qaService.createAnswer(this.question()!.id, {
-      content: this.newAnswer
-    }).subscribe({
-      next: () => {
-        this.newAnswer = '';
-        this.submitting.set(false);
-        this.submitError.set(null);
-        this.loadQuestion(this.question()!.id);
-      },
-      error: (err) => {
-        console.error('Failed to submit answer:', err);
-        this.submitting.set(false);
-        
-        // Show user-friendly error message
-        if (err.status === 401) {
-          // Redirect to login if token expired
-          this.router.navigate(['/login'], {
-            queryParams: { returnUrl: this.router.url }
-          });
-        } else if (err.status === 403) {
-          this.submitError.set('You do not have permission to post an answer.');
-        } else if (err.status === 404) {
-          this.submitError.set('Question not found.');
-        } else {
-          this.submitError.set('Failed to post answer. Please try again.');
-        }
-      }
-    });
+  onAnswersUpdated(updatedAnswers: AnswerDto[]) {
+    this.answers.set(updatedAnswers);
   }
 
   scrollToAnswerForm() {
@@ -133,27 +90,14 @@ export class QuestionDetailComponent implements OnInit {
     this.router.navigate(['/community/qa']);
   }
 
-  getAuthorName(author: any): string {
-    return `${author.firstName} ${author.lastName}`.trim();
-  }
-
   voteQuestion(voteType: 1 | -1) {
-    if (!this.question()?.id) return;
-
     const currentQuestion = this.question();
     if (!currentQuestion) return;
 
-    // Determine the actual vote to send based on current state
     const currentVote = currentQuestion.currentUserVote || 0;
-    let actualVote: 1 | -1;
 
-    // If clicking the same vote, it will be removed (backend handles this)
-    // If clicking opposite vote, it will change
-    actualVote = voteType;
-
-    this.qaService.voteQuestion(currentQuestion.id, actualVote).subscribe({
+    this.qaService.voteQuestion(currentQuestion.id, voteType).subscribe({
       next: (result) => {
-        // Update both vote count and user's vote state
         const newUserVote = currentVote === voteType ? 0 : voteType;
         this.question.set({
           ...currentQuestion,
@@ -164,7 +108,9 @@ export class QuestionDetailComponent implements OnInit {
       error: (err) => {
         console.error('Failed to vote on question:', err);
         if (err.status === 401) {
-          this.submitError.set('You must be logged in to vote.');
+          this.router.navigate(['/login'], {
+            queryParams: { returnUrl: this.router.url }
+          });
         } else {
           this.submitError.set('Failed to vote. Please try again.');
         }
@@ -172,19 +118,18 @@ export class QuestionDetailComponent implements OnInit {
     });
   }
 
-  voteAnswer(answerId: string, voteType: 1 | -1) {
+  voteAnswer(event: { answerId: string; voteType: 1 | -1 }) {
     const currentAnswers = this.answers();
-    const answer = currentAnswers.find(a => a.id === answerId);
+    const answer = currentAnswers.find(a => a.id === event.answerId);
     if (!answer) return;
 
     const currentVote = answer.currentUserVote || 0;
 
-    this.qaService.voteAnswer(answerId, voteType).subscribe({
+    this.qaService.voteAnswer(event.answerId, event.voteType).subscribe({
       next: (result) => {
-        // Update both vote count and user's vote state
-        const newUserVote = currentVote === voteType ? 0 : voteType;
+        const newUserVote = currentVote === event.voteType ? 0 : event.voteType;
         const updatedAnswers = currentAnswers.map(a =>
-          a.id === answerId
+          a.id === event.answerId
             ? { ...a, voteCount: result.voteCount, currentUserVote: newUserVote }
             : a
         );
@@ -193,143 +138,13 @@ export class QuestionDetailComponent implements OnInit {
       error: (err) => {
         console.error('Failed to vote on answer:', err);
         if (err.status === 401) {
-          this.submitError.set('You must be logged in to vote.');
+          this.router.navigate(['/login'], {
+            queryParams: { returnUrl: this.router.url }
+          });
         } else {
           this.submitError.set('Failed to vote. Please try again.');
         }
       }
     });
-  }
-
-  // Comment methods
-  toggleCommentForm(answerId: string) {
-    const current = this.showCommentForm();
-    this.showCommentForm.set(current === answerId ? null : answerId);
-    
-    // Initialize comment content if not exists
-    if (!this.newComment()[answerId]) {
-      this.newComment.set({ ...this.newComment(), [answerId]: '' });
-    }
-  }
-
-  updateCommentContent(answerId: string, content: string) {
-    this.newComment.set({ ...this.newComment(), [answerId]: content });
-  }
-
-  submitComment(answerId: string) {
-    const content = this.newComment()[answerId]?.trim();
-    if (!content) return;
-
-    if (!this.isAuthenticated) {
-      this.router.navigate(['/login'], {
-        queryParams: { returnUrl: this.router.url }
-      });
-      return;
-    }
-
-    this.commentSubmitting.set(answerId);
-
-    this.commentService.addComment(answerId, { content }).subscribe({
-      next: (comment) => {
-        // Add comment to the answer
-        const currentAnswers = this.answers();
-        const updatedAnswers = currentAnswers.map(a => {
-          if (a.id === answerId) {
-            return {
-              ...a,
-              comments: [...(a.comments || []), comment]
-            };
-          }
-          return a;
-        });
-        this.answers.set(updatedAnswers);
-
-        // Reset form
-        this.newComment.set({ ...this.newComment(), [answerId]: '' });
-        this.showCommentForm.set(null);
-        this.commentSubmitting.set(null);
-      },
-      error: (err) => {
-        console.error('Failed to add comment:', err);
-        this.commentSubmitting.set(null);
-        
-        if (err.status === 401) {
-          this.router.navigate(['/login'], {
-            queryParams: { returnUrl: this.router.url }
-          });
-        } else {
-          this.submitError.set('Failed to add comment. Please try again.');
-        }
-      }
-    });
-  }
-
-  startEditComment(comment: AnswerComment) {
-    this.editingComment.set(comment.id);
-    this.editCommentContent.set(comment.content);
-  }
-
-  cancelEditComment() {
-    this.editingComment.set(null);
-    this.editCommentContent.set('');
-  }
-
-  saveEditComment(answerId: string, commentId: string) {
-    const content = this.editCommentContent().trim();
-    if (!content) return;
-
-    this.commentService.updateComment(commentId, { content }).subscribe({
-      next: (updatedComment) => {
-        // Update comment in the answer
-        const currentAnswers = this.answers();
-        const updatedAnswers = currentAnswers.map(a => {
-          if (a.id === answerId) {
-            return {
-              ...a,
-              comments: a.comments?.map(c => c.id === commentId ? updatedComment : c) || []
-            };
-          }
-          return a;
-        });
-        this.answers.set(updatedAnswers);
-
-        this.editingComment.set(null);
-        this.editCommentContent.set('');
-      },
-      error: (err) => {
-        console.error('Failed to update comment:', err);
-        this.submitError.set('Failed to update comment. Please try again.');
-      }
-    });
-  }
-
-  deleteComment(answerId: string, commentId: string) {
-    if (!confirm('Are you sure you want to delete this comment?')) return;
-
-    this.commentService.deleteComment(commentId).subscribe({
-      next: () => {
-        // Remove comment from the answer
-        const currentAnswers = this.answers();
-        const updatedAnswers = currentAnswers.map(a => {
-          if (a.id === answerId) {
-            return {
-              ...a,
-              comments: a.comments?.filter(c => c.id !== commentId) || []
-            };
-          }
-          return a;
-        });
-        this.answers.set(updatedAnswers);
-      },
-      error: (err) => {
-        console.error('Failed to delete comment:', err);
-        this.submitError.set('Failed to delete comment. Please try again.');
-      }
-    });
-  }
-
-  isCommentAuthor(comment: AnswerComment): boolean {
-    const currentUser = this.authService.currentUser();
-    return currentUser?.id === comment.authorId;
   }
 }

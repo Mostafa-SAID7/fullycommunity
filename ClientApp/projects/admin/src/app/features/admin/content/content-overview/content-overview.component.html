@@ -1,0 +1,178 @@
+<div class="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
+  <!-- Header -->
+  <div class="mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Content Management</h1>
+    <p class="text-sm md:text-base text-gray-600 mt-1">Manage all content across the platform</p>
+  </div>
+
+  @if (loading()) {
+    <div class="bg-white rounded-lg shadow p-8 text-center">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <p class="mt-2 text-gray-600">Loading content stats...</p>
+    </div>
+  } @else if (stats()) {
+    <!-- Content Type Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Q&A Card -->
+      <a routerLink="/admin/content/qa/questions" 
+         class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 block">
+        <div class="flex items-center justify-between mb-4">
+          <div class="text-3xl">❓</div>
+          <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+            Q&A
+          </span>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Questions & Answers</h3>
+        <div class="space-y-2 text-sm text-gray-600">
+          <div class="flex justify-between">
+            <span>Total Questions:</span>
+            <span class="font-medium text-gray-900">{{ stats()!.qa.totalQuestions }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Total Answers:</span>
+            <span class="font-medium text-gray-900">{{ stats()!.qa.totalAnswers }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Open Questions:</span>
+            <span class="font-medium text-green-600">{{ stats()!.qa.openQuestions }}</span>
+          </div>
+          @if (stats()!.qa.pendingReview > 0) {
+            <div class="flex justify-between">
+              <span>Pending Review:</span>
+              <span class="font-medium text-orange-600">{{ stats()!.qa.pendingReview }}</span>
+            </div>
+          }
+        </div>
+        <div class="mt-4 text-blue-600 text-sm font-medium flex items-center">
+          Manage Q&A
+          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Community Card -->
+      <a routerLink="/admin/content/community/posts" 
+         class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 block">
+        <div class="flex items-center justify-between mb-4">
+          <div class="text-3xl">👥</div>
+          <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+            Community
+          </span>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Community Content</h3>
+        <div class="space-y-2 text-sm text-gray-600">
+          <div class="flex justify-between">
+            <span>Posts:</span>
+            <span class="font-medium text-gray-900">{{ stats()!.community.totalPosts }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Pages:</span>
+            <span class="font-medium text-gray-900">{{ stats()!.community.totalPages }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Groups:</span>
+            <span class="font-medium text-gray-900">{{ stats()!.community.totalGroups }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Events:</span>
+            <span class="font-medium text-gray-900">{{ stats()!.community.totalEvents }}</span>
+          </div>
+        </div>
+        <div class="mt-4 text-green-600 text-sm font-medium flex items-center">
+          Manage Community
+          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Videos Card -->
+      <a routerLink="/admin/content/videos/list" 
+         class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 block">
+        <div class="flex items-center justify-between mb-4">
+          <div class="text-3xl">🎥</div>
+          <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">
+            Videos
+          </span>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Video Content</h3>
+        <div class="space-y-2 text-sm text-gray-600">
+          <div class="flex justify-between">
+            <span>Total Videos:</span>
+            <span class="font-medium text-gray-900">{{ stats()!.videos.totalVideos }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Total Views:</span>
+            <span class="font-medium text-gray-900">{{ stats()!.videos.totalViews }}</span>
+          </div>
+          @if (stats()!.videos.pendingApproval > 0) {
+            <div class="flex justify-between">
+              <span>Pending Approval:</span>
+              <span class="font-medium text-orange-600">{{ stats()!.videos.pendingApproval }}</span>
+            </div>
+          }
+        </div>
+        <div class="mt-4 text-purple-600 text-sm font-medium flex items-center">
+          Manage Videos
+          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+      </a>
+
+      <!-- Podcasts Card -->
+      <a routerLink="/admin/content/podcasts/shows" 
+         class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 block">
+        <div class="flex items-center justify-between mb-4">
+          <div class="text-3xl">🎙️</div>
+          <span class="px-3 py-1 bg-pink-100 text-pink-800 text-xs font-medium rounded-full">
+            Podcasts
+          </span>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Podcast Content</h3>
+        <div class="space-y-2 text-sm text-gray-600">
+          <div class="flex justify-between">
+            <span>Total Shows:</span>
+            <span class="font-medium text-gray-900">{{ stats()!.podcasts.totalShows }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Total Episodes:</span>
+            <span class="font-medium text-gray-900">{{ stats()!.podcasts.totalEpisodes }}</span>
+          </div>
+          @if (stats()!.podcasts.pendingReview > 0) {
+            <div class="flex justify-between">
+              <span>Pending Review:</span>
+              <span class="font-medium text-orange-600">{{ stats()!.podcasts.pendingReview }}</span>
+            </div>
+          }
+        </div>
+        <div class="mt-4 text-pink-600 text-sm font-medium flex items-center">
+          Manage Podcasts
+          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </div>
+      </a>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mt-8 bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <button class="px-4 py-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 text-sm font-medium">
+          Review Pending Content
+        </button>
+        <button class="px-4 py-3 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 text-sm font-medium">
+          Moderate Flags
+        </button>
+        <button class="px-4 py-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 text-sm font-medium">
+          View Reports
+        </button>
+        <button class="px-4 py-3 bg-pink-50 text-pink-700 rounded-lg hover:bg-pink-100 text-sm font-medium">
+          Analytics Dashboard
+        </button>
+      </div>
+    </div>
+  }
+</div>

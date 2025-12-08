@@ -10,7 +10,7 @@ import {
   QuestionCategory,
   TrendingQuestionDto,
   AnswerDto,
-  AnswerCommentDto,
+  AnswerComment,
   CreateQuestionRequest,
   UpdateQuestionRequest,
   CreateAnswerRequest,
@@ -128,15 +128,15 @@ export class QAService {
   // COMMENT OPERATIONS
   // ============================================================================
 
-  getAnswerComments(answerId: string): Observable<AnswerCommentDto[]> {
+  getAnswerComments(answerId: string): Observable<AnswerComment[]> {
     return this.answerService.getAnswerComments(answerId);
   }
 
-  createAnswerComment(answerId: string, request: CreateCommentRequest): Observable<AnswerCommentDto> {
+  createAnswerComment(answerId: string, request: CreateCommentRequest): Observable<AnswerComment> {
     return this.answerService.createAnswerComment(answerId, request);
   }
 
-  updateAnswerComment(commentId: string, request: UpdateCommentRequest): Observable<AnswerCommentDto> {
+  updateAnswerComment(commentId: string, request: UpdateCommentRequest): Observable<AnswerComment> {
     return this.answerService.updateAnswerComment(commentId, request);
   }
 

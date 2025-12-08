@@ -1,0 +1,129 @@
+<div class="p-6">
+  <div class="mb-6 flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">Podcast Shows</h1>
+      <p class="text-gray-600">Manage podcast shows and monitor performance</p>
+    </div>
+    <a
+      routerLink="/admin/content/podcasts/episodes"
+      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+    >
+      View Episodes
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+    <div class="flex flex-col md:flex-row gap-4">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
+        placeholder="Search shows..."
+        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+      />
+      <select
+        [(ngModel)]="selectedStatus"
+        (change)="onStatusChange(selectedStatus)"
+        class="px-4 py-2 border border-gray-300 rounded-lg"
+      >
+        <option value="">All Status</option>
+        <option value="active">Active</option>
+        <option value="paused">Paused</option>
+        <option value="archived">Archived</option>
+      </select>
+      <button
+        (click)="onSearch()"
+        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+      >
+        Search
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="flex justify-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>
+  }
+
+  @if (!loading() && shows().length > 0) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (show of shows(); track show.id) {
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+          <div class="aspect-square bg-gray-200">
+            @if (show.coverImageUrl) {
+              <img [src]="show.coverImageUrl" [alt]="show.title" class="w-full h-full object-cover" />
+            } @else {
+              <div class="flex items-center justify-center h-full text-gray-400 text-6xl">
+                🎙️
+              </div>
+            }
+          </div>
+          
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">{{ show.title }}</h3>
+              <span [class]="'px-2 py-1 text-xs rounded-full ' + getStatusBadgeClass(show.status)">
+                {{ show.status }}
+              </span>
+            </div>
+            
+            <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ show.description }}</p>
+            
+            <div class="space-y-1 text-sm text-gray-600 mb-3">
+              <div>Host: {{ show.hostName }}</div>
+              <div>{{ show.episodeCount }} episodes • {{ show.subscriberCount }} subscribers</div>
+            </div>
+
+            <div class="flex gap-2">
+              <button
+                [routerLink]="['/admin/content/podcasts/shows', show.id]"
+                class="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+              >
+                View Details
+              </button>
+              <button
+                (click)="deleteShow(show)"
+                class="px-3 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 text-sm"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex justify-between items-center">
+      <div class="text-sm text-gray-700">
+        Page {{ currentPage() }} of {{ totalPages() }} ({{ totalCount() }} total)
+      </div>
+      <div class="flex gap-2">
+        <button
+          (click)="goToPage(currentPage() - 1)"
+          [disabled]="currentPage() === 1"
+          class="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+        >
+          Previous
+        </button>
+        <button
+          (click)="goToPage(currentPage() + 1)"
+          [disabled]="currentPage() === totalPages()"
+          class="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (!loading() && shows().length === 0) {
+    <div class="bg-white rounded-lg shadow-sm p-12 text-center">
+      <div class="text-gray-400 text-6xl mb-4">🎙️</div>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No podcast shows found</h3>
+      <p class="text-gray-600">Try adjusting your search or filters</p>
+    </div>
+  }
+</div>

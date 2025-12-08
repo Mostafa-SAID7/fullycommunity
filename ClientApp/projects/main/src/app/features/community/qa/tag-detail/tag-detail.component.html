@@ -1,0 +1,182 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  
+  <!-- Header -->
+  <div class="mb-8">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
+      <button (click)="goBack()" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1 group">
+        <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Q&A
+      </button>
+      <span>/</span>
+      <span class="text-gray-900 dark:text-white">Tags</span>
+      <span>/</span>
+      <span class="text-gray-900 dark:text-white">{{ tag() }}</span>
+    </nav>
+
+    <div class="flex items-start justify-between">
+      <div class="flex-1">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-lg font-semibold rounded-full border-2 border-blue-200 dark:border-blue-800">
+            {{ tag() }}
+          </div>
+          <span class="text-gray-600 dark:text-gray-400">
+            {{ totalCount() }} question{{ totalCount() !== 1 ? 's' : '' }}
+          </span>
+        </div>
+        <p class="text-gray-600 dark:text-gray-400">
+          Browse all questions tagged with <span class="font-semibold text-gray-900 dark:text-white">{{ tag() }}</span>
+        </p>
+      </div>
+      
+      <button
+        (click)="askQuestion()"
+        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Ask Question
+      </button>
+    </div>
+  </div>
+
+  <div class="flex gap-6">
+    <!-- Main Content -->
+    <div class="flex-1">
+      <!-- Sort Options -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Sort by</h3>
+          <div class="flex gap-2">
+            @for (option of sortOptions; track option.value) {
+            <button
+              (click)="selectSort(option.value)"
+              [class.bg-blue-600]="sortBy() === option.value"
+              [class.text-white]="sortBy() === option.value"
+              [class.bg-gray-100]="sortBy() !== option.value"
+              [class.dark:bg-gray-700]="sortBy() !== option.value"
+              [class.text-gray-700]="sortBy() !== option.value"
+              [class.dark:text-gray-300]="sortBy() !== option.value"
+              class="px-4 py-2 rounded-lg font-medium text-sm transition-all hover:scale-105 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="option.icon"/>
+              </svg>
+              {{ option.label }}
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Questions List -->
+      @if (loading()) {
+      <app-loading-state message="Loading questions..." />
+      }
+      @else if (error()) {
+      <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-8 text-center">
+        <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-red-900 dark:text-red-100 mb-2">Error Loading Questions</h3>
+        <p class="text-red-700 dark:text-red-300 mb-6">{{ error() }}</p>
+        <button 
+          (click)="loadQuestions()"
+          class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
+          Try Again
+        </button>
+      </div>
+      }
+      @else {
+      <app-question-list
+        [questions]="questions()"
+        [loading]="loading()"
+        [error]="error()"
+        [viewMode]="viewMode"
+        [hasFilters]="false"
+      />
+      }
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="hidden lg:block w-80 flex-shrink-0">
+      <div class="sticky top-6 space-y-6">
+        
+        <!-- Tag Info Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+            </svg>
+            About this tag
+          </h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-gray-600 dark:text-gray-400">Total Questions</span>
+              <span class="font-semibold text-gray-900 dark:text-white">{{ totalCount() }}</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-gray-600 dark:text-gray-400">Tag Name</span>
+              <span class="font-semibold text-gray-900 dark:text-white">{{ tag() }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Related Tags -->
+        @if (relatedTags().length > 0) {
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            Related Tags
+          </h3>
+          <div class="space-y-2">
+            @for (relatedTag of relatedTags(); track relatedTag.tag) {
+            <button
+              (click)="navigateToTag(relatedTag.tag)"
+              class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
+              <div class="flex items-center gap-2">
+                <span class="px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-sm font-medium rounded-full border border-blue-100 dark:border-blue-800 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
+                  {{ relatedTag.tag }}
+                </span>
+              </div>
+              <span class="text-sm text-gray-500 dark:text-gray-400">
+                {{ relatedTag.count }} question{{ relatedTag.count !== 1 ? 's' : '' }}
+              </span>
+            </button>
+            }
+          </div>
+        </div>
+        }
+
+        <!-- Tips Card -->
+        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
+          <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Using Tags
+          </h3>
+          <ul class="text-blue-800 dark:text-blue-200 space-y-2 text-xs">
+            <li class="flex items-start gap-2">
+              <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+              <span>Tags help categorize and find questions</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+              <span>Use specific tags for better visibility</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+              <span>Combine multiple tags for precise filtering</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

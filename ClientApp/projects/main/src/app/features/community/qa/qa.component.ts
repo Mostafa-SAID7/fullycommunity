@@ -1,12 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { QAService, QuestionListDto, QuestionCategory, QuestionStatus } from '../../../core/services/community/qa.service';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { StatsCardComponent, AskQuestionModalComponent } from '../../../shared/components';
+import { StatsCardComponent } from '../../../shared/components';
 
 // Import child components
 import { QuestionListComponent } from './components/question-list/question-list.component';
+import { AskQuestionModalComponent } from './components/ask-question-modal/ask-question-modal.component';
 
 export interface NewQuestionForm {
   title: string;
@@ -29,6 +31,7 @@ export interface NewQuestionForm {
 })
 export class QAComponent implements OnInit {
   private qaService = inject(QAService);
+  private router = inject(Router);
 
   // Core data
   questions = signal<QuestionListDto[]>([]);
@@ -215,6 +218,10 @@ export class QAComponent implements OnInit {
   filterByTag(tag: string) {
     this.selectedTag = this.selectedTag === tag ? '' : tag;
     this.loadQuestions();
+  }
+
+  navigateToTag(tag: string) {
+    this.router.navigate(['/community/qa/tag', tag]);
   }
 
   getTagCount(tag: string): number {

@@ -1,0 +1,193 @@
+<!-- Modal Backdrop -->
+<div 
+  (click)="onBackdropClick($event)"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+  
+  <!-- Modal Container -->
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden animate-slideUp">
+    
+    <!-- Modal Header -->
+    <div class="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between z-10">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Ask a Question</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Get help from the community</p>
+      </div>
+      <button 
+        (click)="closeModal()"
+        class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+        <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="overflow-y-auto max-h-[calc(90vh-140px)] px-6 py-6">
+      
+      <!-- Tips Card -->
+      <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6">
+        <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2 flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Tips for a Great Question
+        </h3>
+        <ul class="text-blue-800 dark:text-blue-200 space-y-1 text-xs">
+          <li class="flex items-start gap-2">
+            <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+            <span>Be specific about your car make, model, and year</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+            <span>Describe the problem in detail with symptoms</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+            <span>Include what you've already tried</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Error Message -->
+      @if (submitError()) {
+      <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6 flex items-start gap-3">
+        <svg class="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <div class="flex-1">
+          <p class="text-sm font-medium text-red-800 dark:text-red-200">{{ submitError() }}</p>
+        </div>
+        <button type="button" (click)="submitError.set(null)" class="text-red-400 hover:text-red-600 dark:hover:text-red-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      }
+
+      <!-- Question Form -->
+      <form [formGroup]="questionForm" (ngSubmit)="submitQuestion()" class="space-y-6">
+        
+        <!-- Title -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+            Question Title *
+          </label>
+          <input 
+            type="text"
+            formControlName="title"
+            placeholder="e.g., Why is my 2018 Honda Civic making a grinding noise when braking?"
+            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+          
+          @if (questionForm.get('title')?.invalid && questionForm.get('title')?.touched) {
+          <div class="mt-2 text-sm text-red-600 dark:text-red-400">
+            @if (questionForm.get('title')?.errors?.['required']) {
+            <span>Title is required</span>
+            }
+            @if (questionForm.get('title')?.errors?.['minlength']) {
+            <span>Title must be at least 10 characters</span>
+            }
+          </div>
+          }
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+            Category
+          </label>
+          <select 
+            formControlName="categoryId"
+            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+            <option value="">Select a category (optional)</option>
+            @for (category of categories(); track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Content -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+            Question Details *
+          </label>
+          <textarea 
+            formControlName="content"
+            rows="8"
+            placeholder="Describe your problem in detail. Include:&#10;• Car make, model, year, and mileage&#10;• When the problem occurs&#10;• What symptoms you're experiencing&#10;• What you've already tried"
+            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-vertical">
+          </textarea>
+          
+          @if (questionForm.get('content')?.invalid && questionForm.get('content')?.touched) {
+          <div class="mt-2 text-sm text-red-600 dark:text-red-400">
+            @if (questionForm.get('content')?.errors?.['required']) {
+            <span>Question details are required</span>
+            }
+            @if (questionForm.get('content')?.errors?.['minlength']) {
+            <span>Please provide more details (at least 50 characters)</span>
+            }
+          </div>
+          }
+        </div>
+
+        <!-- Tags -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+            Tags
+          </label>
+          <input 
+            type="text"
+            formControlName="tagsInput"
+            placeholder="e.g., brakes, honda, grinding-noise, maintenance"
+            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+          
+          <p class="mt-2 text-xs text-gray-600 dark:text-gray-400">
+            Separate tags with commas
+          </p>
+          
+          <!-- Popular Tags -->
+          <div class="mt-3">
+            <p class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Popular tags:</p>
+            <div class="flex flex-wrap gap-2">
+              @for (tag of popularTags; track tag) {
+              <button 
+                type="button"
+                (click)="addTag(tag)"
+                class="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900/30 text-gray-700 dark:text-gray-300 hover:text-blue-700 dark:hover:text-blue-300 text-xs rounded-full transition-colors">
+                {{ tag }}
+              </button>
+              }
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="sticky bottom-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-end gap-3">
+      <button 
+        type="button"
+        (click)="closeModal()"
+        [disabled]="submitting()"
+        class="px-6 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        Cancel
+      </button>
+      
+      <button 
+        type="button"
+        (click)="submitQuestion()"
+        [disabled]="questionForm.invalid || submitting()"
+        class="px-8 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 disabled:cursor-not-allowed flex items-center gap-2">
+        @if (!submitting()) {
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+        </svg>
+        <span>Post Question</span>
+        } @else {
+        <div class="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+        <span>Posting...</span>
+        }
+      </button>
+    </div>
+  </div>
+</div>

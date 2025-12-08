@@ -8,7 +8,7 @@ export const adminRoutes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', loadComponent: () => import('./dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent) },
       { path: 'users', loadComponent: () => import('./users/user-management.component').then(m => m.UserManagementComponent) },
-      { path: 'content', loadComponent: () => import('./content/content-management.component').then(m => m.ContentManagementComponent) },
+      { path: 'content', loadChildren: () => import('./content/content.routes').then(m => m.contentRoutes) },
       { path: 'reports', loadComponent: () => import('./reports/reports.component').then(m => m.ReportsComponent) },
       { path: 'settings', loadComponent: () => import('./settings/admin-settings.component').then(m => m.AdminSettingsComponent) },
       { path: 'moderation', loadComponent: () => import('./moderation/moderation.component').then(m => m.ModerationComponent) },
