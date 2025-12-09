@@ -1,6 +1,5 @@
-/**
- * Question Status Enum - matches QuestionStatus enum from backend
- */
+// Enum matching backend: CommunityCar.Domain.Enums.Community.QA.QuestionStatus
+
 export enum QuestionStatus {
   Open = 0,
   Answered = 1,

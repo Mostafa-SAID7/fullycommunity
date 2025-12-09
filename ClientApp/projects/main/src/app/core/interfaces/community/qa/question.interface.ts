@@ -1,5 +1,4 @@
-import { QuestionStatus } from './qa.enums';
-import { QuestionAuthor } from './question-author.interface';
+import { QuestionStatus } from './enums';
 
 /**
  * Question DTO - matches QuestionDto.cs from backend
@@ -26,40 +25,5 @@ export interface Question {
   isClosed: boolean;
   currentUserVote: number;
   isBookmarkedByCurrentUser: boolean;
-  createdAt: string;
-}
-
-/**
- * Question List DTO - matches QuestionListDto.cs from backend
- */
-export interface QuestionList {
-  id: string;
-  title: string;
-  authorId: string;
-  authorName: string;
-  authorAvatarUrl: string | null;
-  status: QuestionStatus;
-  answerCount: number;
-  voteCount: number;
-  viewCount: number;
-  hasAcceptedAnswer: boolean;
-  tags: string[];
-  createdAt: string;
-}
-
-/**
- * Trending Question DTO - matches TrendingQuestionDto.cs from backend
- */
-export interface TrendingQuestion {
-  id: string;
-  title: string;
-  slug: string;
-  content: string;
-  author: QuestionAuthor;
-  voteCount: number;
-  answerCount: number;
-  viewCount: number;
-  hasAcceptedAnswer: boolean;
-  tags: string[];
   createdAt: string;
 }
