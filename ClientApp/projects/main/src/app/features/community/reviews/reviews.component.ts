@@ -72,7 +72,7 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @for (review of featuredReviews(); track review.id) {
               <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 hover:shadow-md transition cursor-pointer"
-                   [routerLink]="['/community/reviews', review.slug]">
+                   [routerLink]="['/community/reviews', review.id]">
                 <div class="flex items-start justify-between mb-3">
                   <div class="flex items-center gap-2">
                     @if (review.isExpertReview) {
@@ -94,9 +94,8 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
                     {{ review.carYear }} {{ review.carMake }} {{ review.carModel }}
                   </p>
                 }
-                <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{{ review.excerpt }}</p>
                 <div class="flex items-center justify-between mt-4 text-sm text-gray-500">
-                  <span>By {{ review.author.firstName }} {{ review.author.lastName }}</span>
+                  <span>By {{ review.authorName }}</span>
                   <span>👍 {{ review.helpfulCount }} helpful</span>
                 </div>
               </div>
@@ -115,7 +114,7 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
         <div class="space-y-4">
           @for (review of reviews(); track review.id) {
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 hover:shadow-md transition cursor-pointer"
-                 [routerLink]="['/community/reviews', review.slug]">
+                 [routerLink]="['/community/reviews', review.id]">
               <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 mb-2">
@@ -137,18 +136,21 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
                       {{ review.carYear }} {{ review.carMake }} {{ review.carModel }}
                     </p>
                   }
-                  <p class="text-sm text-gray-600 dark:text-gray-400 mt-2 line-clamp-2">{{ review.excerpt }}</p>
                 </div>
                 <div class="flex md:flex-col items-center md:items-end gap-4 text-sm text-gray-500">
                   <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm">
-                      {{ review.author.firstName[0] }}{{ review.author.lastName[0] }}
-                    </div>
-                    <span>{{ review.author.firstName }}</span>
+                    @if (review.authorAvatarUrl) {
+                      <img [src]="review.authorAvatarUrl" [alt]="review.authorName" class="w-8 h-8 rounded-full object-cover">
+                    } @else {
+                      <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm">
+                        {{ review.authorName[0] }}
+                      </div>
+                    }
+                    <span>{{ review.authorName }}</span>
                   </div>
                   <div class="flex gap-3">
                     <span>👍 {{ review.helpfulCount }}</span>
-                    <span>💬 {{ review.commentCount }}</span>
+                    <span>{{ review.createdAt | date:'MMM d' }}</span>
                   </div>
                 </div>
               </div>
