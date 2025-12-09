@@ -1,8 +1,4 @@
-// Interface matching backend DTO: ReviewMediaDto
+import { Media } from '../../../common';
 
-export interface ReviewMedia {
-  id: string;
-  url: string;
-  thumbnailUrl: string | null;
-  caption: string | null;
-}
+// Interface matching backend DTO: ReviewMediaDto
+export interface ReviewMedia extends Omit<Media, 'type' | 'order'> {}

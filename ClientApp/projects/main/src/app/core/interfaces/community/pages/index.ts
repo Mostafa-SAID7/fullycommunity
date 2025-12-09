@@ -1,4 +1,4 @@
 export * from './page.interface';
-export * from './page-owner.interface';
-export * from './page-review.interface';
-export * from './page.enums';
+export * from './enums';
+export * from './components';
+export * from './requests';

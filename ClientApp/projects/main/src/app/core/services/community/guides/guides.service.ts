@@ -2,58 +2,21 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { PagedResult } from '../../../interfaces/common/paged-result.interface';
+import { PagedResult } from '../../../types';
 import {
   Guide,
   GuideList,
   GuideCategory,
   GuideStep,
-  GuideStepMedia,
   GuideRating,
   GuideDifficulty,
   GuideType,
-  GuideStatus
+  GuideStatus,
+  GuideFilter,
+  CreateGuideRequest,
+  UpdateGuideRequest,
+  CreateGuideStepRequest
 } from '../../../interfaces/community/guides';
-
-export interface GuideFilter {
-  type?: GuideType;
-  difficulty?: GuideDifficulty;
-  categoryId?: string;
-  carMake?: string;
-  carModel?: string;
-  searchTerm?: string;
-  tag?: string;
-  minRating?: number;
-  sortBy?: string;
-}
-
-export interface CreateGuideRequest {
-  title: string;
-  description: string | null;
-  type: GuideType;
-  difficulty: GuideDifficulty;
-  estimatedMinutes: number | null;
-  categoryId?: string | null;
-  tags?: string[];
-  coverImageUrl?: string | null;
-  carMake?: string | null;
-  carModel?: string | null;
-  carYearFrom?: number | null;
-  carYearTo?: number | null;
-}
-
-export interface UpdateGuideRequest extends Partial<CreateGuideRequest> {}
-
-export interface CreateGuideStepRequest {
-  stepNumber: number;
-  title: string;
-  content: string;
-  tip?: string | null;
-  warning?: string | null;
-  toolsRequired?: string | null;
-  partsRequired?: string | null;
-  estimatedMinutes?: number | null;
-}
 
 @Injectable({ providedIn: 'root' })
 export class GuidesService {

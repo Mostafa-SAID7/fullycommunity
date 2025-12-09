@@ -1,94 +1,18 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, tap, catchError, of } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { PagedResult } from '../../types/common.types';
-
-export interface Post {
-  id: string;
-  authorId: string;
-  author: PostAuthor;
-  title: string;
-  content: string;
-  slug: string;
-  type: PostType;
-  status: string;
-  visibility: string;
-  coverImageUrl?: string;
-  media: PostMedia[];
-  categoryId?: string;
-  category?: PostCategory;
-  tags: string[];
-  groupId?: string;
-  viewCount: number;
-  likeCount: number;
-  commentCount: number;
-  shareCount: number;
-  allowComments: boolean;
-  isPinned: boolean;
-  isFeatured: boolean;
-  isLiked?: boolean;
-  publishedAt: string;
-  createdAt: string;
-}
-
-export interface PostAuthor {
-  id: string;
-  firstName: string;
-  lastName: string;
-  avatarUrl?: string;
-  userType: string;
-}
-
-export interface PostMedia {
-  id: string;
-  url: string;
-  type: 'image' | 'video';
-  thumbnailUrl?: string;
-}
-
-export interface PostCategory {
-  id: string;
-  name: string;
-  slug: string;
-  icon?: string;
-}
-
-export interface PostComment {
-  id: string;
-  postId: string;
-  authorId: string;
-  author: PostAuthor;
-  content: string;
-  likeCount: number;
-  isLiked?: boolean;
-  parentId?: string;
-  replies?: PostComment[];
-  createdAt: string;
-}
-
-export interface CreatePostRequest {
-  title: string;
-  content: string;
-  type: PostType;
-  visibility: string;
-  categoryId?: string;
-  tags?: string[];
-  groupId?: string;
-  mediaUrls?: string[];
-}
-
-export interface PostFilter {
-  type?: PostType;
-  categoryId?: string;
-  visibility?: string;
-  searchTerm?: string;
-  tag?: string;
-  isFeatured?: boolean;
-  sortBy?: string;
-}
-
-export type PostType = 'General' | 'Article' | 'Question' | 'Poll' | 'Announcement';
+import {
+  Post,
+  PostAuthor,
+  PostMedia,
+  PostCategory,
+  PostComment,
+  PostType,
+  PostFilter,
+  CreatePostRequest
+} from '../../interfaces/community/posts';
 
 
 
@@ -230,38 +154,42 @@ export class CommunityService {
       {
         id: '1', authorId: '1', title: 'Just finished my first oil change! 🔧',
         content: 'Finally did my first DIY oil change on my Honda Civic. Took about 45 minutes but saved $50 compared to the shop.',
-        slug: 'first-oil-change', type: 'General', status: 'Published', visibility: 'Public',
+        slug: 'first-oil-change', type: PostType.General, status: 'Published', visibility: 'Public',
+        coverImageUrl: null, categoryId: null, category: null, groupId: null,
         media: [], tags: ['diy', 'maintenance'], viewCount: 245, likeCount: 42, commentCount: 12, shareCount: 5,
         allowComments: true, isPinned: false, isFeatured: true, isLiked: false,
         publishedAt: new Date().toISOString(), createdAt: new Date().toISOString(),
-        author: { id: '1', firstName: 'John', lastName: 'Doe', userType: 'Member' }
+        author: { id: '1', firstName: 'John', lastName: 'Doe', avatarUrl: null, userType: 'Member' }
       },
       {
         id: '2', authorId: '2', title: 'Tesla Model 3 vs BMW i4 - My honest comparison',
         content: 'After test driving both for a week, here\'s my detailed comparison. The Tesla wins on tech and charging network.',
-        slug: 'tesla-vs-bmw', type: 'Article', status: 'Published', visibility: 'Public',
+        slug: 'tesla-vs-bmw', type: PostType.Article, status: 'Published', visibility: 'Public',
+        coverImageUrl: null, categoryId: null, category: null, groupId: null,
         media: [], tags: ['ev', 'comparison'], viewCount: 1250, likeCount: 156, commentCount: 45, shareCount: 23,
         allowComments: true, isPinned: false, isFeatured: true, isLiked: false,
         publishedAt: new Date().toISOString(), createdAt: new Date().toISOString(),
-        author: { id: '2', firstName: 'Alice', lastName: 'Smith', userType: 'Expert' }
+        author: { id: '2', firstName: 'Alice', lastName: 'Smith', avatarUrl: null, userType: 'Expert' }
       },
       {
         id: '3', authorId: '3', title: 'Weekend car meet this Saturday! 🚗',
         content: 'Organizing a casual car meet at Central Park parking lot this Saturday at 3 PM. All car enthusiasts welcome!',
-        slug: 'weekend-car-meet', type: 'General', status: 'Published', visibility: 'Public',
+        slug: 'weekend-car-meet', type: PostType.General, status: 'Published', visibility: 'Public',
+        coverImageUrl: null, categoryId: null, category: null, groupId: null,
         media: [], tags: ['events', 'meetup'], viewCount: 520, likeCount: 89, commentCount: 34, shareCount: 15,
         allowComments: true, isPinned: false, isFeatured: false, isLiked: false,
         publishedAt: new Date().toISOString(), createdAt: new Date().toISOString(),
-        author: { id: '3', firstName: 'Bob', lastName: 'Wilson', userType: 'Member' }
+        author: { id: '3', firstName: 'Bob', lastName: 'Wilson', avatarUrl: null, userType: 'Member' }
       },
       {
         id: '4', authorId: '4', title: 'Restored my grandfather\'s 1967 Mustang',
         content: 'After 2 years of work, I finally finished restoring my grandfather\'s Mustang. He bought it new in \'67.',
-        slug: 'restored-mustang', type: 'General', status: 'Published', visibility: 'Public',
+        slug: 'restored-mustang', type: PostType.General, status: 'Published', visibility: 'Public',
+        coverImageUrl: null, categoryId: null, category: null, groupId: null,
         media: [], tags: ['classic', 'restoration'], viewCount: 890, likeCount: 234, commentCount: 67, shareCount: 45,
         allowComments: true, isPinned: false, isFeatured: true, isLiked: false,
         publishedAt: new Date().toISOString(), createdAt: new Date().toISOString(),
-        author: { id: '4', firstName: 'Emma', lastName: 'Davis', userType: 'Member' }
+        author: { id: '4', firstName: 'Emma', lastName: 'Davis', avatarUrl: null, userType: 'Member' }
       }
     ];
     return { items: mockPosts, totalCount: 4, page: 1, pageSize: 20, totalPages: 1 };

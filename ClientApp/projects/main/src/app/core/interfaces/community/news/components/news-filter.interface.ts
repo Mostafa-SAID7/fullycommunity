@@ -1,11 +1,10 @@
+import { BaseFilter } from '../../../../types';
 import { NewsStatus } from '../enums';
 
-export interface NewsFilter {
+export interface NewsFilter extends BaseFilter {
   status?: NewsStatus;
   categoryId?: string;
-  searchTerm?: string;
   tag?: string;
   isFeatured?: boolean;
   isBreaking?: boolean;
-  sortBy?: string;
 }

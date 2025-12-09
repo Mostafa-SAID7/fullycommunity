@@ -1,4 +1,4 @@
-import { GroupPrivacy, GroupType, GroupRole, MemberStatus } from './group.enums';
+import { GroupPrivacy, GroupType, GroupRole, MemberStatus } from './enums';
 
 /**
  * Group DTO - matches GroupDto.cs from backend
@@ -24,19 +24,4 @@ export interface Group {
   currentUserRole: GroupRole | null;
   currentUserStatus: MemberStatus | null;
   createdAt: string;
-}
-
-/**
- * Group List DTO - matches GroupListDto.cs from backend
- */
-export interface GroupList {
-  id: string;
-  name: string;
-  avatarUrl: string | null;
-  privacy: GroupPrivacy;
-  type: GroupType;
-  memberCount: number;
-  city: string | null;
-  country: string | null;
-  isMember: boolean;
 }

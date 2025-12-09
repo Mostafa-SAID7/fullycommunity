@@ -2,8 +2,8 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { PagesService, PageFilter } from '../../../../core/services/community/pages';
-import { PageList, PageCategory } from '../../../../core/interfaces/community/pages';
+import { PagesService } from '../../../../core/services/community/pages';
+import { PageList, PageCategory, PageFilter } from '../../../../core/interfaces/community/pages';
 
 @Component({
   selector: 'app-pages-list',
@@ -206,7 +206,7 @@ export class PagesListComponent implements OnInit {
         this.pages.set(result.items);
         this.loading.set(false);
       },
-      error: (err: any) => {
+      error: () => {
         this.loading.set(false);
       }
     });
@@ -250,6 +250,6 @@ export class PagesListComponent implements OnInit {
       [PageCategory.Media]: 'Media',
       [PageCategory.Other]: 'Other'
     };
-    return labels[category] || category;
+    return labels[category] || 'Unknown';
   }
 }

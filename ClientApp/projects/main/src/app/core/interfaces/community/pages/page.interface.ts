@@ -1,6 +1,6 @@
 // Interface matching backend DTO: PageDto
-import { PageCategory, PageType } from './page.enums';
-import { PageOwner } from './page-owner.interface';
+import { PageCategory, PageType } from './enums';
+import { PageOwner } from './components/page-owner.interface';
 
 export interface Page {
   id: string;
@@ -37,18 +37,4 @@ export interface Page {
   isOwner: boolean;
   isAdmin: boolean;
   createdAt: string;
-}
-
-// Interface matching backend DTO: PageListDto
-export interface PageList {
-  id: string;
-  name: string;
-  username: string;
-  description: string | null;
-  profileImageUrl: string | null;
-  category: PageCategory;
-  isVerified: boolean;
-  followerCount: number;
-  averageRating: number;
-  isFollowing: boolean;
 }

@@ -1,6 +1,6 @@
 // Interface matching backend DTO: GuideDto
-import { GuideType, GuideDifficulty, GuideStatus } from './guide.enums';
-import { GuideStep } from './guide-step.interface';
+import { GuideType, GuideDifficulty, GuideStatus } from './enums';
+import { GuideStep } from './components/guide-step.interface';
 
 export interface Guide {
   id: string;
@@ -33,18 +33,4 @@ export interface Guide {
   isBookmarkedByCurrentUser: boolean;
   steps: GuideStep[];
   createdAt: string;
-}
-
-// Interface matching backend DTO: GuideListDto
-export interface GuideList {
-  id: string;
-  title: string;
-  coverImageUrl: string | null;
-  authorName: string;
-  type: GuideType;
-  difficulty: GuideDifficulty;
-  estimatedMinutes: number | null;
-  averageRating: number;
-  ratingCount: number;
-  isVerified: boolean;
 }

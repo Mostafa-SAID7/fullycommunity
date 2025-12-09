@@ -1,7 +1,5 @@
-import { PostAuthor } from './components/post-author.interface';
-import { PostMedia } from './components/post-media.interface';
-import { PostCategory } from './components/post-category.interface';
 import { PostType } from './enums';
+import { PostAuthor, PostMedia, PostCategory } from './components';
 
 /**
  * Full Post DTO - matches PostDto.cs from backend

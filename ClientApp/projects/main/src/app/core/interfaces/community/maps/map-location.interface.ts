@@ -1,5 +1,5 @@
 // Interface matching backend DTO: MapLocationDto
-import { LocationType, LocationStatus } from './map.enums';
+import { LocationType, LocationStatus } from './enums';
 
 export interface MapLocation {
   id: string;
@@ -28,18 +28,4 @@ export interface MapLocation {
   isVerified: boolean;
   isSavedByCurrentUser: boolean;
   createdAt: string;
-}
-
-// Interface matching backend DTO: MapLocationListDto
-export interface MapLocationList {
-  id: string;
-  name: string;
-  latitude: number;
-  longitude: number;
-  city: string | null;
-  type: LocationType;
-  imageUrl: string | null;
-  averageRating: number;
-  reviewCount: number;
-  isVerified: boolean;
 }

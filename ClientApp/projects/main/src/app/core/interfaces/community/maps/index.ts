@@ -1,3 +1,11 @@
+// Main interface
 export * from './map-location.interface';
-export * from './location-review.interface';
-export * from './map.enums';
+
+// Enums
+export * from './enums';
+
+// Components
+export * from './components';
+
+// Requests
+export * from './requests';

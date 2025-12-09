@@ -5,3 +5,4 @@ export * from './answer-comment.interface';
 export * from './question-author.interface';
 export * from './question-category.interface';
 export * from './user-quota.interface';
+export * from './question-filter.interface';

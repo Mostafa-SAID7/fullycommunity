@@ -1,5 +1,5 @@
 // Interface matching backend DTO: EventDto
-import { EventLocationType, EventType, EventStatus, EventVisibility, AttendeeStatus } from './event.enums';
+import { EventLocationType, EventType, EventStatus, EventVisibility, AttendeeStatus } from './enums';
 
 export interface Event {
   id: string;
@@ -36,20 +36,4 @@ export interface Event {
   interestedCount: number;
   currentUserStatus: AttendeeStatus | null;
   createdAt: string;
-}
-
-// Interface matching backend DTO: EventListDto
-export interface EventList {
-  id: string;
-  title: string;
-  coverImageUrl: string | null;
-  startDate: string;
-  endDate: string;
-  city: string | null;
-  country: string | null;
-  type: EventType;
-  status: EventStatus;
-  attendeeCount: number;
-  isFree: boolean;
-  price: number | null;
 }

@@ -2,61 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { PagedResult } from '../../../interfaces/common/paged-result.interface';
-import {
-  MapLocation,
-  MapLocationList,
-  LocationReview,
-  LocationType,
-  LocationStatus
-} from '../../../interfaces/community/maps';
-
-export interface LocationFilter {
-  type?: LocationType;
-  status?: LocationStatus;
-  city?: string;
-  state?: string;
-  country?: string;
-  searchTerm?: string;
-  latitude?: number;
-  longitude?: number;
-  radiusKm?: number;
-  isVerified?: boolean;
-  sortBy?: string;
-}
-
-export interface CreateLocationRequest {
-  name: string;
-  description: string | null;
-  latitude: number;
-  longitude: number;
-  address: string | null;
-  city: string | null;
-  state: string | null;
-  country: string | null;
-  postalCode: string | null;
-  type: LocationType;
-  imageUrl?: string | null;
-  phone?: string | null;
-  email?: string | null;
-  website?: string | null;
-  openingHours?: string | null;
-  isOpen24Hours: boolean;
-  features?: string[];
-}
-
-export interface UpdateLocationRequest extends Partial<CreateLocationRequest> {}
-
-export interface CreateLocationReviewRequest {
-  rating: number;
-  title?: string | null;
-  content?: string | null;
-  serviceRating?: number | null;
-  priceRating?: number | null;
-  cleanlinessRating?: number | null;
-  mediaUrls?: string[];
-  visitDate?: string | null;
-}
+import { PagedResult } from '../../../types';
+import { MapLocation } from '../../../interfaces/community/maps/map-location.interface';
+import { MapLocationList } from '../../../interfaces/community/maps/components/map-location-list.interface';
+import { LocationReview } from '../../../interfaces/community/maps/components/location-review.interface';
+import { LocationFilter } from '../../../interfaces/community/maps/components/location-filter.interface';
+import { LocationType, LocationStatus } from '../../../interfaces/community/maps/enums';
+import { CreateLocationRequest } from '../../../interfaces/community/maps/requests/create-location-request.interface';
+import { UpdateLocationRequest } from '../../../interfaces/community/maps/requests/update-location-request.interface';
+import { CreateLocationReviewRequest } from '../../../interfaces/community/maps/requests/create-location-review-request.interface';
 
 @Injectable({ providedIn: 'root' })
 export class MapsService {

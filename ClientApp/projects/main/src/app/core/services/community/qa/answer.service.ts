@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import {
-  AnswerDto,
+  Answer,
   AnswerComment,
   CreateAnswerRequest,
   UpdateAnswerRequest,
@@ -30,24 +30,24 @@ export class AnswerService {
   /**
    * Get answers for a question
    */
-  getAnswers(questionId: string): Observable<AnswerDto[]> {
-    return this.http.get<ApiResponse<AnswerDto[]>>(`${this.apiUrl}/questions/${questionId}/answers`)
+  getAnswers(questionId: string): Observable<Answer[]> {
+    return this.http.get<ApiResponse<Answer[]>>(`${this.apiUrl}/questions/${questionId}/answers`)
       .pipe(map(response => response.data));
   }
 
   /**
    * Create answer (auth required)
    */
-  createAnswer(questionId: string, request: CreateAnswerRequest): Observable<AnswerDto> {
-    return this.http.post<ApiResponse<AnswerDto>>(`${this.apiUrl}/questions/${questionId}/answers`, request)
+  createAnswer(questionId: string, request: CreateAnswerRequest): Observable<Answer> {
+    return this.http.post<ApiResponse<Answer>>(`${this.apiUrl}/questions/${questionId}/answers`, request)
       .pipe(map(response => response.data));
   }
 
   /**
    * Update answer (auth required, owner only)
    */
-  updateAnswer(id: string, request: UpdateAnswerRequest): Observable<AnswerDto> {
-    return this.http.put<ApiResponse<AnswerDto>>(`${this.apiUrl}/answers/${id}`, request)
+  updateAnswer(id: string, request: UpdateAnswerRequest): Observable<Answer> {
+    return this.http.put<ApiResponse<Answer>>(`${this.apiUrl}/answers/${id}`, request)
       .pipe(map(response => response.data));
   }
 

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { PagedResult } from '../../../interfaces/common/paged-result.interface';
+import { PagedResult } from '../../../types';
 import {
   Page,
   PageList,
@@ -10,52 +10,12 @@ import {
   PageReview,
   PageCategory,
   PageType,
-  PageRole
+  PageRole,
+  PageFilter,
+  CreatePageRequest,
+  UpdatePageRequest,
+  CreatePageReviewRequest
 } from '../../../interfaces/community/pages';
-
-export interface PageFilter {
-  category?: PageCategory;
-  type?: PageType;
-  isVerified?: boolean;
-  searchTerm?: string;
-  city?: string;
-  country?: string;
-  sortBy?: string;
-}
-
-export interface CreatePageRequest {
-  name: string;
-  username: string;
-  description: string | null;
-  bio: string | null;
-  category: PageCategory;
-  type: PageType;
-  isPublic: boolean;
-  profileImageUrl?: string | null;
-  coverImageUrl?: string | null;
-  email?: string | null;
-  phone?: string | null;
-  website?: string | null;
-  address?: string | null;
-  city?: string | null;
-  state?: string | null;
-  country?: string | null;
-  businessHours?: string | null;
-  facebookUrl?: string | null;
-  instagramUrl?: string | null;
-  twitterUrl?: string | null;
-  youTubeUrl?: string | null;
-  linkedInUrl?: string | null;
-}
-
-export interface UpdatePageRequest extends Partial<CreatePageRequest> {}
-
-export interface CreatePageReviewRequest {
-  rating: number;
-  title?: string | null;
-  content: string;
-  imageUrls?: string[];
-}
 
 @Injectable({ providedIn: 'root' })
 export class PagesService {

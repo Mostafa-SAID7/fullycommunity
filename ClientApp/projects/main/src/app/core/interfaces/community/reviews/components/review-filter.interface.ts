@@ -1,6 +1,7 @@
+import { BaseFilter } from '../../../../types';
 import { ReviewSubjectType, ReviewStatus } from '../enums';
 
-export interface ReviewFilter {
+export interface ReviewFilter extends BaseFilter {
   subjectType?: ReviewSubjectType;
   subjectId?: string;
   carMake?: string;
@@ -12,5 +13,4 @@ export interface ReviewFilter {
   isExpertReview?: boolean;
   isFeatured?: boolean;
   status?: ReviewStatus;
-  sortBy?: string;
 }

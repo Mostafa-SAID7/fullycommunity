@@ -2,13 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { PagedResult } from '../../../interfaces/common/paged-result.interface';
+import { PagedResult } from '../../../types';
 import {
   Friend,
   FriendRequest,
   Follower,
   Following,
-  UserSocialStats
+  UserSocialStats,
+  FriendFilter,
+  BlockUserRequest
 } from '../../../interfaces/community/friends';
 
 @Injectable({ providedIn: 'root' })
@@ -20,20 +22,28 @@ export class FriendsService {
   // FRIEND OPERATIONS
   // ============================================================================
 
-  getFriends(userId?: string, page = 1, pageSize = 20): Observable<PagedResult<Friend>> {
-    const params = new HttpParams()
+  getFriends(filter: FriendFilter = {}, page = 1, pageSize = 20): Observable<PagedResult<Friend>> {
+    let params = new HttpParams()
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
-    const url = userId ? `${this.apiUrl}/user/${userId}` : this.apiUrl;
+
+    if (filter.userId) params = params.set('userId', filter.userId);
+    if (filter.searchTerm) params = params.set('searchTerm', filter.searchTerm);
+    if (filter.sortBy) params = params.set('sortBy', filter.sortBy);
+    if (filter.status !== undefined) params = params.set('status', filter.status.toString());
+    if (filter.isOnline !== undefined) params = params.set('isOnline', filter.isOnline.toString());
+    if (filter.mutualFriendsOnly) params = params.set('mutualFriendsOnly', 'true');
+    if (filter.hasCommonInterests) params = params.set('hasCommonInterests', 'true');
+    if (filter.location) params = params.set('location', filter.location);
+    if (filter.joinedAfter) params = params.set('joinedAfter', filter.joinedAfter);
+    if (filter.joinedBefore) params = params.set('joinedBefore', filter.joinedBefore);
+
+    const url = filter.userId ? `${this.apiUrl}/user/${filter.userId}` : this.apiUrl;
     return this.http.get<PagedResult<Friend>>(url, { params });
   }
 
   searchFriends(searchTerm: string, page = 1, pageSize = 20): Observable<PagedResult<Friend>> {
-    const params = new HttpParams()
-      .set('searchTerm', searchTerm)
-      .set('page', page.toString())
-      .set('pageSize', pageSize.toString());
-    return this.http.get<PagedResult<Friend>>(`${this.apiUrl}/search`, { params });
+    return this.getFriends({ searchTerm }, page, pageSize);
   }
 
   removeFriend(friendId: string): Observable<void> {
@@ -121,8 +131,8 @@ export class FriendsService {
   // BLOCK OPERATIONS
   // ============================================================================
 
-  blockUser(userId: string, reason?: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/block/${userId}`, { reason });
+  blockUser(userId: string, request?: BlockUserRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/block/${userId}`, request || {});
   }
 
   unblockUser(userId: string): Observable<void> {

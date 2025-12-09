@@ -1,3 +1,4 @@
 export * from './event.interface';
-export * from './event-attendee.interface';
-export * from './event.enums';
+export * from './enums';
+export * from './components';
+export * from './requests';

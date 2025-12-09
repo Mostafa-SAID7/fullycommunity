@@ -1,9 +1,6 @@
-// Interface matching backend DTO: NewsCategoryDto
+import { Category } from '../../../common';
 
-export interface NewsCategory {
-  id: string;
-  name: string;
-  slug: string | null;
-  description: string | null;
+// Interface matching backend DTO: NewsCategoryDto
+export interface NewsCategory extends Omit<Category, 'icon' | 'color' | 'itemCount' | 'isActive'> {
   iconUrl: string | null;
 }

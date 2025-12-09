@@ -2,41 +2,18 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { PagedResult } from '../../../interfaces/common/paged-result.interface';
+import { PagedResult } from '../../../types';
 import {
   Group,
   GroupList,
   GroupMember,
   GroupPrivacy,
   GroupType,
-  GroupRole
+  GroupRole,
+  GroupFilter,
+  CreateGroupRequest,
+  UpdateGroupRequest
 } from '../../../interfaces/community/groups';
-
-export interface GroupFilter {
-  type?: GroupType;
-  privacy?: GroupPrivacy;
-  searchTerm?: string;
-  categoryId?: string;
-  sortBy?: string;
-}
-
-export interface CreateGroupRequest {
-  name: string;
-  description: string | null;
-  privacy: GroupPrivacy;
-  type: GroupType;
-  categoryId?: string | null;
-  coverImageUrl?: string | null;
-  rules?: string | null;
-}
-
-export interface UpdateGroupRequest {
-  name?: string;
-  description?: string | null;
-  privacy?: GroupPrivacy;
-  coverImageUrl?: string | null;
-  rules?: string | null;
-}
 
 @Injectable({ providedIn: 'root' })
 export class GroupsService {
