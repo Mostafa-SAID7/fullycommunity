@@ -123,13 +123,13 @@ export class VideosService {
   /**
    * Create video
    */
-  create(request: CreateVideoRequest): Observable<Video> {
+  create(channelId: string, request: CreateVideoRequest): Observable<Video> {
     const formData = new FormData();
     
-    formData.append('channelId', request.channelId);
+    formData.append('channelId', channelId);
     formData.append('title', request.title);
     if (request.description) formData.append('description', request.description);
-    formData.append('videoFile', request.videoFile);
+    if (request.videoFile) formData.append('videoFile', request.videoFile);
     if (request.thumbnailFile) formData.append('thumbnailFile', request.thumbnailFile);
     formData.append('type', request.type.toString());
     formData.append('visibility', request.visibility.toString());
@@ -209,6 +209,44 @@ export class VideosService {
   getRelated(id: string, limit: number = 10): Observable<VideoListItem[]> {
     return this.http.get<VideoListItem[]>(`${this.apiUrl}/${id}/related`, {
       params: { limit: limit.toString() }
+    });
+  }
+
+  /**
+   * Complete video upload
+   */
+  completeUpload(id: string, videoUrl: string, thumbnailUrl?: string): Observable<Video> {
+    return this.http.post<Video>(`${this.apiUrl}/${id}/complete-upload`, {
+      videoUrl,
+      thumbnailUrl
+    });
+  }
+
+  /**
+   * Record video view
+   */
+  recordView(id: string, sessionId?: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/record-view`, {
+      sessionId
+    });
+  }
+
+  /**
+   * Track watch progress
+   */
+  trackWatchProgress(id: string, watchDuration: string, watchPercent: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/watch-progress`, {
+      watchDuration,
+      watchPercent
+    });
+  }
+
+  /**
+   * Get video upload URL
+   */
+  getUploadUrl(channelId: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/upload-url`, {
+      channelId
     });
   }
 }

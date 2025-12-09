@@ -4,14 +4,14 @@ import { VideoType, VideoVisibility, ContentRating } from '../enums/video-enums'
  * Create Video Request
  */
 export interface CreateVideoRequest {
-  channelId: string;
   title: string;
   description?: string;
-  videoFile: File;
+  videoFile?: File; // Optional for upload flow
   thumbnailFile?: File;
   type: VideoType;
   visibility: VideoVisibility;
   contentRating: ContentRating;
+  scheduledPublishAt?: string;
   categoryId?: string;
   tags?: string[];
   hashtags?: string[];
@@ -22,10 +22,14 @@ export interface CreateVideoRequest {
   allowDuets?: boolean;
   allowStitches?: boolean;
   allowDownloads?: boolean;
-  scheduledPublishAt?: string;
+  showLikeCount?: boolean;
   soundId?: string;
+  soundClipStart?: string; // TimeSpan
+  soundClipEnd?: string; // TimeSpan
   useOriginalAudio?: boolean;
   duetOfVideoId?: string;
   stitchOfVideoId?: string;
   replyToVideoId?: string;
+  isSponsoredContent?: boolean;
+  sponsorName?: string;
 }

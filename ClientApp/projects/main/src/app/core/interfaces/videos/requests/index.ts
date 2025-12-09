@@ -10,3 +10,7 @@ export * from './video-reaction-request.interface';
 export * from './save-video-request.interface';
 export * from './report-video-request.interface';
 export * from './subscribe-channel-request.interface';
+export * from './live-stream-request.interface';
+export * from './sound-request.interface';
+export * from './playlist-request.interface';
+export * from './video-upload-request.interface';

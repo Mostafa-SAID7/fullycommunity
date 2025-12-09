@@ -6,3 +6,6 @@ export * from './videos.service';
 export * from './channels.service';
 export * from './video-engagement.service';
 export * from './video-analytics.service';
+export * from './live-stream.service';
+export * from './sounds.service';
+export * from './playlists.service';

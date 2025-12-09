@@ -173,3 +173,18 @@ export enum ChannelTier {
   Partner = 2,
   Premium = 3
 }
+
+/**
+ * Share Platform
+ */
+export enum SharePlatform {
+  Internal = 0,
+  WhatsApp = 1,
+  Facebook = 2,
+  Twitter = 3,
+  Instagram = 4,
+  TikTok = 5,
+  Email = 6,
+  CopyLink = 7,
+  Other = 8
+}

@@ -146,11 +146,25 @@ export interface VideoSound {
   id: string;
   title: string;
   artist: string | null;
-  duration: string;
+  album: string | null;
   audioUrl: string;
   coverImageUrl: string | null;
+  duration: string;
+  clipStart: string | null; // TimeSpan
+  clipEnd: string | null; // TimeSpan
   isOriginal: boolean;
+  originalVideoId: string | null;
+  creatorChannelId: string | null;
   usageCount: number;
+  favoriteCount: number;
+  isAvailable: boolean;
+  isTrending: boolean;
+  isFeatured: boolean;
+  isCopyrighted: boolean;
+  copyrightHolder: string | null;
+  licenseInfo: string | null;
+  genre: string | null;
+  tags: string[];
 }
 
 /**
