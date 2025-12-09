@@ -1,4 +1,4 @@
-import { NewsStatus } from './enums';
+import { NewsStatus } from '../enums';
 
 export interface NewsFilter {
   status?: NewsStatus;
