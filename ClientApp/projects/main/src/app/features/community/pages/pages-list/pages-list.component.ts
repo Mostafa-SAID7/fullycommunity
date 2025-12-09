@@ -45,13 +45,13 @@ import { PageList, PageCategory } from '../../../../core/interfaces/community/pa
               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             >
               <option value="">All Categories</option>
-              <option value="CarDealer">Car Dealers</option>
-              <option value="AutoRepair">Auto Repair</option>
-              <option value="CarWash">Car Wash</option>
-              <option value="AutoParts">Auto Parts</option>
-              <option value="RacingTeam">Racing Teams</option>
-              <option value="CarClub">Car Clubs</option>
-              <option value="Other">Other</option>
+              <option value="1">Car Dealers</option>
+              <option value="2">Auto Repair</option>
+              <option value="3">Car Wash</option>
+              <option value="6">Auto Parts</option>
+              <option value="10">Racing Teams</option>
+              <option value="9">Car Clubs</option>
+              <option value="14">Other</option>
             </select>
           </div>
 
@@ -197,7 +197,7 @@ export class PagesListComponent implements OnInit {
     
     const filter: PageFilter = {
       searchTerm: this.searchTerm || undefined,
-      category: this.selectedCategory as PageCategory || undefined,
+      category: this.selectedCategory ? Number(this.selectedCategory) as PageCategory : undefined,
       isVerified: this.verifiedOnly || undefined
     };
 
