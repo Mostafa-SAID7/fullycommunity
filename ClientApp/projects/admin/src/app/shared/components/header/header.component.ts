@@ -33,12 +33,8 @@ import { AuthService } from '../../../core/services/auth/auth.service';
             </button>
           } @else {
             <a routerLink="/login" 
-               class="text-white hover:text-gray-100 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-white/10 font-medium">
-              Login
-            </a>
-            <a routerLink="/register" 
-               class="bg-white text-primary hover:bg-gray-100 transition-all duration-200 px-5 py-2 rounded-lg font-semibold shadow-md hover:shadow-xl hover:scale-105">
-              Register
+               class="bg-white text-primary hover:bg-gray-100 transition-all duration-200 px-6 py-2.5 rounded-lg font-semibold shadow-md hover:shadow-xl hover:scale-105">
+              Admin Login
             </a>
           }
         </div>

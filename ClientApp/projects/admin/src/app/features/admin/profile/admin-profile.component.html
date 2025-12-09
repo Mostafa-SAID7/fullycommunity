@@ -1,4 +1,4 @@
-<div class="profile-page">
+<div class="profile-page pt-12">
   <div class="page-header">
     <h1>My Profile</h1>
     <p>Manage your account settings and preferences</p>
@@ -67,26 +67,11 @@
     }
 
     <!-- Tabs -->
-    <div class="tabs">
-      <button 
-        class="tab" 
-        [class.active]="activeTab() === 'profile'"
-        (click)="setActiveTab('profile')">
-        👤 Profile
-      </button>
-      <button 
-        class="tab" 
-        [class.active]="activeTab() === 'security'"
-        (click)="setActiveTab('security')">
-        🔒 Security
-      </button>
-      <button 
-        class="tab" 
-        [class.active]="activeTab() === 'activity'"
-        (click)="setActiveTab('activity')">
-        📊 Activity
-      </button>
-    </div>
+    <app-tab-navigation
+      [tabs]="tabs"
+      [activeTabId]="activeTab()"
+      (tabChange)="onTabChange($event)">
+    </app-tab-navigation>
 
     <!-- Messages -->
     @if (successMessage()) {

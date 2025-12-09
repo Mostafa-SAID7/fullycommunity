@@ -3,13 +3,13 @@
   class="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-30">
 </div>
 
-<!-- Sidebar Container - Always visible -->
+<!-- Sidebar Container - Always visible on all screens -->
 <aside
   class="fixed top-14 start-0 h-[calc(100vh-56px)] z-40 flex border-e border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 overflow-hidden">
 
-  <!-- Catalogue Rail - Always visible -->
+  <!-- Catalogue Rail - Always visible on all screens including mobile -->
   <div
-    class="w-12 bg-gray-50/80 dark:bg-gray-900/80 backdrop-blur-sm flex flex-col items-center py-2 gap-1 overflow-y-auto overflow-x-hidden scrollbar-none">
+    class="w-12 bg-gray-50/80 dark:bg-gray-900/80 backdrop-blur-sm flex flex-col items-center py-2 gap-1 overflow-y-auto overflow-x-hidden scrollbar-none flex-shrink-0">
     <!-- Toggle Button -->
     <button (click)="toggleSidebar()"
       class="w-10 h-10 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-400 transition-all mb-2 flex-shrink-0"
@@ -20,10 +20,10 @@
       </svg>
     </button>
 
-    <!-- Catalogue Items -->
-    <div class="flex flex-col gap-1 flex-1">
-      @for (item of catalogueItems; track item.route) {
-      <div class="relative group">
+    <!-- Home Icon - Fixed at top -->
+    @for (item of getDisplayCatalogueItems(); track item.route) {
+      @if (item.icon === 'home') {
+      <div class="relative group flex-shrink-0">
         <button (click)="selectCatalogueItem(item)" (mouseenter)="setHoveredItem(item.label)"
           (mouseleave)="setHoveredItem(null)"
           class="w-10 h-10 rounded-lg flex items-center justify-center transition-all" [ngClass]="{
@@ -35,7 +35,7 @@
           </svg>
         </button>
 
-        <!-- Tooltip (only when sidebar is collapsed) -->
+        <!-- Tooltip -->
         <div *ngIf="!isExpanded()"
           class="absolute start-full ms-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-700 text-white text-xs font-medium rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 shadow-lg pointer-events-none">
           {{ item.label }}
@@ -45,31 +45,63 @@
         </div>
       </div>
       }
+    }
+
+    <!-- Scrollable Catalogue Items (excluding Home) -->
+    <div class="flex flex-col gap-1 flex-1 overflow-y-auto scrollbar-none">
+      @for (item of getDisplayCatalogueItems(); track item.route) {
+        @if (item.icon !== 'home') {
+        <div class="relative group">
+          <button (click)="selectCatalogueItem(item)" (mouseenter)="setHoveredItem(item.label)"
+            (mouseleave)="setHoveredItem(null)"
+            class="w-10 h-10 rounded-lg flex items-center justify-center transition-all" [ngClass]="{
+                'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400': activeCatalogue() === item.label,
+                'hover:bg-gray-200 dark:hover:bg-gray-800': activeCatalogue() !== item.label
+              }" [class]="activeCatalogue() !== item.label ? (item.color || 'text-gray-600 dark:text-gray-400') : ''">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <path [attr.d]="getIcon(item.icon)" />
+            </svg>
+          </button>
+
+          <!-- Tooltip -->
+          <div *ngIf="!isExpanded()"
+            class="absolute start-full ms-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-700 text-white text-xs font-medium rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 shadow-lg pointer-events-none">
+            {{ item.label }}
+            <div
+              class="absolute end-full top-1/2 -translate-y-1/2 border-4 border-transparent border-e-gray-900 dark:border-e-gray-700">
+            </div>
+          </div>
+        </div>
+        }
+      }
     </div>
 
-    <!-- User Avatar -->
-    @if (showUserProfile && user()) {
-    <div class="relative group mt-auto flex-shrink-0">
+    <!-- User Icon - Fixed at bottom -->
+    <div class="relative group flex-shrink-0 mt-auto">
       <a routerLink="/profile" (mouseenter)="setHoveredItem('profile')" (mouseleave)="setHoveredItem(null)"
-        class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center font-semibold text-sm hover:scale-105 transition-all">
-        {{ getUserInitials() }}
+        class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center hover:scale-105 transition-all">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+        </svg>
       </a>
 
+      <!-- Tooltip -->
       <div *ngIf="!isExpanded()"
         class="absolute start-full ms-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-700 text-white text-xs font-medium rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 shadow-lg pointer-events-none">
-        {{ user()?.firstName }} {{ user()?.lastName }}
+        Profile
         <div
           class="absolute end-full top-1/2 -translate-y-1/2 border-4 border-transparent border-e-gray-900 dark:border-e-gray-700">
         </div>
       </div>
     </div>
-    }
+
+
   </div>
 
-  <!-- Expanded Panel -->
-  <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm overflow-hidden transition-all duration-300"
+  <!-- Expanded Panel - Slides out on mobile, always visible on desktop when expanded -->
+  <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm overflow-hidden transition-all duration-300 shadow-lg lg:shadow-none"
     [ngClass]="{'w-52': isExpanded(), 'w-0': !isExpanded()}">
-    <div class="w-52 h-full flex flex-col overflow-y-auto overflow-x-hidden scrollbar-sidebar">
+    <div class="w-52 h-full flex flex-col overflow-hidden">
 
       <!-- Active Section Header -->
       @if (activeCatalogue() && isExpanded()) {
@@ -111,71 +143,51 @@
       }
       }
 
-      <!-- Default: User Profile & Menu Items (when no catalogue selected) -->
+      <!-- Default: 3-Part Layout (when no catalogue selected) -->
       @if (!activeCatalogue() && isExpanded()) {
-      <!-- User Profile -->
-      @if (showUserProfile && user()) {
-      <div class="p-3 border-b border-gray-200/50 dark:border-gray-700/50">
-        <a routerLink="/profile"
-          class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-          <div
-            class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white flex items-center justify-center font-semibold text-sm">
-            {{ getUserInitials() }}
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="font-semibold text-sm text-gray-900 dark:text-white truncate">{{ user()?.firstName }} {{
-              user()?.lastName }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 truncate">View profile</p>
-          </div>
-        </a>
-      </div>
-      }
-
-      <!-- Quick Links -->
-      <nav class="flex-1 p-2">
-        <p class="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Quick Links
-        </p>
-        @for (item of catalogueItems; track item.route) {
-        <a [routerLink]="item.route" (click)="setActiveCatalogue(item.label)"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all group">
-          <svg class="w-5 h-5 transition-colors" [ngClass]="item.color" viewBox="0 0 24 24" fill="currentColor">
-            <path [attr.d]="getIcon(item.icon)" />
-          </svg>
-          <span class="text-sm font-medium flex-1">{{ item.label }}</span>
-          @if (item.subItems && item.subItems.length > 0) {
-          <svg class="w-4 h-4 text-gray-400 rtl:rotate-180" viewBox="0 0 24 24" fill="currentColor">
-            <path [attr.d]="getIcon('chevronRight')" />
-          </svg>
+      
+      <!-- Part 1: Main Navigation - Scrollable top section -->
+      <div class="flex-1 min-h-0 overflow-y-auto scrollbar-sidebar border-b border-gray-200/50 dark:border-gray-700/50">
+        <nav class="p-2">
+          @for (item of getDisplayCatalogueItems(); track item.route) {
+          <a [routerLink]="item.route"
+            routerLinkActive="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all group">
+            <svg class="w-5 h-5 transition-colors" [ngClass]="item.color" viewBox="0 0 24 24" fill="currentColor">
+              <path [attr.d]="getIcon(item.icon)" />
+            </svg>
+            <span class="text-sm font-medium flex-1">{{ item.label }}</span>
+          </a>
           }
-        </a>
-        }
-      </nav>
-      }
+        </nav>
+      </div>
 
-      <!-- Shortcuts -->
-      @if (shortcuts.length > 0 && isExpanded() && !activeCatalogue()) {
-      <div class="p-2 border-t border-gray-200/50 dark:border-gray-700/50">
-        <p class="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Shortcuts
-        </p>
-        @for (shortcut of shortcuts; track shortcut.id) {
-        <a [routerLink]="shortcut.route || '/community/groups/' + shortcut.id"
-          class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-          <div
-            class="w-8 h-8 rounded-lg bg-gray-200 dark:bg-gray-700 bg-cover bg-center flex items-center justify-center overflow-hidden"
-            [style.background-image]="shortcut.image ? 'url(' + shortcut.image + ')' : 'none'">
-            @if (!shortcut.image) {
-            <span class="text-gray-500 dark:text-gray-400 font-semibold text-sm">{{ shortcut.name.charAt(0) }}</span>
-            }
-          </div>
-          <span class="text-sm font-medium truncate">{{ shortcut.name }}</span>
-        </a>
-        }
+      <!-- Part 2: Friends List - Scrollable middle section -->
+      @if (shortcuts.length > 0) {
+      <div class="flex-1 min-h-0 overflow-y-auto scrollbar-sidebar border-b border-gray-200/50 dark:border-gray-700/50">
+        <div class="p-2">
+          <h3 class="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Friends</h3>
+          @for (shortcut of shortcuts; track shortcut.id) {
+          <a [routerLink]="shortcut.route || '/community/friends'"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
+            <div
+              class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 bg-cover bg-center flex items-center justify-center overflow-hidden"
+              [style.background-image]="shortcut.image ? 'url(' + shortcut.image + ')' : 'none'">
+              @if (!shortcut.image) {
+              <span class="text-gray-500 dark:text-gray-400 font-semibold text-sm">{{ shortcut.name.charAt(0) }}</span>
+              }
+            </div>
+            <span class="text-sm font-medium truncate">{{ shortcut.name }}</span>
+          </a>
+          }
+        </div>
       </div>
       }
 
-      <!-- Footer -->
-      @if (showFooter && isExpanded() && !activeCatalogue()) {
-      <div class="mt-auto p-4 border-t border-gray-200/50 dark:border-gray-700/50">
+      <!-- Part 3: Footer - Fixed at absolute bottom -->
+      @if (showFooter) {
+      <div class="flex-shrink-0 p-4 border-t border-gray-200/50 dark:border-gray-700/50 mt-auto bg-white dark:bg-gray-900">
         <div class="flex flex-wrap gap-x-2 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
           <a href="#" class="hover:text-primary-500 transition-colors">Privacy</a>
           <span>·</span>
@@ -185,6 +197,7 @@
         </div>
         <p class="mt-2 text-xs text-gray-400 dark:text-gray-500">© {{ getCurrentYear() }} CommunityCar</p>
       </div>
+      }
       }
 
       <!-- Back Button (when viewing sub-items) -->

@@ -1,7 +1,21 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  
-  <!-- Header -->
-  <div class="mb-8">
+<app-sidebar-layout
+  [shortcuts]="shortcuts"
+  [showUserProfile]="true"
+  [showFooter]="true"
+  [sponsoredItems]="sponsoredItems"
+  [events]="events"
+  [contacts]="contacts"
+  [showSponsored]="true"
+  [showEvents]="true"
+  [showContacts]="true"
+  [contentWidth]="'wide'"
+  [centerContent]="true">
+
+  <div class="w-full max-w-4xl mx-auto space-y-6 pt-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      
+      <!-- Header -->
+      <div class="mb-8">
     <div class="flex items-center justify-between">
       <div>
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Q&A Community</h1>
@@ -196,7 +210,9 @@
     (clearFilters)="clearAllFilters()"
     (askQuestion)="navigateToAskQuestion()">
   </app-question-list>
-</div>
+    </div>
+  </div>
+</app-sidebar-layout>
 
 <!-- Ask Question Modal -->
 @if (showAskModal()) {

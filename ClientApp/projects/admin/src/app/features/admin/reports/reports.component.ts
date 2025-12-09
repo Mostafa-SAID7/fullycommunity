@@ -4,14 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { Subject, forkJoin, of } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { AdminReportsService } from '../../../core/services/admin/reports.service';
-import { 
-  AnalyticsOverview, 
-  UserGrowthData, 
-  ContentEngagementData, 
+import {
+  AnalyticsOverview,
+  UserGrowthData,
+  ContentEngagementData,
   TopContent,
   RealtimeStats,
   PlatformSummary
 } from '../../../core/interfaces/admin/reports.interface';
+import { BarChartComponent, BarChartConfig } from '../../../shared/components/charts/bar-chart.component';
+import { LineChartComponent, LineChartConfig } from '../../../shared/components/charts/line-chart.component';
+import { PieChartComponent, PieChartConfig } from '../../../shared/components/charts/pie-chart.component';
 
 @Component({
   selector: 'reports',
@@ -19,8 +22,6 @@ import {
   imports: [
     CommonModule,
     FormsModule,
-    TabNavigationComponent,
-    StatCardComponent,
     BarChartComponent,
     LineChartComponent,
     PieChartComponent

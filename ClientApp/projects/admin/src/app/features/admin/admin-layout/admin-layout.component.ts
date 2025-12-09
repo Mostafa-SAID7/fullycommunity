@@ -31,7 +31,7 @@ export class AdminLayoutComponent implements OnInit {
   currentUser = this.authService.currentUser;
   showRoleSwitcher = signal(false);
   showNotifications = signal(false);
-  sidebarOpen = signal(false);
+  sidebarOpen = signal(true);
   showUserMenu = signal(false);
   currentViewRole = signal<string>('SuperAdmin');
 
@@ -117,15 +117,12 @@ export class AdminLayoutComponent implements OnInit {
     this.sidebarOpen.update(v => !v);
   }
 
+  onSidebarToggled(isOpen: boolean) {
+    this.sidebarOpen.set(isOpen);
+  }
+
   getSidebarClasses(): string {
-    const isOpen = this.sidebarOpen();
-    const baseClasses = 'bg-white border-r border-gray-200 overflow-y-auto shadow-sm transition-all duration-300 ease-in-out';
-    
-    if (isOpen) {
-      return `${baseClasses} fixed inset-y-0 left-0 w-64 z-50 lg:static lg:w-64`;
-    }
-    
-    return `${baseClasses} fixed inset-y-0 left-0 w-0 lg:w-64 lg:static -ml-64 lg:ml-0`;
+    return '';
   }
 
   isLinkActive(route: string): boolean {

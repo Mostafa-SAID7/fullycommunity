@@ -31,7 +31,7 @@ export class PieChartComponent implements OnInit, OnChanges {
   @Input() config!: PieChartConfig;
 
   get hasData(): boolean {
-    return this.config?.data?.length > 0 ?? false;
+    return (this.config?.data?.length ?? 0) > 0;
   }
 
   ngOnInit() {

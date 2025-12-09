@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { LogoButtonComponent } from '../../../shared/components/logo-button/logo-button.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LogoButtonComponent],
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
@@ -19,6 +20,7 @@ export class LoginComponent {
   rememberMe = false;
   loading = false;
   errorMessage = '';
+  currentYear = new Date().getFullYear();
 
   onSubmit() {
     if (!this.email || !this.password) {

@@ -1,5 +1,17 @@
-<div class="min-h-screen bg-background dark:bg-background-dark p-6">
-  <div class="max-w-6xl mx-auto">
+<app-sidebar-layout
+  [shortcuts]="shortcuts"
+  [showUserProfile]="true"
+  [showFooter]="true"
+  [sponsoredItems]="sponsoredItems"
+  [events]="events"
+  [contacts]="contacts"
+  [showSponsored]="true"
+  [showEvents]="true"
+  [showContacts]="true"
+  [contentWidth]="'wide'"
+  [centerContent]="true">
+
+  <div class="w-full max-w-4xl mx-auto space-y-6 pt-6">
     <!-- Page Header -->
     <div class="mb-8">
       <h1 class="text-display text-secondary-900 dark:text-secondary-100">Friends</h1>
@@ -183,4 +195,4 @@
       </ui-card>
     }
   </div>
-</div>
+</app-sidebar-layout>

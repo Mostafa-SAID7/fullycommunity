@@ -112,9 +112,9 @@
     </div>
   </app-admin-header>
 
-  <div class="flex flex-1 overflow-hidden">
-    <app-admin-sidebar [sidebarClasses]="getSidebarClasses()"></app-admin-sidebar>
-    <main class="flex-1 overflow-y-auto">
+  <div class="flex flex-1 overflow-hidden pt-16">
+    <app-admin-sidebar [sidebarClasses]="getSidebarClasses()" (sidebarToggled)="onSidebarToggled($event)"></app-admin-sidebar>
+    <main class="flex-1 overflow-y-auto transition-all duration-300" [class.ml-64]="sidebarOpen()" [class.ml-16]="!sidebarOpen()">
       <router-outlet></router-outlet>
     </main>
   </div>

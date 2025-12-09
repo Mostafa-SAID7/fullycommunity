@@ -1,22 +1,20 @@
+import { AnswerComment } from './answer-comment.interface';
+
 /**
- * Answer-related interfaces matching backend DTOs
+ * Answer DTO - matches AnswerDto.cs from backend
  */
-
-import { AnswerComment } from './comment.interface';
-
-export interface AnswerDto {
+export interface Answer {
   id: string;
   questionId: string;
   authorId: string;
   authorName: string;
-  authorAvatarUrl?: string;
+  authorAvatarUrl: string | null;
   content: string;
   voteCount: number;
   isAccepted: boolean;
-  acceptedAt?: string;
-  currentUserVote: number; // 0 = no vote, 1 = upvote, -1 = downvote
+  acceptedAt: string | null;
+  currentUserVote: number;
   isEdited: boolean;
   createdAt: string;
-  updatedAt?: string; // For edited timestamp
   comments: AnswerComment[];
 }

@@ -1,6 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
+import { type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
+import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
 
 interface SavedItem {
   id: string;
@@ -15,10 +18,24 @@ interface SavedItem {
 @Component({
   selector: 'app-saved',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SidebarLayoutComponent],
   template: `
-    <div class="saved-page">
-      <div class="page-header">
+    <app-sidebar-layout
+      [shortcuts]="shortcuts"
+      [showUserProfile]="true"
+      [showFooter]="true"
+      [sponsoredItems]="sponsoredItems"
+      [events]="events"
+      [contacts]="contacts"
+      [showSponsored]="true"
+      [showEvents]="true"
+      [showContacts]="true"
+      [contentWidth]="'wide'"
+      [centerContent]="true">
+      
+      <div class="w-full max-w-4xl mx-auto space-y-6 pt-6">
+        <div class="saved-page">
+          <div class="page-header">
         <h1>Saved</h1>
       </div>
 
@@ -76,6 +93,8 @@ interface SavedItem {
         }
       </div>
     </div>
+      </div>
+    </app-sidebar-layout>
   `,
   styles: [`
     .saved-page { padding: 1rem 0; }
@@ -204,6 +223,25 @@ interface SavedItem {
 })
 export class SavedComponent {
   activeFilter = signal<string>('all');
+
+  // Sidebar configuration
+  shortcuts: SidebarShortcut[] = [
+    { id: '1', name: 'Car Enthusiasts', image: '/assets/groups/car-enthusiasts.jpg', type: 'group' },
+    { id: '2', name: 'DIY Mechanics', image: '/assets/groups/diy-mechanics.jpg', type: 'group' }
+  ];
+
+  sponsoredItems: SponsoredItem[] = [
+    { id: '1', title: 'Premium Car Parts', url: 'autoparts.com', image: '/assets/ads/car-parts.jpg' }
+  ];
+
+  events: EventReminder[] = [
+    { id: '1', title: 'Car Meet - Downtown', time: 'Tomorrow at 6:00 PM' }
+  ];
+
+  contacts: Contact[] = [
+    { id: '1', name: 'John Doe', initials: 'JD', online: true },
+    { id: '2', name: 'Alice Smith', initials: 'AS', online: true }
+  ];
 
   savedItems = signal<SavedItem[]>([
     { id: '1', type: 'post', title: 'Best Car Maintenance Tips for Winter', description: 'Essential tips to keep your car running smoothly during cold months', savedAt: '2 days ago', source: 'Car Enthusiasts' },

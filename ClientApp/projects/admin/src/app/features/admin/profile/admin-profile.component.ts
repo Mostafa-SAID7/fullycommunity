@@ -67,6 +67,11 @@ export class AdminProfileComponent implements OnInit {
     return classes[role] || 'badge-gray';
   }
 
+  onTabChange(tabId: string) {
+    this.activeTab.set(tabId as 'profile' | 'security' | 'activity');
+    this.clearMessages();
+  }
+
   setActiveTab(tab: 'profile' | 'security' | 'activity') {
     this.activeTab.set(tab);
     this.clearMessages();

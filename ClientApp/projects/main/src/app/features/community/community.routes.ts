@@ -7,6 +7,10 @@ export const communityRoutes: Routes = [
     loadComponent: () => import('./community.component').then(m => m.CommunityComponent)
   },
   {
+    path: 'posts',
+    loadComponent: () => import('./posts/posts.component').then(m => m.PostsComponent)
+  },
+  {
     path: 'post/:id',
     loadComponent: () => import('./post-detail/post-detail.component').then(m => m.PostDetailComponent)
   },

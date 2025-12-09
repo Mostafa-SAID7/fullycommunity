@@ -2,14 +2,31 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { GroupsService, Group } from '../../../core/services/community/groups.service';
+import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
+import { type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
+import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
 
 @Component({
   selector: 'app-groups',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SidebarLayoutComponent],
   template: `
-    <div class="groups-page">
-      <div class="page-header">
+    <app-sidebar-layout
+      [shortcuts]="shortcuts"
+      [showUserProfile]="true"
+      [showFooter]="true"
+      [sponsoredItems]="sponsoredItems"
+      [events]="events"
+      [contacts]="contacts"
+      [showSponsored]="true"
+      [showEvents]="true"
+      [showContacts]="true"
+      [contentWidth]="'wide'"
+      [centerContent]="true">
+      
+      <div class="w-full max-w-4xl mx-auto space-y-6 pt-6">
+        <div class="groups-page">
+          <div class="page-header">
         <h1>Groups</h1>
         <button class="create-btn">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -45,6 +62,8 @@ import { GroupsService, Group } from '../../../core/services/community/groups.se
         }
       </div>
     </div>
+      </div>
+    </app-sidebar-layout>
   `,
   styles: [`
     .groups-page { padding: 1rem 0; }
@@ -162,6 +181,25 @@ export class GroupsComponent implements OnInit {
   activeTab = signal<'your' | 'discover'>('your');
   groups = this.groupsService.groups;
   loading = this.groupsService.loading;
+
+  // Sidebar configuration
+  shortcuts: SidebarShortcut[] = [
+    { id: '1', name: 'Car Enthusiasts', image: '/assets/groups/car-enthusiasts.jpg', type: 'group' },
+    { id: '2', name: 'DIY Mechanics', image: '/assets/groups/diy-mechanics.jpg', type: 'group' }
+  ];
+
+  sponsoredItems: SponsoredItem[] = [
+    { id: '1', title: 'Premium Car Parts', url: 'autoparts.com', image: '/assets/ads/car-parts.jpg' }
+  ];
+
+  events: EventReminder[] = [
+    { id: '1', title: 'Car Meet - Downtown', time: 'Tomorrow at 6:00 PM' }
+  ];
+
+  contacts: Contact[] = [
+    { id: '1', name: 'John Doe', initials: 'JD', online: true },
+    { id: '2', name: 'Alice Smith', initials: 'AS', online: true }
+  ];
 
   ngOnInit() {
     this.groupsService.loadGroups();

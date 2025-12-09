@@ -135,7 +135,7 @@ export class AskQuestionModalComponent implements OnInit {
           this.questionCreated.emit();
           this.close();
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error creating question:', error);
           alert('Failed to create question. Please try again.');
           this.creating.set(false);

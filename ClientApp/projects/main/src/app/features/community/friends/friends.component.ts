@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ButtonComponent, CardComponent, InputComponent, BadgeComponent, AvatarComponent } from '../../../shared/ui';
 import { FriendsService, Friend, FriendRequest, FriendSuggestion } from '../../../core/services/community/friends.service';
+import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
+import { type SidebarMenuItem, type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
+import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
 
 export interface LoadingState {
   isLoading: boolean;
@@ -12,13 +15,32 @@ export interface LoadingState {
 @Component({
   selector: 'app-friends',
   standalone: true,
-  imports: [CommonModule, RouterModule, ButtonComponent, CardComponent, InputComponent, BadgeComponent, AvatarComponent],
+  imports: [CommonModule, RouterModule, ButtonComponent, CardComponent, InputComponent, BadgeComponent, AvatarComponent, SidebarLayoutComponent],
   templateUrl: './friends.component.html'
 })
 export class FriendsComponent implements OnInit {
   private friendsService = inject(FriendsService);
 
   activeTab = signal<'all' | 'requests' | 'suggestions'>('all');
+
+  // Sidebar configuration
+  shortcuts: SidebarShortcut[] = [
+    { id: '1', name: 'Car Enthusiasts', image: '/assets/groups/car-enthusiasts.jpg', type: 'group' },
+    { id: '2', name: 'DIY Mechanics', image: '/assets/groups/diy-mechanics.jpg', type: 'group' }
+  ];
+
+  sponsoredItems: SponsoredItem[] = [
+    { id: '1', title: 'Premium Car Parts', url: 'autoparts.com', image: '/assets/ads/car-parts.jpg' }
+  ];
+
+  events: EventReminder[] = [
+    { id: '1', title: 'Car Meet - Downtown', time: 'Tomorrow at 6:00 PM' }
+  ];
+
+  contacts: Contact[] = [
+    { id: '1', name: 'John Doe', initials: 'JD', online: true },
+    { id: '2', name: 'Alice Smith', initials: 'AS', online: true }
+  ];
   
   friends = signal<Friend[]>([]);
   friendRequests = signal<FriendRequest[]>([]);

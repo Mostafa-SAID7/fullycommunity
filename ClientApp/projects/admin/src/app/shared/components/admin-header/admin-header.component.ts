@@ -1,19 +1,22 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { LogoButtonComponent } from '../logo-button/logo-button.component';
 
 @Component({
   selector: 'app-admin-header',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, LogoButtonComponent],
   template: `
-    <header class="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <header class="bg-white/80 backdrop-blur-lg border-b border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm">
       <div class="px-6 py-4 flex items-center justify-between">
         <div class="flex items-center gap-4">
-          <a routerLink="/admin/dashboard" class="flex items-center gap-3 hover:scale-105 transition-transform duration-200">
-            <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-hover rounded-xl flex items-center justify-center text-white text-xl shadow-lg">
-              🚗
-            </div>
+          <a routerLink="/admin/dashboard" class="flex items-center gap-3 transition-transform duration-200">
+            <app-logo-button 
+              text="CC" 
+              [size]="48" 
+              [fontSize]="24"
+            ></app-logo-button>
             <span class="text-xl font-bold bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent">CommunityCar Admin</span>
           </a>
         </div>

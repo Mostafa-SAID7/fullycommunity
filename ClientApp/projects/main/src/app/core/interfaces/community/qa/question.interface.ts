@@ -1,38 +1,42 @@
-/**
- * Question-related interfaces matching backend DTOs
- */
+import { QuestionStatus } from './qa.enums';
 
-export interface QuestionDto {
+/**
+ * Question DTO - matches QuestionDto.cs from backend
+ */
+export interface Question {
   id: string;
   authorId: string;
   authorName: string;
-  authorAvatarUrl?: string;
+  authorAvatarUrl: string | null;
   title: string;
   content: string;
-  slug?: string;
+  slug: string | null;
   status: QuestionStatus;
-  categoryId?: string;
-  categoryName?: string;
+  categoryId: string | null;
+  categoryName: string | null;
   tags: string[];
   viewCount: number;
   answerCount: number;
   voteCount: number;
   bookmarkCount: number;
-  acceptedAnswerId?: string;
-  bountyPoints?: number;
-  bountyExpiresAt?: string;
+  acceptedAnswerId: string | null;
+  bountyPoints: number | null;
+  bountyExpiresAt: string | null;
   isClosed: boolean;
-  currentUserVote: number; // 0 = no vote, 1 = upvote, -1 = downvote
+  currentUserVote: number;
   isBookmarkedByCurrentUser: boolean;
   createdAt: string;
 }
 
-export interface QuestionListDto {
+/**
+ * Question List DTO - matches QuestionListDto.cs from backend
+ */
+export interface QuestionList {
   id: string;
   title: string;
   authorId: string;
   authorName: string;
-  authorAvatarUrl?: string;
+  authorAvatarUrl: string | null;
   status: QuestionStatus;
   answerCount: number;
   voteCount: number;
@@ -42,7 +46,10 @@ export interface QuestionListDto {
   createdAt: string;
 }
 
-export interface TrendingQuestionDto {
+/**
+ * Trending Question DTO - matches TrendingQuestionDto.cs from backend
+ */
+export interface TrendingQuestion {
   id: string;
   title: string;
   slug: string;
@@ -54,24 +61,4 @@ export interface TrendingQuestionDto {
   hasAcceptedAnswer: boolean;
   tags: string[];
   createdAt: string;
-}
-
-export interface QuestionAuthor {
-  id: string;
-  firstName: string;
-  lastName: string;
-  avatarUrl?: string;
-  userType: string;
-}
-
-export type QuestionStatus = 'Open' | 'Answered' | 'Closed' | 'Duplicate';
-
-export interface QuestionFilter {
-  status?: QuestionStatus;
-  categoryId?: string;
-  searchTerm?: string;
-  tag?: string;
-  hasAcceptedAnswer?: boolean;
-  hasBounty?: boolean;
-  sortBy?: 'newest' | 'votes' | 'views' | 'active' | 'unanswered';
 }

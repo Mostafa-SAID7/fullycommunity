@@ -1,0 +1,147 @@
+<app-sidebar-layout
+  [leftMenuItems]="leftMenuItems"
+  [shortcuts]="shortcuts"
+  [showUserProfile]="true"
+  [showFooter]="true"
+  [sponsoredItems]="sponsoredItems"
+  [events]="events"
+  [contacts]="contacts"
+  [showSponsored]="true"
+  [showEvents]="true"
+  [showContacts]="true">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Page Header -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Posts</h1>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Browse all community posts</p>
+  </div>
+
+  <!-- Create Post Card -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+    <div class="flex items-center space-x-4">
+      <div class="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+      <button
+        class="flex-1 text-left px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+      >
+        What's on your mind?
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading && posts.length === 0" class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+    <p class="text-red-800 dark:text-red-200 text-sm">{{error}}</p>
+  </div>
+
+  <!-- Posts Feed -->
+  <div class="space-y-6">
+    <div *ngFor="let post of posts" 
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      
+      <!-- Post Header -->
+      <div class="p-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div *ngIf="post.author.avatarUrl; else initials" class="w-10 h-10 rounded-full overflow-hidden">
+            <img [src]="post.author.avatarUrl" [alt]="post.author.firstName + ' ' + post.author.lastName" class="w-full h-full object-cover">
+          </div>
+          <ng-template #initials>
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-white font-bold flex items-center justify-center text-sm">
+              {{post.author.firstName.charAt(0)}}{{post.author.lastName.charAt(0)}}
+            </div>
+          </ng-template>
+          <div>
+            <p class="font-semibold text-gray-900 dark:text-white text-sm">{{post.author.firstName}} {{post.author.lastName}}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">{{getTimeAgo(post.createdAt)}}</p>
+          </div>
+        </div>
+        <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Post Title (if exists) -->
+      <div *ngIf="post.title" class="px-4 pb-2">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{post.title}}</h3>
+      </div>
+
+      <!-- Post Content -->
+      <div class="px-4 pb-3">
+        <p class="text-gray-900 dark:text-white text-sm whitespace-pre-wrap">{{post.content}}</p>
+      </div>
+
+      <!-- Post Image (if exists) -->
+      <div *ngIf="post.coverImageUrl" class="w-full">
+        <img [src]="post.coverImageUrl" [alt]="post.title || 'Post image'" class="w-full h-auto object-cover">
+      </div>
+
+      <!-- Post Stats -->
+      <div class="px-4 py-2 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700">
+        <span>{{post.likeCount}} likes</span>
+        <div class="flex items-center space-x-3">
+          <span>{{post.commentCount}} comments</span>
+          <span>{{post.shareCount}} shares</span>
+        </div>
+      </div>
+
+      <!-- Post Actions -->
+      <div class="px-4 py-2 flex items-center justify-around border-t border-gray-100 dark:border-gray-700">
+        <button 
+          (click)="likePost(post.id)"
+          class="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors"
+          [class.text-primary-600]="post.isLiked"
+          [class.dark:text-primary-400]="post.isLiked"
+          [class.text-gray-600]="!post.isLiked"
+          [class.dark:text-gray-400]="!post.isLiked"
+          [class.hover:bg-gray-100]="!post.isLiked"
+          [class.dark:hover:bg-gray-700]="!post.isLiked">
+          <svg class="w-5 h-5" [attr.fill]="post.isLiked ? 'currentColor' : 'none'" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+          </svg>
+          <span class="text-sm font-medium">Like</span>
+        </button>
+        
+        <button 
+          (click)="commentOnPost(post.id)"
+          class="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
+          <span class="text-sm font-medium">Comment</span>
+        </button>
+        
+        <button 
+          (click)="sharePost(post.id)"
+          class="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+          </svg>
+          <span class="text-sm font-medium">Share</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load More -->
+  <div *ngIf="hasNextPage" class="mt-8 text-center">
+    <button 
+      (click)="loadMore()"
+      [disabled]="loading"
+      class="px-6 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <span *ngIf="!loading">Load More Posts</span>
+      <span *ngIf="loading">Loading...</span>
+    </button>
+  </div>
+
+  <!-- No More Posts -->
+  <div *ngIf="!hasNextPage && posts.length > 0" class="mt-8 text-center text-gray-500 dark:text-gray-400 text-sm">
+    You've reached the end
+  </div>
+  </div>
+</app-sidebar-layout>

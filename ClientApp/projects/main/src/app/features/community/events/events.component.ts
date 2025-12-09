@@ -1,5 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
+import { type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
+import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
 
 interface Event {
   id: string;
@@ -18,10 +21,24 @@ interface Event {
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SidebarLayoutComponent],
   template: `
-    <div class="events-page">
-      <div class="page-header">
+    <app-sidebar-layout
+      [shortcuts]="shortcuts"
+      [showUserProfile]="true"
+      [showFooter]="true"
+      [sponsoredItems]="sponsoredItems"
+      [events]="events"
+      [contacts]="contacts"
+      [showSponsored]="true"
+      [showEvents]="true"
+      [showContacts]="true"
+      [contentWidth]="'wide'"
+      [centerContent]="true">
+      
+      <div class="w-full max-w-4xl mx-auto space-y-6 pt-6">
+        <div class="events-page">
+          <div class="page-header">
         <h1>Events</h1>
         <button class="create-btn">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -38,7 +55,7 @@ interface Event {
 
       <!-- Events List -->
       <div class="events-list">
-        @for (event of events(); track event.id) {
+        @for (event of eventsList(); track event.id) {
           <div class="event-card">
             <div class="event-cover" [style.background-image]="event.coverImage ? 'url(' + event.coverImage + ')' : ''">
               <div class="event-date-badge">
@@ -69,6 +86,8 @@ interface Event {
         }
       </div>
     </div>
+      </div>
+    </app-sidebar-layout>
   `,
   styles: [`
     .events-page { padding: 1rem 0; }
@@ -239,7 +258,26 @@ interface Event {
 export class EventsComponent {
   activeTab = signal<'upcoming' | 'going' | 'past'>('upcoming');
 
-  events = signal<Event[]>([
+  // Sidebar configuration
+  shortcuts: SidebarShortcut[] = [
+    { id: '1', name: 'Car Enthusiasts', image: '/assets/groups/car-enthusiasts.jpg', type: 'group' },
+    { id: '2', name: 'DIY Mechanics', image: '/assets/groups/diy-mechanics.jpg', type: 'group' }
+  ];
+
+  sponsoredItems: SponsoredItem[] = [
+    { id: '1', title: 'Premium Car Parts', url: 'autoparts.com', image: '/assets/ads/car-parts.jpg' }
+  ];
+
+  events: EventReminder[] = [
+    { id: '1', title: 'Car Meet - Downtown', time: 'Tomorrow at 6:00 PM' }
+  ];
+
+  contacts: Contact[] = [
+    { id: '1', name: 'John Doe', initials: 'JD', online: true },
+    { id: '2', name: 'Alice Smith', initials: 'AS', online: true }
+  ];
+
+  eventsList = signal<Event[]>([
     { id: '1', title: 'Downtown Car Meet', description: 'Monthly car meet', coverImage: '', date: 'Dec 15, 2024', time: '6:00 PM', location: 'Downtown Plaza', attendeeCount: 245, isAttending: true, isInterested: false, organizer: 'Car Club' },
     { id: '2', title: 'EV Showcase 2024', description: 'Electric vehicle exhibition', coverImage: '', date: 'Dec 20, 2024', time: '10:00 AM', location: 'Convention Center', attendeeCount: 1200, isAttending: false, isInterested: true, organizer: 'EV Association' },
     { id: '3', title: 'DIY Workshop: Brake Maintenance', description: 'Learn brake basics', coverImage: '', date: 'Dec 22, 2024', time: '2:00 PM', location: 'Community Garage', attendeeCount: 45, isAttending: false, isInterested: false, organizer: 'DIY Mechanics' }
@@ -254,13 +292,13 @@ export class EventsComponent {
   }
 
   toggleAttending(event: Event) {
-    this.events.update(events => 
+    this.eventsList.update(events => 
       events.map(e => e.id === event.id ? { ...e, isAttending: !e.isAttending, isInterested: false } : e)
     );
   }
 
   toggleInterested(event: Event) {
-    this.events.update(events => 
+    this.eventsList.update(events => 
       events.map(e => e.id === event.id ? { ...e, isInterested: !e.isInterested, isAttending: false } : e)
     );
   }

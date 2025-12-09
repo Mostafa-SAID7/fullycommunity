@@ -55,8 +55,6 @@ export class LeftSidebarComponent {
   hoveredItem = signal<string | null>(null);
   activeCatalogue = signal<string | null>(null);
   isMobileOpen = signal(false);
-  
-  user = this.authService.currentUser;
 
   private getInitialExpandedState(): boolean {
     // Check if we're in browser and screen is large (lg breakpoint = 1024px)
@@ -65,6 +63,20 @@ export class LeftSidebarComponent {
     }
     return true; // Default to expanded for SSR
   }
+
+  // Community-specific catalogue items (shown when on community pages)
+  communityCatalogueItems: CatalogueItem[] = [
+    { icon: 'feed', label: 'Posts', route: '/community/posts', color: 'text-blue-500' },
+    { icon: 'qa', label: 'Q&A', route: '/community/qa', color: 'text-indigo-500' },
+    { icon: 'friends', label: 'Friends', route: '/community/friends', color: 'text-cyan-500' },
+    { icon: 'groups', label: 'Groups', route: '/community/groups', color: 'text-purple-500' },
+    { icon: 'events', label: 'Events', route: '/community/events', color: 'text-orange-500' },
+    { icon: 'guides', label: 'Guides', route: '/community/guides', color: 'text-amber-500' },
+    { icon: 'reviews', label: 'Reviews', route: '/community/reviews', color: 'text-yellow-500' },
+    { icon: 'news', label: 'News', route: '/community/news', color: 'text-red-500' },
+    { icon: 'maps', label: 'Maps', route: '/community/maps', color: 'text-teal-500' },
+    { icon: 'saved', label: 'Saved', route: '/community/saved', color: 'text-pink-500' },
+  ];
 
   // Catalogue items with sub-items for each section
   catalogueItems: CatalogueItem[] = [
@@ -80,7 +92,7 @@ export class LeftSidebarComponent {
       route: '/community', 
       color: 'text-green-500',
       subItems: [
-        { icon: 'feed', label: 'Feed', route: '/community' },
+        { icon: 'feed', label: 'Posts', route: '/community/posts' },
         { icon: 'friends', label: 'Friends', route: '/community/friends', badge: 5 },
         { icon: 'groups', label: 'Groups', route: '/community/groups' },
         { icon: 'events', label: 'Events', route: '/community/events' },
@@ -176,14 +188,16 @@ export class LeftSidebarComponent {
     }
   }
 
-  getUserInitials(): string {
-    const u = this.user();
-    if (!u) return 'U';
-    return ((u.firstName?.charAt(0) || '') + (u.lastName?.charAt(0) || '')).toUpperCase() || 'U';
-  }
-
   getCurrentYear(): number {
     return new Date().getFullYear();
+  }
+
+  getDisplayCatalogueItems(): CatalogueItem[] {
+    // Check if current route is a community page
+    if (typeof window !== 'undefined' && window.location.pathname.startsWith('/community')) {
+      return this.communityCatalogueItems;
+    }
+    return this.catalogueItems;
   }
 
   getIcon(name: string): string {
@@ -199,12 +213,15 @@ export class LeftSidebarComponent {
       groups: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z',
       events: 'M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z',
       qa: 'M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z',
+      guides: 'M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z',
+      reviews: 'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z',
+      news: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z',
+      maps: 'M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z',
       saved: 'M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z',
       history: 'M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z',
       cart: 'M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z',
       sell: 'M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z',
       booking: 'M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z',
-      reviews: 'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z',
       menu: 'M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z',
       close: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
       chevronLeft: 'M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z',

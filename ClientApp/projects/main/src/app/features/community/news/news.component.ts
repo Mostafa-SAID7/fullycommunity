@@ -3,13 +3,30 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NewsService, NewsListItem, NewsCategory } from '../../../core/services/community/news.service';
+import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
+import { type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
+import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
 
 @Component({
   selector: 'app-news',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, SidebarLayoutComponent],
   template: `
-    <div class="max-w-7xl mx-auto px-4 py-6">
+    <app-sidebar-layout
+      [shortcuts]="shortcuts"
+      [showUserProfile]="true"
+      [showFooter]="true"
+      [sponsoredItems]="sponsoredItems"
+      [events]="events"
+      [contacts]="contacts"
+      [showSponsored]="true"
+      [showEvents]="true"
+      [showContacts]="true"
+      [contentWidth]="'wide'"
+      [centerContent]="true">
+      
+      <div class="w-full max-w-4xl mx-auto space-y-6 pt-6">
+        <div class="max-w-7xl mx-auto px-4 py-6">
       <!-- Header -->
       <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
@@ -149,7 +166,9 @@ import { NewsService, NewsListItem, NewsCategory } from '../../../core/services/
           <p>No news articles found.</p>
         </div>
       }
-    </div>
+        </div>
+      </div>
+    </app-sidebar-layout>
   `
 })
 export class NewsComponent implements OnInit {
@@ -164,6 +183,25 @@ export class NewsComponent implements OnInit {
   selectedCategory = '';
   searchTerm = '';
   sortBy = 'newest';
+
+  // Sidebar configuration
+  shortcuts: SidebarShortcut[] = [
+    { id: '1', name: 'Car Enthusiasts', image: '/assets/groups/car-enthusiasts.jpg', type: 'group' },
+    { id: '2', name: 'DIY Mechanics', image: '/assets/groups/diy-mechanics.jpg', type: 'group' }
+  ];
+
+  sponsoredItems: SponsoredItem[] = [
+    { id: '1', title: 'Premium Car Parts', url: 'autoparts.com', image: '/assets/ads/car-parts.jpg' }
+  ];
+
+  events: EventReminder[] = [
+    { id: '1', title: 'Car Meet - Downtown', time: 'Tomorrow at 6:00 PM' }
+  ];
+
+  contacts: Contact[] = [
+    { id: '1', name: 'John Doe', initials: 'JD', online: true },
+    { id: '2', name: 'Alice Smith', initials: 'AS', online: true }
+  ];
 
   ngOnInit() {
     this.loadArticles();

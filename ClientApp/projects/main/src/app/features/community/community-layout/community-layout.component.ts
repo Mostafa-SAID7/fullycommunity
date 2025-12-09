@@ -14,11 +14,12 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
 export class CommunityLayoutComponent {
   leftMenuItems: SidebarMenuItem[] = [
     { icon: 'home', label: 'Home', route: '/', exact: true },
-    { icon: 'feed', label: 'Community', route: '/community', exact: true },
+    { icon: 'feed', label: 'Feed', route: '/community', exact: true },
     { icon: 'marketplace', label: 'Marketplace', route: '/marketplace' },
     { icon: 'videos', label: 'Videos', route: '/videos' },
     { icon: 'podcasts', label: 'Podcasts', route: '/podcasts' },
     { icon: 'services', label: 'Services', route: '/services' },
+    { icon: 'feed', label: 'Posts', route: '/community/posts' },
     { icon: 'friends', label: 'Friends', route: '/community/friends' },
     { icon: 'groups', label: 'Groups', route: '/community/groups' },
     { icon: 'events', label: 'Events', route: '/community/events' },
