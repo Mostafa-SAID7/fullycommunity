@@ -2,8 +2,8 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { PagesService } from '../../../../core/services/community/pages';
-import { PageListItem, PageCategory, PageFilter } from '../../../../core/interfaces/community/pages';
+import { PagesService, PageFilter } from '../../../../core/services/community/pages';
+import { PageList, PageCategory } from '../../../../core/interfaces/community/pages';
 
 @Component({
   selector: 'app-pages-list',
@@ -177,7 +177,7 @@ import { PageListItem, PageCategory, PageFilter } from '../../../../core/interfa
 export class PagesListComponent implements OnInit {
   private pagesService = inject(PagesService);
 
-  pages = signal<PageListItem[]>([]);
+  pages = signal<PageList[]>([]);
   loading = signal(false);
   
   searchTerm = '';
@@ -212,7 +212,7 @@ export class PagesListComponent implements OnInit {
     });
   }
 
-  toggleFollow(page: PageListItem) {
+  toggleFollow(page: PageList) {
     if (page.isFollowing) {
       this.pagesService.unfollowPage(page.id).subscribe({
         next: () => {
