@@ -12,8 +12,7 @@ import {
   selector: 'admin-settings',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './admin-settings.component.html',
-  styleUrl: './admin-settings.component.scss'
+  templateUrl: './admin-settings.component.html'
 })
 export class AdminSettingsComponent implements OnInit {
   siteSettings = signal<SiteSettings | null>(null);

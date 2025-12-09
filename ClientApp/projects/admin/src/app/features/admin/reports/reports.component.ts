@@ -15,8 +15,7 @@ import {
   selector: 'reports',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './reports.component.html',
-  styleUrl: './reports.component.scss'
+  templateUrl: './reports.component.html'
 })
 export class ReportsComponent implements OnInit, OnDestroy {
   overview = signal<AnalyticsOverview | null>(null);

@@ -17,8 +17,7 @@ interface AdminRole {
   selector: 'admin-layout',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, FormsModule],
-  templateUrl: './admin-layout.component.html',
-  styleUrl: './admin-layout.component.scss'
+  templateUrl: './admin-layout.component.html'
 })
 export class AdminLayoutComponent implements OnInit {
   private authService = inject(AuthService);

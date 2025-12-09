@@ -8,8 +8,7 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'user-management',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './user-management.component.html',
-  styleUrl: './user-management.component.scss'
+  templateUrl: './user-management.component.html'
 })
 export class UserManagementComponent implements OnInit {
   users = signal<AdminUser[]>([]);

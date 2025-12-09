@@ -7,8 +7,7 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'admin-profile',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './admin-profile.component.html',
-  styleUrl: './admin-profile.component.scss'
+  templateUrl: './admin-profile.component.html'
 })
 export class AdminProfileComponent implements OnInit {
   private authService = inject(AuthService);

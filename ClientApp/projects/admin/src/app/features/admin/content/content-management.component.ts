@@ -7,8 +7,7 @@ import { AdminContentService, ContentItem, ContentStats } from '../../../core/se
   selector: 'content-management',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './content-management.component.html',
-  styleUrl: './content-management.component.scss'
+  templateUrl: './content-management.component.html'
 })
 export class ContentManagementComponent implements OnInit {
   stats = signal<ContentStats | null>(null);

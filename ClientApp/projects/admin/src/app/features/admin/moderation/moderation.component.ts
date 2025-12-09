@@ -7,8 +7,7 @@ import { AdminModerationService, ModerationItem, ModerationStats } from '../../.
   selector: 'moderation',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './moderation.component.html',
-  styleUrl: './moderation.component.scss'
+  templateUrl: './moderation.component.html'
 })
 export class ModerationComponent implements OnInit {
   stats = signal<ModerationStats | null>(null);
