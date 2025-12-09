@@ -1,7 +1,15 @@
 import { Component, inject, signal, output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { QAService, QuestionCategory, CreateQuestionRequest } from '../../../core/services/community/qa.service';
+import { QAService } from '../../../core/services/community/qa';
+import { QuestionCategory } from '../../../core/interfaces/community/qa';
+
+export interface CreateQuestionRequest {
+  title: string;
+  content: string;
+  tags: string[];
+  categoryId?: string;
+}
 
 @Component({
   selector: 'app-ask-question-modal',
@@ -39,11 +47,11 @@ export class AskQuestionModalComponent implements OnInit {
   loadCategories() {
     this.loadingCategories.set(true);
     this.qaService.getCategories().subscribe({
-      next: (cats) => {
+      next: (cats: QuestionCategory[]) => {
         this.categories.set(cats);
         this.loadingCategories.set(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to load categories:', err);
         this.loadingCategories.set(false);
       }

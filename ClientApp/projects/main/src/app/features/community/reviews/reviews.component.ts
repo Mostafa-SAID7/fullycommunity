@@ -2,7 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ReviewsService, ReviewListItem, ReviewSubjectType } from '../../../core/services/community/reviews.service';
+import { ReviewsService } from '../../../core/services/community/reviews';
+import { ReviewList, ReviewSubjectType } from '../../../core/interfaces/community/reviews';
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
@@ -170,8 +171,8 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
 export class ReviewsComponent implements OnInit {
   private reviewsService = inject(ReviewsService);
 
-  reviews = signal<ReviewListItem[]>([]);
-  featuredReviews = signal<ReviewListItem[]>([]);
+  reviews = signal<ReviewList[]>([]);
+  featuredReviews = signal<ReviewList[]>([]);
   loading = signal(false);
   
   selectedType = '';
@@ -206,7 +207,7 @@ export class ReviewsComponent implements OnInit {
   loadReviews() {
     this.loading.set(true);
     this.reviewsService.getReviews({
-      subjectType: this.selectedType as ReviewSubjectType || undefined,
+      subjectType: this.selectedType ? Number(this.selectedType) as ReviewSubjectType : undefined,
       carMake: this.carMake || undefined,
       carModel: this.carModel || undefined,
       sortBy: this.sortBy
@@ -221,7 +222,7 @@ export class ReviewsComponent implements OnInit {
 
   loadFeaturedReviews() {
     this.reviewsService.getFeaturedReviews(4).subscribe({
-      next: (reviews) => this.featuredReviews.set(reviews)
+      next: (reviews: ReviewList[]) => this.featuredReviews.set(reviews)
     });
   }
 }

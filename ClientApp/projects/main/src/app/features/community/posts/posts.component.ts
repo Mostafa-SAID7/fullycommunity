@@ -4,8 +4,8 @@ import { RouterModule } from '@angular/router';
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarMenuItem, type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
-import { PostsService } from '../../../core/services/community/posts.service';
-import { Post } from '../../../core/interfaces/community/posts';
+import { PostsService } from '../../../core/services/community/posts/posts.service';
+import { PostList } from '../../../core/interfaces/community/posts';
 import { PagedResult } from '../../../core/interfaces/common/paged-result.interface';
 
 @Component({
@@ -17,7 +17,7 @@ import { PagedResult } from '../../../core/interfaces/common/paged-result.interf
 export class PostsComponent implements OnInit {
   private postsService = inject(PostsService);
   
-  posts: Post[] = [];
+  posts: PostList[] = [];
   loading = false;
   error: string | null = null;
   currentPage = 1;
@@ -78,13 +78,13 @@ export class PostsComponent implements OnInit {
     this.error = null;
 
     this.postsService.getPosts({}, this.currentPage, this.pageSize).subscribe({
-      next: (result: PagedResult<Post>) => {
+      next: (result: PagedResult<PostList>) => {
         this.posts = result.items;
         this.totalPages = result.totalPages;
-        this.hasNextPage = result.hasNextPage;
+        this.hasNextPage = this.currentPage < result.totalPages;
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = 'Failed to load posts. Please try again.';
         this.loading = false;
         console.error('Error loading posts:', err);
@@ -98,13 +98,13 @@ export class PostsComponent implements OnInit {
       this.loading = true;
 
       this.postsService.getPosts({}, this.currentPage, this.pageSize).subscribe({
-        next: (result: PagedResult<Post>) => {
+        next: (result: PagedResult<PostList>) => {
           this.posts = [...this.posts, ...result.items];
           this.totalPages = result.totalPages;
-          this.hasNextPage = result.hasNextPage;
+          this.hasNextPage = this.currentPage < result.totalPages;
           this.loading = false;
         },
-        error: (err) => {
+        error: (err: any) => {
           this.error = 'Failed to load more posts.';
           this.loading = false;
           this.currentPage--; // Revert page increment
@@ -119,20 +119,20 @@ export class PostsComponent implements OnInit {
     if (!post) return;
 
     if (post.isLiked) {
-      this.postsService.unlike(postId).subscribe({
+      this.postsService.unlikePost(postId).subscribe({
         next: () => {
           post.isLiked = false;
           post.likeCount--;
         },
-        error: (err) => console.error('Error unliking post:', err)
+        error: (err: any) => console.error('Error unliking post:', err)
       });
     } else {
-      this.postsService.like(postId).subscribe({
+      this.postsService.likePost(postId).subscribe({
         next: () => {
           post.isLiked = true;
           post.likeCount++;
         },
-        error: (err) => console.error('Error liking post:', err)
+        error: (err: any) => console.error('Error liking post:', err)
       });
     }
   }

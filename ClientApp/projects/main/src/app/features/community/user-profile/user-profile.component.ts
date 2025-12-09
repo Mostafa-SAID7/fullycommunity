@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { QAService } from '../../../core/services/community/qa.service';
+import { QAService } from '../../../core/services/community/qa/qa.service';
 import { LoadingStateComponent } from '../../../shared/components/loading-state/loading-state.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 
@@ -62,7 +62,7 @@ export class UserProfileComponent implements OnInit {
         
         this.loading.set(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to load user profile:', err);
         this.error.set('Failed to load user profile');
         this.loading.set(false);

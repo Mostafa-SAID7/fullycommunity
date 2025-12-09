@@ -1,4 +1,5 @@
 import { QuestionStatus } from './qa.enums';
+import { QuestionAuthor } from './question-author.interface';
 
 /**
  * Question DTO - matches QuestionDto.cs from backend
