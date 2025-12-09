@@ -1,4 +1,4 @@
-import { ReviewSubjectType, ReviewStatus } from './enums';
+import { ReviewSubjectType, ReviewStatus } from '../enums';
 
 export interface ReviewFilter {
   subjectType?: ReviewSubjectType;

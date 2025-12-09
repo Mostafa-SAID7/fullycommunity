@@ -1,6 +1,6 @@
 // Interface matching backend DTO: ReviewDto
 import { ReviewSubjectType, OwnershipStatus, ReviewStatus } from './enums';
-import { ReviewMedia } from './review-media.interface';
+import { ReviewMedia } from './components/review-media.interface';
 
 export interface Review {
   id: string;
