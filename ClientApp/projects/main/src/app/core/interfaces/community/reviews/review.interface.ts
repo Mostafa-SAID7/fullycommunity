@@ -1,5 +1,5 @@
 // Interface matching backend DTO: ReviewDto
-import { ReviewSubjectType, OwnershipStatus, ReviewStatus } from './review.enums';
+import { ReviewSubjectType, OwnershipStatus, ReviewStatus } from './enums';
 import { ReviewMedia } from './review-media.interface';
 
 export interface Review {

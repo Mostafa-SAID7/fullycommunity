@@ -1,5 +1,5 @@
 // Interface matching backend DTO: NewsArticleDto
-import { NewsStatus } from './news.enums';
+import { NewsStatus } from './enums';
 
 export interface NewsArticle {
   id: string;

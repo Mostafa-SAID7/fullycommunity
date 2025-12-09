@@ -1,4 +1,4 @@
-import { ReviewSubjectType, OwnershipStatus } from './review.enums';
+import { ReviewSubjectType, OwnershipStatus } from '../enums';
 
 export interface CreateReviewRequest {
   title: string;
