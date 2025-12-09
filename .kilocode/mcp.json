@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "<server-id>": {
+      "command": "python",
+      "args": ["path/to/script.py"],
+      "env": {
+        "KEY": "value"
+      }
+    }
+  }
+}

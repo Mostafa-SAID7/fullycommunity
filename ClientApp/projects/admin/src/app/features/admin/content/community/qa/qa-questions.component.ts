@@ -2,7 +2,8 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { QaAdminService, QAStats, QuestionListItem, Category } from '../../../core/services/qa-admin.service';
+import { QaAdminService } from '../../../../../core/services/content/community/qa/qa-admin.service';
+import { QAStats, QuestionListItem, Category } from '../../../../../core/interfaces/content/community/qa/qa-admin.interface';
 
 @Component({
   selector: 'app-qa-questions',
@@ -42,7 +43,7 @@ export class QaQuestionsComponent implements OnInit {
   loadStats() {
     this.qaAdminService.getStats().subscribe({
       next: (response) => {
-        if (response.success) {
+        if (response.success && response.data) {
           this.stats.set(response.data);
         }
       },
@@ -76,7 +77,7 @@ export class QaQuestionsComponent implements OnInit {
   loadCategories() {
     this.qaAdminService.getCategories().subscribe({
       next: (response) => {
-        if (response.success) {
+        if (response.success && response.data) {
           this.categories.set(response.data);
         }
       },

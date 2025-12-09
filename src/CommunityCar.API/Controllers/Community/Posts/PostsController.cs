@@ -1,6 +1,7 @@
 using CommunityCar.Application.Common.Interfaces.Community;
 using CommunityCar.Application.DTOs.Response.Community.Posts;
 using CommunityCar.Application.DTOs.Requests.Community.Posts;
+using CommunityCar.Infrastructure.Services.Community.Posts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -13,8 +14,13 @@ namespace CommunityCar.API.Controllers.Community;
 public class PostsController : ControllerBase
 {
     private readonly IPostService _postService;
+    // private readonly PersonalizedFeedService _feedService; // TODO: Implement PersonalizedFeedService
 
-    public PostsController(IPostService postService) => _postService = postService;
+    public PostsController(IPostService postService) // , PersonalizedFeedService feedService)
+    {
+        _postService = postService;
+        // _feedService = feedService;
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetPosts([FromQuery] PostFilter filter, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
@@ -46,6 +52,12 @@ public class PostsController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetFeed([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         => Ok(await _postService.GetFeedAsync(GetUserId()!.Value, page, pageSize));
+
+    // TODO: Implement PersonalizedFeedService
+    // [HttpGet("feed/personalized")]
+    // [Authorize]
+    // public async Task<IActionResult> GetPersonalizedFeed([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    //     => Ok(await _feedService.GetPersonalizedFeedAsync(GetUserId()!.Value, page, pageSize));
 
     [HttpPost]
     [Authorize]

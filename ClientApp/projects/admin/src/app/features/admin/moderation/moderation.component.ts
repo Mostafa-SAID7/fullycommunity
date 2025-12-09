@@ -1,15 +1,27 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminModerationService, ModerationItem, ModerationStats } from '../../../core/services/admin-moderation.service';
+import { AdminModerationService } from '../../../core/services/admin/moderation.service';
+import { ModerationItem, ModerationStats } from '../../../core/interfaces/admin/moderation.interface';
+import { StatCardComponent, StatCardConfig } from '../../../shared/components/charts/stat-card.component';
+import { TabNavigationComponent, Tab } from '../../../shared/components/tab-navigation/tab-navigation.component';
+import { ModerationItemCardComponent } from '../../../shared/components/moderation-item-card/moderation-item-card.component';
 
 @Component({
   selector: 'moderation',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    StatCardComponent,
+    TabNavigationComponent,
+    ModerationItemCardComponent
+  ],
   templateUrl: './moderation.component.html'
 })
 export class ModerationComponent implements OnInit {
+  private moderationService = inject(AdminModerationService);
+  
   stats = signal<ModerationStats | null>(null);
   items = signal<ModerationItem[]>([]);
   loading = signal(false);
@@ -19,7 +31,11 @@ export class ModerationComponent implements OnInit {
   actionType = signal<'approve' | 'reject' | 'dismiss' | 'ban' | null>(null);
   actionNotes = '';
 
-  constructor(private moderationService: AdminModerationService) {}
+  tabs: Tab[] = [
+    { id: 'pending', label: 'Pending', badge: 0 },
+    { id: 'resolved', label: 'Resolved' },
+    { id: 'all', label: 'All Reports' }
+  ];
 
   ngOnInit() {
     this.loadStats();
@@ -28,9 +44,49 @@ export class ModerationComponent implements OnInit {
 
   loadStats() {
     this.moderationService.getModerationStats().subscribe({
-      next: (data) => this.stats.set(data),
+      next: (data) => {
+        this.stats.set(data);
+        // Update pending badge count
+        this.tabs = this.tabs.map(tab =>
+          tab.id === 'pending'
+            ? { ...tab, badge: data.pendingReports }
+            : tab
+        );
+      },
       error: (err) => console.error('Error loading stats:', err)
     });
+  }
+
+  getStatCards(): StatCardConfig[] {
+    const stats = this.stats();
+    if (!stats) return [];
+
+    return [
+      {
+        title: 'Pending Reports',
+        value: stats.pendingReports,
+        icon: '⚠️',
+        color: stats.pendingReports > 0 ? 'danger' : 'success'
+      },
+      {
+        title: 'Resolved Today',
+        value: stats.resolvedToday,
+        icon: '✅',
+        color: 'success'
+      },
+      {
+        title: 'Resolved This Week',
+        value: stats.resolvedThisWeek,
+        icon: '📊',
+        color: 'info'
+      },
+      {
+        title: 'Total Reports',
+        value: stats.totalReports,
+        icon: '📋',
+        color: 'primary'
+      }
+    ];
   }
 
   loadItems() {
@@ -52,8 +108,8 @@ export class ModerationComponent implements OnInit {
     });
   }
 
-  setTab(tab: 'pending' | 'resolved' | 'all') {
-    this.activeTab = tab;
+  setTab(tabId: string) {
+    this.activeTab = tabId as 'pending' | 'resolved' | 'all';
     this.loadItems();
   }
 

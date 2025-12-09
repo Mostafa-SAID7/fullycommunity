@@ -1,9 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  DashboardService,
-  AdminDashboardOverview,
-} from '../../../core/services/dashboard.service';
+import { DashboardService } from '../../../core/services/dashboard/dashboard.service';
+import { AdminDashboardOverview } from '../../../core/interfaces/dashboard/dashboard.interface';
 
 @Component({
   selector: 'admin-dashboard',
@@ -12,11 +10,11 @@ import {
   templateUrl: './admin-dashboard.component.html',
 })
 export class AdminDashboardComponent implements OnInit {
+  private dashboardService = inject(DashboardService);
+  
   overview: AdminDashboardOverview | null = null;
   loading = false;
   error: string | null = null;
-
-  constructor(private dashboardService: DashboardService) {}
 
   ngOnInit() {
     this.loadDashboard();

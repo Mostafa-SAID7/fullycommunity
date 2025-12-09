@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../../../../../../environments/environment';
+import { environment } from '../../../../../../environments/environment';
 
 interface PodcastEpisode {
   id: string;

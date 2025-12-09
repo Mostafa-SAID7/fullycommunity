@@ -18,6 +18,7 @@ export interface QuestionListItem {
   content: string;
   status: string;
   categoryId: string;
+  categoryName?: string;
   authorId: string;
   authorName: string;
   authorEmail: string;

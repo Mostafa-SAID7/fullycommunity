@@ -19,10 +19,11 @@ export const podcastRoutes: Routes = [
     path: 'show/:slug', 
     loadComponent: () => import('./podcast-detail/podcast-detail.component').then(m => m.PodcastDetailComponent) 
   },
-  { 
-    path: 'episode/:podcastId/:episodeId', 
-    loadComponent: () => import('./episode-player/episode-player.component').then(m => m.EpisodePlayerComponent) 
-  },
+  // Episode player route - TODO: Create episode player component
+  // { 
+  //   path: 'episode/:podcastId/:episodeId', 
+  //   loadComponent: () => import('./episode-player/episode-player.component').then(m => m.EpisodePlayerComponent) 
+  // },
   { 
     path: 'create', 
     loadComponent: () => import('./podcast-create/podcast-create.component').then(m => m.PodcastCreateComponent),

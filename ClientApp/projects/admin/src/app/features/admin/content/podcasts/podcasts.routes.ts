@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+// Podcasts management routes
 export const podcastsRoutes: Routes = [
   { path: '', redirectTo: 'shows', pathMatch: 'full' },
   { 

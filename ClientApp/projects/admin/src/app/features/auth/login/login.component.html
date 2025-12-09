@@ -1,58 +1,97 @@
-<div class="login-container">
-  <div class="login-card">
-    <div class="login-header">
-      <div class="logo">🚗</div>
-      <h1>CommunityCar Admin</h1>
-      <p>Sign in to access the admin dashboard</p>
-    </div>
-
-    <form (ngSubmit)="onSubmit()" class="login-form">
-      <div *ngIf="errorMessage" class="error-alert">
-        {{ errorMessage }}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
+          <span class="text-3xl">🚗</span>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">CommunityCar Admin</h1>
+        <p class="text-gray-600 text-sm">Sign in to access the admin dashboard</p>
       </div>
 
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          [(ngModel)]="email"
-          name="email"
-          placeholder="admin@example.com"
-          required
+      <!-- Form -->
+      <form (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Error Message -->
+        @if (errorMessage) {
+          <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            {{ errorMessage }}
+          </div>
+        }
+
+        <!-- Email Field -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+            Email Address
+          </label>
+          <input
+            type="email"
+            id="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="admin@example.com"
+            required
+            [disabled]="loading"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
+          />
+        </div>
+
+        <!-- Password Field -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+            [disabled]="loading"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
+          />
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="flex items-center justify-between">
+          <label class="flex items-center cursor-pointer">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="rememberMe" 
+              name="rememberMe"
+              class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <span class="ml-2 text-sm text-gray-700">Remember me</span>
+          </label>
+          <a href="#" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
+            Forgot password?
+          </a>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          type="submit" 
           [disabled]="loading"
-        />
+          class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center justify-center"
+        >
+          @if (!loading) {
+            <span>Sign In</span>
+          } @else {
+            <div class="flex items-center gap-2">
+              <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span>Signing in...</span>
+            </div>
+          }
+        </button>
+      </form>
+
+      <!-- Footer -->
+      <div class="mt-8 text-center">
+        <p class="text-xs text-gray-500">
+          🔒 Protected area. Authorized personnel only.
+        </p>
       </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          [(ngModel)]="password"
-          name="password"
-          placeholder="Enter your password"
-          required
-          [disabled]="loading"
-        />
-      </div>
-
-      <div class="form-options">
-        <label class="remember-me">
-          <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" />
-          <span>Remember me</span>
-        </label>
-        <a href="#" class="forgot-link">Forgot password?</a>
-      </div>
-
-      <button type="submit" class="btn-login" [disabled]="loading">
-        <span *ngIf="!loading">Sign In</span>
-        <span *ngIf="loading" class="loading-spinner"></span>
-      </button>
-    </form>
-
-    <div class="login-footer">
-      <p>Protected area. Authorized personnel only.</p>
     </div>
   </div>
 </div>

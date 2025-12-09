@@ -1,9 +1,12 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { Component, inject, OnInit, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../../core/services/auth.service';
-import { NotificationService, Notification } from '../../../core/services/notification.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { NotificationService } from '../../../core/services/notifications/notification.service';
+import { Notification } from '../../../core/interfaces/notifications/notification.interface';
+import { AdminHeaderComponent } from '../../../shared/components/admin-header/admin-header.component';
+import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
+import { ToastContainerComponent } from '../../../shared/components/toast-container/toast-container.component';
 
 interface AdminRole {
   id: string;
@@ -16,7 +19,8 @@ interface AdminRole {
 @Component({
   selector: 'admin-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, FormsModule],
+  imports: [CommonModule, RouterOutlet, RouterLink, AdminHeaderComponent, AdminSidebarComponent, ToastContainerComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './admin-layout.component.html'
 })
 export class AdminLayoutComponent implements OnInit {
@@ -27,6 +31,8 @@ export class AdminLayoutComponent implements OnInit {
   currentUser = this.authService.currentUser;
   showRoleSwitcher = signal(false);
   showNotifications = signal(false);
+  sidebarOpen = signal(false);
+  showUserMenu = signal(false);
   currentViewRole = signal<string>('SuperAdmin');
 
   adminRoles: AdminRole[] = [
@@ -105,5 +111,37 @@ export class AdminLayoutComponent implements OnInit {
     this.notificationService.createTestNotification().subscribe(() => {
       this.loadNotifications();
     });
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen.update(v => !v);
+  }
+
+  getSidebarClasses(): string {
+    const isOpen = this.sidebarOpen();
+    const baseClasses = 'bg-white border-r border-gray-200 overflow-y-auto shadow-sm transition-all duration-300 ease-in-out';
+    
+    if (isOpen) {
+      return `${baseClasses} fixed inset-y-0 left-0 w-64 z-50 lg:static lg:w-64`;
+    }
+    
+    return `${baseClasses} fixed inset-y-0 left-0 w-0 lg:w-64 lg:static -ml-64 lg:ml-0`;
+  }
+
+  isLinkActive(route: string): boolean {
+    const currentRoute = this.router.url;
+    return currentRoute.includes(route);
+  }
+
+  toggleUserMenu() {
+    this.showUserMenu.update(v => !v);
+  }
+
+  trackByRoleId(index: number, role: AdminRole): string {
+    return role.id;
+  }
+
+  trackByNotificationId(index: number, notification: Notification): string {
+    return notification.id;
   }
 }

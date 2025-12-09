@@ -125,6 +125,7 @@ public static class DependencyInjection
         services.AddScoped<Services.Community.Posts.PostEngagementService>();
         services.AddScoped<Services.Community.Posts.PostCommentService>();
         services.AddScoped<Services.Community.Posts.PostCategoryService>();
+        // services.AddScoped<Services.Community.Posts.PersonalizedFeedService>(); // TODO: Implement PersonalizedFeedService
         services.AddScoped<Application.Common.Interfaces.Community.IPostService, Services.Community.Posts.PostService>();
 
         // Community Services - QA

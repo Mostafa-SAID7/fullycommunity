@@ -1,7 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminContentService, ContentItem, ContentStats } from '../../../core/services/content/admin-content.service';
+import { AdminContentService } from '../../../core/services/content/admin-content.service';
+import { ContentItem, ContentStats } from '../../../core/interfaces/content/admin-content.interface';
 
 @Component({
   selector: 'content-management',
@@ -10,6 +11,8 @@ import { AdminContentService, ContentItem, ContentStats } from '../../../core/se
   templateUrl: './content-management.component.html'
 })
 export class ContentManagementComponent implements OnInit {
+  private contentService = inject(AdminContentService);
+  
   stats = signal<ContentStats | null>(null);
   content = signal<ContentItem[]>([]);
   loading = signal(false);
@@ -21,8 +24,6 @@ export class ContentManagementComponent implements OnInit {
   currentPage = 1;
   pageSize = 10;
   totalCount = 0;
-
-  constructor(private contentService: AdminContentService) {}
 
   ngOnInit() {
     this.loadStats();

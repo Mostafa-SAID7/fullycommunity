@@ -2,22 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-// SCSS Variables for admin theme
-$admin-primary: #0078D4;
-$admin-secondary: #323130;
-$admin-background: #F8F9FA;
-$admin-surface: #FFFFFF;
-$admin-text: #333333;
-$admin-border: #E1E5E9;
-
-// Admin-specific styles using SCSS
+// Admin-specific styles using Tailwind
 @layer base {
   body {
-    @apply font-segoe;
-    line-height: 1.6;
-    color: $admin-text;
-    background-color: $admin-background;
-    margin: 0;
+    @apply font-segoe leading-relaxed text-text-primary bg-background-surface m-0 antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -26,55 +14,33 @@ $admin-border: #E1E5E9;
 @layer components {
   // Admin component styles
   .admin-card {
-    background: $admin-surface;
-    border: 1px solid $admin-border;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    
-    &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      transition: box-shadow 0.2s ease;
-    }
+    @apply bg-background-card border border-border rounded-fluent-lg p-6 shadow-fluent hover:shadow-fluent-lg transition-shadow duration-200;
   }
   
   .admin-button {
-    @apply px-4 py-2 rounded-md font-medium transition-colors duration-200;
-    background-color: $admin-primary;
-    color: white;
-    border: none;
-    cursor: pointer;
+    @apply px-4 py-2 rounded-fluent font-medium transition-colors duration-200 bg-primary text-white border-none cursor-pointer;
     
     &:hover {
-      background-color: darken($admin-primary, 10%);
+      @apply bg-primary-hover;
     }
     
     &:disabled {
-      background-color: lighten($admin-secondary, 30%);
-      cursor: not-allowed;
+      @apply bg-secondary-300 cursor-not-allowed;
     }
   }
   
   .admin-input {
-    @apply w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2;
-    border-color: $admin-border;
-    
-    &:focus {
-      border-color: $admin-primary;
-      box-shadow: 0 0 0 2px rgba($admin-primary, 0.2);
-    }
+    @apply w-full px-3 py-2 border border-border rounded-fluent focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary;
   }
 }
 
 // Dark mode for admin
 @media (prefers-color-scheme: dark) {
   body {
-    background-color: #1a1a1a;
-    color: #e4e6eb;
+    @apply bg-background-dark text-text-dark;
   }
   
   .admin-card {
-    background: #242526;
-    border-color: #3a3b3c;
+    @apply bg-background-card-dark border-border-dark;
   }
 }

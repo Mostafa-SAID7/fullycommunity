@@ -1,20 +1,27 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { 
-  AdminSettingsService, 
-  SiteSettings, 
-  EmailSettings, 
-  SecuritySettings 
-} from '../../../core/services/admin-settings.service';
+import { AdminSettingsService } from '../../../core/services/admin/settings.service';
+import {
+  SiteSettings,
+  EmailSettings,
+  SecuritySettings
+} from '../../../core/interfaces/admin/settings.interface';
+import { TabNavigationComponent, Tab } from '../../../shared/components/tab-navigation/tab-navigation.component';
 
 @Component({
   selector: 'admin-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TabNavigationComponent
+  ],
   templateUrl: './admin-settings.component.html'
 })
 export class AdminSettingsComponent implements OnInit {
+  private settingsService = inject(AdminSettingsService);
+  
   siteSettings = signal<SiteSettings | null>(null);
   emailSettings = signal<EmailSettings | null>(null);
   securitySettings = signal<SecuritySettings | null>(null);
@@ -25,7 +32,16 @@ export class AdminSettingsComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
 
-  constructor(private settingsService: AdminSettingsService) {}
+  tabs: Tab[] = [
+    { id: 'general', label: 'General' },
+    { id: 'email', label: 'Email' },
+    { id: 'security', label: 'Security' },
+    { id: 'system', label: 'System' }
+  ];
+
+  setTab(tabId: string) {
+    this.activeTab = tabId as 'general' | 'email' | 'security' | 'system';
+  }
 
   ngOnInit() {
     this.loadSettings();

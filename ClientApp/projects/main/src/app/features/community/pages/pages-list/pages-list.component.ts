@@ -108,7 +108,7 @@ import { PagesService, PageListItem, PageCategory, PageFilter } from '../../../.
                     />
                   </svg>
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">@{{ page.username }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">{{ '@' + page.username }}</p>
                 <span class="inline-block px-2 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full mt-2">
                   {{ getCategoryLabel(page.category) }}
                 </span>

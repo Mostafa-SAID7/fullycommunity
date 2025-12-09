@@ -297,7 +297,7 @@ export interface UpdateChannelRequest {
   contentCategories?: string[];
 }
 
-export interface CreateCommentRequest {
+export interface CreateVideoCommentRequest {
   videoId: string;
   content: string;
   parentId?: string;
@@ -417,7 +417,7 @@ export class VideoService {
     });
   }
 
-  createComment(request: CreateCommentRequest): Observable<VideoComment> {
+  createComment(request: CreateVideoCommentRequest): Observable<VideoComment> {
     return this.http.post<VideoComment>(`${this.baseUrl}/comments`, request);
   }
 

@@ -1,12 +1,13 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { TabNavigationComponent, Tab } from '../../../shared/components/tab-navigation/tab-navigation.component';
 
 @Component({
   selector: 'admin-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TabNavigationComponent],
   templateUrl: './admin-profile.component.html'
 })
 export class AdminProfileComponent implements OnInit {
@@ -32,6 +33,13 @@ export class AdminProfileComponent implements OnInit {
   // Avatar
   uploadingAvatar = signal(false);
   showAvatarModal = signal(false);
+
+  // Tabs for TabNavigation component
+  tabs: Tab[] = [
+    { id: 'profile', label: 'Profile' },
+    { id: 'security', label: 'Security' },
+    { id: 'activity', label: 'Activity' }
+  ];
 
   ngOnInit() {
     const user = this.currentUser();

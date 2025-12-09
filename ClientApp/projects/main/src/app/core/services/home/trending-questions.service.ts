@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { QuestionAuthor } from '../../interfaces/community/qa';
 
 export interface TrendingQuestion {
   id: string;
@@ -15,14 +16,6 @@ export interface TrendingQuestion {
   hasAcceptedAnswer: boolean;
   tags: string[];
   createdAt: string;
-}
-
-export interface QuestionAuthor {
-  id: string;
-  firstName: string;
-  lastName: string;
-  avatarUrl?: string;
-  userType: string;
 }
 
 // Backend response wrapper
