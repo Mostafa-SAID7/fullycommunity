@@ -11,5 +11,3 @@ export interface CreateNewsRequest {
   sourceName?: string | null;
   sourceUrl?: string | null;
 }
-
-export interface UpdateNewsRequest extends Partial<CreateNewsRequest> {}

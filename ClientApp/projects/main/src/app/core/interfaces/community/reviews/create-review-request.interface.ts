@@ -21,10 +21,3 @@ export interface CreateReviewRequest {
   cons?: string[];
   coverImageUrl?: string | null;
 }
-
-export interface UpdateReviewRequest extends Partial<CreateReviewRequest> {}
-
-export interface CreateReviewCommentRequest {
-  content: string;
-  parentId?: string | null;
-}
