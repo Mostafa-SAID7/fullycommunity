@@ -49,22 +49,23 @@ import { Review } from '../../../core/interfaces/community/reviews';
 
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                {{ review()!.author.firstName[0] }}{{ review()!.author.lastName[0] }}
-              </div>
+              @if (review()!.authorAvatarUrl) {
+                <img [src]="review()!.authorAvatarUrl" [alt]="review()!.authorName" class="w-12 h-12 rounded-full object-cover">
+              } @else {
+                <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+                  {{ review()!.authorName[0] }}
+                </div>
+              }
               <div>
                 <p class="font-medium text-gray-900 dark:text-white">
-                  {{ review()!.author.firstName }} {{ review()!.author.lastName }}
+                  {{ review()!.authorName }}
                 </p>
                 <p class="text-sm text-gray-500">{{ review()!.publishedAt | date:'MMM d, yyyy' }}</p>
               </div>
             </div>
             <div class="flex gap-3">
-              <button (click)="markHelpful(true)" class="px-4 py-2 rounded-lg border hover:bg-gray-50">
-                👍 {{ review()!.helpfulCount }}
-              </button>
-              <button (click)="markHelpful(false)" class="px-4 py-2 rounded-lg border hover:bg-gray-50">
-                👎 {{ review()!.notHelpfulCount }}
+              <button (click)="toggleHelpful()" class="px-4 py-2 rounded-lg border hover:bg-gray-50">
+                {{ review()!.currentUserFoundHelpful ? '👍' : '👍' }} {{ review()!.helpfulCount }}
               </button>
             </div>
           </div>
@@ -160,11 +161,32 @@ export class ReviewDetailComponent implements OnInit {
     }
   }
 
-  markHelpful(isHelpful: boolean) {
+  toggleHelpful() {
     const r = this.review();
-    if (r) this.reviewsService.markHelpful(r.id, isHelpful).subscribe({
-      next: () => {},
-      error: (err: any) => console.error(err)
-    });
+    if (!r) return;
+
+    if (r.currentUserFoundHelpful) {
+      this.reviewsService.unmarkHelpful(r.id).subscribe({
+        next: () => {
+          this.review.set({
+            ...r,
+            currentUserFoundHelpful: false,
+            helpfulCount: r.helpfulCount - 1
+          });
+        },
+        error: (err: any) => console.error(err)
+      });
+    } else {
+      this.reviewsService.markHelpful(r.id).subscribe({
+        next: () => {
+          this.review.set({
+            ...r,
+            currentUserFoundHelpful: true,
+            helpfulCount: r.helpfulCount + 1
+          });
+        },
+        error: (err: any) => console.error(err)
+      });
+    }
   }
 }
