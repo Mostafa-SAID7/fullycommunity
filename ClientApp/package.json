@@ -11,7 +11,11 @@
     "build:admin": "ng build community-car-admin",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "version:major": "npm version major --no-git-tag-version",
+    "version:minor": "npm version minor --no-git-tag-version",
+    "version:patch": "npm version patch --no-git-tag-version",
+    "version:check": "node -p \"require('./package.json').version\""
   },
   "private": true,
   "dependencies": {

@@ -1,0 +1,186 @@
+name: Version Sync
+
+on:
+  push:
+    paths:
+      - 'ClientApp/package.json'
+      - 'src/**/*.csproj'
+      - 'AiAgent/__version__.py'
+      - 'VERSION'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-sync:
+    name: Check Version Sync
+    runs-on: ubuntu-latest
+    outputs:
+      needs_sync: ${{ steps.check.outputs.needs_sync }}
+      target_version: ${{ steps.check.outputs.target_version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check Version Consistency
+        id: check
+        run: |
+          # Get versions from different sources
+          FRONTEND_VERSION=$(node -p "require('./ClientApp/package.json').version" 2>/dev/null || echo "0.0.0")
+          VERSION_FILE=$(cat VERSION 2>/dev/null || echo "0.0.0")
+          
+          # Get backend version (from first .csproj found)
+          BACKEND_VERSION=$(grep -oP '<Version>\K[^<]+' $(find src -name "*.csproj" -type f | head -1) 2>/dev/null || echo "0.0.0")
+          
+          # Get AI agent version
+          AI_VERSION=$(grep -oP "__version__ = '\K[^']+" AiAgent/__version__.py 2>/dev/null || echo "0.0.0")
+          
+          echo "Frontend: $FRONTEND_VERSION"
+          echo "Backend: $BACKEND_VERSION"
+          echo "AI Agent: $AI_VERSION"
+          echo "VERSION file: $VERSION_FILE"
+          
+          # Check if all versions match
+          if [ "$FRONTEND_VERSION" != "$BACKEND_VERSION" ] || \
+             [ "$FRONTEND_VERSION" != "$AI_VERSION" ] || \
+             [ "$FRONTEND_VERSION" != "$VERSION_FILE" ]; then
+            echo "⚠️ Version mismatch detected!"
+            echo "needs_sync=true" >> $GITHUB_OUTPUT
+            echo "target_version=$FRONTEND_VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "✅ All versions are in sync"
+            echo "needs_sync=false" >> $GITHUB_OUTPUT
+          fi
+
+  sync-versions:
+    name: Sync Versions
+    needs: check-sync
+    if: needs.check-sync.outputs.needs_sync == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Sync All Versions
+        run: |
+          TARGET_VERSION="${{ needs.check-sync.outputs.target_version }}"
+          
+          echo "Syncing all versions to: $TARGET_VERSION"
+          
+          # Update VERSION file
+          echo "$TARGET_VERSION" > VERSION
+          
+          # Update frontend
+          cd ClientApp
+          npm version "$TARGET_VERSION" --no-git-tag-version --allow-same-version
+          cd ..
+          
+          # Update backend
+          find src -name "*.csproj" -type f -exec sed -i "s/<Version>.*<\/Version>/<Version>$TARGET_VERSION<\/Version>/g" {} \;
+          
+          # Update AI agent
+          echo "__version__ = '$TARGET_VERSION'" > AiAgent/__version__.py
+          
+          # Update docker-compose
+          if [ -f ".devops/docker-compose.yml" ]; then
+            sed -i "s/:v[0-9]*\.[0-9]*\.[0-9]*/:v$TARGET_VERSION/g" .devops/docker-compose.yml
+          fi
+
+      - name: Commit Sync
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git add .
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: sync versions to ${{ needs.check-sync.outputs.target_version }} [skip ci]"
+            git push
+          fi
+
+      - name: Create Summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << EOF
+          # ✅ Version Sync Complete
+          
+          All components have been synced to version **${{ needs.check-sync.outputs.target_version }}**
+          
+          ## Updated Components
+          - ✓ Frontend (package.json)
+          - ✓ Backend (.csproj files)
+          - ✓ AI Agent (__version__.py)
+          - ✓ VERSION file
+          - ✓ Docker Compose
+          
+          ## Next Steps
+          - Verify changes in repository
+          - Check if release is needed
+          EOF
+
+  notify-mismatch:
+    name: Notify Version Mismatch
+    needs: check-sync
+    if: needs.check-sync.outputs.needs_sync == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '⚠️ Version Mismatch Detected';
+            const body = `
+            ## Version Mismatch Alert
+            
+            A version mismatch was detected and automatically synced to **${{ needs.check-sync.outputs.target_version }}**.
+            
+            ### What Happened?
+            Different components had different version numbers. This can happen when:
+            - Manual version updates in one component
+            - Merge conflicts
+            - Failed version bump
+            
+            ### What Was Done?
+            All components have been automatically synced to the same version.
+            
+            ### Action Required
+            - Review the sync commit
+            - Verify all components work correctly
+            - Consider creating a release if needed
+            
+            ---
+            
+            *This issue was automatically created by the Version Sync workflow.*
+            `;
+            
+            // Check if issue already exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'version-sync'
+            });
+            
+            if (issues.data.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['version-sync', 'automated']
+              });
+            }

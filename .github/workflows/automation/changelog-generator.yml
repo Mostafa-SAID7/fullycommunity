@@ -1,0 +1,228 @@
+name: Changelog Generator
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'CHANGELOG.md'
+      - '**.md'
+  workflow_dispatch:
+    inputs:
+      from_tag:
+        description: 'Generate from tag (leave empty for last tag)'
+        required: false
+        type: string
+      to_ref:
+        description: 'Generate to ref (default: HEAD)'
+        required: false
+        type: string
+        default: 'HEAD'
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  generate-changelog:
+    name: Generate Changelog
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: |
+          npm install -g conventional-changelog-cli
+
+      - name: Determine Range
+        id: range
+        run: |
+          FROM_TAG="${{ github.event.inputs.from_tag }}"
+          TO_REF="${{ github.event.inputs.to_ref || 'HEAD' }}"
+          
+          if [ -z "$FROM_TAG" ]; then
+            FROM_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          fi
+          
+          if [ -z "$FROM_TAG" ]; then
+            echo "No previous tag found, generating full changelog"
+            echo "from_tag=" >> $GITHUB_OUTPUT
+          else
+            echo "from_tag=$FROM_TAG" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "to_ref=$TO_REF" >> $GITHUB_OUTPUT
+
+      - name: Generate Changelog
+        run: |
+          FROM_TAG="${{ steps.range.outputs.from_tag }}"
+          TO_REF="${{ steps.range.outputs.to_ref }}"
+          
+          # Create changelog header
+          cat > CHANGELOG.md << 'EOF'
+          # Changelog
+
+          All notable changes to this project will be documented in this file.
+
+          The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+          and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+          EOF
+          
+          # Generate changelog sections
+          if [ -n "$FROM_TAG" ]; then
+            RANGE="$FROM_TAG..$TO_REF"
+          else
+            RANGE="$TO_REF"
+          fi
+          
+          # Get all tags
+          TAGS=$(git tag --sort=-version:refname)
+          
+          for TAG in $TAGS; do
+            PREV_TAG=$(git describe --tags --abbrev=0 $TAG^ 2>/dev/null || echo "")
+            DATE=$(git log -1 --format=%ai $TAG | cut -d' ' -f1)
+            
+            echo "" >> CHANGELOG.md
+            echo "## [$TAG] - $DATE" >> CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            
+            if [ -n "$PREV_TAG" ]; then
+              COMMIT_RANGE="$PREV_TAG..$TAG"
+            else
+              COMMIT_RANGE="$TAG"
+            fi
+            
+            # Features
+            FEATURES=$(git log $COMMIT_RANGE --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" --grep="^feat" 2>/dev/null || echo "")
+            if [ -n "$FEATURES" ]; then
+              echo "### ✨ Features" >> CHANGELOG.md
+              echo "$FEATURES" >> CHANGELOG.md
+              echo "" >> CHANGELOG.md
+            fi
+            
+            # Bug Fixes
+            FIXES=$(git log $COMMIT_RANGE --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" --grep="^fix" 2>/dev/null || echo "")
+            if [ -n "$FIXES" ]; then
+              echo "### 🐛 Bug Fixes" >> CHANGELOG.md
+              echo "$FIXES" >> CHANGELOG.md
+              echo "" >> CHANGELOG.md
+            fi
+            
+            # Performance
+            PERF=$(git log $COMMIT_RANGE --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" --grep="^perf" 2>/dev/null || echo "")
+            if [ -n "$PERF" ]; then
+              echo "### ⚡ Performance" >> CHANGELOG.md
+              echo "$PERF" >> CHANGELOG.md
+              echo "" >> CHANGELOG.md
+            fi
+            
+            # Documentation
+            DOCS=$(git log $COMMIT_RANGE --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" --grep="^docs" 2>/dev/null || echo "")
+            if [ -n "$DOCS" ]; then
+              echo "### 📚 Documentation" >> CHANGELOG.md
+              echo "$DOCS" >> CHANGELOG.md
+              echo "" >> CHANGELOG.md
+            fi
+            
+            # Refactoring
+            REFACTOR=$(git log $COMMIT_RANGE --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" --grep="^refactor" 2>/dev/null || echo "")
+            if [ -n "$REFACTOR" ]; then
+              echo "### ♻️ Refactoring" >> CHANGELOG.md
+              echo "$REFACTOR" >> CHANGELOG.md
+              echo "" >> CHANGELOG.md
+            fi
+            
+            # Tests
+            TESTS=$(git log $COMMIT_RANGE --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" --grep="^test" 2>/dev/null || echo "")
+            if [ -n "$TESTS" ]; then
+              echo "### 🧪 Tests" >> CHANGELOG.md
+              echo "$TESTS" >> CHANGELOG.md
+              echo "" >> CHANGELOG.md
+            fi
+            
+            # Chores
+            CHORES=$(git log $COMMIT_RANGE --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" --grep="^chore" 2>/dev/null || echo "")
+            if [ -n "$CHORES" ]; then
+              echo "### 🔧 Chores" >> CHANGELOG.md
+              echo "$CHORES" >> CHANGELOG.md
+              echo "" >> CHANGELOG.md
+            fi
+            
+            # Breaking Changes
+            BREAKING=$(git log $COMMIT_RANGE --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" --grep="BREAKING CHANGE" 2>/dev/null || echo "")
+            if [ -n "$BREAKING" ]; then
+              echo "### ⚠️ BREAKING CHANGES" >> CHANGELOG.md
+              echo "$BREAKING" >> CHANGELOG.md
+              echo "" >> CHANGELOG.md
+            fi
+            
+            # Compare link
+            if [ -n "$PREV_TAG" ]; then
+              echo "[View Full Changelog](https://github.com/${{ github.repository }}/compare/$PREV_TAG...$TAG)" >> CHANGELOG.md
+            fi
+          done
+
+      - name: Generate Component Changelogs
+        run: |
+          # Frontend Changelog
+          mkdir -p ClientApp/CHANGELOG
+          git log --pretty=format:"- %s (%h)" --grep="^feat\|^fix" -- ClientApp/ > ClientApp/CHANGELOG/CHANGELOG.md || true
+          
+          # Backend Changelog
+          mkdir -p src/CHANGELOG
+          git log --pretty=format:"- %s (%h)" --grep="^feat\|^fix" -- src/ > src/CHANGELOG/CHANGELOG.md || true
+          
+          # AI Agent Changelog
+          mkdir -p AiAgent/CHANGELOG
+          git log --pretty=format:"- %s (%h)" --grep="^feat\|^fix" -- AiAgent/ > AiAgent/CHANGELOG/CHANGELOG.md || true
+          
+          # Mobile Changelog
+          if [ -d "Mobile" ]; then
+            mkdir -p Mobile/CHANGELOG
+            git log --pretty=format:"- %s (%h)" --grep="^feat\|^fix" -- Mobile/ > Mobile/CHANGELOG/CHANGELOG.md || true
+          fi
+
+      - name: Commit Changelog
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git add CHANGELOG.md
+          git add */CHANGELOG/ 2>/dev/null || true
+          
+          if git diff --staged --quiet; then
+            echo "No changelog changes to commit"
+          else
+            git commit -m "docs: update changelog [skip ci]"
+            git push
+          fi
+
+      - name: Create Summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << EOF
+          # 📝 Changelog Generated
+          
+          ## 📊 Statistics
+          - **Total Commits**: $(git rev-list --count HEAD)
+          - **Total Tags**: $(git tag | wc -l)
+          - **Latest Tag**: $(git describe --tags --abbrev=0 2>/dev/null || echo "None")
+          
+          ## 🔗 Links
+          - [View Changelog](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)
+          - [View Releases](https://github.com/${{ github.repository }}/releases)
+          
+          ## 📦 Component Changelogs
+          - [Frontend](https://github.com/${{ github.repository }}/blob/main/ClientApp/CHANGELOG/CHANGELOG.md)
+          - [Backend](https://github.com/${{ github.repository }}/blob/main/src/CHANGELOG/CHANGELOG.md)
+          - [AI Agent](https://github.com/${{ github.repository }}/blob/main/AiAgent/CHANGELOG/CHANGELOG.md)
+          EOF

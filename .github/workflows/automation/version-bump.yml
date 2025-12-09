@@ -1,0 +1,280 @@
+name: Manual Version Bump
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+          - custom
+      custom_version:
+        description: 'Custom version (only if type is custom)'
+        required: false
+        type: string
+      components:
+        description: 'Components to update'
+        required: true
+        type: choice
+        options:
+          - all
+          - frontend
+          - backend
+          - ai-agent
+          - mobile
+      create_release:
+        description: 'Create GitHub release'
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  bump-version:
+    name: Bump Version
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.calculate.outputs.new_version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Calculate New Version
+        id: calculate
+        run: |
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./ClientApp/package.json').version")
+          
+          if [ "${{ github.event.inputs.version_type }}" == "custom" ]; then
+            NEW_VERSION="${{ github.event.inputs.custom_version }}"
+          else
+            IFS='.' read -r -a VERSION_PARTS <<< "$CURRENT_VERSION"
+            MAJOR="${VERSION_PARTS[0]}"
+            MINOR="${VERSION_PARTS[1]}"
+            PATCH="${VERSION_PARTS[2]}"
+            
+            case "${{ github.event.inputs.version_type }}" in
+              major)
+                MAJOR=$((MAJOR + 1))
+                MINOR=0
+                PATCH=0
+                ;;
+              minor)
+                MINOR=$((MINOR + 1))
+                PATCH=0
+                ;;
+              patch)
+                PATCH=$((PATCH + 1))
+                ;;
+            esac
+            
+            NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          fi
+          
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $CURRENT_VERSION"
+          echo "New version: $NEW_VERSION"
+
+      - name: Update Frontend Version
+        if: github.event.inputs.components == 'all' || github.event.inputs.components == 'frontend'
+        working-directory: ClientApp
+        run: |
+          npm version ${{ steps.calculate.outputs.new_version }} --no-git-tag-version
+          echo "✅ Frontend version updated"
+
+      - name: Update Backend Version
+        if: github.event.inputs.components == 'all' || github.event.inputs.components == 'backend'
+        run: |
+          VERSION="${{ steps.calculate.outputs.new_version }}"
+          
+          # Update all .csproj files
+          find src -name "*.csproj" -type f -exec sed -i "s/<Version>.*<\/Version>/<Version>$VERSION<\/Version>/g" {} \;
+          
+          # Update appsettings.json if exists
+          if [ -f "src/API/appsettings.json" ]; then
+            sed -i "s/\"Version\": \".*\"/\"Version\": \"$VERSION\"/g" src/API/appsettings.json
+          fi
+          
+          echo "✅ Backend version updated"
+
+      - name: Update AI Agent Version
+        if: github.event.inputs.components == 'all' || github.event.inputs.components == 'ai-agent'
+        working-directory: AiAgent
+        run: |
+          VERSION="${{ steps.calculate.outputs.new_version }}"
+          
+          # Create/update __version__.py
+          echo "__version__ = '$VERSION'" > __version__.py
+          
+          # Update setup.py if exists
+          if [ -f "setup.py" ]; then
+            sed -i "s/version='.*'/version='$VERSION'/g" setup.py
+          fi
+          
+          echo "✅ AI Agent version updated"
+
+      - name: Update Mobile Version
+        if: github.event.inputs.components == 'all' || github.event.inputs.components == 'mobile'
+        run: |
+          VERSION="${{ steps.calculate.outputs.new_version }}"
+          
+          # Update Android version
+          if [ -f "Mobile/Android/app/build.gradle" ]; then
+            IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
+            VERSION_CODE=$((${VERSION_PARTS[0]} * 10000 + ${VERSION_PARTS[1]} * 100 + ${VERSION_PARTS[2]}))
+            
+            sed -i "s/versionCode .*/versionCode $VERSION_CODE/g" Mobile/Android/app/build.gradle
+            sed -i "s/versionName \".*\"/versionName \"$VERSION\"/g" Mobile/Android/app/build.gradle
+          fi
+          
+          # Update iOS version
+          if [ -f "Mobile/iOS/Info.plist" ]; then
+            /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" Mobile/iOS/Info.plist
+          fi
+          
+          echo "✅ Mobile version updated"
+
+      - name: Update Root Package Files
+        run: |
+          VERSION="${{ steps.calculate.outputs.new_version }}"
+          
+          # Create/update VERSION file
+          echo "$VERSION" > VERSION
+          
+          # Update docker-compose.yml
+          if [ -f ".devops/docker-compose.yml" ]; then
+            sed -i "s/image: .*:v.*/image: ghcr.io\/${{ github.repository }}:v$VERSION/g" .devops/docker-compose.yml
+          fi
+          
+          echo "✅ Root files updated"
+
+      - name: Generate Changelog Entry
+        run: |
+          VERSION="${{ steps.calculate.outputs.new_version }}"
+          DATE=$(date +%Y-%m-%d)
+          
+          # Create changelog entry
+          cat > CHANGELOG_ENTRY.md << EOF
+          ## [$VERSION] - $DATE
+          
+          ### Changed
+          - Manual version bump to $VERSION
+          - Updated by: @${{ github.actor }}
+          - Bump type: ${{ github.event.inputs.version_type }}
+          - Components: ${{ github.event.inputs.components }}
+          
+          EOF
+          
+          # Prepend to existing changelog if it exists
+          if [ -f "CHANGELOG.md" ]; then
+            cat CHANGELOG.md >> CHANGELOG_ENTRY.md
+            mv CHANGELOG_ENTRY.md CHANGELOG.md
+          else
+            echo "# Changelog" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            cat CHANGELOG_ENTRY.md >> CHANGELOG.md
+          fi
+
+      - name: Commit Changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git add .
+          git commit -m "chore(release): manual version bump to ${{ steps.calculate.outputs.new_version }} [skip ci]"
+          git push
+
+      - name: Create Tag
+        run: |
+          git tag -a "v${{ steps.calculate.outputs.new_version }}" -m "Release v${{ steps.calculate.outputs.new_version }}"
+          git push origin "v${{ steps.calculate.outputs.new_version }}"
+
+  create-release:
+    name: Create Release
+    needs: bump-version
+    if: github.event.inputs.create_release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ needs.bump-version.outputs.new_version }}
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.bump-version.outputs.new_version }}
+          release_name: Release v${{ needs.bump-version.outputs.new_version }}
+          body: |
+            ## 🎉 Manual Release v${{ needs.bump-version.outputs.new_version }}
+            
+            ### 📦 Release Information
+            - **Version**: v${{ needs.bump-version.outputs.new_version }}
+            - **Type**: ${{ github.event.inputs.version_type }}
+            - **Components**: ${{ github.event.inputs.components }}
+            - **Released by**: @${{ github.actor }}
+            - **Date**: ${{ github.event.head_commit.timestamp }}
+            
+            ### 📝 Changes
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+            
+            ### 🚀 Installation
+            ```bash
+            # Docker
+            docker pull ghcr.io/${{ github.repository }}:v${{ needs.bump-version.outputs.new_version }}
+            
+            # Git
+            git clone https://github.com/${{ github.repository }}.git
+            git checkout v${{ needs.bump-version.outputs.new_version }}
+            ```
+          draft: false
+          prerelease: false
+
+  summary:
+    name: Summary
+    needs: [bump-version, create-release]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << EOF
+          # ✅ Version Bump Complete
+          
+          ## 📦 Details
+          - **New Version**: v${{ needs.bump-version.outputs.new_version }}
+          - **Bump Type**: ${{ github.event.inputs.version_type }}
+          - **Components**: ${{ github.event.inputs.components }}
+          - **Release Created**: ${{ github.event.inputs.create_release }}
+          
+          ## 🔗 Links
+          - [View Tag](https://github.com/${{ github.repository }}/releases/tag/v${{ needs.bump-version.outputs.new_version }})
+          - [View Changelog](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)
+          
+          ## ✨ What's Next?
+          - Review the changes in the repository
+          - Trigger deployments if needed
+          - Update documentation
+          EOF

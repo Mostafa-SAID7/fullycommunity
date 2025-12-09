@@ -1,0 +1,317 @@
+name: Semantic Release
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - beta
+      - alpha
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        type: choice
+        options:
+          - auto
+          - major
+          - minor
+          - patch
+          - prerelease
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  packages: write
+
+jobs:
+  analyze-changes:
+    name: Analyze Changes
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      release_type: ${{ steps.check.outputs.release_type }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check for release
+        id: check
+        run: |
+          # Get commits since last tag
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$LAST_TAG" ]; then
+            echo "No previous tag found, creating initial release"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "release_type=minor" >> $GITHUB_OUTPUT
+            echo "version=1.0.0" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Get commits since last tag
+          COMMITS=$(git log $LAST_TAG..HEAD --pretty=format:"%s")
+          
+          if [ -z "$COMMITS" ]; then
+            echo "No new commits since last release"
+            echo "should_release=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Determine release type from commits
+          RELEASE_TYPE="patch"
+          
+          if echo "$COMMITS" | grep -qiE "^(feat|feature)(\(.+\))?!:|^BREAKING CHANGE:|breaking"; then
+            RELEASE_TYPE="major"
+          elif echo "$COMMITS" | grep -qiE "^(feat|feature)(\(.+\))?:"; then
+            RELEASE_TYPE="minor"
+          elif echo "$COMMITS" | grep -qiE "^(fix|bugfix)(\(.+\))?:"; then
+            RELEASE_TYPE="patch"
+          fi
+          
+          # Override with manual input if provided
+          if [ "${{ github.event.inputs.release_type }}" != "" ] && [ "${{ github.event.inputs.release_type }}" != "auto" ]; then
+            RELEASE_TYPE="${{ github.event.inputs.release_type }}"
+          fi
+          
+          echo "should_release=true" >> $GITHUB_OUTPUT
+          echo "release_type=$RELEASE_TYPE" >> $GITHUB_OUTPUT
+          
+          # Calculate new version
+          CURRENT_VERSION=$(echo $LAST_TAG | sed 's/v//')
+          IFS='.' read -r -a VERSION_PARTS <<< "$CURRENT_VERSION"
+          MAJOR="${VERSION_PARTS[0]}"
+          MINOR="${VERSION_PARTS[1]}"
+          PATCH="${VERSION_PARTS[2]}"
+          
+          case $RELEASE_TYPE in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+          
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version will be: $NEW_VERSION"
+
+  bump-versions:
+    name: Bump Versions
+    needs: analyze-changes
+    if: needs.analyze-changes.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Bump Frontend Version
+        working-directory: ClientApp
+        run: |
+          npm version ${{ needs.analyze-changes.outputs.version }} --no-git-tag-version
+          echo "✅ Frontend version bumped to ${{ needs.analyze-changes.outputs.version }}"
+
+      - name: Bump Backend Version
+        run: |
+          VERSION="${{ needs.analyze-changes.outputs.version }}"
+          
+          # Update all .csproj files
+          find src -name "*.csproj" -type f -exec sed -i "s/<Version>.*<\/Version>/<Version>$VERSION<\/Version>/g" {} \;
+          
+          echo "✅ Backend version bumped to $VERSION"
+
+      - name: Bump AI Agent Version
+        working-directory: AiAgent
+        run: |
+          VERSION="${{ needs.analyze-changes.outputs.version }}"
+          
+          # Create or update __version__.py
+          echo "__version__ = '$VERSION'" > __version__.py
+          
+          echo "✅ AI Agent version bumped to $VERSION"
+
+      - name: Generate Changelog
+        run: |
+          VERSION="${{ needs.analyze-changes.outputs.version }}"
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          echo "# Changelog" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "## [$VERSION] - $(date +%Y-%m-%d)" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          
+          if [ -n "$LAST_TAG" ]; then
+            # Group commits by type
+            echo "### 🚀 Features" >> CHANGELOG.md
+            git log $LAST_TAG..HEAD --pretty=format:"- %s (%h)" --grep="^feat" >> CHANGELOG.md || true
+            echo "" >> CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            
+            echo "### 🐛 Bug Fixes" >> CHANGELOG.md
+            git log $LAST_TAG..HEAD --pretty=format:"- %s (%h)" --grep="^fix" >> CHANGELOG.md || true
+            echo "" >> CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            
+            echo "### 📚 Documentation" >> CHANGELOG.md
+            git log $LAST_TAG..HEAD --pretty=format:"- %s (%h)" --grep="^docs" >> CHANGELOG.md || true
+            echo "" >> CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            
+            echo "### 🔧 Maintenance" >> CHANGELOG.md
+            git log $LAST_TAG..HEAD --pretty=format:"- %s (%h)" --grep="^chore\|^refactor" >> CHANGELOG.md || true
+            echo "" >> CHANGELOG.md
+          fi
+
+      - name: Commit Version Bump
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git add .
+          git commit -m "chore(release): bump version to ${{ needs.analyze-changes.outputs.version }} [skip ci]" || echo "No changes to commit"
+          git push
+
+      - name: Create Git Tag
+        run: |
+          git tag -a "v${{ needs.analyze-changes.outputs.version }}" -m "Release v${{ needs.analyze-changes.outputs.version }}"
+          git push origin "v${{ needs.analyze-changes.outputs.version }}"
+
+  create-release:
+    name: Create GitHub Release
+    needs: [analyze-changes, bump-versions]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ needs.analyze-changes.outputs.version }}
+          fetch-depth: 0
+
+      - name: Generate Release Notes
+        id: notes
+        run: |
+          VERSION="${{ needs.analyze-changes.outputs.version }}"
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          
+          {
+            echo "notes<<EOF"
+            echo "## 🚀 What's Changed"
+            echo ""
+            
+            if [ -n "$LAST_TAG" ]; then
+              echo "### ✨ Features"
+              git log $LAST_TAG..HEAD --pretty=format:"- %s by @%an (%h)" --grep="^feat" || echo "- No new features"
+              echo ""
+              echo ""
+              
+              echo "### 🐛 Bug Fixes"
+              git log $LAST_TAG..HEAD --pretty=format:"- %s by @%an (%h)" --grep="^fix" || echo "- No bug fixes"
+              echo ""
+              echo ""
+              
+              echo "### 📚 Documentation"
+              git log $LAST_TAG..HEAD --pretty=format:"- %s by @%an (%h)" --grep="^docs" || echo "- No documentation changes"
+              echo ""
+              echo ""
+              
+              echo "### 🔧 Other Changes"
+              git log $LAST_TAG..HEAD --pretty=format:"- %s by @%an (%h)" --grep="^chore\|^refactor\|^perf\|^test" || echo "- No other changes"
+              echo ""
+            fi
+            
+            echo ""
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/$LAST_TAG...v$VERSION"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.analyze-changes.outputs.version }}
+          release_name: Release v${{ needs.analyze-changes.outputs.version }}
+          body: ${{ steps.notes.outputs.notes }}
+          draft: false
+          prerelease: ${{ contains(needs.analyze-changes.outputs.version, 'alpha') || contains(needs.analyze-changes.outputs.version, 'beta') || contains(needs.analyze-changes.outputs.version, 'rc') }}
+
+  trigger-deployments:
+    name: Trigger Deployments
+    needs: [analyze-changes, create-release]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        component: [backend, frontend, ai-agent, mobile]
+    steps:
+      - name: Trigger ${{ matrix.component }} deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: '${{ matrix.component }}/cd.yml',
+                ref: 'v${{ needs.analyze-changes.outputs.version }}',
+                inputs: {
+                  environment: 'production',
+                  version: '${{ needs.analyze-changes.outputs.version }}'
+                }
+              });
+              console.log('✅ Triggered ${{ matrix.component }} deployment');
+            } catch (error) {
+              console.log('⚠️ Could not trigger ${{ matrix.component }} deployment:', error.message);
+            }
+        continue-on-error: true
+
+  notify:
+    name: Notify Release
+    needs: [analyze-changes, create-release]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Release Summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << EOF
+          # 🎉 Release v${{ needs.analyze-changes.outputs.version }} Created!
+          
+          ## 📦 Release Details
+          - **Version**: v${{ needs.analyze-changes.outputs.version }}
+          - **Type**: ${{ needs.analyze-changes.outputs.release_type }}
+          - **Branch**: ${{ github.ref_name }}
+          - **Commit**: ${{ github.sha }}
+          
+          ## 🔗 Links
+          - [View Release](https://github.com/${{ github.repository }}/releases/tag/v${{ needs.analyze-changes.outputs.version }})
+          - [View Changelog](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)
+          
+          ## 🚀 Next Steps
+          - Deployments have been triggered automatically
+          - Monitor deployment status in Actions tab
+          - Update documentation if needed
+          EOF
