@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NewsService } from '../../../core/services/community/news';
-import { NewsListItem, NewsCategory } from '../../../core/interfaces/community/news';
+import { NewsList, NewsCategory } from '../../../core/interfaces/community/news';
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
@@ -175,9 +175,9 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
 export class NewsComponent implements OnInit {
   private newsService = inject(NewsService);
 
-  articles = signal<NewsListItem[]>([]);
-  featuredArticles = signal<NewsListItem[]>([]);
-  breakingNews = signal<NewsListItem[]>([]);
+  articles = signal<NewsList[]>([]);
+  featuredArticles = signal<NewsList[]>([]);
+  breakingNews = signal<NewsList[]>([]);
   categories = signal<NewsCategory[]>([]);
   loading = signal(false);
   
@@ -213,7 +213,7 @@ export class NewsComponent implements OnInit {
 
   loadArticles() {
     this.loading.set(true);
-    this.newsService.getArticles({
+    this.newsService.getNews({
       categoryId: this.selectedCategory || undefined,
       searchTerm: this.searchTerm || undefined,
       sortBy: this.sortBy
@@ -227,7 +227,7 @@ export class NewsComponent implements OnInit {
   }
 
   loadFeaturedArticles() {
-    this.newsService.getFeaturedArticles(4).subscribe({
+    this.newsService.getFeaturedNews(4).subscribe({
       next: (articles: any) => this.featuredArticles.set(articles),
       error: (err: any) => console.error(err)
     });

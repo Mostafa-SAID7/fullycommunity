@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NewsService } from '../../../core/services/community/news';
-import { NewsArticle, NewsListItem } from '../../../core/interfaces/community/news';
+import { NewsArticle, NewsList } from '../../../core/interfaces/community/news';
 
 @Component({
   selector: 'app-news-detail',
@@ -126,7 +126,7 @@ export class NewsDetailComponent implements OnInit {
   private newsService = inject(NewsService);
 
   article = signal<NewsArticle | null>(null);
-  relatedArticles = signal<NewsListItem[]>([]);
+  relatedArticles = signal<NewsList[]>([]);
   loading = signal(true);
 
   ngOnInit() {
@@ -144,7 +144,7 @@ export class NewsDetailComponent implements OnInit {
   }
 
   loadRelatedArticles(articleId: string) {
-    this.newsService.getRelatedArticles(articleId, 3).subscribe({
+    this.newsService.getRelatedNews(articleId, 3).subscribe({
       next: (articles: any) => this.relatedArticles.set(articles),
       error: (err: any) => console.error(err)
     });
