@@ -7,34 +7,10 @@ import {
   NewsArticle,
   NewsList,
   NewsCategory,
-  NewsStatus
+  NewsFilter,
+  CreateNewsRequest,
+  UpdateNewsRequest
 } from '../../../interfaces/community/news';
-
-export interface NewsFilter {
-  status?: NewsStatus;
-  categoryId?: string;
-  searchTerm?: string;
-  tag?: string;
-  isFeatured?: boolean;
-  isBreaking?: boolean;
-  sortBy?: string;
-}
-
-export interface CreateNewsRequest {
-  title: string;
-  excerpt: string | null;
-  content: string;
-  coverImageUrl?: string | null;
-  videoUrl?: string | null;
-  categoryId?: string | null;
-  tags?: string[];
-  isFeatured?: boolean;
-  isBreaking?: boolean;
-  sourceName?: string | null;
-  sourceUrl?: string | null;
-}
-
-export interface UpdateNewsRequest extends Partial<CreateNewsRequest> {}
 
 @Injectable({ providedIn: 'root' })
 export class NewsService {
