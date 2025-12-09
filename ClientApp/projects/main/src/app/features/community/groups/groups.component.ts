@@ -1,7 +1,8 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { GroupsService, Group } from '../../../core/services/community/groups.service';
+import { GroupsService } from '../../../core/services/community/groups';
+import { GroupList } from '../../../core/interfaces/community/groups/group.interface';
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
@@ -50,12 +51,12 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
             <div class="group-info">
               <h3>{{ group.name }}</h3>
               <p class="group-meta">
-                <span class="privacy">{{ group.privacy === 'Public' ? '🌍 Public' : '🔒 Private' }}</span>
+                <span class="privacy">{{ group.privacy === 0 ? '🌍 Public' : '🔒 Private' }}</span>
                 · {{ group.memberCount | number }} members
               </p>
               <p class="group-desc">{{ group.description }}</p>
-              <button class="join-btn" [class.joined]="group.isJoined" (click)="toggleJoin(group)">
-                {{ group.isJoined ? 'Joined ✓' : 'Join Group' }}
+              <button class="join-btn" [class.joined]="group.isMember" (click)="toggleJoin(group)">
+                {{ group.isMember ? 'Joined ✓' : 'Join Group' }}
               </button>
             </div>
           </div>
@@ -179,8 +180,8 @@ export class GroupsComponent implements OnInit {
   private groupsService = inject(GroupsService);
   
   activeTab = signal<'your' | 'discover'>('your');
-  groups = this.groupsService.groups;
-  loading = this.groupsService.loading;
+  groups = signal<GroupList[]>([]);
+  loading = signal(false);
 
   // Sidebar configuration
   shortcuts: SidebarShortcut[] = [
@@ -202,27 +203,47 @@ export class GroupsComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.groupsService.loadGroups();
+    this.loadGroups();
+  }
+
+  loadGroups() {
+    this.loading.set(true);
+    this.groupsService.getGroups({}, 1, 50).subscribe({
+      next: (result: any) => {
+        this.groups.set(result.items);
+        this.loading.set(false);
+      },
+      error: (err: any) => {
+        console.error('Error loading groups:', err);
+        this.loading.set(false);
+      }
+    });
   }
 
   filteredGroups() {
     return this.activeTab() === 'your' 
-      ? this.groups().filter(g => g.isJoined)
-      : this.groups().filter(g => !g.isJoined);
+      ? this.groups().filter((g: GroupList) => g.isMember)
+      : this.groups().filter((g: GroupList) => !g.isMember);
   }
 
-  toggleJoin(group: Group) {
-    if (group.isJoined) {
-      this.groupsService.leaveGroup(group.id).subscribe(() => {
-        this.groupsService.groups.update(groups => 
-          groups.map(g => g.id === group.id ? { ...g, isJoined: false } : g)
-        );
+  toggleJoin(group: GroupList) {
+    if (group.isMember) {
+      this.groupsService.leaveGroup(group.id).subscribe({
+        next: () => {
+          this.groups.update(groups => 
+            groups.map(g => g.id === group.id ? { ...g, isMember: false, memberCount: g.memberCount - 1 } : g)
+          );
+        },
+        error: (err: any) => console.error('Error leaving group:', err)
       });
     } else {
-      this.groupsService.joinGroup(group.id).subscribe(() => {
-        this.groupsService.groups.update(groups => 
-          groups.map(g => g.id === group.id ? { ...g, isJoined: true } : g)
-        );
+      this.groupsService.joinGroup(group.id).subscribe({
+        next: () => {
+          this.groups.update(groups => 
+            groups.map(g => g.id === group.id ? { ...g, isMember: true, memberCount: g.memberCount + 1 } : g)
+          );
+        },
+        error: (err: any) => console.error('Error joining group:', err)
       });
     }
   }

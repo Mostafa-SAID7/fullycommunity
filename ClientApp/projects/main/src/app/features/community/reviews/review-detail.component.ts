@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ReviewsService, Review } from '../../../core/services/community/reviews.service';
+import { ReviewsService } from '../../../core/services/community/reviews';
+import { Review } from '../../../core/interfaces/community/reviews';
 
 @Component({
   selector: 'app-review-detail',
@@ -153,14 +154,17 @@ export class ReviewDetailComponent implements OnInit {
     const slug = this.route.snapshot.paramMap.get('slug');
     if (slug) {
       this.reviewsService.getReviewBySlug(slug).subscribe({
-        next: (review) => { this.review.set(review); this.loading.set(false); },
-        error: () => this.loading.set(false)
+        next: (review: any) => { this.review.set(review); this.loading.set(false); },
+        error: (err: any) => this.loading.set(false)
       });
     }
   }
 
   markHelpful(isHelpful: boolean) {
     const r = this.review();
-    if (r) this.reviewsService.markHelpful(r.id, isHelpful).subscribe();
+    if (r) this.reviewsService.markHelpful(r.id, isHelpful).subscribe({
+      next: () => {},
+      error: (err: any) => console.error(err)
+    });
   }
 }

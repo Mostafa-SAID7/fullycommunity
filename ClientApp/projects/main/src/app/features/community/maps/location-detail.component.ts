@@ -2,7 +2,9 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MapsService, MapLocation, LocationReview } from '../../../core/services/community/maps/maps.service';
+import { MapsService } from '../../../core/services/community/maps';
+import { MapLocation } from '../../../core/interfaces/community/maps/map-location.interface';
+import { LocationReview } from '../../../core/interfaces/community/maps/location-review.interface';
 
 @Component({
   selector: 'app-location-detail',
@@ -77,7 +79,7 @@ import { MapsService, MapLocation, LocationReview } from '../../../core/services
             <!-- Actions -->
             <div class="flex flex-wrap gap-3">
               <button (click)="toggleSave()" class="px-4 py-2 rounded-lg border hover:bg-gray-50 dark:hover:bg-gray-700">
-                {{ location()!.isSaved ? '🔖 Saved' : '📑 Save' }}
+                {{ location()!.isSavedByCurrentUser ? '🔖 Saved' : '📑 Save' }}
               </button>
               <button (click)="checkIn()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                 📍 Check In
@@ -101,8 +103,8 @@ import { MapsService, MapLocation, LocationReview } from '../../../core/services
             <p class="text-sm text-gray-500">Check-ins</p>
           </div>
           <div class="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ location()!.saveCount }}</p>
-            <p class="text-sm text-gray-500">Saves</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ location()!.averageRating.toFixed(1) }}</p>
+            <p class="text-sm text-gray-500">Rating</p>
           </div>
         </div>
 
@@ -119,10 +121,10 @@ import { MapsService, MapLocation, LocationReview } from '../../../core/services
                   <div class="flex items-start justify-between mb-2">
                     <div class="flex items-center gap-2">
                       <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm">
-                        {{ review.user.firstName[0] }}{{ review.user.lastName[0] }}
+                        {{ review.authorName[0] }}
                       </div>
                       <div>
-                        <p class="font-medium text-gray-900 dark:text-white">{{ review.user.firstName }}</p>
+                        <p class="font-medium text-gray-900 dark:text-white">{{ review.authorName }}</p>
                         <p class="text-xs text-gray-500">{{ review.createdAt | date:'MMM d, yyyy' }}</p>
                       </div>
                     </div>
@@ -170,32 +172,48 @@ export class LocationDetailComponent implements OnInit {
   ngOnInit() {
     const slug = this.route.snapshot.paramMap.get('slug');
     if (slug) {
-      this.mapsService.getLocationBySlug(slug).subscribe({
-        next: (location) => {
+      this.mapsService.getLocation(slug).subscribe({
+        next: (location: MapLocation) => {
           this.location.set(location);
           this.loading.set(false);
           this.loadReviews(location.id);
         },
-        error: () => this.loading.set(false)
+        error: (err: any) => {
+          console.error('Error loading location:', err);
+          this.loading.set(false);
+        }
       });
     }
   }
 
   loadReviews(locationId: string) {
-    this.mapsService.getLocationReviews(locationId).subscribe({
-      next: (result) => this.reviews.set(result.items)
+    this.mapsService.getReviews(locationId).subscribe({
+      next: (result: any) => this.reviews.set(result.items),
+      error: (err: any) => console.error('Error loading reviews:', err)
     });
   }
 
   toggleSave() {
     const loc = this.location();
     if (!loc) return;
-    (loc.isSaved ? this.mapsService.unsaveLocation(loc.id) : this.mapsService.saveLocation(loc.id)).subscribe();
+    (loc.isSavedByCurrentUser ? this.mapsService.unsaveLocation(loc.id) : this.mapsService.saveLocation(loc.id)).subscribe({
+      next: () => {
+        this.location.update(l => l ? { ...l, isSavedByCurrentUser: !l.isSavedByCurrentUser } : null);
+      },
+      error: (err: any) => console.error('Error toggling save:', err)
+    });
   }
 
   checkIn() {
     const loc = this.location();
-    if (loc) this.mapsService.checkIn(loc.id).subscribe();
+    if (loc) {
+      this.mapsService.checkIn(loc.id).subscribe({
+        next: () => {
+          this.location.update(l => l ? { ...l, checkInCount: l.checkInCount + 1 } : null);
+        },
+        error: (err: any) => console.error('Error checking in:', err)
+      });
+    }
   }
 
   getTypeIcon(type: string): string {

@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QAService, QuestionListDto } from '../../../../core/services/community/qa.service';
+import { QAService } from '../../../../core/services/community/qa';
+import { QuestionListDto } from '../../../../core/interfaces/community/qa';
 import { QuestionListComponent } from '../components/question-list/question-list.component';
 import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
 
@@ -57,12 +58,12 @@ export class TagDetailComponent implements OnInit {
       tag: this.tag(),
       sortBy: this.sortBy() as any
     }).subscribe({
-      next: (result) => {
+      next: (result: any) => {
         this.questions.set(result.items);
         this.totalCount.set(result.totalCount);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to load questions for tag:', err);
         this.error.set('Failed to load questions. Please try again.');
         this.loading.set(false);

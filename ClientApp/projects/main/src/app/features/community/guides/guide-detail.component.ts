@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { GuidesService } from '../../../core/services/community/guides/guides.service';
+import { GuidesService } from '../../../core/services/community/guides';
+import { Guide } from '../../../core/interfaces/community/guides/guide.interface';
 
 @Component({
   selector: 'app-guide-detail',
@@ -31,22 +32,22 @@ import { GuidesService } from '../../../core/services/community/guides/guides.se
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
               <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                {{ guide()!.author.firstName[0] }}{{ guide()!.author.lastName[0] }}
+                {{ guide()!.authorName[0] }}
               </div>
               <div>
                 <p class="font-medium text-gray-900 dark:text-white">
-                  {{ guide()!.author.firstName }} {{ guide()!.author.lastName }}
-                  @if (guide()!.author.isVerified) { <span class="text-blue-500">✓</span> }
+                  {{ guide()!.authorName }}
+                  @if (guide()!.isVerified) { <span class="text-blue-500">✓</span> }
                 </p>
                 <p class="text-sm text-gray-500">{{ guide()!.publishedAt | date:'MMM d, yyyy' }}</p>
               </div>
             </div>
             <div class="flex gap-3">
               <button (click)="toggleLike()" class="px-4 py-2 rounded-lg border hover:bg-gray-50 dark:hover:bg-gray-700">
-                {{ guide()!.isLiked ? '❤️' : '🤍' }} {{ guide()!.likeCount }}
+                {{ guide()!.likeCount > 0 ? '❤️' : '🤍' }} {{ guide()!.likeCount }}
               </button>
               <button (click)="toggleBookmark()" class="px-4 py-2 rounded-lg border hover:bg-gray-50 dark:hover:bg-gray-700">
-                {{ guide()!.isBookmarked ? '🔖' : '📑' }} Save
+                {{ guide()!.isBookmarkedByCurrentUser ? '🔖' : '📑' }} Save
               </button>
             </div>
           </div>
@@ -115,8 +116,14 @@ export class GuideDetailComponent implements OnInit {
     const slug = this.route.snapshot.paramMap.get('slug');
     if (slug) {
       this.guidesService.getGuideBySlug(slug).subscribe({
-        next: (guide) => { this.guide.set(guide); this.loading.set(false); },
-        error: () => this.loading.set(false)
+        next: (guide: Guide) => { 
+          this.guide.set(guide); 
+          this.loading.set(false); 
+        },
+        error: (err: any) => {
+          console.error('Error loading guide:', err);
+          this.loading.set(false);
+        }
       });
     }
   }
@@ -124,20 +131,37 @@ export class GuideDetailComponent implements OnInit {
   toggleLike() {
     const g = this.guide();
     if (!g) return;
-    (g.isLiked ? this.guidesService.unlikeGuide(g.id) : this.guidesService.likeGuide(g.id)).subscribe();
+    (g.likeCount > 0 ? this.guidesService.unlikeGuide(g.id) : this.guidesService.likeGuide(g.id)).subscribe({
+      next: () => {
+        this.guide.update(guide => guide ? { 
+          ...guide, 
+          likeCount: g.likeCount > 0 ? guide.likeCount - 1 : guide.likeCount + 1 
+        } : null);
+      },
+      error: (err: any) => console.error('Error toggling like:', err)
+    });
   }
 
   toggleBookmark() {
     const g = this.guide();
     if (!g) return;
-    (g.isBookmarked ? this.guidesService.unbookmarkGuide(g.id) : this.guidesService.bookmarkGuide(g.id)).subscribe();
+    (g.isBookmarkedByCurrentUser ? this.guidesService.unbookmarkGuide(g.id) : this.guidesService.bookmarkGuide(g.id)).subscribe({
+      next: () => {
+        this.guide.update(guide => guide ? { 
+          ...guide, 
+          isBookmarkedByCurrentUser: !guide.isBookmarkedByCurrentUser 
+        } : null);
+      },
+      error: (err: any) => console.error('Error toggling bookmark:', err)
+    });
   }
 
-  getDifficultyClass(difficulty: string): string {
+  getDifficultyClass(difficulty: number | string): string {
+    const difficultyStr = typeof difficulty === 'number' ? ['Beginner', 'Intermediate', 'Advanced', 'Expert'][difficulty] : difficulty;
     const classes: Record<string, string> = {
       'Beginner': 'bg-green-100 text-green-800', 'Intermediate': 'bg-yellow-100 text-yellow-800',
       'Advanced': 'bg-orange-100 text-orange-800', 'Expert': 'bg-red-100 text-red-800'
     };
-    return classes[difficulty] || classes['Beginner'];
+    return classes[difficultyStr] || classes['Beginner'];
   }
 }

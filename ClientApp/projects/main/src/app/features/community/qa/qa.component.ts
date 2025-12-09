@@ -2,7 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { QAService, QuestionListDto, QuestionCategory, QuestionStatus } from '../../../core/services/community/qa.service';
+import { QAService } from '../../../core/services/community/qa';
+import { QuestionListDto, QuestionCategory, QuestionStatus } from '../../../core/interfaces/community/qa';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { StatsCardComponent } from '../../../shared/components';
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
@@ -170,13 +171,13 @@ export class QAComponent implements OnInit {
     }
 
     this.qaService.getQuestions(filter).subscribe({
-      next: (result) => {
+      next: (result: any) => {
         this.questions.set(result.items);
         this.totalQuestions.set(result.totalCount);
         this.updateStats(result.items);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to load questions:', err);
         this.error.set('Failed to load questions. Please check your connection and try again.');
         this.loading.set(false);
@@ -186,8 +187,8 @@ export class QAComponent implements OnInit {
 
   loadCategories() {
     this.qaService.getCategories().subscribe({
-      next: (cats) => this.categories.set(cats),
-      error: (err) => console.error('Failed to load categories:', err)
+      next: (cats: any) => this.categories.set(cats),
+      error: (err: any) => console.error('Failed to load categories:', err)
     });
   }
 

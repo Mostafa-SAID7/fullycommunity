@@ -2,10 +2,21 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ButtonComponent, CardComponent, InputComponent, BadgeComponent, AvatarComponent } from '../../../shared/ui';
-import { FriendsService, Friend, FriendRequest, FriendSuggestion } from '../../../core/services/community/friends.service';
+import { FriendsService } from '../../../core/services/community/friends';
+import { Friend, FriendRequest } from '../../../core/interfaces/community/friends';
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarMenuItem, type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
+
+export interface FriendSuggestion {
+  id: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: string;
+  userType: string;
+  mutualFriends: number;
+  reason: string;
+}
 
 export interface LoadingState {
   isLoading: boolean;
@@ -57,9 +68,11 @@ export class FriendsComponent implements OnInit {
     this.loadingState.set({ isLoading: true, error: null });
     
     // Load friends
-    this.friendsService.getFriends().subscribe({
-      next: (friends) => this.friends.set(friends),
-      error: (error) => {
+    this.friendsService.getFriends(undefined, 1, 50).subscribe({
+      next: (result: any) => {
+        this.friends.set(result.items || []);
+      },
+      error: (error: any) => {
         console.error('Error loading friends:', error);
         this.loadingState.set({ isLoading: false, error: 'Failed to load friends' });
       }
@@ -67,20 +80,30 @@ export class FriendsComponent implements OnInit {
 
     // Load friend requests
     this.friendsService.getFriendRequests().subscribe({
-      next: (requests) => this.friendRequests.set(requests),
-      error: (error) => {
+      next: (result: any) => {
+        this.friendRequests.set(result.items || []);
+      },
+      error: (error: any) => {
         console.error('Error loading friend requests:', error);
         this.loadingState.set({ isLoading: false, error: 'Failed to load friend requests' });
       }
     });
 
     // Load friend suggestions
-    this.friendsService.getFriendSuggestions().subscribe({
-      next: (suggestions) => {
-        this.friendSuggestions.set(suggestions);
+    this.friendsService.getSuggestions(10).subscribe({
+      next: (suggestions: Friend[]) => {
+        this.friendSuggestions.set(suggestions.map(s => ({
+          id: s.id,
+          firstName: s.firstName,
+          lastName: s.lastName,
+          avatarUrl: s.avatarUrl,
+          userType: s.userType,
+          mutualFriends: s.mutualFriends,
+          reason: 'Suggested for you'
+        })));
         this.loadingState.set({ isLoading: false, error: null });
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading friend suggestions:', error);
         this.loadingState.set({ isLoading: false, error: 'Failed to load friends data' });
       }
@@ -100,11 +123,11 @@ export class FriendsComponent implements OnInit {
   }
 
   acceptRequest(request: FriendRequest): void {
-    this.friendsService.acceptFriendRequest(request.requestId).subscribe({
+    this.friendsService.acceptFriendRequest(request.id).subscribe({
       next: () => {
         // Move from requests to friends
         this.friendRequests.update(requests => 
-          requests.filter(r => r.requestId !== request.requestId)
+          requests.filter(r => r.id !== request.id)
         );
         
         // Add to friends list
@@ -120,18 +143,18 @@ export class FriendsComponent implements OnInit {
         
         this.friends.update(friends => [...friends, newFriend]);
       },
-      error: (error) => console.error('Error accepting friend request:', error)
+      error: (error: any) => console.error('Error accepting friend request:', error)
     });
   }
 
   declineRequest(request: FriendRequest): void {
-    this.friendsService.declineFriendRequest(request.requestId).subscribe({
+    this.friendsService.declineFriendRequest(request.id).subscribe({
       next: () => {
         this.friendRequests.update(requests => 
-          requests.filter(r => r.requestId !== request.requestId)
+          requests.filter(r => r.id !== request.id)
         );
       },
-      error: (error) => console.error('Error declining friend request:', error)
+      error: (error: any) => console.error('Error declining friend request:', error)
     });
   }
 
@@ -143,7 +166,7 @@ export class FriendsComponent implements OnInit {
           suggestions.filter(s => s.id !== suggestion.id)
         );
       },
-      error: (error) => console.error('Error sending friend request:', error)
+      error: (error: any) => console.error('Error sending friend request:', error)
     });
   }
 
@@ -161,7 +184,7 @@ export class FriendsComponent implements OnInit {
             friends.filter(f => f.id !== friend.id)
           );
         },
-        error: (error) => console.error('Error removing friend:', error)
+        error: (error: any) => console.error('Error removing friend:', error)
       });
     }
   }
@@ -175,7 +198,7 @@ export class FriendsComponent implements OnInit {
           this.friendRequests.update(requests => requests.filter(r => r.userId !== userId));
           this.friendSuggestions.update(suggestions => suggestions.filter(s => s.id !== userId));
         },
-        error: (error) => console.error('Error blocking user:', error)
+        error: (error: any) => console.error('Error blocking user:', error)
       });
     }
   }
@@ -183,9 +206,9 @@ export class FriendsComponent implements OnInit {
   searchFriends(): void {
     const search = this.searchTerm();
     if (this.activeTab() === 'all') {
-      this.friendsService.getFriends(search).subscribe({
-        next: (friends) => this.friends.set(friends),
-        error: (error) => console.error('Error searching friends:', error)
+      this.friendsService.searchFriends(search).subscribe({
+        next: (result: any) => this.friends.set(result.items || []),
+        error: (error: any) => console.error('Error searching friends:', error)
       });
     }
   }

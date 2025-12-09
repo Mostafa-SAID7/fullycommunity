@@ -2,7 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NewsService, NewsListItem, NewsCategory } from '../../../core/services/community/news.service';
+import { NewsService } from '../../../core/services/community/news';
+import { NewsListItem, NewsCategory } from '../../../core/interfaces/community/news';
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
@@ -217,29 +218,32 @@ export class NewsComponent implements OnInit {
       searchTerm: this.searchTerm || undefined,
       sortBy: this.sortBy
     }).subscribe({
-      next: (result) => {
+      next: (result: any) => {
         this.articles.set(result.items);
         this.loading.set(false);
       },
-      error: () => this.loading.set(false)
+      error: (err: any) => this.loading.set(false)
     });
   }
 
   loadFeaturedArticles() {
     this.newsService.getFeaturedArticles(4).subscribe({
-      next: (articles) => this.featuredArticles.set(articles)
+      next: (articles: any) => this.featuredArticles.set(articles),
+      error: (err: any) => console.error(err)
     });
   }
 
   loadBreakingNews() {
     this.newsService.getBreakingNews(1).subscribe({
-      next: (articles) => this.breakingNews.set(articles)
+      next: (articles: any) => this.breakingNews.set(articles),
+      error: (err: any) => console.error(err)
     });
   }
 
   loadCategories() {
     this.newsService.getCategories().subscribe({
-      next: (categories) => this.categories.set(categories)
+      next: (categories: any) => this.categories.set(categories),
+      error: (err: any) => console.error(err)
     });
   }
 }

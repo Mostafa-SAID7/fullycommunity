@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { NewsService, NewsArticle, NewsListItem } from '../../../core/services/community/news.service';
+import { NewsService } from '../../../core/services/community/news';
+import { NewsArticle, NewsListItem } from '../../../core/interfaces/community/news';
 
 @Component({
   selector: 'app-news-detail',
@@ -132,25 +133,29 @@ export class NewsDetailComponent implements OnInit {
     const slug = this.route.snapshot.paramMap.get('slug');
     if (slug) {
       this.newsService.getArticleBySlug(slug).subscribe({
-        next: (article) => {
+        next: (article: any) => {
           this.article.set(article);
           this.loading.set(false);
           this.loadRelatedArticles(article.id);
         },
-        error: () => this.loading.set(false)
+        error: (err: any) => this.loading.set(false)
       });
     }
   }
 
   loadRelatedArticles(articleId: string) {
     this.newsService.getRelatedArticles(articleId, 3).subscribe({
-      next: (articles) => this.relatedArticles.set(articles)
+      next: (articles: any) => this.relatedArticles.set(articles),
+      error: (err: any) => console.error(err)
     });
   }
 
   toggleLike() {
     const a = this.article();
     if (!a) return;
-    (a.isLiked ? this.newsService.unlikeArticle(a.id) : this.newsService.likeArticle(a.id)).subscribe();
+    (a.isLiked ? this.newsService.unlikeArticle(a.id) : this.newsService.likeArticle(a.id)).subscribe({
+      next: () => {},
+      error: (err: any) => console.error(err)
+    });
   }
 }

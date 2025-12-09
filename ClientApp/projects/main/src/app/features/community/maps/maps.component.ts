@@ -2,7 +2,9 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MapsService, MapLocationListItem, LocationType } from '../../../core/services/community/maps.service';
+import { MapsService } from '../../../core/services/community/maps';
+import { MapLocationList } from '../../../core/interfaces/community/maps/map-location.interface';
+import { LocationType } from '../../../core/interfaces/community/maps/map.enums';
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
@@ -106,13 +108,11 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
                   <span class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
                     {{ getTypeLabel(location.type) }}
                   </span>
-                  @if (location.isOpen24Hours) {
-                    <span class="text-xs text-green-600">Open 24h</span>
-                  }
+
                 </div>
                 <h3 class="font-semibold text-gray-900 dark:text-white">{{ location.name }}</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  {{ location.address }}, {{ location.city }}
+                  {{ location.city }}
                 </p>
                 <div class="flex items-center justify-between mt-3">
                   <div class="flex items-center gap-1">
@@ -120,9 +120,7 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
                     <span class="font-medium">{{ location.averageRating.toFixed(1) }}</span>
                     <span class="text-sm text-gray-500">({{ location.reviewCount }})</span>
                   </div>
-                  @if (location.distance) {
-                    <span class="text-sm text-gray-500">{{ location.distance.toFixed(1) }} km</span>
-                  }
+
                 </div>
               </div>
             </div>
@@ -144,7 +142,7 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
 export class MapsComponent implements OnInit {
   private mapsService = inject(MapsService);
 
-  locations = signal<MapLocationListItem[]>([]);
+  locations = signal<MapLocationList[]>([]);
   loading = signal(false);
   
   selectedType = '';
@@ -189,16 +187,19 @@ export class MapsComponent implements OnInit {
   loadLocations() {
     this.loading.set(true);
     this.mapsService.getLocations({
-      type: this.selectedType as LocationType || undefined,
+      type: this.selectedType ? Number(this.selectedType) as LocationType : undefined,
       city: this.city || undefined,
       searchTerm: this.searchTerm || undefined,
       sortBy: this.sortBy
     }).subscribe({
-      next: (result) => {
+      next: (result: any) => {
         this.locations.set(result.items);
         this.loading.set(false);
       },
-      error: () => this.loading.set(false)
+      error: (err: any) => {
+        console.error('Error loading locations:', err);
+        this.loading.set(false);
+      }
     });
   }
 
@@ -207,17 +208,20 @@ export class MapsComponent implements OnInit {
       this.loading.set(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          this.mapsService.getNearbyLocations({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            radiusKm: 10,
-            type: this.selectedType as LocationType || undefined
-          }).subscribe({
-            next: (locations) => {
+          this.mapsService.getNearbyLocations(
+            position.coords.latitude,
+            position.coords.longitude,
+            10,
+            this.selectedType ? Number(this.selectedType) as LocationType : undefined
+          ).subscribe({
+            next: (locations: MapLocationList[]) => {
               this.locations.set(locations);
               this.loading.set(false);
             },
-            error: () => this.loading.set(false)
+            error: (err: any) => {
+              console.error('Error loading nearby locations:', err);
+              this.loading.set(false);
+            }
           });
         },
         () => {
@@ -230,17 +234,19 @@ export class MapsComponent implements OnInit {
     }
   }
 
-  getTypeIcon(type: LocationType): string {
+  getTypeIcon(type: LocationType | string): string {
+    const typeStr = typeof type === 'number' ? LocationType[type] : type;
     const icons: Record<string, string> = {
       'GasStation': '⛽', 'ChargingStation': '🔌', 'CarWash': '🚿', 'Garage': '🔧',
       'Dealership': '🏪', 'PartsStore': '🛒', 'ParkingLot': '🅿️', 'ScenicRoute': '🏔️',
       'MeetupSpot': '🚗', 'RaceTrack': '🏁', 'CarMuseum': '🏛️', 'DrivingSchool': '🎓',
       'InspectionCenter': '📋', 'Other': '📍'
     };
-    return icons[type] || '📍';
+    return icons[typeStr] || '📍';
   }
 
-  getTypeLabel(type: LocationType): string {
+  getTypeLabel(type: LocationType | string): string {
+    const typeStr = typeof type === 'number' ? LocationType[type] : type;
     const labels: Record<string, string> = {
       'GasStation': 'Gas Station', 'ChargingStation': 'EV Charging', 'CarWash': 'Car Wash',
       'Garage': 'Garage', 'Dealership': 'Dealership', 'PartsStore': 'Parts Store',
@@ -248,6 +254,6 @@ export class MapsComponent implements OnInit {
       'RaceTrack': 'Race Track', 'CarMuseum': 'Car Museum', 'DrivingSchool': 'Driving School',
       'InspectionCenter': 'Inspection', 'Other': 'Other'
     };
-    return labels[type] || type;
+    return labels[typeStr] || typeStr;
   }
 }

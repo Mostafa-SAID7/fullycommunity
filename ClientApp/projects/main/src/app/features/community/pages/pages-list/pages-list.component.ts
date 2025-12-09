@@ -2,7 +2,8 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { PagesService, PageListItem, PageCategory, PageFilter } from '../../../../core/services';
+import { PagesService } from '../../../../core/services/community/pages';
+import { PageListItem, PageCategory, PageFilter } from '../../../../core/interfaces/community/pages';
 
 @Component({
   selector: 'app-pages-list',
@@ -201,11 +202,11 @@ export class PagesListComponent implements OnInit {
     };
 
     this.pagesService.getPages(filter).subscribe({
-      next: (result) => {
+      next: (result: any) => {
         this.pages.set(result.items);
         this.loading.set(false);
       },
-      error: () => {
+      error: (err: any) => {
         this.loading.set(false);
       }
     });
@@ -213,14 +214,20 @@ export class PagesListComponent implements OnInit {
 
   toggleFollow(page: PageListItem) {
     if (page.isFollowing) {
-      this.pagesService.unfollowPage(page.id).subscribe(() => {
-        page.isFollowing = false;
-        page.followerCount--;
+      this.pagesService.unfollowPage(page.id).subscribe({
+        next: () => {
+          page.isFollowing = false;
+          page.followerCount--;
+        },
+        error: (err: any) => console.error(err)
       });
     } else {
-      this.pagesService.followPage(page.id).subscribe(() => {
-        page.isFollowing = true;
-        page.followerCount++;
+      this.pagesService.followPage(page.id).subscribe({
+        next: () => {
+          page.isFollowing = true;
+          page.followerCount++;
+        },
+        error: (err: any) => console.error(err)
       });
     }
   }

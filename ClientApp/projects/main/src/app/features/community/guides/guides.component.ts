@@ -2,7 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { GuidesService, GuideListItem, GuideDifficulty } from '../../../core/services/community/guides.service';
+import { GuidesService } from '../../../core/services/community/guides';
+import { GuideList, GuideDifficulty } from '../../../core/interfaces/community/guides';
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
@@ -72,10 +73,9 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
                 <div class="p-4">
                   <span class="inline-block px-2 py-1 text-xs rounded-full mb-2"
                         [class]="getDifficultyClass(guide.difficulty)">
-                    {{ guide.difficulty }}
+                    {{ getDifficultyLabel(guide.difficulty) }}
                   </span>
                   <h3 class="font-semibold text-gray-900 dark:text-white line-clamp-2">{{ guide.title }}</h3>
-                  <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">{{ guide.description }}</p>
                   <div class="flex items-center justify-between mt-3 text-sm text-gray-500">
                     <span>⏱️ {{ guide.estimatedMinutes }} min</span>
                     <span>⭐ {{ guide.averageRating.toFixed(1) }}</span>
@@ -101,19 +101,18 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
               <div class="flex items-start justify-between mb-3">
                 <span class="inline-block px-2 py-1 text-xs rounded-full"
                       [class]="getDifficultyClass(guide.difficulty)">
-                  {{ guide.difficulty }}
+                  {{ getDifficultyLabel(guide.difficulty) }}
                 </span>
                 <span class="text-sm text-gray-500">⏱️ {{ guide.estimatedMinutes }} min</span>
               </div>
               <h3 class="font-semibold text-gray-900 dark:text-white mb-2">{{ guide.title }}</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4">{{ guide.description }}</p>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                   <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm">
-                    {{ guide.author.firstName[0] }}{{ guide.author.lastName[0] }}
+                    {{ guide.authorName[0] }}
                   </div>
                   <span class="text-sm text-gray-600 dark:text-gray-400">
-                    {{ guide.author.firstName }} {{ guide.author.lastName }}
+                    {{ guide.authorName }}
                   </span>
                 </div>
                 <div class="flex items-center gap-3 text-sm text-gray-500">
@@ -140,8 +139,8 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
 export class GuidesComponent implements OnInit {
   private guidesService = inject(GuidesService);
 
-  guides = signal<GuideListItem[]>([]);
-  featuredGuides = signal<GuideListItem[]>([]);
+  guides = signal<GuideList[]>([]);
+  featuredGuides = signal<GuideList[]>([]);
   loading = signal(false);
   
   selectedDifficulty = '';
@@ -175,31 +174,41 @@ export class GuidesComponent implements OnInit {
   loadGuides() {
     this.loading.set(true);
     this.guidesService.getGuides({
-      difficulty: this.selectedDifficulty as GuideDifficulty || undefined,
+      difficulty: this.selectedDifficulty ? Number(this.selectedDifficulty) as GuideDifficulty : undefined,
       searchTerm: this.searchTerm || undefined,
       sortBy: this.sortBy
     }).subscribe({
-      next: (result) => {
+      next: (result: any) => {
         this.guides.set(result.items);
         this.loading.set(false);
       },
-      error: () => this.loading.set(false)
+      error: (err: any) => {
+        console.error('Error loading guides:', err);
+        this.loading.set(false);
+      }
     });
   }
 
   loadFeaturedGuides() {
     this.guidesService.getFeaturedGuides(3).subscribe({
-      next: (guides) => this.featuredGuides.set(guides)
+      next: (guides: GuideList[]) => this.featuredGuides.set(guides),
+      error: (err: any) => console.error('Error loading featured guides:', err)
     });
   }
 
-  getDifficultyClass(difficulty: GuideDifficulty): string {
-    const classes: Record<GuideDifficulty, string> = {
+  getDifficultyLabel(difficulty: GuideDifficulty | number): string {
+    const labels = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
+    return typeof difficulty === 'number' ? labels[difficulty] : difficulty;
+  }
+
+  getDifficultyClass(difficulty: GuideDifficulty | number): string {
+    const difficultyStr = this.getDifficultyLabel(difficulty);
+    const classes: Record<string, string> = {
       'Beginner': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
       'Intermediate': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
       'Advanced': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
       'Expert': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
     };
-    return classes[difficulty] || classes['Beginner'];
+    return classes[difficultyStr] || classes['Beginner'];
   }
 }

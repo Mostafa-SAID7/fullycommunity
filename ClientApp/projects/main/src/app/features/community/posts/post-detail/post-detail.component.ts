@@ -2,8 +2,8 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CommunityService, Post, PostComment } from '../../../core/services/community/community.service';
-import { AuthService } from '../../../core/services/auth/auth.service';
+import { CommunityService, Post, PostComment } from '../../../../core/services/community/community.service';
+import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-post-detail',

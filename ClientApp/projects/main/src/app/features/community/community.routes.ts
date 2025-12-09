@@ -12,7 +12,7 @@ export const communityRoutes: Routes = [
   },
   {
     path: 'post/:id',
-    loadComponent: () => import('./post-detail/post-detail.component').then(m => m.PostDetailComponent)
+    loadComponent: () => import('./posts/post-detail/post-detail.component').then(m => m.PostDetailComponent)
   },
   {
     path: 'groups',

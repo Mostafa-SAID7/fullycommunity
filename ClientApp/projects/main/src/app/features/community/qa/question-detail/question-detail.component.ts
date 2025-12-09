@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QAService, QuestionDto, AnswerDto } from '../../../../core/services/community/qa.service';
+import { QAService } from '../../../../core/services/community/qa';
+import { QuestionDto, AnswerDto } from '../../../../core/interfaces/community/qa';
 import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
 import { QuestionHeaderComponent } from '../components/question-header/question-header.component';
 import { AnswerListComponent } from '../components/answer-list/answer-list.component';
@@ -44,11 +45,11 @@ export class QuestionDetailComponent implements OnInit {
     this.error.set(null);
 
     this.qaService.getQuestion(id).subscribe({
-      next: (question) => {
+      next: (question: any) => {
         this.question.set(question);
         this.loadAnswers(id);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to load question:', err);
         this.error.set('Failed to load question');
         this.loading.set(false);
@@ -58,11 +59,11 @@ export class QuestionDetailComponent implements OnInit {
 
   loadAnswers(questionId: string) {
     this.qaService.getAnswers(questionId).subscribe({
-      next: (answers) => {
+      next: (answers: any) => {
         this.answers.set(answers);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to load answers:', err);
         this.loading.set(false);
       }
@@ -97,7 +98,7 @@ export class QuestionDetailComponent implements OnInit {
     const currentVote = currentQuestion.currentUserVote || 0;
 
     this.qaService.voteQuestion(currentQuestion.id, voteType).subscribe({
-      next: (result) => {
+      next: (result: any) => {
         const newUserVote = currentVote === voteType ? 0 : voteType;
         this.question.set({
           ...currentQuestion,
@@ -105,7 +106,7 @@ export class QuestionDetailComponent implements OnInit {
           currentUserVote: newUserVote
         });
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to vote on question:', err);
         if (err.status === 401) {
           this.router.navigate(['/login'], {
@@ -126,7 +127,7 @@ export class QuestionDetailComponent implements OnInit {
     const currentVote = answer.currentUserVote || 0;
 
     this.qaService.voteAnswer(event.answerId, event.voteType).subscribe({
-      next: (result) => {
+      next: (result: any) => {
         const newUserVote = currentVote === event.voteType ? 0 : event.voteType;
         const updatedAnswers = currentAnswers.map(a =>
           a.id === event.answerId
@@ -135,7 +136,7 @@ export class QuestionDetailComponent implements OnInit {
         );
         this.answers.set(updatedAnswers);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to vote on answer:', err);
         if (err.status === 401) {
           this.router.navigate(['/login'], {
