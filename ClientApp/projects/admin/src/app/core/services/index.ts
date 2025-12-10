@@ -43,3 +43,8 @@ export * from './marketplace/orders/orders-admin.service';
 
 // Services Management
 export * from './services/services-admin.service';
+
+// Unified Admin Services (Recommended)
+export * from './unified-admin';
+export * from './base';
+export * from './admin-factory.service';

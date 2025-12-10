@@ -1,0 +1,294 @@
+<!-- Role Management Component Template -->
+<div class="role-management-container">
+  <!-- Header -->
+  <div class="header-section">
+    <div class="title-area">
+      <h1>Role Management</h1>
+      <p>Manage admin roles and permissions</p>
+    </div>
+    <div class="action-area">
+      <button 
+        class="btn btn-primary" 
+        (click)="openAssignRoleModal()"
+        *hasPermission="AdminPermission.ManageRoles">
+        <i class="fas fa-user-plus"></i>
+        Assign Role
+      </button>
+      <button 
+        class="btn btn-secondary" 
+        (click)="exportUsers()">
+        <i class="fas fa-download"></i>
+        Export
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section" [formGroup]="filterForm">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label>Role</label>
+        <select formControlName="role" class="form-control">
+          <option value="">All Roles</option>
+          <option *ngFor="let role of roleDefinitions" [value]="role.role">
+            {{ role.name }}
+          </option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Search</label>
+        <input 
+          type="text" 
+          formControlName="search" 
+          class="form-control" 
+          placeholder="Search by username or email">
+      </div>
+      <div class="filter-group">
+        <label>Status</label>
+        <select formControlName="isActive" class="form-control">
+          <option value="">All</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Role Definitions Overview -->
+  <div class="role-definitions-section" *hasRole="AdminRole.SuperAdmin">
+    <h3>Role Definitions</h3>
+    <div class="role-cards">
+      <div class="role-card" *ngFor="let roleDef of roleDefinitions">
+        <div class="role-header">
+          <h4>{{ roleDef.name }}</h4>
+          <span class="role-badge" [class]="'role-' + roleDef.role">
+            {{ AdminRole[roleDef.role] }}
+          </span>
+        </div>
+        <p class="role-description">{{ roleDef.description }}</p>
+        <div class="role-permissions">
+          <h5>Permissions ({{ roleDef.permissions.length }})</h5>
+          <div class="permission-tags">
+            <span 
+              class="permission-tag" 
+              *ngFor="let permission of roleDef.permissions.slice(0, 5)">
+              {{ getPermissionDisplayName(permission) }}
+            </span>
+            <span 
+              class="permission-more" 
+              *ngIf="roleDef.permissions.length > 5">
+              +{{ roleDef.permissions.length - 5 }} more
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Users Table -->
+  <div class="users-section">
+    <h3>Admin Users</h3>
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Last Login</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of adminUsers" [class.inactive]="!user.isActive">
+            <td>
+              <div class="user-info">
+                <div class="user-avatar">
+                  {{ user.username.charAt(0).toUpperCase() }}
+                </div>
+                <div class="user-details">
+                  <div class="username">{{ user.username }}</div>
+                  <div class="email">{{ user.email }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="role-badge" [class]="'role-' + user.role">
+                {{ getRoleDisplayName(user.role) }}
+              </span>
+            </td>
+            <td>
+              <span class="status-badge" [class.active]="user.isActive" [class.inactive]="!user.isActive">
+                {{ user.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td>
+              <span *ngIf="user.lastLoginAt; else noLogin">
+                {{ user.lastLoginAt | date:'short' }}
+              </span>
+              <ng-template #noLogin>
+                <span class="text-muted">Never</span>
+              </ng-template>
+            </td>
+            <td>{{ user.createdAt | date:'short' }}</td>
+            <td>
+              <div class="action-buttons">
+                <button 
+                  class="btn btn-sm btn-outline-primary" 
+                  (click)="onViewUserDetails(user)"
+                  title="View Details">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button 
+                  class="btn btn-sm btn-outline-warning" 
+                  (click)="openAssignRoleModal(user)"
+                  *ngIf="canManageUser(user)"
+                  title="Change Role">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button 
+                  class="btn btn-sm btn-outline-danger" 
+                  (click)="onRemoveRole(user)"
+                  *ngIf="canManageUser(user) && user.role !== AdminRole.SuperAdmin"
+                  title="Remove Role">
+                  <i class="fas fa-user-minus"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="totalItems > pageSize">
+      <!-- Add pagination component here -->
+    </div>
+  </div>
+</div>
+
+<!-- Assign Role Modal -->
+<div class="modal" [class.show]="showAssignRoleModal" *ngIf="showAssignRoleModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Assign Role</h5>
+        <button type="button" class="close" (click)="closeAssignRoleModal()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="assignRoleForm" (ngSubmit)="onAssignRole()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>User ID</label>
+            <input 
+              type="text" 
+              formControlName="userId" 
+              class="form-control" 
+              readonly>
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <select formControlName="role" class="form-control">
+              <option value="">Select Role</option>
+              <option *ngFor="let role of manageableRoles" [value]="role.role">
+                {{ role.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Reason (Optional)</label>
+            <textarea 
+              formControlName="reason" 
+              class="form-control" 
+              rows="3"
+              placeholder="Reason for role assignment..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeAssignRoleModal()">
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            [disabled]="assignRoleForm.invalid || loading">
+            <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+            Assign Role
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- User Details Modal -->
+<div class="modal" [class.show]="showUserDetailsModal" *ngIf="showUserDetailsModal && selectedUser">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">User Details - {{ selectedUser.username }}</h5>
+        <button type="button" class="close" (click)="closeUserDetailsModal()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="user-details-content">
+          <div class="detail-section">
+            <h6>Basic Information</h6>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <label>Username:</label>
+                <span>{{ selectedUser.username }}</span>
+              </div>
+              <div class="detail-item">
+                <label>Email:</label>
+                <span>{{ selectedUser.email }}</span>
+              </div>
+              <div class="detail-item">
+                <label>Role:</label>
+                <span class="role-badge" [class]="'role-' + selectedUser.role">
+                  {{ getRoleDisplayName(selectedUser.role) }}
+                </span>
+              </div>
+              <div class="detail-item">
+                <label>Status:</label>
+                <span class="status-badge" [class.active]="selectedUser.isActive">
+                  {{ selectedUser.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h6>Permissions</h6>
+            <div class="permission-list">
+              <span 
+                class="permission-tag" 
+                *ngFor="let permission of selectedUser.permissions">
+                {{ getPermissionDisplayName(permission) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="detail-section" *ngIf="selectedUser.customPermissions?.length">
+            <h6>Custom Permissions</h6>
+            <div class="permission-list">
+              <span 
+                class="permission-tag custom" 
+                *ngFor="let permission of selectedUser.customPermissions">
+                {{ getPermissionDisplayName(permission) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeUserDetailsModal()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
