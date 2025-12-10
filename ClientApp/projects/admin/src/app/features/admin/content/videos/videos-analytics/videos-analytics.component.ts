@@ -2,6 +2,7 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../../environments/environment';
+import { DateUtils } from '../../../../../core/utils/date.utils';
 
 interface VideoStats {
   totalVideos: number;
@@ -106,9 +107,5 @@ export class VideosAnalyticsComponent implements OnInit {
     return num.toString();
   }
 
-  formatDuration(seconds: number): string {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  }
+  formatDuration = DateUtils.formatDuration;
 }

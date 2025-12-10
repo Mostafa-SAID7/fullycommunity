@@ -40,7 +40,7 @@ export * from './content/community/events/events-admin.interface';
 
 // Content - Media
 export * from './content/podcasts/podcast.interface';
-export * from './content/videos/videos-admin.interface';
+export * from './content/videos/video-admin.interface';
 
 // Marketplace
 export * from './marketplace/products/product-admin.interface';

@@ -188,16 +188,16 @@ import { RouterLink, RouterLinkActive, Router } from '@angular/router';
           </a>
         </div>
 
-        <!-- Configuration Section -->
+        <!-- System Section -->
         <div *ngIf="isOpen()">
-          <button (click)="toggleSection('configuration')" 
+          <button (click)="toggleSection('system')" 
                   class="w-full flex items-center justify-between text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3 hover:text-gray-600 transition-colors">
-            <span>Configuration</span>
-            <svg class="w-4 h-4 transition-transform" [class.rotate-180]="!sections.configuration()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span>System</span>
+            <svg class="w-4 h-4 transition-transform" [class.rotate-180]="!sections.system()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </button>
-          <ul class="space-y-1" [class.hidden]="!sections.configuration()">
+          <ul class="space-y-1" [class.hidden]="!sections.system()">
             <li>
               <a routerLink="settings" routerLinkActive="active"
                  class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150"
@@ -213,6 +213,118 @@ import { RouterLink, RouterLinkActive, Router } from '@angular/router';
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
                 <span class="font-medium whitespace-nowrap">System Settings</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="system-health" routerLinkActive="active"
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150"
+                 [class.bg-gradient-to-r]="isLinkActive('system-health')"
+                 [class.from-primary]="isLinkActive('system-health')"
+                 [class.to-primary-hover]="isLinkActive('system-health')"
+                 [class.text-white]="isLinkActive('system-health')"
+                 [class.shadow-md]="isLinkActive('system-health')"
+                 [class.text-gray-700]="!isLinkActive('system-health')"
+                 [class.hover:bg-gray-50]="!isLinkActive('system-health')">
+                <svg class="w-5 h-5 flex-shrink-0" [class.text-white]="isLinkActive('system-health')" [class.text-gray-500]="!isLinkActive('system-health')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+                <span class="font-medium whitespace-nowrap">System Health</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="maintenance" routerLinkActive="active"
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150"
+                 [class.bg-gradient-to-r]="isLinkActive('maintenance')"
+                 [class.from-primary]="isLinkActive('maintenance')"
+                 [class.to-primary-hover]="isLinkActive('maintenance')"
+                 [class.text-white]="isLinkActive('maintenance')"
+                 [class.shadow-md]="isLinkActive('maintenance')"
+                 [class.text-gray-700]="!isLinkActive('maintenance')"
+                 [class.hover:bg-gray-50]="!isLinkActive('maintenance')">
+                <svg class="w-5 h-5 flex-shrink-0" [class.text-white]="isLinkActive('maintenance')" [class.text-gray-500]="!isLinkActive('maintenance')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                </svg>
+                <span class="font-medium whitespace-nowrap">Maintenance</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="security" routerLinkActive="active"
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150"
+                 [class.bg-gradient-to-r]="isLinkActive('security')"
+                 [class.from-primary]="isLinkActive('security')"
+                 [class.to-primary-hover]="isLinkActive('security')"
+                 [class.text-white]="isLinkActive('security')"
+                 [class.shadow-md]="isLinkActive('security')"
+                 [class.text-gray-700]="!isLinkActive('security')"
+                 [class.hover:bg-gray-50]="!isLinkActive('security')">
+                <svg class="w-5 h-5 flex-shrink-0" [class.text-white]="isLinkActive('security')" [class.text-gray-500]="!isLinkActive('security')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                <span class="font-medium whitespace-nowrap">Security Center</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="api" routerLinkActive="active"
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150"
+                 [class.bg-gradient-to-r]="isLinkActive('api')"
+                 [class.from-primary]="isLinkActive('api')"
+                 [class.to-primary-hover]="isLinkActive('api')"
+                 [class.text-white]="isLinkActive('api')"
+                 [class.shadow-md]="isLinkActive('api')"
+                 [class.text-gray-700]="!isLinkActive('api')"
+                 [class.hover:bg-gray-50]="!isLinkActive('api')">
+                <svg class="w-5 h-5 flex-shrink-0" [class.text-white]="isLinkActive('api')" [class.text-gray-500]="!isLinkActive('api')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-11.83 1M9 7a2 2 0 012 2m4 0a6 6 0 01-11.83 1"/>
+                </svg>
+                <span class="font-medium whitespace-nowrap">API Management</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="notifications" routerLinkActive="active"
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150"
+                 [class.bg-gradient-to-r]="isLinkActive('notifications')"
+                 [class.from-primary]="isLinkActive('notifications')"
+                 [class.to-primary-hover]="isLinkActive('notifications')"
+                 [class.text-white]="isLinkActive('notifications')"
+                 [class.shadow-md]="isLinkActive('notifications')"
+                 [class.text-gray-700]="!isLinkActive('notifications')"
+                 [class.hover:bg-gray-50]="!isLinkActive('notifications')">
+                <svg class="w-5 h-5 flex-shrink-0" [class.text-white]="isLinkActive('notifications')" [class.text-gray-500]="!isLinkActive('notifications')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5z"/>
+                </svg>
+                <span class="font-medium whitespace-nowrap">Notifications</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="activity-log" routerLinkActive="active"
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150"
+                 [class.bg-gradient-to-r]="isLinkActive('activity-log')"
+                 [class.from-primary]="isLinkActive('activity-log')"
+                 [class.to-primary-hover]="isLinkActive('activity-log')"
+                 [class.text-white]="isLinkActive('activity-log')"
+                 [class.shadow-md]="isLinkActive('activity-log')"
+                 [class.text-gray-700]="!isLinkActive('activity-log')"
+                 [class.hover:bg-gray-50]="!isLinkActive('activity-log')">
+                <svg class="w-5 h-5 flex-shrink-0" [class.text-white]="isLinkActive('activity-log')" [class.text-gray-500]="!isLinkActive('activity-log')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                <span class="font-medium whitespace-nowrap">Activity Log</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="localization" routerLinkActive="active"
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150"
+                 [class.bg-gradient-to-r]="isLinkActive('localization')"
+                 [class.from-primary]="isLinkActive('localization')"
+                 [class.to-primary-hover]="isLinkActive('localization')"
+                 [class.text-white]="isLinkActive('localization')"
+                 [class.shadow-md]="isLinkActive('localization')"
+                 [class.text-gray-700]="!isLinkActive('localization')"
+                 [class.hover:bg-gray-50]="!isLinkActive('localization')">
+                <svg class="w-5 h-5 flex-shrink-0" [class.text-white]="isLinkActive('localization')" [class.text-gray-500]="!isLinkActive('localization')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+                </svg>
+                <span class="font-medium whitespace-nowrap">Localization</span>
               </a>
             </li>
           </ul>
@@ -236,6 +348,44 @@ import { RouterLink, RouterLinkActive, Router } from '@angular/router';
           </a>
         </div>
 
+        </div>
+
+        <!-- Help Section -->
+        <div *ngIf="isOpen()" class="mt-4">
+          <div class="px-3 mb-3">
+            <div class="border-t border-gray-200"></div>
+          </div>
+          <a routerLink="help" routerLinkActive="active"
+             class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150"
+             [class.bg-gradient-to-r]="isLinkActive('help')"
+             [class.from-primary]="isLinkActive('help')"
+             [class.to-primary-hover]="isLinkActive('help')"
+             [class.text-white]="isLinkActive('help')"
+             [class.shadow-md]="isLinkActive('help')"
+             [class.text-gray-700]="!isLinkActive('help')"
+             [class.hover:bg-gray-50]="!isLinkActive('help')">
+            <svg class="w-5 h-5 flex-shrink-0" [class.text-white]="isLinkActive('help')" [class.text-gray-500]="!isLinkActive('help')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span class="font-medium whitespace-nowrap">Help & Support</span>
+          </a>
+        </div>
+
+        <!-- Icon-only Help when closed -->
+        <div *ngIf="!isOpen()" class="mt-4 pt-4 border-t border-gray-200">
+          <a routerLink="help" routerLinkActive="active" title="Help & Support"
+             class="flex items-center justify-center px-2 py-3 rounded-lg transition-colors duration-150"
+             [class.bg-gradient-to-r]="isLinkActive('help')"
+             [class.from-primary]="isLinkActive('help')"
+             [class.to-primary-hover]="isLinkActive('help')"
+             [class.text-white]="isLinkActive('help')"
+             [class.shadow-md]="isLinkActive('help')"
+             [class.text-gray-700]="!isLinkActive('help')"
+             [class.hover:bg-gray-50]="!isLinkActive('help')">
+            <svg class="w-8 h-8" [class.text-white]="isLinkActive('help')" [class.text-gray-500]="!isLinkActive('help')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </a>
         </div>
 
         <!-- My Profile at bottom - Fixed -->
@@ -273,7 +423,7 @@ export class AdminSidebarComponent {
   sections = {
     management: signal(true),
     analytics: signal(true),
-    configuration: signal(true)
+    system: signal(true)
   };
 
   constructor(router: Router) {

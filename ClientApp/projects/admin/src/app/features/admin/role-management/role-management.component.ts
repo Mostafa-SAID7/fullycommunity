@@ -4,7 +4,8 @@
  */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { AdminRBACService } from '../../../core/services/rbac/admin-rbac.service';
@@ -18,6 +19,8 @@ import {
 
 @Component({
   selector: 'app-role-management',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './role-management.component.html',
   styleUrls: ['./role-management.component.scss']
 })
@@ -222,5 +225,9 @@ export class RoleManagementComponent implements OnInit, OnDestroy {
 
   get isSuperAdmin(): boolean {
     return this.rbacService.isSuperAdmin;
+  }
+
+  getSelectedUserRoleDisplayName(): string {
+    return this.selectedUser?.role ? this.getRoleDisplayName(this.selectedUser.role) : '';
   }
 }

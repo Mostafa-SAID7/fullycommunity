@@ -35,7 +35,7 @@ export * from './content/community/events/events-admin.service';
 
 // Content - Media
 export * from './content/podcasts/podcast.service';
-export * from './content/videos/videos-admin.service';
+export * from './content/videos/video-admin.service';
 
 // Marketplace Services
 export * from './marketplace/products/products-admin.service';

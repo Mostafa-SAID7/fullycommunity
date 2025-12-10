@@ -1,0 +1,199 @@
+// =============================================================================
+// Refresh Button Component Styles
+// =============================================================================
+
+@import '../../styles/component-mixins';
+
+:host {
+  display: inline-block;
+}
+
+// Enhanced refresh button styles - inherits from main button component
+:host {
+  .btn {
+    position: relative;
+    overflow: hidden;
+    
+    // Ripple effect on click
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width $transition-base, height $transition-base;
+      pointer-events: none;
+    }
+    
+    &:active::before {
+      width: 100px;
+      height: 100px;
+    }
+    
+    // Loading state
+    &.loading {
+      color: transparent;
+      
+      .refresh-icon {
+        animation: spin 1s linear infinite;
+      }
+    }
+    
+    // Success state animation
+    &.success-state {
+      animation: successPulse 0.6s ease-out;
+    }
+    
+    // Error state animation
+    &.error-state {
+      animation: errorShake 0.5s ease-in-out;
+    }
+    
+    // Icon styling
+    .refresh-icon {
+      width: $icon-sm;
+      height: $icon-sm;
+      transition: transform $transition-base;
+      
+      &.rotate-effect {
+        transition: transform $transition-slow;
+      }
+    }
+    
+    // Text styling
+    .refresh-text {
+      font-weight: $font-weight-medium;
+      margin-left: $spacing-2;
+    }
+    
+    // Hover effects
+    &:hover:not(:disabled) {
+      .refresh-icon.rotate-effect {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
+
+// Status indicator styles
+.status-indicator {
+  position: absolute;
+  top: -$spacing-1;
+  right: -$spacing-1;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: $border-radius-full;
+  
+  &.success {
+    @include status-indicator('success');
+  }
+  
+  &.error {
+    @include status-indicator('error');
+  }
+  
+  &.warning {
+    @include status-indicator('warning');
+  }
+}
+
+// Tooltip styles
+.refresh-tooltip {
+  position: absolute;
+  bottom: calc(100% + #{$spacing-2});
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: $text-inverse;
+  padding: $spacing-1 $spacing-2;
+  border-radius: $border-radius-sm;
+  font-size: $font-size-xs;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity $transition-fast;
+  z-index: $z-index-tooltip;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+  }
+}
+
+.refresh-button:hover .refresh-tooltip {
+  opacity: 1;
+}
+
+// Responsive design
+@include respond-below('sm') {
+  .refresh-button.responsive {
+    padding: $spacing-2;
+    
+    .refresh-text {
+      display: none;
+    }
+    
+    .refresh-icon {
+      margin: 0;
+    }
+  }
+}
+
+// Dark mode support
+@include dark-mode {
+  .refresh-tooltip {
+    background: rgba(255, 255, 255, 0.9);
+    color: $dark-bg-primary;
+    
+    &::after {
+      border-top-color: rgba(255, 255, 255, 0.9);
+    }
+  }
+}
+
+// High contrast mode
+@include high-contrast {
+  .refresh-button {
+    border: 2px solid currentColor;
+  }
+}
+
+// Reduced motion support
+@include reduced-motion {
+  .refresh-button {
+    &::before {
+      transition: none;
+    }
+    
+    .refresh-icon {
+      transition: none;
+      
+      &.rotate-effect {
+        transition: none;
+      }
+    }
+    
+    &.primary {
+      animation: none;
+      background: $color-primary;
+    }
+    
+    &.loading .refresh-icon {
+      animation: none;
+    }
+    
+    &.success-state,
+    &.error-state {
+      animation: none;
+    }
+  }
+}

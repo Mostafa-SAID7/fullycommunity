@@ -1,351 +1,324 @@
-<div class="p-6 pt-12 space-y-6">
-  <!-- Page Header -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<div class="p-6 space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">System Settings</h1>
-      <p class="text-sm text-gray-600 mt-1">Configure platform settings and preferences</p>
+      <p class="text-gray-600 mt-1">Configure system-wide settings and preferences</p>
     </div>
+    <button (click)="loadSettings()" 
+            [disabled]="loading()"
+            class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50">
+      <svg class="w-4 h-4" [class.animate-spin]="loading()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+      </svg>
+    </button>
   </div>
 
-  <!-- Tabs using tab-navigation component -->
+  <!-- Success/Error Messages -->
+  <div *ngIf="successMessage" class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Tabs -->
   <app-tab-navigation
     [tabs]="tabs"
     [activeTabId]="activeTab"
     (tabChange)="setTab($event)">
   </app-tab-navigation>
 
-  <!-- Success/Error Messages -->
-  <div *ngIf="successMessage" class="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
-    <span class="text-green-600 text-xl">✓</span>
-    <span class="text-green-800 font-medium">{{ successMessage }}</span>
-  </div>
-  <div *ngIf="errorMessage" class="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3">
-    <span class="text-red-600 text-xl">✕</span>
-    <span class="text-red-800 font-medium">{{ errorMessage }}</span>
-  </div>
-
-  <!-- Loading -->
-  <div *ngIf="loading()" class="flex items-center justify-center py-12">
-    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-  </div>
-
   <!-- General Settings -->
-  <div *ngIf="!loading() && activeTab === 'general' && siteSettings()">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="p-6 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">Site Information</h2>
-        <p class="text-sm text-gray-600 mt-1">Basic site configuration</p>
-      </div>
-      <div class="p-6 space-y-4">
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700">Site Name</label>
-          <input 
-            type="text" 
-            [(ngModel)]="siteSettings()!.siteName"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
+  <div *ngIf="activeTab === 'general' && siteSettings()" class="bg-white rounded-lg border border-gray-200 p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-6">General Settings</h2>
+    <form (ngSubmit)="saveSiteSettings()" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Site Name</label>
+          <input type="text" 
+                 [(ngModel)]="siteSettings()!.siteName"
+                 name="siteName"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
         </div>
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700">Site Description</label>
-          <textarea 
-            [(ngModel)]="siteSettings()!.siteDescription"
-            rows="3"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"></textarea>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-700">Default Language</label>
-            <select 
-              [(ngModel)]="siteSettings()!.defaultLanguage"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
-              <option value="en">English</option>
-              <option value="ar">Arabic</option>
-              <option value="fr">French</option>
-              <option value="de">German</option>
-            </select>
-          </div>
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-700">Max Upload Size (MB)</label>
-            <input 
-              type="number" 
-              [(ngModel)]="siteSettings()!.maxUploadSizeMb"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
-          </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Site URL</label>
+          <input type="url" 
+                 [(ngModel)]="siteSettings()!.siteUrl"
+                 name="siteUrl"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
         </div>
       </div>
-    </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
-      <div class="p-6 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">Feature Toggles</h2>
-        <p class="text-sm text-gray-600 mt-1">Enable or disable platform features</p>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Site Description</label>
+        <textarea [(ngModel)]="siteSettings()!.siteDescription"
+                  name="siteDescription"
+                  rows="3"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"></textarea>
       </div>
-      <div class="p-6 space-y-4">
-        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-          <div class="flex-1">
-            <div class="font-medium text-gray-900">Maintenance Mode</div>
-            <div class="text-sm text-gray-500">Temporarily disable the site for maintenance</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              [(ngModel)]="siteSettings()!.maintenanceMode"
-              class="sr-only peer" />
-            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-          </label>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Admin Email</label>
+          <input type="email" 
+                 [(ngModel)]="siteSettings()!.adminEmail"
+                 name="adminEmail"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
         </div>
-        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-          <div class="flex-1">
-            <div class="font-medium text-gray-900">User Registration</div>
-            <div class="text-sm text-gray-500">Allow new users to register</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              [(ngModel)]="siteSettings()!.registrationEnabled"
-              class="sr-only peer" />
-            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-          </label>
-        </div>
-        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-          <div class="flex-1">
-            <div class="font-medium text-gray-900">Email Verification Required</div>
-            <div class="text-sm text-gray-500">Require email verification for new accounts</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              [(ngModel)]="siteSettings()!.emailVerificationRequired"
-              class="sr-only peer" />
-            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-          </label>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Support Email</label>
+          <input type="email" 
+                 [(ngModel)]="siteSettings()!.supportEmail"
+                 name="supportEmail"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
         </div>
       </div>
-      <div class="p-6 bg-gray-50 border-t border-gray-200 flex justify-end">
-        <button 
-          (click)="saveSiteSettings()"
-          class="px-6 py-2 bg-gradient-to-r from-primary to-primary-hover text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium">
-          Save Changes
+
+      <div class="flex items-center gap-4">
+        <label class="flex items-center">
+          <input type="checkbox" 
+                 [(ngModel)]="siteSettings()!.maintenanceMode"
+                 name="maintenanceMode"
+                 class="rounded border-gray-300 text-primary focus:ring-primary">
+          <span class="ml-2 text-sm font-medium text-gray-700">Maintenance Mode</span>
+        </label>
+        <label class="flex items-center">
+          <input type="checkbox" 
+                 [(ngModel)]="siteSettings()!.registrationEnabled"
+                 name="registrationEnabled"
+                 class="rounded border-gray-300 text-primary focus:ring-primary">
+          <span class="ml-2 text-sm font-medium text-gray-700">Allow User Registration</span>
+        </label>
+      </div>
+
+      <div class="pt-4 border-t border-gray-200">
+        <button type="submit" 
+                class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors">
+          Save General Settings
         </button>
       </div>
-    </div>
+    </form>
   </div>
 
   <!-- Email Settings -->
-  <div *ngIf="!loading() && activeTab === 'email' && emailSettings()">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="p-6 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">SMTP Configuration</h2>
-        <p class="text-sm text-gray-600 mt-1">Configure email server settings</p>
-      </div>
-      <div class="p-6 space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-700">SMTP Host</label>
-            <input 
-              type="text" 
-              [(ngModel)]="emailSettings()!.smtpHost" 
-              placeholder="smtp.example.com"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
-          </div>
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-700">SMTP Port</label>
-            <input 
-              type="number" 
-              [(ngModel)]="emailSettings()!.smtpPort"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
-          </div>
+  <div *ngIf="activeTab === 'email' && emailSettings()" class="bg-white rounded-lg border border-gray-200 p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-6">Email Settings</h2>
+    <form (ngSubmit)="saveEmailSettings()" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">SMTP Host</label>
+          <input type="text" 
+                 [(ngModel)]="emailSettings()!.smtpHost"
+                 name="smtpHost"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
         </div>
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700">SMTP Username</label>
-          <input 
-            type="text" 
-            [(ngModel)]="emailSettings()!.smtpUsername"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-700">Sender Email</label>
-            <input 
-              type="email" 
-              [(ngModel)]="emailSettings()!.senderEmail"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
-          </div>
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-700">Sender Name</label>
-            <input 
-              type="text" 
-              [(ngModel)]="emailSettings()!.senderName"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
-          </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">SMTP Port</label>
+          <input type="number" 
+                 [(ngModel)]="emailSettings()!.smtpPort"
+                 name="smtpPort"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
         </div>
       </div>
-      <div class="p-6 bg-gray-50 border-t border-gray-200 flex justify-end gap-3">
-        <button 
-          (click)="testEmailConnection()"
-          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">SMTP Username</label>
+          <input type="text" 
+                 [(ngModel)]="emailSettings()!.smtpUsername"
+                 name="smtpUsername"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">SMTP Password</label>
+          <input type="password" 
+                 [(ngModel)]="emailSettings()!.smtpPassword"
+                 name="smtpPassword"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">From Email</label>
+          <input type="email" 
+                 [(ngModel)]="emailSettings()!.fromEmail"
+                 name="fromEmail"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">From Name</label>
+          <input type="text" 
+                 [(ngModel)]="emailSettings()!.fromName"
+                 name="fromName"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <label class="flex items-center">
+          <input type="checkbox" 
+                 [(ngModel)]="emailSettings()!.enableSsl"
+                 name="enableSsl"
+                 class="rounded border-gray-300 text-primary focus:ring-primary">
+          <span class="ml-2 text-sm font-medium text-gray-700">Enable SSL</span>
+        </label>
+        <label class="flex items-center">
+          <input type="checkbox" 
+                 [(ngModel)]="emailSettings()!.enableTls"
+                 name="enableTls"
+                 class="rounded border-gray-300 text-primary focus:ring-primary">
+          <span class="ml-2 text-sm font-medium text-gray-700">Enable TLS</span>
+        </label>
+      </div>
+
+      <div class="pt-4 border-t border-gray-200 flex items-center gap-4">
+        <button type="submit" 
+                class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors">
+          Save Email Settings
+        </button>
+        <button type="button" 
+                (click)="testEmailConnection()"
+                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
           Test Connection
         </button>
-        <button 
-          (click)="saveEmailSettings()"
-          class="px-6 py-2 bg-gradient-to-r from-primary to-primary-hover text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium">
-          Save Changes
-        </button>
       </div>
-    </div>
+    </form>
   </div>
 
   <!-- Security Settings -->
-  <div *ngIf="!loading() && activeTab === 'security' && securitySettings()">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="p-6 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">Login Security</h2>
-        <p class="text-sm text-gray-600 mt-1">Configure login and session settings</p>
-      </div>
-      <div class="p-6 space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-700">Max Login Attempts</label>
-            <input 
-              type="number" 
-              [(ngModel)]="securitySettings()!.maxLoginAttempts"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
-            <span class="text-xs text-gray-500">Number of failed attempts before lockout</span>
-          </div>
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-700">Lockout Duration (minutes)</label>
-            <input 
-              type="number" 
-              [(ngModel)]="securitySettings()!.lockoutDurationMinutes"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
-          </div>
+  <div *ngIf="activeTab === 'security' && securitySettings()" class="bg-white rounded-lg border border-gray-200 p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-6">Security Settings</h2>
+    <form (ngSubmit)="saveSecuritySettings()" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Session Timeout (minutes)</label>
+          <input type="number" 
+                 [(ngModel)]="securitySettings()!.sessionTimeout"
+                 name="sessionTimeout"
+                 min="5" max="480"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
         </div>
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700">Session Timeout (minutes)</label>
-          <input 
-            type="number" 
-            [(ngModel)]="securitySettings()!.sessionTimeoutMinutes"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Max Login Attempts</label>
+          <input type="number" 
+                 [(ngModel)]="securitySettings()!.maxLoginAttempts"
+                 name="maxLoginAttempts"
+                 min="3" max="10"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
         </div>
       </div>
-    </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
-      <div class="p-6 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">Password Policy</h2>
-        <p class="text-sm text-gray-600 mt-1">Configure password requirements</p>
-      </div>
-      <div class="p-6 space-y-4">
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-700">Minimum Password Length</label>
-          <input 
-            type="number" 
-            [(ngModel)]="securitySettings()!.passwordMinLength"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Password Min Length</label>
+          <input type="number" 
+                 [(ngModel)]="securitySettings()!.passwordMinLength"
+                 name="passwordMinLength"
+                 min="6" max="20"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
         </div>
-        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-          <div class="flex-1">
-            <div class="font-medium text-gray-900">Require Uppercase</div>
-            <div class="text-sm text-gray-500">Password must contain uppercase letters</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              [(ngModel)]="securitySettings()!.requireUppercase"
-              class="sr-only peer" />
-            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-          </label>
-        </div>
-        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-          <div class="flex-1">
-            <div class="font-medium text-gray-900">Require Numbers</div>
-            <div class="text-sm text-gray-500">Password must contain numbers</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              [(ngModel)]="securitySettings()!.requireNumbers"
-              class="sr-only peer" />
-            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-          </label>
-        </div>
-        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-          <div class="flex-1">
-            <div class="font-medium text-gray-900">Require Special Characters</div>
-            <div class="text-sm text-gray-500">Password must contain special characters</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              [(ngModel)]="securitySettings()!.requireSpecialChars"
-              class="sr-only peer" />
-            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-          </label>
-        </div>
-        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-          <div class="flex-1">
-            <div class="font-medium text-gray-900">Two-Factor Authentication</div>
-            <div class="text-sm text-gray-500">Enable 2FA for all users</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              [(ngModel)]="securitySettings()!.twoFactorEnabled"
-              class="sr-only peer" />
-            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-          </label>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Account Lockout Duration (minutes)</label>
+          <input type="number" 
+                 [(ngModel)]="securitySettings()!.accountLockoutDuration"
+                 name="accountLockoutDuration"
+                 min="5" max="1440"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
         </div>
       </div>
-      <div class="p-6 bg-gray-50 border-t border-gray-200 flex justify-end">
-        <button 
-          (click)="saveSecuritySettings()"
-          class="px-6 py-2 bg-gradient-to-r from-primary to-primary-hover text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium">
-          Save Changes
+
+      <div class="space-y-4">
+        <label class="flex items-center">
+          <input type="checkbox" 
+                 [(ngModel)]="securitySettings()!.requireTwoFactor"
+                 name="requireTwoFactor"
+                 class="rounded border-gray-300 text-primary focus:ring-primary">
+          <span class="ml-2 text-sm font-medium text-gray-700">Require Two-Factor Authentication</span>
+        </label>
+        <label class="flex items-center">
+          <input type="checkbox" 
+                 [(ngModel)]="securitySettings()!.requirePasswordComplexity"
+                 name="requirePasswordComplexity"
+                 class="rounded border-gray-300 text-primary focus:ring-primary">
+          <span class="ml-2 text-sm font-medium text-gray-700">Require Password Complexity</span>
+        </label>
+        <label class="flex items-center">
+          <input type="checkbox" 
+                 [(ngModel)]="securitySettings()!.enableIpWhitelist"
+                 name="enableIpWhitelist"
+                 class="rounded border-gray-300 text-primary focus:ring-primary">
+          <span class="ml-2 text-sm font-medium text-gray-700">Enable IP Whitelist</span>
+        </label>
+        <label class="flex items-center">
+          <input type="checkbox" 
+                 [(ngModel)]="securitySettings()!.logSecurityEvents"
+                 name="logSecurityEvents"
+                 class="rounded border-gray-300 text-primary focus:ring-primary">
+          <span class="ml-2 text-sm font-medium text-gray-700">Log Security Events</span>
+        </label>
+      </div>
+
+      <div class="pt-4 border-t border-gray-200">
+        <button type="submit" 
+                class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors">
+          Save Security Settings
         </button>
       </div>
-    </div>
+    </form>
   </div>
 
-  <!-- System Settings -->
-  <div *ngIf="!loading() && activeTab === 'system'">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="p-6 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">System Information</h2>
-        <p class="text-sm text-gray-600 mt-1">Current system status and information</p>
+  <!-- System Information -->
+  <div *ngIf="activeTab === 'system' && systemInfo()" class="bg-white rounded-lg border border-gray-200 p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-6">System Information</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div class="bg-gray-50 rounded-lg p-4">
+        <h3 class="text-sm font-medium text-gray-700 mb-2">Application Version</h3>
+        <p class="text-lg font-semibold text-gray-900">{{ systemInfo()!.version }}</p>
       </div>
-      <div class="p-6">
-        <div *ngIf="systemInfo()" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-gray-50 rounded-lg p-4">
-            <div class="text-sm text-gray-600 mb-1">Version</div>
-            <div class="text-lg font-semibold text-gray-900">{{ systemInfo()!.version }}</div>
-          </div>
-          <div class="bg-gray-50 rounded-lg p-4">
-            <div class="text-sm text-gray-600 mb-1">Environment</div>
-            <div class="text-lg font-semibold text-gray-900">{{ systemInfo()!.environment }}</div>
-          </div>
-          <div class="bg-gray-50 rounded-lg p-4">
-            <div class="text-sm text-gray-600 mb-1">Uptime</div>
-            <div class="text-lg font-semibold text-gray-900">{{ systemInfo()!.uptime }}</div>
-          </div>
-        </div>
+      <div class="bg-gray-50 rounded-lg p-4">
+        <h3 class="text-sm font-medium text-gray-700 mb-2">Environment</h3>
+        <p class="text-lg font-semibold text-gray-900">{{ systemInfo()!.environment }}</p>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-4">
+        <h3 class="text-sm font-medium text-gray-700 mb-2">System Uptime</h3>
+        <p class="text-lg font-semibold text-gray-900">{{ systemInfo()!.uptime }}</p>
       </div>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
-      <div class="p-6 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">Maintenance Actions</h2>
-        <p class="text-sm text-gray-600 mt-1">System maintenance operations</p>
-      </div>
-      <div class="p-6">
-        <div class="flex items-center justify-between py-3">
-          <div class="flex-1">
-            <div class="font-medium text-gray-900">Clear Cache</div>
-            <div class="text-sm text-gray-500">Clear all cached data</div>
+    <div class="space-y-4">
+      <h3 class="text-lg font-semibold text-gray-900">System Actions</h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <button (click)="clearCache()" 
+                class="p-4 border border-gray-300 rounded-lg text-left hover:bg-gray-50 transition-colors">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-100 rounded-lg">
+              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900">Clear Cache</h4>
+              <p class="text-sm text-gray-600">Clear all cached data to improve performance</p>
+            </div>
           </div>
-          <button 
-            (click)="clearCache()"
-            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium">
-            Clear Cache
-          </button>
+        </button>
+
+        <div class="p-4 border border-gray-300 rounded-lg">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-green-100 rounded-lg">
+              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-900">System Health</h4>
+              <p class="text-sm text-gray-600">All systems operational</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

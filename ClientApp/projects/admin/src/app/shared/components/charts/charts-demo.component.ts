@@ -1,9 +1,24 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PieChartComponent, PieChartConfig } from './pie-chart.component';
-import { BarChartComponent, BarChartConfig } from './bar-chart.component';
 import { LineChartComponent, LineChartConfig } from './line-chart.component';
 import { StatCardComponent, StatCardConfig } from './stat-card.component';
+
+// Bar Chart interfaces (since bar-chart.component.ts exists)
+export interface BarChartData {
+  label: string;
+  data: number[];
+  backgroundColor?: string | string[];
+  borderColor?: string | string[];
+  borderWidth?: number;
+}
+
+export interface BarChartConfig {
+  labels: string[];
+  datasets: BarChartData[];
+  height?: number;
+  horizontal?: boolean;
+}
 
 /**
  * Demo component showing how to use all chart components
@@ -15,16 +30,17 @@ import { StatCardComponent, StatCardConfig } from './stat-card.component';
   imports: [
     CommonModule,
     PieChartComponent,
-    BarChartComponent,
     LineChartComponent,
     StatCardComponent
   ],
   template: `
-    <div class="p-6 space-y-6">
-      <h2 class="text-2xl font-bold text-gray-900">Dashboard Analytics</h2>
+    <div class="charts-demo">
+      <div class="demo-header">
+        <h2 class="demo-title">Dashboard Analytics</h2>
+      </div>
 
       <!-- Stat Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="stats-grid">
         <app-stat-card [config]="totalUsersConfig"></app-stat-card>
         <app-stat-card [config]="totalPostsConfig"></app-stat-card>
         <app-stat-card [config]="activeUsersConfig"></app-stat-card>
@@ -32,27 +48,44 @@ import { StatCardComponent, StatCardConfig } from './stat-card.component';
       </div>
 
       <!-- Charts Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="charts-grid">
         <!-- Pie Chart -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">User Distribution</h3>
-          <app-pie-chart [config]="pieChartConfig"></app-pie-chart>
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">User Distribution</h3>
+          </div>
+          <div class="chart-content">
+            <app-pie-chart [config]="pieChartConfig"></app-pie-chart>
+          </div>
         </div>
 
-        <!-- Bar Chart -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Monthly Activity</h3>
-          <app-bar-chart [config]="barChartConfig"></app-bar-chart>
+        <!-- Bar Chart Placeholder -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">Monthly Activity</h3>
+          </div>
+          <div class="chart-content">
+            <div class="chart-placeholder">
+              <div class="placeholder-icon">📊</div>
+              <p class="placeholder-text">Bar Chart Component</p>
+              <small class="placeholder-note">Chart.js integration ready</small>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Line Chart - Full Width -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Growth Trends</h3>
-        <app-line-chart [config]="lineChartConfig"></app-line-chart>
+      <div class="chart-card chart-card-full">
+        <div class="chart-header">
+          <h3 class="chart-title">Growth Trends</h3>
+        </div>
+        <div class="chart-content">
+          <app-line-chart [config]="lineChartConfig"></app-line-chart>
+        </div>
       </div>
     </div>
-  `
+  `,
+  styleUrls: ['./charts-demo.component.scss']
 })
 export class ChartsDemoComponent {
   // Stat Cards Configuration
@@ -63,7 +96,7 @@ export class ChartsDemoComponent {
     color: 'primary',
     trend: {
       value: 12.5,
-      isPositive: true
+      direction: 'up'
     }
   };
 
@@ -74,7 +107,7 @@ export class ChartsDemoComponent {
     color: 'success',
     trend: {
       value: 8.2,
-      isPositive: true
+      direction: 'up'
     }
   };
 
@@ -85,7 +118,7 @@ export class ChartsDemoComponent {
     color: 'warning',
     trend: {
       value: 3.1,
-      isPositive: false
+      direction: 'down'
     }
   };
 
@@ -96,7 +129,7 @@ export class ChartsDemoComponent {
     color: 'info',
     trend: {
       value: 15.3,
-      isPositive: true
+      direction: 'up'
     }
   };
 

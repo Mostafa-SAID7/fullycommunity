@@ -1,25 +1,18 @@
-export type ModerationStatus = 'pending' | 'approved' | 'rejected' | 'dismissed';
-export type ModerationPriority = 'low' | 'normal' | 'high' | 'urgent';
-
 export interface ModerationItem {
   id: string;
   contentId: string;
-  contentType: string;
+  contentType: 'post' | 'comment' | 'review' | 'video' | 'guide';
   contentTitle: string;
+  contentPreview: string;
   reportReason: string;
-  reportedBy: string;
-  reportedAt: string;
-  status: ModerationStatus;
-  priority: ModerationPriority;
+  reporterId: string;
+  reporterName: string;
+  reportedAt: Date;
+  priority: 'low' | 'normal' | 'high' | 'urgent';
+  status: 'pending' | 'approved' | 'rejected' | 'dismissed';
   moderatorId?: string;
-  moderatedAt?: string;
   moderatorNotes?: string;
-}
-
-export interface ModerationListResponse {
-  items: ModerationItem[];
-  totalCount: number;
-  pendingCount: number;
+  resolvedAt?: Date;
 }
 
 export interface ModerationStats {
@@ -27,14 +20,19 @@ export interface ModerationStats {
   resolvedToday: number;
   resolvedThisWeek: number;
   totalReports: number;
+  averageResolutionTime: number;
 }
 
-export interface ModerationActionRequest {
-  notes?: string;
+export interface ModerationResponse {
+  items: ModerationItem[];
+  totalCount: number;
+  totalPages: number;
+}
+
+export interface ModerationAction {
+  itemId: string;
+  action: 'approve' | 'reject' | 'dismiss' | 'ban';
   reason?: string;
-}
-
-export interface BanUserRequest {
-  reason: string;
+  notes?: string;
   durationDays?: number;
 }

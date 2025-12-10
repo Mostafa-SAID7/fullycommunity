@@ -1,0 +1,295 @@
+// =============================================================================
+// Login Component Styles
+// =============================================================================
+
+@import '../../../shared/styles/component-mixins';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100vh;
+}
+
+// Main Container
+// -----------------------------------------------------------------------------
+
+.login-container {
+  min-height: 100vh;
+  @include flex-center;
+  padding: $spacing-4;
+  background: linear-gradient(135deg, 
+    rgba($neutral-50, 1) 0%, 
+    rgba($primary-50, 0.3) 30%, 
+    rgba($indigo-50, 0.3) 100%
+  );
+  position: relative;
+  overflow: hidden;
+  
+  @include respond-to('sm') {
+    padding: $spacing-6;
+  }
+  
+  @include respond-to('lg') {
+    padding: $spacing-8;
+  }
+}
+
+// Animated Background Elements
+// -----------------------------------------------------------------------------
+
+.background-elements {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  
+  .bg-element {
+    position: absolute;
+    border-radius: $border-radius-full;
+    filter: blur(3rem);
+    animation: pulse 4s ease-in-out infinite;
+    
+    &.element-1 {
+      top: 5rem;
+      left: 2.5rem;
+      width: 18rem;
+      height: 18rem;
+      background-color: rgba($color-primary, 0.05);
+    }
+    
+    &.element-2 {
+      bottom: 5rem;
+      right: 2.5rem;
+      width: 24rem;
+      height: 24rem;
+      background-color: rgba($indigo-500, 0.05);
+      animation-delay: 1s;
+    }
+  }
+}
+
+// Login Card
+// -----------------------------------------------------------------------------
+
+.login-card-wrapper {
+  width: 100%;
+  max-width: 28rem;
+  
+  @include respond-to('lg') {
+    max-width: 32rem;
+  }
+}
+
+.login-card {
+  position: relative;
+  background: rgba($bg-primary, 0.8);
+  backdrop-filter: blur(16px);
+  border-radius: $border-radius-3xl;
+  box-shadow: $shadow-2xl;
+  padding: $spacing-6;
+  border: 1px solid rgba($border-primary, 0.2);
+  
+  @include respond-to('sm') {
+    padding: $spacing-8;
+  }
+  
+  @include respond-to('lg') {
+    padding: $spacing-10;
+  }
+}
+
+// Header Section
+// -----------------------------------------------------------------------------
+
+.login-header {
+  text-align: center;
+  margin-bottom: $spacing-6;
+  
+  @include respond-to('sm') {
+    margin-bottom: $spacing-8;
+  }
+}
+
+.logo-container {
+  @include flex-center;
+  margin-bottom: $spacing-3;
+  
+  @include respond-to('sm') {
+    margin-bottom: $spacing-4;
+  }
+}
+
+.login-title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-hover 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: $spacing-2;
+  
+  @include respond-to('sm') {
+    font-size: $font-size-3xl;
+  }
+  
+  @include respond-to('lg') {
+    font-size: $font-size-4xl;
+  }
+}
+
+.login-subtitle {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  
+  @include respond-to('sm') {
+    font-size: $font-size-base;
+  }
+}
+
+// Login-specific form styles are now inherited from auth-form class in forms/_base.scss
+// This eliminates duplication and ensures consistency across auth forms
+
+// Footer Section
+// -----------------------------------------------------------------------------
+
+.login-footer {
+  margin-top: $spacing-8;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.security-notice {
+  @include flex-center;
+  gap: $spacing-2;
+  font-size: $font-size-xs;
+  color: $text-muted;
+  
+  svg {
+    width: $spacing-4;
+    height: $spacing-4;
+  }
+}
+
+.copyright {
+  font-size: $font-size-xs;
+  color: $text-tertiary;
+}
+
+// Responsive Design
+// -----------------------------------------------------------------------------
+
+@include respond-below('sm') {
+  .login-container {
+    padding: $spacing-4;
+  }
+  
+  .login-card {
+    padding: $spacing-4;
+  }
+  
+  .login-header {
+    margin-bottom: $spacing-4;
+  }
+  
+  .login-title {
+    font-size: $font-size-xl;
+  }
+  
+  .form-options {
+    flex-direction: column;
+    gap: $spacing-3;
+    align-items: flex-start;
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .login-container {
+    background: linear-gradient(135deg, 
+      rgba($dark-bg-primary, 1) 0%, 
+      rgba($color-primary, 0.1) 30%, 
+      rgba($indigo-900, 0.2) 100%
+    );
+  }
+  
+  .login-card {
+    background: rgba($dark-bg-secondary, 0.8);
+    border-color: rgba($dark-border-primary, 0.3);
+  }
+  
+  .security-notice {
+    color: $dark-text-secondary;
+  }
+  
+  .copyright {
+    color: $dark-text-secondary;
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+
+@include high-contrast {
+  .login-card {
+    border: 2px solid currentColor;
+  }
+  
+  .form-input {
+    border: 2px solid currentColor;
+  }
+  
+  .submit-button {
+    border: 2px solid currentColor;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  .background-elements .bg-element {
+    animation: none;
+  }
+  
+  .submit-button {
+    transition: none;
+    
+    &:hover {
+      transform: none;
+    }
+  }
+  
+  .loading-spinner {
+    animation: none;
+  }
+}
+
+// Print Styles
+// -----------------------------------------------------------------------------
+
+@media print {
+  .login-container {
+    background: white;
+    padding: 0;
+  }
+  
+  .background-elements {
+    display: none;
+  }
+  
+  .login-card {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+  
+  .submit-button {
+    background: #000;
+    color: #fff;
+  }
+}
+
+// Animation keyframes are now in forms/_base.scss to avoid duplication

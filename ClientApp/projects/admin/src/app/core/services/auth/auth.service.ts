@@ -6,7 +6,6 @@ import {
   User,
   AuthResponse,
   LoginRequest,
-  RegisterRequest,
   UpdateProfileRequest,
   RefreshTokenRequest,
   UploadAvatarResponse
@@ -28,10 +27,7 @@ export class AuthService {
       .pipe(tap(res => this.setSession(res)));
   }
 
-  register(data: RegisterRequest) {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data)
-      .pipe(tap(res => this.setSession(res)));
-  }
+
 
   updateProfile(data: UpdateProfileRequest) {
     return this.http.put<void>(`${this.apiUrl}/me`, data).pipe(

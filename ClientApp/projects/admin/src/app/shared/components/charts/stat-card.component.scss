@@ -1,0 +1,278 @@
+// =============================================================================
+// Stat Card Component Styles
+// =============================================================================
+
+@import '../../styles/component-mixins';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+// Base Card Styles
+// -----------------------------------------------------------------------------
+
+.stat-card {
+  @include card-base;
+  @include card-hover;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-xl;
+  padding: $spacing-6;
+  transition: $transition-base;
+  
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+}
+
+// Header Section
+// -----------------------------------------------------------------------------
+
+.stat-card-header {
+  @include flex-between;
+  margin-bottom: $spacing-4;
+}
+
+.stat-card-icon {
+  padding: $spacing-3;
+  border-radius: $border-radius-lg;
+  
+  // Color variants
+  &.stat-card-icon-primary {
+    background-color: rgba($color-primary, 0.1);
+  }
+  
+  &.stat-card-icon-success {
+    background-color: rgba($color-success, 0.1);
+  }
+  
+  &.stat-card-icon-warning {
+    background-color: rgba($color-warning, 0.1);
+  }
+  
+  &.stat-card-icon-danger {
+    background-color: rgba($color-danger, 0.1);
+  }
+  
+  &.stat-card-icon-info {
+    background-color: rgba($color-info, 0.1);
+  }
+}
+
+.stat-card-icon-text {
+  font-size: $font-size-2xl;
+  line-height: 1;
+}
+
+// Trend Section
+// -----------------------------------------------------------------------------
+
+.stat-card-trend {
+  @include flex-center;
+  gap: $spacing-1;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  
+  &.stat-card-trend-up {
+    color: $color-success;
+  }
+  
+  &.stat-card-trend-down {
+    color: $color-danger;
+  }
+}
+
+.stat-card-trend-icon {
+  width: $icon-sm;
+  height: $icon-sm;
+}
+
+// Content Section
+// -----------------------------------------------------------------------------
+
+.stat-card-content {
+  // No additional styles needed, using default flow
+}
+
+.stat-card-title {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  margin: 0 0 $spacing-1 0;
+}
+
+.stat-card-value {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  margin: 0;
+  line-height: 1.2;
+  
+  // Color variants
+  &.stat-card-value-primary {
+    color: $color-primary;
+  }
+  
+  &.stat-card-value-success {
+    color: $color-success;
+  }
+  
+  &.stat-card-value-warning {
+    color: $color-warning;
+  }
+  
+  &.stat-card-value-danger {
+    color: $color-danger;
+  }
+  
+  &.stat-card-value-info {
+    color: $color-info;
+  }
+}
+
+.stat-card-subtitle {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  margin: $spacing-1 0 0 0;
+}
+
+// Responsive Design
+// -----------------------------------------------------------------------------
+
+@include respond-below('sm') {
+  .stat-card {
+    padding: $spacing-4;
+  }
+  
+  .stat-card-header {
+    margin-bottom: $spacing-3;
+  }
+  
+  .stat-card-icon {
+    padding: $spacing-2;
+  }
+  
+  .stat-card-icon-text {
+    font-size: $font-size-xl;
+  }
+  
+  .stat-card-value {
+    font-size: $font-size-xl;
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .stat-card {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+  
+  .stat-card-title {
+    color: $dark-text-secondary;
+  }
+  
+  .stat-card-subtitle {
+    color: $dark-text-muted;
+  }
+  
+  // Icon backgrounds in dark mode
+  .stat-card-icon {
+    &.stat-card-icon-primary {
+      background-color: rgba($color-primary, 0.2);
+    }
+    
+    &.stat-card-icon-success {
+      background-color: rgba($color-success, 0.2);
+    }
+    
+    &.stat-card-icon-warning {
+      background-color: rgba($color-warning, 0.2);
+    }
+    
+    &.stat-card-icon-danger {
+      background-color: rgba($color-danger, 0.2);
+    }
+    
+    &.stat-card-icon-info {
+      background-color: rgba($color-info, 0.2);
+    }
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+
+@include high-contrast {
+  .stat-card {
+    border: 2px solid currentColor;
+  }
+  
+  .stat-card-icon {
+    border: 1px solid currentColor;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  .stat-card {
+    transition: none;
+    
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// Loading State
+// -----------------------------------------------------------------------------
+
+.stat-card.loading {
+  position: relative;
+  
+  .stat-card-content {
+    opacity: 0.5;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    @include loading-spinner($icon-md, $color-primary);
+  }
+}
+
+// Animation
+// -----------------------------------------------------------------------------
+
+.stat-card {
+  @include fade-in;
+}
+
+// Print Styles
+// -----------------------------------------------------------------------------
+
+@media print {
+  .stat-card {
+    box-shadow: none;
+    border: 1px solid #000;
+    break-inside: avoid;
+  }
+  
+  .stat-card:hover {
+    transform: none;
+  }
+  
+  .stat-card-trend {
+    &.stat-card-trend-up,
+    &.stat-card-trend-down {
+      color: #000;
+    }
+  }
+}

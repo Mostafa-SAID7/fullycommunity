@@ -2,12 +2,62 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/admin/dashboard', pathMatch: 'full' },
-  { path: 'login', loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent) },
+  // Root redirect
+  { 
+    path: '', 
+    redirectTo: '/admin/dashboard', 
+    pathMatch: 'full' 
+  },
+  
+  // Authentication routes
+  {
+    path: 'auth',
+    children: [
+      { 
+        path: 'login', 
+        loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent),
+        title: 'Admin Login - Community Car',
+        data: { 
+          hideNavigation: true,
+          description: 'Admin login page for Community Car platform'
+        }
+      },
+      { 
+        path: 'register', 
+        loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent),
+        title: 'Admin Registration - Community Car',
+        data: { 
+          hideNavigation: true,
+          description: 'Admin registration page for Community Car platform'
+        }
+      },
+      { path: '', redirectTo: 'login', pathMatch: 'full' }
+    ]
+  },
+  
+  // Legacy login route (redirect to new structure)
+  { 
+    path: 'login', 
+    redirectTo: '/auth/login', 
+    pathMatch: 'full' 
+  },
+  
+  // Admin routes with authentication
   {
     path: 'admin',
     loadChildren: () => import('./features/admin/admin.routes').then(m => m.adminRoutes),
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+    data: {
+      requiresAuth: true,
+      roles: ['admin', 'super-admin', 'content-admin', 'user-admin']
+    }
   },
-  { path: '**', redirectTo: '/admin/dashboard' }
+  
+
+  
+  // Wildcard route - must be last
+  { 
+    path: '**', 
+    redirectTo: '/admin/dashboard' 
+  }
 ];

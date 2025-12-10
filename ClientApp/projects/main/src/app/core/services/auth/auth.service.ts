@@ -5,7 +5,6 @@ import { environment } from '../../../../environments/environment';
 import {
   User,
   LoginRequest,
-  RegisterRequest,
   LoginResponse,
   UpdateProfileRequest,
   ExternalLoginRequest,
@@ -33,10 +32,7 @@ export class AuthService {
       .pipe(tap(res => this.setSession(res)));
   }
 
-  register(request: RegisterRequest) {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/register`, request)
-      .pipe(tap(res => this.setSession(res)));
-  }
+
 
   externalLogin(request: ExternalLoginRequest) {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login/external`, request)

@@ -7,95 +7,55 @@ import { ModerationItem } from '../../../core/interfaces/admin/moderation.interf
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="bg-white rounded-xl shadow-sm border transition-all hover:shadow-md"
-         [ngClass]="isHighPriority ? 'border-red-300 bg-red-50/30' : 'border-gray-200'">
-      
-      <!-- Item Header -->
-      <div class="p-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div class="flex flex-wrap items-center gap-2">
-          <span *ngIf="item.priority !== 'normal'" 
-                class="px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase"
-                [ngClass]="{
-                  'bg-red-100 text-red-700': item.priority === 'high' || item.priority === 'urgent',
-                  'bg-orange-100 text-orange-700': item.priority === 'low'
-                }">
-            {{ item.priority }}
-          </span>
-          <span class="px-2.5 py-0.5 rounded-full text-xs font-medium"
-                [ngClass]="getReasonClass(item.reportReason)">
-            {{ item.reportReason }}
-          </span>
-          <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-            {{ item.contentType }}
-          </span>
-        </div>
-        <div class="flex items-center gap-3 text-sm">
-          <span class="px-2.5 py-0.5 rounded-full text-xs font-medium"
-                [ngClass]="{
-                  'bg-yellow-100 text-yellow-700': item.status === 'pending',
-                  'bg-green-100 text-green-700': item.status === 'approved',
-                  'bg-red-100 text-red-700': item.status === 'rejected',
-                  'bg-gray-100 text-gray-700': item.status === 'dismissed'
-                }">
-            {{ item.status }}
-          </span>
-          <span class="text-gray-500">{{ item.reportedAt | date:'short' }}</span>
-        </div>
-      </div>
-
-      <!-- Item Body -->
-      <div class="p-4 space-y-3">
-        <div>
-          <h3 class="text-lg font-semibold text-gray-900">{{ item.contentTitle }}</h3>
-          <p class="text-sm text-gray-500">ID: {{ item.contentId }}</p>
-        </div>
-
-        <div class="space-y-2 text-sm">
-          <div class="flex items-start gap-2">
-            <span class="font-medium text-gray-700 min-w-[100px]">Reported by:</span>
-            <span class="text-gray-900">{{ item.reportedBy }}</span>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="getContentTypeClass()">
+              {{ item.contentType | titlecase }}
+            </span>
+            <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="getPriorityClass()">
+              {{ item.priority | titlecase }}
+            </span>
           </div>
-          <div *ngIf="item.moderatorNotes" class="flex items-start gap-2">
-            <span class="font-medium text-gray-700 min-w-[100px]">Notes:</span>
-            <span class="text-gray-900">{{ item.moderatorNotes }}</span>
+          <h3 class="font-semibold text-gray-900 mb-2">{{ item.contentTitle }}</h3>
+          <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ item.contentPreview }}</p>
+          <div class="flex items-center gap-4 text-xs text-gray-500">
+            <span>Reported by: {{ item.reporterName }}</span>
+            <span>{{ item.reportedAt | date:'short' }}</span>
           </div>
         </div>
+        <div class="flex flex-col gap-2 ml-4">
+          <button 
+            (click)="approve.emit(item)"
+            class="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium">
+            Approve
+          </button>
+          <button 
+            (click)="reject.emit(item)"
+            class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium">
+            Reject
+          </button>
+          <button 
+            (click)="dismiss.emit(item)"
+            class="px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm font-medium">
+            Dismiss
+          </button>
+          <button 
+            (click)="more.emit(item)"
+            class="px-3 py-1 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
+            More
+          </button>
+        </div>
       </div>
-
-      <!-- Item Actions -->
-      <div *ngIf="item.status === 'pending'" 
-           class="p-4 bg-gray-50 border-t border-gray-200 flex flex-wrap gap-2">
-        <button 
-          (click)="approve.emit(item)" 
-          title="Content is OK"
-          class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm">
-          ✓ Approve
-        </button>
-        <button 
-          (click)="reject.emit(item)" 
-          title="Remove content"
-          class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm">
-          ✕ Remove
-        </button>
-        <button 
-          (click)="dismiss.emit(item)" 
-          title="Dismiss report"
-          class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium text-sm">
-          Dismiss
-        </button>
-        <button 
-          (click)="more.emit(item)" 
-          title="More options"
-          class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm">
-          ⋯ More
-        </button>
-      </div>
-
-      <!-- Resolved Status -->
-      <div *ngIf="item.status !== 'pending'" 
-           class="p-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between text-sm">
-        <span class="font-medium text-gray-700">{{ item.status | titlecase }}</span>
-        <span *ngIf="item.moderatedAt" class="text-gray-500">{{ item.moderatedAt | date:'short' }}</span>
+      <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+        <div class="flex items-center gap-2 mb-1">
+          <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+          </svg>
+          <span class="text-sm font-medium text-red-800">Report Reason</span>
+        </div>
+        <p class="text-sm text-red-700">{{ item.reportReason }}</p>
       </div>
     </div>
   `
@@ -107,19 +67,24 @@ export class ModerationItemCardComponent {
   @Output() dismiss = new EventEmitter<ModerationItem>();
   @Output() more = new EventEmitter<ModerationItem>();
 
-  get isHighPriority(): boolean {
-    return this.item.priority === 'high' || this.item.priority === 'urgent';
+  getContentTypeClass(): string {
+    const classes = {
+      post: 'bg-blue-100 text-blue-800',
+      comment: 'bg-green-100 text-green-800',
+      review: 'bg-purple-100 text-purple-800',
+      video: 'bg-red-100 text-red-800',
+      guide: 'bg-yellow-100 text-yellow-800'
+    };
+    return classes[this.item.contentType] || 'bg-gray-100 text-gray-800';
   }
 
-  getReasonClass(reason: string): string {
-    const reasonMap: { [key: string]: string } = {
-      'spam': 'bg-orange-100 text-orange-700',
-      'harassment': 'bg-red-100 text-red-700',
-      'inappropriate': 'bg-purple-100 text-purple-700',
-      'misinformation': 'bg-yellow-100 text-yellow-700',
-      'copyright': 'bg-blue-100 text-blue-700',
-      'other': 'bg-gray-100 text-gray-700'
+  getPriorityClass(): string {
+    const classes = {
+      low: 'bg-gray-100 text-gray-800',
+      normal: 'bg-blue-100 text-blue-800',
+      high: 'bg-orange-100 text-orange-800',
+      urgent: 'bg-red-100 text-red-800'
     };
-    return reasonMap[reason.toLowerCase()] || 'bg-gray-100 text-gray-700';
+    return classes[this.item.priority] || 'bg-gray-100 text-gray-800';
   }
 }

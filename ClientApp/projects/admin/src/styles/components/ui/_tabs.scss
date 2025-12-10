@@ -1,0 +1,354 @@
+// =============================================================================
+// Tabs Components
+// =============================================================================
+
+.tabs {
+  .tabs-nav {
+    @include flex-start;
+    border-bottom: 1px solid $border-primary;
+    margin-bottom: $spacing-6;
+    
+    .tab-item {
+      padding: $spacing-3 $spacing-4;
+      font-weight: $font-weight-medium;
+      color: $text-secondary;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all $transition-fast;
+      position: relative;
+      
+      &:hover {
+        color: $color-primary;
+        background: rgba($color-primary, 0.05);
+      }
+      
+      &.active {
+        color: $color-primary;
+        border-bottom-color: $color-primary;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: $color-primary;
+        }
+      }
+      
+      &:disabled {
+        color: $text-muted;
+        cursor: not-allowed;
+        
+        &:hover {
+          background: none;
+        }
+      }
+      
+      // Tab with icon
+      .tab-icon {
+        width: $icon-sm;
+        height: $icon-sm;
+        margin-right: $spacing-2;
+      }
+      
+      // Tab with badge
+      .tab-badge {
+        margin-left: $spacing-2;
+        padding: 0.125rem 0.375rem;
+        font-size: $font-size-xs;
+        background: rgba($color-primary, 0.1);
+        color: $color-primary;
+        border-radius: $border-radius-full;
+      }
+    }
+  }
+  
+  .tabs-content {
+    .tab-pane {
+      display: none;
+      
+      &.active {
+        display: block;
+        @include fade-in;
+      }
+    }
+  }
+  
+  // Vertical tabs
+  &.tabs-vertical {
+    @include flex-start;
+    align-items: flex-start;
+    gap: $spacing-6;
+    
+    .tabs-nav {
+      flex-direction: column;
+      border-bottom: none;
+      border-right: 1px solid $border-primary;
+      margin-bottom: 0;
+      margin-right: $spacing-6;
+      min-width: 200px;
+      
+      .tab-item {
+        width: 100%;
+        text-align: left;
+        border-bottom: none;
+        border-right: 2px solid transparent;
+        
+        &.active {
+          border-right-color: $color-primary;
+          border-bottom-color: transparent;
+          
+          &::after {
+            top: 0;
+            bottom: 0;
+            left: auto;
+            right: -1px;
+            width: 2px;
+            height: auto;
+          }
+        }
+      }
+    }
+    
+    .tabs-content {
+      flex: 1;
+    }
+  }
+  
+  // Pills variant
+  &.tabs-pills {
+    .tabs-nav {
+      border-bottom: none;
+      gap: $spacing-2;
+      
+      .tab-item {
+        border-radius: $border-radius-md;
+        border-bottom: none;
+        
+        &.active {
+          background: $color-primary;
+          color: $text-inverse;
+          
+          &::after {
+            display: none;
+          }
+          
+          .tab-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: $text-inverse;
+          }
+        }
+        
+        &:hover:not(.active) {
+          background: rgba($color-primary, 0.1);
+        }
+      }
+    }
+  }
+  
+  // Underline variant
+  &.tabs-underline {
+    .tabs-nav {
+      border-bottom: none;
+      
+      .tab-item {
+        border-bottom: 1px solid transparent;
+        
+        &.active {
+          border-bottom-color: $color-primary;
+          
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  
+  // Boxed variant
+  &.tabs-boxed {
+    .tabs-nav {
+      background: $bg-secondary;
+      border-radius: $border-radius-md $border-radius-md 0 0;
+      padding: $spacing-2;
+      border-bottom: 1px solid $border-primary;
+      
+      .tab-item {
+        border-radius: $border-radius-base;
+        
+        &.active {
+          background: $bg-primary;
+          box-shadow: $shadow-sm;
+          border-bottom-color: transparent;
+          
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
+    
+    .tabs-content {
+      background: $bg-primary;
+      border: 1px solid $border-primary;
+      border-top: none;
+      border-radius: 0 0 $border-radius-md $border-radius-md;
+      padding: $spacing-6;
+    }
+  }
+}
+
+// Tab sizes
+// -----------------------------------------------------------------------------
+
+.tabs-sm {
+  .tab-item {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-sm;
+    
+    .tab-icon {
+      width: $icon-xs;
+      height: $icon-xs;
+    }
+  }
+}
+
+.tabs-lg {
+  .tab-item {
+    padding: $spacing-4 $spacing-6;
+    font-size: $font-size-lg;
+    
+    .tab-icon {
+      width: $icon-md;
+      height: $icon-md;
+    }
+  }
+}
+
+// Scrollable tabs
+// -----------------------------------------------------------------------------
+
+.tabs-scrollable {
+  .tabs-nav {
+    overflow-x: auto;
+    scrollbar-width: none;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .tab-item {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+  }
+}
+
+// Responsive tabs
+// -----------------------------------------------------------------------------
+
+@include respond-below('md') {
+  .tabs-vertical {
+    flex-direction: column;
+    
+    .tabs-nav {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid $border-primary;
+      margin-right: 0;
+      margin-bottom: $spacing-4;
+      
+      .tab-item {
+        border-right: none;
+        border-bottom: 2px solid transparent;
+        
+        &.active {
+          border-right-color: transparent;
+          border-bottom-color: $color-primary;
+          
+          &::after {
+            top: auto;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            width: auto;
+            height: 2px;
+          }
+        }
+      }
+    }
+  }
+  
+  .tabs-scrollable .tabs-nav {
+    flex-wrap: nowrap;
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .tabs {
+    .tabs-nav {
+      border-color: $dark-border-primary;
+      
+      .tab-item {
+        color: $dark-text-secondary;
+        
+        &:hover {
+          background: rgba($color-primary, 0.1);
+        }
+        
+        &.active {
+          color: $color-primary;
+        }
+      }
+    }
+    
+    &.tabs-boxed {
+      .tabs-nav {
+        background: $dark-bg-tertiary;
+        border-color: $dark-border-primary;
+        
+        .tab-item.active {
+          background: $dark-bg-secondary;
+        }
+      }
+      
+      .tabs-content {
+        background: $dark-bg-secondary;
+        border-color: $dark-border-primary;
+      }
+    }
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+
+@include high-contrast {
+  .tabs .tabs-nav .tab-item {
+    border: 1px solid transparent;
+    
+    &.active {
+      border-color: currentColor;
+    }
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  .tabs .tab-pane.active {
+    animation: none;
+  }
+  
+  .tabs .tab-item {
+    transition: none;
+  }
+}

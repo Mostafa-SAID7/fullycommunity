@@ -1,0 +1,431 @@
+// =============================================================================
+// Dropdown Components for Admin Interface
+// =============================================================================
+
+// Base Dropdown Styles
+// -----------------------------------------------------------------------------
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  
+  .dropdown-toggle {
+    @include flex-center;
+    gap: $spacing-2;
+    padding: $spacing-2 $spacing-4;
+    background: $bg-primary;
+    border: 1px solid $border-primary;
+    border-radius: $border-radius-md;
+    color: $text-primary;
+    cursor: pointer;
+    transition: all $transition-fast;
+    text-decoration: none;
+    
+    &:hover {
+      background: $bg-secondary;
+      border-color: $color-primary;
+    }
+    
+    &:focus-visible {
+      @include focus-visible;
+    }
+    
+    .dropdown-arrow {
+      width: $icon-sm;
+      height: $icon-sm;
+      transition: transform $transition-fast;
+      
+      &.rotated {
+        transform: rotate(180deg);
+      }
+    }
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 200px;
+    background: $bg-primary;
+    border: 1px solid $border-primary;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-xl;
+    z-index: $z-index-dropdown;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all $transition-fast;
+    overflow: hidden;
+    
+    &.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    &.dropdown-menu-right {
+      left: auto;
+      right: 0;
+    }
+    
+    &.dropdown-menu-up {
+      top: auto;
+      bottom: calc(100% + 4px);
+      transform: translateY(10px);
+      
+      &.show {
+        transform: translateY(0);
+      }
+    }
+  }
+  
+  .dropdown-header {
+    padding: $spacing-3 $spacing-4;
+    background: $bg-secondary;
+    border-bottom: 1px solid $border-primary;
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-sm;
+    color: $text-primary;
+  }
+  
+  .dropdown-item {
+    @include flex-start;
+    gap: $spacing-3;
+    width: 100%;
+    padding: $spacing-3 $spacing-4;
+    background: none;
+    border: none;
+    color: $text-secondary;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all $transition-fast;
+    text-align: left;
+    
+    &:hover {
+      background: rgba($color-primary, 0.08);
+      color: $color-primary;
+    }
+    
+    &:focus-visible {
+      background: rgba($color-primary, 0.12);
+      color: $color-primary;
+      outline: none;
+    }
+    
+    &.active {
+      background: rgba($color-primary, 0.12);
+      color: $color-primary;
+      font-weight: $font-weight-medium;
+    }
+    
+    &.disabled {
+      color: $text-muted;
+      cursor: not-allowed;
+      
+      &:hover {
+        background: none;
+        color: $text-muted;
+      }
+    }
+    
+    .dropdown-icon {
+      width: $icon-sm;
+      height: $icon-sm;
+      flex-shrink: 0;
+    }
+    
+    .dropdown-text {
+      flex: 1;
+      
+      .item-title {
+        font-weight: $font-weight-medium;
+        margin-bottom: 0.125rem;
+      }
+      
+      .item-description {
+        font-size: $font-size-xs;
+        color: $text-muted;
+      }
+    }
+    
+    .dropdown-shortcut {
+      font-size: $font-size-xs;
+      color: $text-muted;
+      background: $bg-secondary;
+      padding: 0.125rem 0.375rem;
+      border-radius: $border-radius-sm;
+    }
+  }
+  
+  .dropdown-divider {
+    height: 1px;
+    background: $border-primary;
+    margin: $spacing-2 0;
+  }
+  
+  .dropdown-footer {
+    padding: $spacing-3 $spacing-4;
+    background: $bg-secondary;
+    border-top: 1px solid $border-primary;
+    
+    .dropdown-footer-text {
+      font-size: $font-size-xs;
+      color: $text-muted;
+      text-align: center;
+    }
+  }
+}
+
+// Dropdown Variants
+// -----------------------------------------------------------------------------
+
+.dropdown-primary {
+  .dropdown-toggle {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: $text-inverse;
+    
+    &:hover {
+      background: $color-primary-hover;
+      border-color: $color-primary-hover;
+    }
+  }
+}
+
+.dropdown-ghost {
+  .dropdown-toggle {
+    background: transparent;
+    border-color: transparent;
+    
+    &:hover {
+      background: rgba($color-primary, 0.1);
+      border-color: rgba($color-primary, 0.2);
+    }
+  }
+}
+
+.dropdown-outline {
+  .dropdown-toggle {
+    background: transparent;
+    border: 2px solid $color-primary;
+    color: $color-primary;
+    
+    &:hover {
+      background: $color-primary;
+      color: $text-inverse;
+    }
+  }
+}
+
+// Dropdown Sizes
+// -----------------------------------------------------------------------------
+
+.dropdown-sm {
+  .dropdown-toggle {
+    padding: $spacing-1 $spacing-3;
+    font-size: $font-size-sm;
+  }
+  
+  .dropdown-menu {
+    min-width: 150px;
+  }
+  
+  .dropdown-item {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-sm;
+  }
+}
+
+.dropdown-lg {
+  .dropdown-toggle {
+    padding: $spacing-3 $spacing-6;
+    font-size: $font-size-lg;
+  }
+  
+  .dropdown-menu {
+    min-width: 250px;
+  }
+  
+  .dropdown-item {
+    padding: $spacing-4 $spacing-6;
+  }
+}
+
+// Multi-level Dropdown
+// -----------------------------------------------------------------------------
+
+.dropdown-submenu {
+  position: relative;
+  
+  .dropdown-item {
+    &::after {
+      content: '';
+      position: absolute;
+      right: $spacing-3;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid currentColor;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+    }
+  }
+  
+  .dropdown-submenu-menu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: 4px;
+    
+    &.submenu-left {
+      left: auto;
+      right: 100%;
+      margin-left: 0;
+      margin-right: 4px;
+    }
+  }
+  
+  &:hover .dropdown-submenu-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+// Dropdown with Search
+// -----------------------------------------------------------------------------
+
+.dropdown-searchable {
+  .dropdown-search {
+    padding: $spacing-3;
+    border-bottom: 1px solid $border-primary;
+    
+    .search-input {
+      @include input-base;
+      width: 100%;
+      padding: $spacing-2 $spacing-3;
+      font-size: $font-size-sm;
+      border-radius: $border-radius-base;
+    }
+  }
+  
+  .dropdown-items {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .dropdown-no-results {
+    padding: $spacing-4;
+    text-align: center;
+    color: $text-muted;
+    font-size: $font-size-sm;
+  }
+}
+
+// Dropdown Backdrop
+// -----------------------------------------------------------------------------
+
+.dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: $z-index-dropdown - 1;
+  background: transparent;
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .dropdown {
+    .dropdown-toggle {
+      background: $dark-bg-secondary;
+      border-color: $dark-border-primary;
+      color: $dark-text-primary;
+      
+      &:hover {
+        background: $dark-bg-tertiary;
+        border-color: $color-primary;
+      }
+    }
+    
+    .dropdown-menu {
+      background: $dark-bg-secondary;
+      border-color: $dark-border-primary;
+    }
+    
+    .dropdown-header,
+    .dropdown-footer {
+      background: $dark-bg-tertiary;
+      border-color: $dark-border-primary;
+      color: $dark-text-primary;
+    }
+    
+    .dropdown-item {
+      color: $dark-text-secondary;
+      
+      &:hover {
+        background: rgba($color-primary, 0.15);
+        color: $color-primary;
+      }
+      
+      &.active {
+        background: rgba($color-primary, 0.2);
+        color: $color-primary;
+      }
+      
+      &.disabled {
+        color: rgba($dark-text-secondary, 0.5);
+      }
+      
+      .item-description {
+        color: rgba($dark-text-secondary, 0.7);
+      }
+      
+      .dropdown-shortcut {
+        background: $dark-bg-tertiary;
+        color: rgba($dark-text-secondary, 0.8);
+      }
+    }
+    
+    .dropdown-divider {
+      background: $dark-border-primary;
+    }
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+
+@include high-contrast {
+  .dropdown {
+    .dropdown-toggle,
+    .dropdown-menu {
+      border: 2px solid;
+    }
+    
+    .dropdown-item:focus-visible {
+      outline: 2px solid;
+      outline-offset: -2px;
+    }
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  .dropdown {
+    .dropdown-toggle .dropdown-arrow,
+    .dropdown-menu {
+      transition: none;
+    }
+    
+    .dropdown-menu.show {
+      transform: none;
+    }
+  }
+}

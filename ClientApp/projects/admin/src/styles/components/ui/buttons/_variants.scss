@@ -1,0 +1,30 @@
+// =============================================================================
+// Button Variants
+// =============================================================================
+
+.btn-primary {
+  @include button-variant('primary');
+}
+
+.btn-secondary {
+  @include button-variant('secondary');
+}
+
+.btn-ghost {
+  @include button-variant('ghost');
+}
+
+.btn-success {
+  @include button-variant('success');
+}
+
+.btn-warning {
+  @include button-variant('warning');
+}
+
+.btn-error {
+  @include button-variant('error');
+}
+
+// Note: Special button variants (outline, gradient, glass, neon) are now in _special.scss
+// to avoid duplication and maintain better organization

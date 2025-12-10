@@ -1,0 +1,542 @@
+// =============================================================================
+// Stat Cards Components for Admin Dashboard
+// =============================================================================
+
+// Base Stat Card Styles
+// -----------------------------------------------------------------------------
+
+.stat-card {
+  @include card-base;
+  padding: $spacing-6;
+  border-radius: $border-radius-2xl;
+  border: 1px solid rgba($border-primary, 0.5);
+  transition: all $transition-base;
+  position: relative;
+  overflow: hidden;
+  
+  // Hover effects
+  &:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: $shadow-xl;
+    border-color: rgba($color-primary, 0.2);
+  }
+  
+  // Card header with icon and badge
+  .stat-header {
+    @include flex-between;
+    margin-bottom: $spacing-4;
+    
+    .stat-icon-wrapper {
+      padding: $spacing-3;
+      border-radius: $border-radius-lg;
+      @include flex-center;
+      
+      .stat-icon {
+        width: $icon-lg;
+        height: $icon-lg;
+      }
+    }
+    
+    .stat-badge {
+      padding: 0.25rem 0.5rem;
+      border-radius: $border-radius-base;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      
+      &.positive {
+        background: rgba($success-500, 0.1);
+        color: $success-600;
+      }
+      
+      &.negative {
+        background: rgba($error-500, 0.1);
+        color: $error-600;
+      }
+      
+      &.neutral {
+        background: rgba($primary-500, 0.1);
+        color: $primary-600;
+      }
+    }
+  }
+  
+  // Card content
+  .stat-content {
+    .stat-title {
+      color: $text-secondary;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      margin-bottom: $spacing-1;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+    }
+    
+    .stat-value {
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      line-height: 1.2;
+      margin-bottom: $spacing-2;
+    }
+    
+    .stat-subtitle {
+      font-size: $font-size-xs;
+      color: $text-muted;
+    }
+  }
+  
+  // Gradient overlay for enhanced visual appeal
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba($color-primary, 0.5), transparent);
+    opacity: 0;
+    transition: opacity $transition-base;
+  }
+  
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+// Stat Card Variants (Tailwind Compatible Colors)
+// -----------------------------------------------------------------------------
+
+.stat-card-blue {
+  @extend .stat-card;
+  
+  .stat-icon-wrapper {
+    background: $primary-100;
+    
+    .stat-icon {
+      color: $primary-600;
+    }
+  }
+  
+  &:hover {
+    border-color: rgba($primary-600, 0.3);
+    
+    &::before {
+      background: linear-gradient(90deg, transparent, $primary-500, transparent);
+    }
+  }
+}
+
+.stat-card-purple {
+  @extend .stat-card;
+  
+  .stat-icon-wrapper {
+    background: $purple-100;
+    
+    .stat-icon {
+      color: $purple-600;
+    }
+  }
+  
+  &:hover {
+    border-color: rgba($purple-600, 0.3);
+    
+    &::before {
+      background: linear-gradient(90deg, transparent, $purple-500, transparent);
+    }
+  }
+}
+
+.stat-card-orange {
+  @extend .stat-card;
+  
+  .stat-icon-wrapper {
+    background: $warning-100;
+    
+    .stat-icon {
+      color: $warning-600;
+    }
+  }
+  
+  &:hover {
+    border-color: rgba($warning-600, 0.3);
+    
+    &::before {
+      background: linear-gradient(90deg, transparent, $warning-500, transparent);
+    }
+  }
+}
+
+.stat-card-green {
+  @extend .stat-card;
+  
+  .stat-icon-wrapper {
+    background: $success-100;
+    
+    .stat-icon {
+      color: $success-600;
+    }
+  }
+  
+  &:hover {
+    border-color: rgba($success-600, 0.3);
+    
+    &::before {
+      background: linear-gradient(90deg, transparent, $success-500, transparent);
+    }
+  }
+}
+
+.stat-card-red {
+  @extend .stat-card;
+  
+  .stat-icon-wrapper {
+    background: $error-100;
+    
+    .stat-icon {
+      color: $error-600;
+    }
+  }
+  
+  &:hover {
+    border-color: rgba($error-600, 0.3);
+    
+    &::before {
+      background: linear-gradient(90deg, transparent, $error-500, transparent);
+    }
+  }
+}
+
+.stat-card-indigo {
+  @extend .stat-card;
+  
+  .stat-icon-wrapper {
+    background: $indigo-100;
+    
+    .stat-icon {
+      color: $indigo-600;
+    }
+  }
+  
+  &:hover {
+    border-color: rgba($indigo-600, 0.3);
+    
+    &::before {
+      background: linear-gradient(90deg, transparent, $indigo-500, transparent);
+    }
+  }
+}
+
+// Stat Card Sizes
+// -----------------------------------------------------------------------------
+
+.stat-card-sm {
+  padding: $spacing-4;
+  
+  .stat-header {
+    margin-bottom: $spacing-3;
+    
+    .stat-icon-wrapper {
+      padding: $spacing-2;
+      
+      .stat-icon {
+        width: $icon-md;
+        height: $icon-md;
+      }
+    }
+  }
+  
+  .stat-content {
+    .stat-value {
+      font-size: $font-size-2xl;
+    }
+  }
+}
+
+.stat-card-lg {
+  padding: $spacing-8;
+  
+  .stat-header {
+    margin-bottom: $spacing-6;
+    
+    .stat-icon-wrapper {
+      padding: $spacing-4;
+      
+      .stat-icon {
+        width: $icon-xl;
+        height: $icon-xl;
+      }
+    }
+  }
+  
+  .stat-content {
+    .stat-value {
+      font-size: $font-size-4xl;
+    }
+  }
+}
+
+// Stat Card States
+// -----------------------------------------------------------------------------
+
+.stat-card-loading {
+  position: relative;
+  
+  .stat-content {
+    opacity: 0.5;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    @include loading-spinner($icon-md, $color-primary);
+  }
+}
+
+.stat-card-error {
+  border-color: rgba($error-500, 0.3);
+  background: rgba($error-50, 0.5);
+  
+  .stat-content {
+    opacity: 0.7;
+  }
+  
+  .stat-value {
+    color: $error-600;
+  }
+}
+
+// Stat Card Animations
+// -----------------------------------------------------------------------------
+
+.stat-card-animate {
+  @include fade-in;
+  
+  &.slide-up {
+    @include slide-in-up;
+  }
+  
+  &.scale-in {
+    animation: scaleIn $animation-duration-normal ease-out;
+  }
+  
+  &.bounce-in {
+    @include bounce-in;
+  }
+}
+
+// Stat Card Grid Layout
+// -----------------------------------------------------------------------------
+
+.stat-cards-grid {
+  display: grid;
+  gap: $spacing-6;
+  
+  &.grid-1 {
+    grid-template-columns: 1fr;
+  }
+  
+  &.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+    
+    @include respond-below('md') {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  &.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+    
+    @include respond-below('lg') {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include respond-below('md') {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  &.grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+    
+    @include respond-below('xl') {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include respond-below('md') {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Stat Card with Trend
+// -----------------------------------------------------------------------------
+
+.stat-card-trend {
+  .stat-trend {
+    @include flex-start;
+    gap: $spacing-1;
+    margin-top: $spacing-2;
+    
+    .trend-icon {
+      width: $icon-sm;
+      height: $icon-sm;
+    }
+    
+    .trend-value {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+    }
+    
+    &.trend-up {
+      color: $success-600;
+      
+      .trend-icon {
+        transform: rotate(-45deg);
+      }
+    }
+    
+    &.trend-down {
+      color: $error-600;
+      
+      .trend-icon {
+        transform: rotate(45deg);
+      }
+    }
+    
+    &.trend-neutral {
+      color: $text-muted;
+    }
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .stat-card {
+    background: $dark-bg-secondary;
+    border-color: rgba($dark-border-primary, 0.5);
+    
+    &:hover {
+      border-color: rgba($color-primary, 0.4);
+    }
+    
+    .stat-content {
+      .stat-title {
+        color: $dark-text-secondary;
+      }
+      
+      .stat-value {
+        color: $dark-text-primary;
+      }
+      
+      .stat-subtitle {
+        color: rgba($dark-text-secondary, 0.7);
+      }
+    }
+  }
+  
+  // Dark mode icon backgrounds
+  .stat-card-blue .stat-icon-wrapper {
+    background: rgba($primary-600, 0.2);
+  }
+  
+  .stat-card-purple .stat-icon-wrapper {
+    background: rgba($purple-600, 0.2);
+  }
+  
+  .stat-card-orange .stat-icon-wrapper {
+    background: rgba($warning-600, 0.2);
+  }
+  
+  .stat-card-green .stat-icon-wrapper {
+    background: rgba($success-600, 0.2);
+  }
+  
+  .stat-card-red .stat-icon-wrapper {
+    background: rgba($error-600, 0.2);
+  }
+  
+  .stat-card-indigo .stat-icon-wrapper {
+    background: rgba($indigo-600, 0.2);
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+
+@include high-contrast {
+  .stat-card {
+    border: 2px solid;
+    
+    &:focus-visible {
+      outline: 3px solid;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  .stat-card {
+    transition: none;
+    
+    &:hover {
+      transform: none;
+    }
+    
+    &::before {
+      transition: none;
+    }
+  }
+  
+  .stat-card-animate {
+    animation: none;
+  }
+}
+
+// Utility Classes for Easy Implementation
+// -----------------------------------------------------------------------------
+
+.stats-container {
+  margin-bottom: $spacing-8;
+  
+  .stats-title {
+    @include heading(3);
+    margin-bottom: $spacing-6;
+    color: $text-primary;
+  }
+}
+
+// Responsive Stat Cards
+// -----------------------------------------------------------------------------
+
+@include respond-below('sm') {
+  .stat-card {
+    padding: $spacing-4;
+    
+    .stat-header {
+      margin-bottom: $spacing-3;
+      
+      .stat-icon-wrapper {
+        padding: $spacing-2;
+        
+        .stat-icon {
+          width: $icon-md;
+          height: $icon-md;
+        }
+      }
+    }
+    
+    .stat-content {
+      .stat-value {
+        font-size: $font-size-2xl;
+      }
+    }
+  }
+}

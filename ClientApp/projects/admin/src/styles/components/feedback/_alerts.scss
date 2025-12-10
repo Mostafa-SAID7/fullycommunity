@@ -1,0 +1,548 @@
+// =============================================================================
+// Alert Components for Admin Interface
+// =============================================================================
+
+// Base Alert Styles
+// -----------------------------------------------------------------------------
+
+.alert {
+  @include flex-start;
+  padding: $spacing-4 $spacing-6;
+  border-radius: $border-radius-lg;
+  border: 1px solid transparent;
+  margin-bottom: $spacing-4;
+  position: relative;
+  
+  .alert-icon {
+    width: $icon-md;
+    height: $icon-md;
+    margin-right: $spacing-3;
+    flex-shrink: 0;
+  }
+  
+  .alert-content {
+    flex: 1;
+    
+    .alert-title {
+      font-weight: $font-weight-semibold;
+      margin-bottom: $spacing-1;
+      font-size: $font-size-sm;
+    }
+    
+    .alert-message {
+      font-size: $font-size-sm;
+      line-height: $line-height-relaxed;
+      margin: 0;
+    }
+    
+    .alert-actions {
+      margin-top: $spacing-3;
+      @include flex-start;
+      gap: $spacing-2;
+      
+      .alert-btn {
+        padding: 0.25rem 0.75rem;
+        font-size: $font-size-xs;
+        border-radius: $border-radius-base;
+        text-decoration: none;
+        font-weight: $font-weight-medium;
+        transition: all $transition-fast;
+      }
+    }
+  }
+  
+  .alert-close {
+    position: absolute;
+    top: $spacing-3;
+    right: $spacing-3;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: $spacing-1;
+    border-radius: $border-radius-base;
+    opacity: 0.7;
+    transition: all $transition-fast;
+    
+    &:hover {
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.1);
+    }
+    
+    .close-icon {
+      width: $icon-sm;
+      height: $icon-sm;
+    }
+  }
+}
+
+// Alert Variants
+// -----------------------------------------------------------------------------
+
+.alert-primary {
+  background: rgba($primary-50, 0.8);
+  border-color: rgba($primary-200, 0.8);
+  color: $primary-800;
+  
+  .alert-icon {
+    color: $primary-600;
+  }
+  
+  .alert-btn {
+    background: $primary-600;
+    color: $text-inverse;
+    
+    &:hover {
+      background: $primary-700;
+    }
+    
+    &.btn-outline {
+      background: transparent;
+      border: 1px solid $primary-600;
+      color: $primary-600;
+      
+      &:hover {
+        background: $primary-600;
+        color: $text-inverse;
+      }
+    }
+  }
+}
+
+.alert-success {
+  background: rgba($success-50, 0.8);
+  border-color: rgba($success-200, 0.8);
+  color: $success-800;
+  
+  .alert-icon {
+    color: $success-600;
+  }
+  
+  .alert-btn {
+    background: $success-600;
+    color: $text-inverse;
+    
+    &:hover {
+      background: $success-700;
+    }
+    
+    &.btn-outline {
+      background: transparent;
+      border: 1px solid $success-600;
+      color: $success-600;
+      
+      &:hover {
+        background: $success-600;
+        color: $text-inverse;
+      }
+    }
+  }
+}
+
+.alert-warning {
+  background: rgba($warning-50, 0.8);
+  border-color: rgba($warning-200, 0.8);
+  color: $warning-800;
+  
+  .alert-icon {
+    color: $warning-600;
+  }
+  
+  .alert-btn {
+    background: $warning-600;
+    color: $text-inverse;
+    
+    &:hover {
+      background: $warning-700;
+    }
+    
+    &.btn-outline {
+      background: transparent;
+      border: 1px solid $warning-600;
+      color: $warning-600;
+      
+      &:hover {
+        background: $warning-600;
+        color: $text-inverse;
+      }
+    }
+  }
+}
+
+.alert-error {
+  background: rgba($error-50, 0.8);
+  border-color: rgba($error-200, 0.8);
+  color: $error-800;
+  
+  .alert-icon {
+    color: $error-600;
+  }
+  
+  .alert-btn {
+    background: $error-600;
+    color: $text-inverse;
+    
+    &:hover {
+      background: $error-700;
+    }
+    
+    &.btn-outline {
+      background: transparent;
+      border: 1px solid $error-600;
+      color: $error-600;
+      
+      &:hover {
+        background: $error-600;
+        color: $text-inverse;
+      }
+    }
+  }
+}
+
+.alert-info {
+  background: rgba($indigo-50, 0.8);
+  border-color: rgba($indigo-200, 0.8);
+  color: $indigo-800;
+  
+  .alert-icon {
+    color: $indigo-600;
+  }
+  
+  .alert-btn {
+    background: $indigo-600;
+    color: $text-inverse;
+    
+    &:hover {
+      background: $indigo-700;
+    }
+    
+    &.btn-outline {
+      background: transparent;
+      border: 1px solid $indigo-600;
+      color: $indigo-600;
+      
+      &:hover {
+        background: $indigo-600;
+        color: $text-inverse;
+      }
+    }
+  }
+}
+
+// Alert Sizes
+// -----------------------------------------------------------------------------
+
+.alert-sm {
+  padding: $spacing-3 $spacing-4;
+  
+  .alert-icon {
+    width: $icon-sm;
+    height: $icon-sm;
+    margin-right: $spacing-2;
+  }
+  
+  .alert-content {
+    .alert-title {
+      font-size: $font-size-xs;
+    }
+    
+    .alert-message {
+      font-size: $font-size-xs;
+    }
+  }
+  
+  .alert-close {
+    top: $spacing-2;
+    right: $spacing-2;
+    
+    .close-icon {
+      width: $icon-xs;
+      height: $icon-xs;
+    }
+  }
+}
+
+.alert-lg {
+  padding: $spacing-6 $spacing-8;
+  
+  .alert-icon {
+    width: $icon-lg;
+    height: $icon-lg;
+    margin-right: $spacing-4;
+  }
+  
+  .alert-content {
+    .alert-title {
+      font-size: $font-size-base;
+      margin-bottom: $spacing-2;
+    }
+    
+    .alert-message {
+      font-size: $font-size-base;
+    }
+    
+    .alert-actions {
+      margin-top: $spacing-4;
+      
+      .alert-btn {
+        padding: 0.5rem 1rem;
+        font-size: $font-size-sm;
+      }
+    }
+  }
+}
+
+// Alert Styles
+// -----------------------------------------------------------------------------
+
+.alert-solid {
+  &.alert-primary {
+    background: $primary-600;
+    border-color: $primary-600;
+    color: $text-inverse;
+    
+    .alert-icon {
+      color: $text-inverse;
+    }
+  }
+  
+  &.alert-success {
+    background: $success-600;
+    border-color: $success-600;
+    color: $text-inverse;
+    
+    .alert-icon {
+      color: $text-inverse;
+    }
+  }
+  
+  &.alert-warning {
+    background: $warning-600;
+    border-color: $warning-600;
+    color: $text-inverse;
+    
+    .alert-icon {
+      color: $text-inverse;
+    }
+  }
+  
+  &.alert-error {
+    background: $error-600;
+    border-color: $error-600;
+    color: $text-inverse;
+    
+    .alert-icon {
+      color: $text-inverse;
+    }
+  }
+  
+  &.alert-info {
+    background: $indigo-600;
+    border-color: $indigo-600;
+    color: $text-inverse;
+    
+    .alert-icon {
+      color: $text-inverse;
+    }
+  }
+  
+  .alert-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.alert-outline {
+  background: transparent;
+  border-width: 2px;
+  
+  &.alert-primary {
+    border-color: $primary-600;
+    color: $primary-600;
+  }
+  
+  &.alert-success {
+    border-color: $success-600;
+    color: $success-600;
+  }
+  
+  &.alert-warning {
+    border-color: $warning-600;
+    color: $warning-600;
+  }
+  
+  &.alert-error {
+    border-color: $error-600;
+    color: $error-600;
+  }
+  
+  &.alert-info {
+    border-color: $indigo-600;
+    color: $indigo-600;
+  }
+}
+
+// Alert with Border Accent
+// -----------------------------------------------------------------------------
+
+.alert-border-left {
+  border-left-width: 4px;
+  border-radius: 0 $border-radius-lg $border-radius-lg 0;
+}
+
+.alert-border-top {
+  border-top-width: 4px;
+  border-radius: 0 0 $border-radius-lg $border-radius-lg;
+}
+
+// Alert Animations
+// -----------------------------------------------------------------------------
+
+.alert-fade-in {
+  animation: fadeInUp $animation-duration-normal ease-out;
+}
+
+.alert-slide-in {
+  animation: slideInDown $animation-duration-normal ease-out;
+}
+
+// Toast Alerts (Fixed Position)
+// -----------------------------------------------------------------------------
+
+.alert-toast {
+  position: fixed;
+  top: $spacing-6;
+  right: $spacing-6;
+  min-width: 300px;
+  max-width: 500px;
+  z-index: $z-index-toast;
+  box-shadow: $shadow-xl;
+  animation: slideInRight $animation-duration-normal ease-out;
+  
+  &.toast-bottom {
+    top: auto;
+    bottom: $spacing-6;
+    animation: slideInUp $animation-duration-normal ease-out;
+  }
+  
+  &.toast-left {
+    right: auto;
+    left: $spacing-6;
+    animation: slideInLeft $animation-duration-normal ease-out;
+  }
+  
+  &.toast-center {
+    left: 50%;
+    transform: translateX(-50%);
+    animation: slideInDown $animation-duration-normal ease-out;
+  }
+}
+
+// Alert Stack Container
+// -----------------------------------------------------------------------------
+
+.alert-stack {
+  position: fixed;
+  top: $spacing-6;
+  right: $spacing-6;
+  z-index: $z-index-toast;
+  
+  .alert {
+    margin-bottom: $spacing-3;
+    min-width: 300px;
+    max-width: 500px;
+    box-shadow: $shadow-xl;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .alert-primary {
+    background: rgba($primary-900, 0.3);
+    border-color: rgba($primary-700, 0.5);
+    color: $primary-200;
+    
+    .alert-icon {
+      color: $primary-400;
+    }
+  }
+  
+  .alert-success {
+    background: rgba($success-900, 0.3);
+    border-color: rgba($success-700, 0.5);
+    color: $success-200;
+    
+    .alert-icon {
+      color: $success-400;
+    }
+  }
+  
+  .alert-warning {
+    background: rgba($warning-900, 0.3);
+    border-color: rgba($warning-700, 0.5);
+    color: $warning-200;
+    
+    .alert-icon {
+      color: $warning-400;
+    }
+  }
+  
+  .alert-error {
+    background: rgba($error-900, 0.3);
+    border-color: rgba($error-700, 0.5);
+    color: $error-200;
+    
+    .alert-icon {
+      color: $error-400;
+    }
+  }
+  
+  .alert-info {
+    background: rgba($indigo-900, 0.3);
+    border-color: rgba($indigo-700, 0.5);
+    color: $indigo-200;
+    
+    .alert-icon {
+      color: $indigo-400;
+    }
+  }
+  
+  .alert-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+
+@include high-contrast {
+  .alert {
+    border: 2px solid;
+  }
+  
+  .alert-close:focus-visible {
+    outline: 2px solid;
+    outline-offset: 2px;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  .alert-fade-in,
+  .alert-slide-in,
+  .alert-toast {
+    animation: none;
+  }
+  
+  .alert-close,
+  .alert-btn {
+    transition: none;
+  }
+}

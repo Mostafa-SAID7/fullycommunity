@@ -1,64 +1,134 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import {
-  ModerationItem,
-  ModerationListResponse,
-  ModerationStats,
-  ModerationActionRequest,
-  BanUserRequest
-} from '../../interfaces/admin/moderation.interface';
 
-@Injectable({ providedIn: 'root' })
+export interface ModerationItem {
+  id: string;
+  contentId: string;
+  contentType: 'post' | 'comment' | 'review' | 'video' | 'guide';
+  contentTitle: string;
+  contentPreview: string;
+  reportReason: string;
+  reporterId: string;
+  reporterName: string;
+  reportedAt: Date;
+  priority: 'low' | 'normal' | 'high' | 'urgent';
+  status: 'pending' | 'approved' | 'rejected' | 'dismissed';
+  moderatorId?: string;
+  moderatorNotes?: string;
+  resolvedAt?: Date;
+}
+
+export interface ModerationStats {
+  pendingReports: number;
+  resolvedToday: number;
+  resolvedThisWeek: number;
+  totalReports: number;
+  averageResolutionTime: number;
+}
+
+export interface ModerationResponse {
+  items: ModerationItem[];
+  totalCount: number;
+  totalPages: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
 export class AdminModerationService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/api/admin/dashboard/community`;
+  private readonly apiUrl = `${environment.apiUrl}/api/admin/moderation`;
 
   getModerationStats(): Observable<ModerationStats> {
-    return this.http.get<ModerationStats>(`${this.apiUrl}/moderation/stats`);
+    // Mock data for development
+    return of({
+      pendingReports: 12,
+      resolvedToday: 8,
+      resolvedThisWeek: 45,
+      totalReports: 234,
+      averageResolutionTime: 2.5
+    });
   }
 
-  getPendingItems(page = 1, pageSize = 20): Observable<ModerationListResponse> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('pageSize', pageSize.toString())
-      .set('status', 'pending');
-    return this.http.get<ModerationListResponse>(`${this.apiUrl}/moderation`, { params });
+  getPendingItems(): Observable<ModerationResponse> {
+    // Mock data for development
+    const mockItems: ModerationItem[] = [
+      {
+        id: '1',
+        contentId: 'post-123',
+        contentType: 'post',
+        contentTitle: 'Best car maintenance tips',
+        contentPreview: 'Here are some great tips for maintaining your car...',
+        reportReason: 'Spam content',
+        reporterId: 'user-456',
+        reporterName: 'John Doe',
+        reportedAt: new Date(Date.now() - 3600000),
+        priority: 'normal',
+        status: 'pending'
+      },
+      {
+        id: '2',
+        contentId: 'comment-789',
+        contentType: 'comment',
+        contentTitle: 'Comment on "Electric vs Gas Cars"',
+        contentPreview: 'This is completely wrong information...',
+        reportReason: 'Inappropriate content',
+        reporterId: 'user-789',
+        reporterName: 'Jane Smith',
+        reportedAt: new Date(Date.now() - 7200000),
+        priority: 'high',
+        status: 'pending'
+      },
+      {
+        id: '3',
+        contentId: 'review-456',
+        contentType: 'review',
+        contentTitle: 'Review of Toyota Camry 2023',
+        contentPreview: 'Terrible car, worst experience ever...',
+        reportReason: 'Harassment',
+        reporterId: 'user-321',
+        reporterName: 'Mike Johnson',
+        reportedAt: new Date(Date.now() - 10800000),
+        priority: 'urgent',
+        status: 'pending'
+      }
+    ];
+
+    return of({
+      items: mockItems,
+      totalCount: mockItems.length,
+      totalPages: 1
+    });
   }
 
-  getAllItems(page = 1, pageSize = 20, status?: string): Observable<ModerationListResponse> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('pageSize', pageSize.toString());
-    if (status) params = params.set('status', status);
-    return this.http.get<ModerationListResponse>(`${this.apiUrl}/moderation`, { params });
+  getAllItems(page: number = 1, pageSize: number = 20, status?: string): Observable<ModerationResponse> {
+    return this.http.get<ModerationResponse>(`${this.apiUrl}/items`, {
+      params: { page: page.toString(), pageSize: pageSize.toString(), ...(status && { status }) }
+    });
   }
 
-  approveItem(id: string, notes?: string): Observable<void> {
-    const request: ModerationActionRequest = { notes };
-    return this.http.post<void>(`${this.apiUrl}/moderation/${id}/approve`, request);
+  approveItem(itemId: string, notes?: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/items/${itemId}/approve`, { notes });
   }
 
-  rejectItem(id: string, reason: string): Observable<void> {
-    const request: ModerationActionRequest = { reason };
-    return this.http.post<void>(`${this.apiUrl}/moderation/${id}/reject`, request);
+  rejectItem(itemId: string, reason: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/items/${itemId}/reject`, { reason });
   }
 
-  deleteContent(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/moderation/${id}/content`);
+  dismissItem(itemId: string, notes?: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/items/${itemId}/dismiss`, { notes });
   }
 
-  dismissItem(id: string, notes?: string): Observable<void> {
-    const request: ModerationActionRequest = { notes };
-    return this.http.post<void>(`${this.apiUrl}/moderation/${id}/dismiss`, request);
-  }
-
-  banUser(userId: string, reason: string, duration?: number): Observable<void> {
-    const request: BanUserRequest = { 
+  banUser(userId: string, reason: string, durationDays?: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/users/${userId}/ban`, { 
       reason, 
-      durationDays: duration 
-    };
-    return this.http.post<void>(`${environment.apiUrl}/api/admin/dashboard/users/admin-users/${userId}/ban`, request);
+      durationDays 
+    });
+  }
+
+  getItemDetails(itemId: string): Observable<ModerationItem> {
+    return this.http.get<ModerationItem>(`${this.apiUrl}/items/${itemId}`);
   }
 }

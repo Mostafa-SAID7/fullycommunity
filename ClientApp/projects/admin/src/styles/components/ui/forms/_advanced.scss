@@ -1,0 +1,321 @@
+// =============================================================================
+// Advanced Form Components
+// =============================================================================
+
+// Enhanced Input Styles
+// -----------------------------------------------------------------------------
+
+.input-enhanced {
+  @extend .form-control;
+  position: relative;
+  
+  &.input-with-icon {
+    padding-left: $spacing-10;
+    
+    + .input-icon {
+      position: absolute;
+      left: $spacing-3;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $text-muted;
+      pointer-events: none;
+      
+      &.clickable {
+        pointer-events: auto;
+        cursor: pointer;
+        
+        &:hover {
+          color: $color-primary;
+        }
+      }
+    }
+  }
+  
+  &.input-with-suffix {
+    padding-right: $spacing-10;
+    
+    + .input-suffix {
+      position: absolute;
+      right: $spacing-3;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $text-muted;
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+.input-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  
+  .input-icon,
+  .input-suffix {
+    @include flex-center;
+    width: $icon-md;
+    height: $icon-md;
+  }
+}
+
+// Password Input
+// -----------------------------------------------------------------------------
+
+.input-password {
+  position: relative;
+  
+  .password-toggle {
+    position: absolute;
+    right: $spacing-3;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: $text-muted;
+    cursor: pointer;
+    padding: $spacing-1;
+    border-radius: $border-radius-base;
+    
+    &:hover {
+      color: $color-primary;
+      background: rgba($color-primary, 0.1);
+    }
+    
+    .toggle-icon {
+      width: $icon-sm;
+      height: $icon-sm;
+    }
+  }
+  
+  .form-control {
+    padding-right: $spacing-10;
+  }
+}
+
+// Search Input
+// -----------------------------------------------------------------------------
+
+.form-search {
+  position: relative;
+  
+  .form-control {
+    padding-left: $spacing-10;
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: $spacing-3;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-muted;
+    pointer-events: none;
+  }
+  
+  .search-clear {
+    position: absolute;
+    right: $spacing-3;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: $text-muted;
+    cursor: pointer;
+    padding: $spacing-1;
+    border-radius: $border-radius-base;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+      color: $text-secondary;
+    }
+  }
+}
+
+// File Input
+// -----------------------------------------------------------------------------
+
+.form-file {
+  position: relative;
+  
+  .form-file-input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+  
+  .form-file-label {
+    @include flex-center;
+    @extend .form-control;
+    cursor: pointer;
+    color: $text-secondary;
+    
+    &:hover {
+      background: $bg-secondary;
+      border-color: $color-primary;
+    }
+    
+    .file-icon {
+      margin-right: $spacing-2;
+    }
+  }
+  
+  &.has-file .form-file-label {
+    color: $text-primary;
+    background: rgba($color-success, 0.1);
+    border-color: $color-success;
+  }
+}
+
+// Drag and Drop File Upload
+// -----------------------------------------------------------------------------
+
+.form-dropzone {
+  border: 2px dashed $border-secondary;
+  border-radius: $border-radius-lg;
+  padding: $spacing-8;
+  text-align: center;
+  transition: all $transition-base;
+  cursor: pointer;
+  
+  &:hover,
+  &.dragover {
+    border-color: $color-primary;
+    background: rgba($color-primary, 0.05);
+  }
+  
+  .dropzone-icon {
+    width: $icon-2xl;
+    height: $icon-2xl;
+    margin: 0 auto $spacing-4;
+    color: $text-muted;
+  }
+  
+  .dropzone-text {
+    color: $text-secondary;
+    margin-bottom: $spacing-2;
+  }
+  
+  .dropzone-hint {
+    font-size: $font-size-sm;
+    color: $text-muted;
+  }
+  
+  input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+}
+
+// Floating Labels
+// -----------------------------------------------------------------------------
+
+.form-floating {
+  position: relative;
+  
+  .form-control {
+    padding: $spacing-4 $spacing-4 $spacing-2 $spacing-4;
+    
+    &::placeholder {
+      color: transparent;
+    }
+    
+    &:focus,
+    &:not(:placeholder-shown) {
+      ~ .form-label {
+        transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+        color: $color-primary;
+      }
+    }
+  }
+  
+  .form-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: $spacing-4;
+    pointer-events: none;
+    transform-origin: 0 0;
+    transition: all $transition-fast;
+    margin-bottom: 0;
+  }
+}
+
+// Range Input
+// -----------------------------------------------------------------------------
+
+.form-range {
+  width: 100%;
+  height: 1.5rem;
+  background: transparent;
+  cursor: pointer;
+  
+  &::-webkit-slider-track {
+    width: 100%;
+    height: 0.5rem;
+    background: $bg-tertiary;
+    border-radius: $border-radius-full;
+  }
+  
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    background: $color-primary;
+    border-radius: $border-radius-full;
+    cursor: pointer;
+    box-shadow: $shadow-sm;
+    
+    &:hover {
+      box-shadow: $shadow-md;
+      transform: scale(1.1);
+    }
+  }
+  
+  &::-moz-range-track {
+    width: 100%;
+    height: 0.5rem;
+    background: $bg-tertiary;
+    border-radius: $border-radius-full;
+    border: none;
+  }
+  
+  &::-moz-range-thumb {
+    width: 1.25rem;
+    height: 1.25rem;
+    background: $color-primary;
+    border-radius: $border-radius-full;
+    cursor: pointer;
+    border: none;
+    box-shadow: $shadow-sm;
+  }
+  
+  &:focus {
+    outline: none;
+    
+    &::-webkit-slider-thumb {
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.2);
+    }
+    
+    &::-moz-range-thumb {
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.2);
+    }
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .form-dropzone {
+    border-color: $dark-border-secondary;
+    
+    &:hover,
+    &.dragover {
+      background: rgba($color-primary, 0.1);
+    }
+  }
+}

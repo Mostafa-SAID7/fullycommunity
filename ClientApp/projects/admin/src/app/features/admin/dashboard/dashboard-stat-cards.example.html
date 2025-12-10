@@ -1,0 +1,166 @@
+<!-- Example of how to use the new stat card classes in dashboard -->
+<!-- Replace the existing stats grid in admin-dashboard.component.html with this structure -->
+
+<!-- Stats Grid with New SCSS Classes -->
+<div class="stats-container">
+  <h2 class="stats-title">Dashboard Overview</h2>
+  
+  <div class="stat-cards-grid grid-4">
+    <!-- Total Users Card -->
+    <div class="stat-card-blue stat-card-animate slide-up">
+      <div class="stat-header">
+        <div class="stat-icon-wrapper">
+          <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+          </svg>
+        </div>
+        <span class="stat-badge positive">
+          +{{ overview()!.users.newUsersThisMonth }}
+        </span>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-title">Total Users</h3>
+        <p class="stat-value">{{ overview()!.users.totalUsers | number }}</p>
+        <p class="stat-subtitle">{{ overview()!.users.activeUsers | number }} active</p>
+      </div>
+    </div>
+
+    <!-- Content Items Card -->
+    <div class="stat-card-purple stat-card-animate slide-up">
+      <div class="stat-header">
+        <div class="stat-icon-wrapper">
+          <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <span class="stat-badge neutral">
+          {{ overview()!.content.totalPosts }}
+        </span>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-title">Content Items</h3>
+        <p class="stat-value">{{ getTotalContent() | number }}</p>
+        <p class="stat-subtitle">Posts, Guides, Reviews</p>
+      </div>
+    </div>
+
+    <!-- Pending Moderation Card -->
+    <div class="stat-card-orange stat-card-animate slide-up">
+      <div class="stat-header">
+        <div class="stat-icon-wrapper">
+          <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+        </div>
+        <span class="stat-badge" 
+              [ngClass]="overview()!.content.pendingModeration > 0 ? 'negative' : 'positive'">
+          {{ overview()!.content.pendingModeration > 0 ? 'Action needed' : 'All clear' }}
+        </span>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-title">Pending Moderation</h3>
+        <p class="stat-value">{{ overview()!.content.pendingModeration }}</p>
+        <p class="stat-subtitle">Items awaiting review</p>
+      </div>
+    </div>
+
+    <!-- Community Stats Card -->
+    <div class="stat-card-green stat-card-animate slide-up">
+      <div class="stat-header">
+        <div class="stat-icon-wrapper">
+          <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+        </div>
+        <span class="stat-badge neutral">
+          {{ overview()!.community.totalGroups }}
+        </span>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-title">Active Communities</h3>
+        <p class="stat-value">{{ overview()!.community.activeDiscussions | number }}</p>
+        <p class="stat-subtitle">{{ overview()!.community.totalComments | number }} comments</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Example with Trend Indicators -->
+<div class="stats-container">
+  <h2 class="stats-title">Performance Metrics</h2>
+  
+  <div class="stat-cards-grid grid-3">
+    <!-- Revenue Card with Trend -->
+    <div class="stat-card-indigo stat-card-trend">
+      <div class="stat-header">
+        <div class="stat-icon-wrapper">
+          <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+          </svg>
+        </div>
+        <span class="stat-badge positive">+12.5%</span>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-title">Monthly Revenue</h3>
+        <p class="stat-value">$24,500</p>
+        <div class="stat-trend trend-up">
+          <svg class="trend-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l9.2-9.2M17 17V7H7"/>
+          </svg>
+          <span class="trend-value">+12.5% from last month</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conversion Rate Card -->
+    <div class="stat-card-green stat-card-trend">
+      <div class="stat-header">
+        <div class="stat-icon-wrapper">
+          <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <span class="stat-badge positive">Excellent</span>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-title">Conversion Rate</h3>
+        <p class="stat-value">3.24%</p>
+        <div class="stat-trend trend-up">
+          <svg class="trend-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l9.2-9.2M17 17V7H7"/>
+          </svg>
+          <span class="trend-value">+0.4% improvement</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bounce Rate Card -->
+    <div class="stat-card-red stat-card-trend">
+      <div class="stat-header">
+        <div class="stat-icon-wrapper">
+          <svg class="stat-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
+          </svg>
+        </div>
+        <span class="stat-badge negative">High</span>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-title">Bounce Rate</h3>
+        <p class="stat-value">45.2%</p>
+        <div class="stat-trend trend-down">
+          <svg class="trend-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l9.2-9.2M17 17V7H7"/>
+          </svg>
+          <span class="trend-value">-2.1% from last month</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>""

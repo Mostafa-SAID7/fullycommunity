@@ -9,22 +9,58 @@
     </div>
 
     <!-- Loading State -->
-    <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <div *ngIf="loading()" class="flex justify-center items-center py-12">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
     </div>
 
     <!-- Error State -->
     <div
-      *ngIf="error && !loading"
+      *ngIf="error() && !loading()"
       class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6"
     >
       <div class="flex items-center gap-2">
-        <span>{{ error }}</span>
+        <span>{{ error() }}</span>
+      </div>
+    </div>
+
+    <!-- System Health Banner -->
+    <div class="mb-6 p-4 rounded-lg border" [ngClass]="{
+      'bg-green-50 border-green-200': systemHealth() === 'healthy',
+      'bg-yellow-50 border-yellow-200': systemHealth() === 'warning',
+      'bg-red-50 border-red-200': systemHealth() === 'critical'
+    }">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-3 h-3 rounded-full" [ngClass]="{
+            'bg-green-500': systemHealth() === 'healthy',
+            'bg-yellow-500': systemHealth() === 'warning',
+            'bg-red-500': systemHealth() === 'critical'
+          }"></div>
+          <span class="font-medium" [ngClass]="{
+            'text-green-800': systemHealth() === 'healthy',
+            'text-yellow-800': systemHealth() === 'warning',
+            'text-red-800': systemHealth() === 'critical'
+          }">
+            System Status: {{ systemHealth() | titlecase }}
+          </span>
+        </div>
+        <app-refresh-button
+          (refresh)="refreshDashboard()"
+          [loading]="loading()"
+          [variant]="'secondary'"
+          [size]="'md'"
+          [showText]="true"
+          [refreshText]="'Refresh Dashboard'"
+          [loadingText]="'Refreshing...'"
+          [showStatusIndicator]="true"
+          [status]="refreshStatus()"
+          [lastRefresh]="lastRefreshTime()">
+        </app-refresh-button>
       </div>
     </div>
 
     <!-- Dashboard Content -->
-    <div *ngIf="overview && !loading">
+    <div *ngIf="overview() && !loading()">
       <!-- Stats Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Total Users Card -->
@@ -38,15 +74,15 @@
               </svg>
             </div>
             <span class="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
-              +{{ overview.users.newUsersThisMonth }}
+              +{{ overview()!.users.newUsersThisMonth }}
             </span>
           </div>
           <h3 class="text-gray-600 text-sm font-medium mb-1">Total Users</h3>
           <p class="text-3xl font-bold text-gray-900">
-            {{ overview.users.totalUsers | number }}
+            {{ overview()!.users.totalUsers | number }}
           </p>
           <p class="text-xs text-gray-500 mt-2">
-            {{ overview.users.activeUsers | number }} active
+            {{ overview()!.users.activeUsers | number }} active
           </p>
         </div>
 
@@ -61,7 +97,7 @@
               </svg>
             </div>
             <span class="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
-              {{ overview.content.totalPosts }}
+              {{ overview()!.content.totalPosts }}
             </span>
           </div>
           <h3 class="text-gray-600 text-sm font-medium mb-1">Content Items</h3>
@@ -83,14 +119,14 @@
             </div>
             <span
               class="text-sm font-medium px-2 py-1 rounded"
-              [ngClass]="overview.content.pendingModeration > 0 ? 'text-red-600 bg-red-50' : 'text-green-600 bg-green-50'"
+              [ngClass]="overview()!.content.pendingModeration > 0 ? 'text-red-600 bg-red-50' : 'text-green-600 bg-green-50'"
             >
-              {{ overview.content.pendingModeration > 0 ? 'Action needed' : 'All clear' }}
+              {{ overview()!.content.pendingModeration > 0 ? 'Action needed' : 'All clear' }}
             </span>
           </div>
           <h3 class="text-gray-600 text-sm font-medium mb-1">Pending Moderation</h3>
           <p class="text-3xl font-bold text-gray-900">
-            {{ overview.content.pendingModeration }}
+            {{ overview()!.content.pendingModeration }}
           </p>
           <p class="text-xs text-gray-500 mt-2">Items awaiting review</p>
         </div>
@@ -106,68 +142,73 @@
               </svg>
             </div>
             <span class="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
-              {{ overview.community.totalGroups }}
+              {{ overview()!.community.totalGroups }}
             </span>
           </div>
           <h3 class="text-gray-600 text-sm font-medium mb-1">Active Communities</h3>
           <p class="text-3xl font-bold text-gray-900">
-            {{ overview.community.activeDiscussions | number }}
+            {{ overview()!.community.activeDiscussions | number }}
           </p>
           <p class="text-xs text-gray-500 mt-2">
-            {{ overview.community.totalComments | number }} comments
+            {{ overview()!.community.totalComments | number }} comments
           </p>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <a *ngFor="let action of quickActions" 
+             [routerLink]="action.route"
+             class="block p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md hover:border-primary/30 transition-all duration-200 group">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="p-2 rounded-lg" [ngClass]="action.color">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="action.icon"/>
+                </svg>
+              </div>
+              <h3 class="font-semibold text-gray-900 group-hover:text-primary transition-colors">{{ action.title }}</h3>
+            </div>
+            <p class="text-sm text-gray-600">{{ action.description }}</p>
+          </a>
         </div>
       </div>
 
       <!-- Main Content Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- User Statistics -->
+        <!-- Recent Activity -->
         <div class="lg:col-span-2 bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-          <h2 class="text-lg font-semibold text-gray-900 mb-4">User Statistics</h2>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-gray-900">Recent Activity</h2>
+            <a routerLink="/admin/activity-log" class="text-sm text-primary hover:text-primary-hover font-medium">
+              View All →
+            </a>
+          </div>
           <div class="space-y-4">
-            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div class="flex items-center gap-3">
-                <div class="p-2 bg-blue-100 rounded">
-                  <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+            <div *ngFor="let activity of recentActivity(); let i = index" 
+                 class="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                 [class.border-l-4]="i < 3"
+                 [class.border-blue-500]="activity.type === 'user_registered'"
+                 [class.border-green-500]="activity.type === 'content_posted'"
+                 [class.border-yellow-500]="activity.type === 'content_moderated'"
+                 [class.border-red-500]="activity.type === 'system_alert'">
+              <div class="flex-shrink-0 mt-1">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center" 
+                     [class]="'bg-' + (activity.type === 'user_registered' ? 'blue' : activity.type === 'content_posted' ? 'green' : activity.type === 'content_moderated' ? 'yellow' : 'red') + '-100'">
+                  <svg class="w-4 h-4" [class]="getActivityColor(activity.type, activity.severity)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="getActivityIcon(activity.type)"/>
                   </svg>
                 </div>
-                <div>
-                  <p class="text-sm font-medium text-gray-900">New Users Today</p>
-                  <p class="text-xs text-gray-500">Registered in last 24h</p>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900">{{ activity.message }}</p>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-xs text-gray-500">{{ activity.timestamp | date:'short' }}</span>
+                  <span class="text-xs text-gray-400">•</span>
+                  <span class="text-xs text-gray-500">{{ activity.user }}</span>
                 </div>
               </div>
-              <span class="text-2xl font-bold text-gray-900">{{ overview.users.newUsersToday }}</span>
-            </div>
-
-            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div class="flex items-center gap-3">
-                <div class="p-2 bg-green-100 rounded">
-                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <p class="text-sm font-medium text-gray-900">New This Week</p>
-                  <p class="text-xs text-gray-500">Last 7 days</p>
-                </div>
-              </div>
-              <span class="text-2xl font-bold text-gray-900">{{ overview.users.newUsersThisWeek }}</span>
-            </div>
-
-            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div class="flex items-center gap-3">
-                <div class="p-2 bg-orange-100 rounded">
-                  <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <p class="text-sm font-medium text-gray-900">Pending Approval</p>
-                  <p class="text-xs text-gray-500">Awaiting verification</p>
-                </div>
-              </div>
-              <span class="text-2xl font-bold text-gray-900">{{ overview.users.pendingApprovals }}</span>
             </div>
           </div>
         </div>
@@ -189,7 +230,7 @@
                 <div class="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span class="text-sm text-gray-700">Database</span>
               </div>
-              <span class="text-xs font-medium text-green-600">{{ overview.system.status }}</span>
+              <span class="text-xs font-medium text-green-600">{{ overview()!.system.status }}</span>
             </div>
 
             <div class="flex items-center justify-between">
@@ -208,31 +249,55 @@
               <span class="text-xs font-medium text-green-600">Healthy</span>
             </div>
           </div>
+
+          <!-- User Statistics Summary -->
+          <div class="mt-6 pt-4 border-t border-gray-200">
+            <h3 class="text-sm font-semibold text-gray-900 mb-3">User Statistics</h3>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-600">New Today</span>
+                <span class="text-sm font-medium text-gray-900">{{ overview()!.users.newUsersToday }}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-600">New This Week</span>
+                <span class="text-sm font-medium text-gray-900">{{ overview()!.users.newUsersThisWeek }}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-600">Pending Approval</span>
+                <span class="text-sm font-medium text-gray-900">{{ overview()!.users.pendingApprovals }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Content Statistics -->
       <div class="mt-6 bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Content Overview</h2>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Content Overview</h2>
+          <a routerLink="/admin/content" class="text-sm text-primary hover:text-primary-hover font-medium">
+            Manage Content →
+          </a>
+        </div>
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <div class="text-center p-4 bg-blue-50 rounded-lg">
-            <p class="text-2xl font-bold text-blue-600">{{ overview.content.totalPosts }}</p>
+          <div class="text-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer">
+            <p class="text-2xl font-bold text-blue-600">{{ overview()!.content.totalPosts }}</p>
             <p class="text-sm text-gray-600 mt-1">Posts</p>
           </div>
-          <div class="text-center p-4 bg-green-50 rounded-lg">
-            <p class="text-2xl font-bold text-green-600">{{ overview.content.totalQuestions }}</p>
+          <div class="text-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors cursor-pointer">
+            <p class="text-2xl font-bold text-green-600">{{ overview()!.content.totalQuestions }}</p>
             <p class="text-sm text-gray-600 mt-1">Questions</p>
           </div>
-          <div class="text-center p-4 bg-orange-50 rounded-lg">
-            <p class="text-2xl font-bold text-orange-600">{{ overview.content.totalReviews }}</p>
+          <div class="text-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors cursor-pointer">
+            <p class="text-2xl font-bold text-orange-600">{{ overview()!.content.totalReviews }}</p>
             <p class="text-sm text-gray-600 mt-1">Reviews</p>
           </div>
-          <div class="text-center p-4 bg-pink-50 rounded-lg">
-            <p class="text-2xl font-bold text-pink-600">{{ overview.content.totalGuides }}</p>
+          <div class="text-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors cursor-pointer">
+            <p class="text-2xl font-bold text-pink-600">{{ overview()!.content.totalGuides }}</p>
             <p class="text-sm text-gray-600 mt-1">Guides</p>
           </div>
-          <div class="text-center p-4 bg-purple-50 rounded-lg">
-            <p class="text-2xl font-bold text-purple-600">{{ overview.content.totalPodcasts }}</p>
+          <div class="text-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors cursor-pointer">
+            <p class="text-2xl font-bold text-purple-600">{{ overview()!.content.totalPodcasts }}</p>
             <p class="text-sm text-gray-600 mt-1">Podcasts</p>
           </div>
         </div>

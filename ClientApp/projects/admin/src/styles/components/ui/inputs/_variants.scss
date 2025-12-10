@@ -1,0 +1,46 @@
+// =============================================================================
+// Input Variants
+// =============================================================================
+
+.input-rounded {
+  border-radius: $border-radius-full;
+}
+
+.input-pill {
+  border-radius: $border-radius-2xl;
+}
+
+.input-underline {
+  border: none;
+  border-bottom: 2px solid $border-primary;
+  border-radius: 0;
+  background: transparent;
+  
+  &:focus {
+    border-bottom-color: $color-primary;
+    box-shadow: none;
+  }
+}
+
+.input-filled {
+  background: $bg-secondary;
+  border: 1px solid transparent;
+  
+  &:focus {
+    background: $bg-primary;
+    border-color: $color-primary;
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .input-filled {
+    background: $dark-bg-tertiary;
+    
+    &:focus {
+      background: $dark-bg-secondary;
+    }
+  }
+}

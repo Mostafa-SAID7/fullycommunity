@@ -1,0 +1,80 @@
+// =============================================================================
+// Form Groups
+// =============================================================================
+
+// Input Groups
+// -----------------------------------------------------------------------------
+
+.input-group {
+  @include flex-start;
+  
+  .form-control {
+    flex: 1;
+    border-radius: 0;
+    
+    &:first-child {
+      border-top-left-radius: $input-border-radius;
+      border-bottom-left-radius: $input-border-radius;
+    }
+    
+    &:last-child {
+      border-top-right-radius: $input-border-radius;
+      border-bottom-right-radius: $input-border-radius;
+    }
+    
+    &:not(:first-child) {
+      border-left: none;
+    }
+    
+    &:focus {
+      z-index: 1;
+    }
+  }
+  
+  .input-group-text {
+    @include flex-center;
+    padding: $input-padding;
+    background: $bg-secondary;
+    border: $input-border;
+    color: $text-secondary;
+    font-size: $font-size-sm;
+    white-space: nowrap;
+    
+    &:first-child {
+      border-top-left-radius: $input-border-radius;
+      border-bottom-left-radius: $input-border-radius;
+      border-right: none;
+    }
+    
+    &:last-child {
+      border-top-right-radius: $input-border-radius;
+      border-bottom-right-radius: $input-border-radius;
+      border-left: none;
+    }
+  }
+  
+  .btn {
+    border-radius: 0;
+    
+    &:first-child {
+      border-top-left-radius: $input-border-radius;
+      border-bottom-left-radius: $input-border-radius;
+    }
+    
+    &:last-child {
+      border-top-right-radius: $input-border-radius;
+      border-bottom-right-radius: $input-border-radius;
+    }
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .input-group-text {
+    background: $dark-bg-tertiary;
+    border-color: $dark-border-primary;
+    color: $dark-text-secondary;
+  }
+}

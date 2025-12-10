@@ -16,40 +16,18 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  // Toggle between login and register
-  isRegisterMode = signal(false);
-  
   // Login form
   loginEmail = '';
   loginPassword = '';
-  
-  // Register form
-  registerEmail = '';
-  registerPassword = '';
-  registerConfirmPassword = '';
-  registerFirstName = '';
-  registerLastName = '';
   
   // State
   loading = signal(false);
   error = signal<string | null>(null);
   showPassword = signal(false);
-  showConfirmPassword = signal(false);
-
-  toggleMode() {
-    this.isRegisterMode.update(v => !v);
-    this.error.set(null);
-    this.clearForms();
-  }
 
   clearForms() {
     this.loginEmail = '';
     this.loginPassword = '';
-    this.registerEmail = '';
-    this.registerPassword = '';
-    this.registerConfirmPassword = '';
-    this.registerFirstName = '';
-    this.registerLastName = '';
   }
 
   onLoginSubmit() {
@@ -73,49 +51,8 @@ export class LoginComponent {
     });
   }
 
-  onRegisterSubmit() {
-    // Validation
-    if (!this.registerEmail || !this.registerPassword || !this.registerFirstName || !this.registerLastName) {
-      this.error.set('Please fill in all required fields');
-      return;
-    }
-
-    if (this.registerPassword.length < 6) {
-      this.error.set('Password must be at least 6 characters long');
-      return;
-    }
-
-    if (this.registerPassword !== this.registerConfirmPassword) {
-      this.error.set('Passwords do not match');
-      return;
-    }
-
-    this.loading.set(true);
-    this.error.set(null);
-
-    this.authService.register({
-      email: this.registerEmail,
-      password: this.registerPassword,
-      firstName: this.registerFirstName,
-      lastName: this.registerLastName
-    }).subscribe({
-      next: () => {
-        this.loading.set(false);
-        this.router.navigate(['/']);
-      },
-      error: (err) => {
-        this.loading.set(false);
-        this.error.set(err.error?.message || 'Registration failed. Please try again.');
-      }
-    });
-  }
-
   togglePasswordVisibility() {
     this.showPassword.update(v => !v);
-  }
-
-  toggleConfirmPasswordVisibility() {
-    this.showConfirmPassword.update(v => !v);
   }
 
   loginWithGoogle() {

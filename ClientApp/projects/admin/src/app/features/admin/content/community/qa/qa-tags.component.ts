@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { QaAdminService } from '../../../../../core/services/content/community/qa/qa-admin.service';
+import { DateUtils } from '../../../../../core/utils/date.utils';
 
 @Component({
   selector: 'app-qa-tags',
@@ -131,11 +132,5 @@ export class QaTagsComponent implements OnInit {
     this.selectedTags.set([]);
   }
 
-  formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  }
+  formatDate = DateUtils.formatDate;
 }

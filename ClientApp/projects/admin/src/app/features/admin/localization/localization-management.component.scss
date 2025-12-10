@@ -1,0 +1,294 @@
+// @import '../../../../styles/variables';
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Language card hover effects
+.language-card {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Progress bar animations
+.progress-bar {
+  transition: width 0.8s ease-in-out;
+}
+
+// Table row hover effects
+.table-row {
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: rgba(59, 130, 246, 0.05);
+  }
+}
+
+// Modal backdrop
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+}
+
+// Status badges
+.status-badge {
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+// Custom scrollbar for tables
+.table-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+  
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.7);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .responsive-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .responsive-flex {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+// Loading spinner
+.loading-spinner {
+  border-top-color: var(--primary-color);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Form validation styles
+.form-field {
+  &.ng-invalid.ng-touched {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  }
+  
+  &.ng-valid.ng-touched {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  }
+}
+
+// Tab navigation
+.tab-nav {
+  .tab-button {
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: transparent;
+      transition: background-color 0.2s ease;
+    }
+    
+    &.active::after {
+      background: var(--primary-color);
+    }
+  }
+}
+
+// Content translation cards
+.content-card {
+  border-left: 4px solid transparent;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-left-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Language flag display
+.language-flag {
+  font-size: 1.5rem;
+  line-height: 1;
+  display: inline-block;
+}
+
+// Statistics cards
+.stat-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Progress visualization
+.progress-visualization {
+  .progress-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  
+  .progress-bar-container {
+    flex: 1;
+    margin: 0 1rem;
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-hover));
+    border-radius: 6px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+// Search and filter section
+.filter-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  
+  .filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+}
+
+// Action buttons
+.action-button {
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+  }
+  
+  &.primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    
+    &:hover {
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+  }
+  
+  &.secondary {
+    background: #6b7280;
+    
+    &:hover {
+      background: #4b5563;
+    }
+  }
+  
+  &.danger {
+    background: #ef4444;
+    
+    &:hover {
+      background: #dc2626;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+  }
+}
+
+// Translation status indicators
+.translation-status {
+  &.complete {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    color: #166534;
+  }
+  
+  &.partial {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #92400e;
+  }
+  
+  &.missing {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #991b1b;
+  }
+}
+
+// Content type badges
+.content-type-badge {
+  &.post {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #1e40af;
+  }
+  
+  &.guide {
+    background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+    color: #7c3aed;
+  }
+  
+  &.page {
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    color: #059669;
+  }
+  
+  &.notification {
+    background: linear-gradient(135deg, #fef7ff, #fae8ff);
+    color: #a21caf;
+  }
+}

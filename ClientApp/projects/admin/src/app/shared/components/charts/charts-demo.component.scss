@@ -1,0 +1,285 @@
+// =============================================================================
+// Charts Demo Component Styles
+// =============================================================================
+
+@import '../../styles/component-mixins';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.charts-demo {
+  padding: $spacing-6;
+  
+  @include respond-below('md') {
+    padding: $spacing-4;
+  }
+}
+
+// Header Section
+// -----------------------------------------------------------------------------
+
+.demo-header {
+  margin-bottom: $spacing-8;
+}
+
+.demo-title {
+  @include heading(2);
+  color: $text-primary;
+  margin: 0;
+}
+
+// Stats Grid
+// -----------------------------------------------------------------------------
+
+.stats-grid {
+  @include grid-responsive(1, $spacing-6);
+  margin-bottom: $spacing-8;
+  
+  @include respond-to('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @include respond-to('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Charts Grid
+// -----------------------------------------------------------------------------
+
+.charts-grid {
+  @include grid-responsive(1, $spacing-6);
+  margin-bottom: $spacing-8;
+  
+  @include respond-to('lg') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// Chart Cards
+// -----------------------------------------------------------------------------
+
+.chart-card {
+  @include card-base;
+  @include card-hover;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-xl;
+  overflow: hidden;
+  
+  &.chart-card-full {
+    grid-column: 1 / -1;
+  }
+}
+
+.chart-header {
+  padding: $spacing-6 $spacing-6 0 $spacing-6;
+  border-bottom: 1px solid rgba($border-primary, 0.5);
+  margin-bottom: $spacing-6;
+  padding-bottom: $spacing-4;
+}
+
+.chart-title {
+  @include heading(4);
+  color: $text-primary;
+  margin: 0;
+  font-weight: $font-weight-semibold;
+}
+
+.chart-content {
+  padding: 0 $spacing-6 $spacing-6 $spacing-6;
+  
+  // Ensure charts are responsive
+  :deep(canvas) {
+    max-width: 100%;
+    height: auto !important;
+  }
+}
+
+// Responsive Design
+// -----------------------------------------------------------------------------
+
+@include respond-below('md') {
+  .charts-demo {
+    padding: $spacing-4;
+  }
+  
+  .demo-header {
+    margin-bottom: $spacing-6;
+  }
+  
+  .stats-grid,
+  .charts-grid {
+    margin-bottom: $spacing-6;
+  }
+  
+  .chart-header {
+    padding: $spacing-4 $spacing-4 0 $spacing-4;
+    margin-bottom: $spacing-4;
+    padding-bottom: $spacing-3;
+  }
+  
+  .chart-content {
+    padding: 0 $spacing-4 $spacing-4 $spacing-4;
+  }
+}
+
+@include respond-below('sm') {
+  .demo-title {
+    font-size: $font-size-xl;
+  }
+  
+  .chart-title {
+    font-size: $font-size-lg;
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .demo-title,
+  .chart-title {
+    color: $dark-text-primary;
+  }
+  
+  .chart-card {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+  
+  .chart-header {
+    border-color: rgba($dark-border-primary, 0.5);
+  }
+  
+  .chart-placeholder {
+    background: rgba($dark-bg-tertiary, 0.5);
+    border-color: $dark-border-secondary;
+    
+    .placeholder-text {
+      color: $dark-text-secondary;
+    }
+    
+    .placeholder-note {
+      color: rgba($dark-text-secondary, 0.7);
+    }
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+
+@include high-contrast {
+  .chart-card {
+    border: 2px solid currentColor;
+  }
+  
+  .chart-header {
+    border-bottom: 2px solid currentColor;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  .chart-card {
+    transition: none;
+    
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// Loading State
+// -----------------------------------------------------------------------------
+
+.chart-card.loading {
+  position: relative;
+  
+  .chart-content {
+    opacity: 0.5;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    @include loading-spinner($icon-lg, $color-primary);
+  }
+}
+
+// Animation for chart cards
+// -----------------------------------------------------------------------------
+
+.chart-card {
+  @include fade-in;
+  
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+}
+
+// Chart Placeholder
+// -----------------------------------------------------------------------------
+
+.chart-placeholder {
+  @include flex-center;
+  flex-direction: column;
+  min-height: 200px;
+  padding: $spacing-8;
+  text-align: center;
+  background: rgba($bg-secondary, 0.5);
+  border-radius: $border-radius-lg;
+  border: 2px dashed $border-secondary;
+  
+  .placeholder-icon {
+    font-size: 3rem;
+    margin-bottom: $spacing-4;
+    opacity: 0.7;
+  }
+  
+  .placeholder-text {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    color: $text-secondary;
+    margin: 0 0 $spacing-2 0;
+  }
+  
+  .placeholder-note {
+    font-size: $font-size-sm;
+    color: $text-muted;
+    margin: 0;
+  }
+}
+
+// Print Styles
+// -----------------------------------------------------------------------------
+
+@media print {
+  .charts-demo {
+    padding: 0;
+  }
+  
+  .chart-card {
+    box-shadow: none;
+    border: 1px solid #000;
+    break-inside: avoid;
+    margin-bottom: $spacing-4;
+  }
+  
+  .chart-card:hover {
+    transform: none;
+  }
+  
+  .chart-placeholder {
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+  }
+}

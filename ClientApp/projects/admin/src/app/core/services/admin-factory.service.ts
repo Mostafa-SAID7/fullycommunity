@@ -96,7 +96,7 @@ export class AdminFactoryService {
   async initialize(): Promise<void> {
     try {
       // Initialize any required setup
-      await this.unifiedAdmin.initializeAdminSession();
+      await this.unifiedAdmin.initializeAdminSession().toPromise();
     } catch (error) {
       console.error('Failed to initialize admin services:', error);
       throw error;

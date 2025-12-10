@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { QaAdminService } from '../../../../../core/services/content/community/qa/qa-admin.service';
+import { DateUtils } from '../../../../../core/utils/date.utils';
 
 @Component({
   selector: 'app-qa-analytics',
@@ -53,10 +54,5 @@ export class QaAnalyticsComponent implements OnInit {
     this.loadAnalytics();
   }
 
-  formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric'
-    });
-  }
+  formatDate = DateUtils.formatDate;
 }

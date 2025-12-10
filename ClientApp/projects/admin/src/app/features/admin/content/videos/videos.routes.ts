@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
 
 export const videosRoutes: Routes = [
-  { path: '', redirectTo: 'list', pathMatch: 'full' },
+  { path: '', redirectTo: 'manage', pathMatch: 'full' },
   { 
-    path: 'list', 
-    loadComponent: () => import('./videos-list/videos-list.component').then(m => m.VideosListComponent) 
+    path: 'manage', 
+    loadComponent: () => import('../../videos/videos-admin.component').then(m => m.VideosAdminComponent) 
   },
   { 
     path: 'pending', 

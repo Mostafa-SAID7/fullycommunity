@@ -5,6 +5,8 @@ export interface Tab {
   id: string;
   label: string;
   badge?: number;
+  disabled?: boolean;
+  icon?: string;
 }
 
 @Component({
@@ -12,19 +14,32 @@ export interface Tab {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-1 inline-flex gap-1">
-      <button 
-        *ngFor="let tab of tabs"
-        class="px-4 py-2 rounded-lg font-medium text-sm transition-all"
-        [ngClass]="activeTabId === tab.id ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-100'"
-        (click)="onTabChange(tab.id)">
-        {{ tab.label }}
-        <span *ngIf="tab.badge !== undefined && tab.badge > 0" 
-              class="ml-2 px-2 py-0.5 rounded-full text-xs font-semibold"
-              [ngClass]="activeTabId === tab.id ? 'bg-white text-primary' : 'bg-red-100 text-red-600'">
-          {{ tab.badge }}
-        </span>
-      </button>
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+        <button
+          *ngFor="let tab of tabs"
+          (click)="selectTab(tab)"
+          [disabled]="tab.disabled"
+          class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          [ngClass]="{
+            'border-primary text-primary': activeTabId === tab.id,
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTabId !== tab.id && !tab.disabled
+          }">
+          <div class="flex items-center gap-2">
+            <span *ngIf="tab.icon" class="text-lg">{{ tab.icon }}</span>
+            <span>{{ tab.label }}</span>
+            <span 
+              *ngIf="tab.badge !== undefined && tab.badge > 0" 
+              class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+              [ngClass]="{
+                'bg-primary text-white': activeTabId === tab.id,
+                'bg-gray-100 text-gray-900': activeTabId !== tab.id
+              }">
+              {{ tab.badge }}
+            </span>
+          </div>
+        </button>
+      </nav>
     </div>
   `
 })
@@ -33,7 +48,8 @@ export class TabNavigationComponent {
   @Input() activeTabId: string = '';
   @Output() tabChange = new EventEmitter<string>();
 
-  onTabChange(tabId: string): void {
-    this.tabChange.emit(tabId);
+  selectTab(tab: Tab) {
+    if (tab.disabled) return;
+    this.tabChange.emit(tab.id);
   }
 }

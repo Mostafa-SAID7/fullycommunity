@@ -1,0 +1,377 @@
+// =============================================================================
+// Base Form Styles
+// =============================================================================
+
+.form {
+  .form-group {
+    margin-bottom: $spacing-6;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  .form-row {
+    @include flex-start;
+    gap: $spacing-4;
+    margin-bottom: $spacing-6;
+    
+    .form-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    
+    @include respond-below('md') {
+      flex-direction: column;
+      gap: 0;
+      
+      .form-group {
+        margin-bottom: $spacing-4;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+// Form Labels
+// -----------------------------------------------------------------------------
+
+.form-label {
+  display: block;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  margin-bottom: $spacing-2;
+  font-size: $font-size-sm;
+  
+  &.required::after {
+    content: ' *';
+    color: $color-error;
+  }
+  
+  &.optional::after {
+    content: ' (optional)';
+    color: $text-muted;
+    font-weight: $font-weight-normal;
+  }
+}
+
+.form-label-inline {
+  @include flex-start;
+  margin-bottom: $spacing-4;
+  
+  .label-text {
+    min-width: 120px;
+    margin-right: $spacing-4;
+    margin-bottom: 0;
+  }
+  
+  .form-control {
+    flex: 1;
+  }
+}
+
+// Form Grid
+// -----------------------------------------------------------------------------
+
+.form-grid {
+  display: grid;
+  gap: $spacing-4;
+  
+  &.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  &.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  &.grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  @include respond-below('md') {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Form States
+// -----------------------------------------------------------------------------
+
+.form-loading {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    @include flex-center;
+    z-index: 1;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    @include loading-spinner($icon-lg, $color-primary);
+    z-index: 2;
+  }
+}
+
+// Authentication Forms (Login, Register, etc.)
+// -----------------------------------------------------------------------------
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+  
+  .form-field {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .field-label {
+    display: block;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+    margin-bottom: $spacing-2;
+  }
+  
+  .input-wrapper {
+    position: relative;
+  }
+  
+  .input-icon {
+    position: absolute;
+    top: 50%;
+    left: $spacing-4;
+    transform: translateY(-50%);
+    pointer-events: none;
+    
+    svg {
+      width: $icon-sm;
+      height: $icon-sm;
+      color: $text-tertiary;
+    }
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: $spacing-3 $spacing-4;
+    padding-left: 3rem; // Space for icon
+    border: 1px solid $border-primary;
+    border-radius: $border-radius-xl;
+    font-size: $font-size-sm;
+    color: $text-primary;
+    background-color: $bg-primary;
+    transition: $transition-base;
+    
+    @include respond-to('sm') {
+      padding: 0.875rem $spacing-4;
+      padding-left: 3rem;
+    }
+    
+    &::placeholder {
+      color: $text-tertiary;
+    }
+    
+    &:hover {
+      border-color: $border-secondary;
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: transparent;
+      box-shadow: 0 0 0 2px $color-primary;
+    }
+    
+    &:disabled {
+      background-color: $bg-secondary;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+  
+  .form-options {
+    @include flex-between;
+    align-items: center;
+    
+    @include respond-below('sm') {
+      flex-direction: column;
+      gap: $spacing-3;
+      align-items: flex-start;
+    }
+  }
+  
+  .remember-me {
+    @include flex-center;
+    cursor: pointer;
+    gap: $spacing-2;
+    transition: $transition-base;
+    
+    &:hover .remember-text {
+      color: $text-primary;
+    }
+  }
+  
+  .remember-checkbox {
+    width: $spacing-4;
+    height: $spacing-4;
+    accent-color: $color-primary;
+    border: 1px solid $border-secondary;
+    border-radius: $border-radius-base;
+    transition: $transition-base;
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
+    }
+  }
+  
+  .remember-text {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+    transition: $transition-base;
+  }
+  
+  .forgot-password {
+    font-size: $font-size-sm;
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+    text-decoration: none;
+    transition: $transition-base;
+    
+    &:hover {
+      color: $color-primary-hover;
+    }
+    
+    &:focus {
+      outline: none;
+      text-decoration: underline;
+    }
+  }
+  
+  .submit-button {
+    width: 100%;
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-hover 100%);
+    color: $text-inverse;
+    padding: $spacing-3 $spacing-4;
+    border: none;
+    border-radius: $border-radius-xl;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    @include flex-center;
+    gap: $spacing-2;
+    
+    @include respond-to('sm') {
+      padding: 0.875rem $spacing-4;
+      font-size: $font-size-base;
+    }
+    
+    &:hover:not(:disabled) {
+      box-shadow: $shadow-lg;
+      transform: scale(1.02);
+    }
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px $color-primary, 0 0 0 4px rgba($color-primary, 0.2);
+    }
+    
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+  
+  .loading-spinner {
+    width: $icon-sm;
+    height: $icon-sm;
+    border: 2px solid $text-inverse;
+    border-top: 2px solid transparent;
+    border-radius: $border-radius-full;
+    animation: spin 1s linear infinite;
+  }
+  
+  .error-message {
+    background-color: $red-50;
+    border: 1px solid $red-200;
+    color: $red-700;
+    padding: $spacing-4;
+    border-radius: $border-radius-lg;
+    font-size: $font-size-sm;
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .form-label {
+    color: $dark-text-primary;
+  }
+  
+  .auth-form {
+    .field-label {
+      color: $dark-text-primary;
+    }
+    
+    .form-input {
+      background-color: $dark-bg-secondary;
+      border-color: $dark-border-primary;
+      color: $dark-text-primary;
+      
+      &::placeholder {
+        color: $dark-text-secondary;
+      }
+      
+      &:disabled {
+        background-color: $dark-bg-tertiary;
+      }
+    }
+    
+    .remember-text {
+      color: $dark-text-secondary;
+    }
+    
+    .error-message {
+      background-color: rgba($red-900, 0.3);
+      border-color: $red-700;
+      color: $red-300;
+    }
+  }
+}
+
+// Animation Keyframes
+// -----------------------------------------------------------------------------
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

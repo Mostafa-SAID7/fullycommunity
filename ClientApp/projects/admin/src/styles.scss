@@ -1,46 +1,493 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+// =============================================================================
+// Main Styles for Admin Interface
+// =============================================================================
 
-// Admin-specific styles using Tailwind
-@layer base {
-  body {
-    @apply font-segoe leading-relaxed text-text-primary bg-background-surface m-0 antialiased;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+// Import abstracts (variables, mixins, animations)
+@import 'styles/abstracts/variables';
+@import 'styles/abstracts/mixins';
+@import 'styles/abstracts/animations';
+
+// Import utilities
+@import 'styles/utilities/utilities';
+
+// Import component styles (organized structure)
+@import 'styles/components/index';
+
+// Base Styles
+// -----------------------------------------------------------------------------
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  
+  @include reduced-motion {
+    scroll-behavior: auto;
   }
 }
 
-@layer components {
-  // Admin component styles
-  .admin-card {
-    @apply bg-background-card border border-border rounded-fluent-lg p-6 shadow-fluent hover:shadow-fluent-lg transition-shadow duration-200;
+body {
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-normal;
+  color: $text-primary;
+  background-color: $admin-background;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+// Typography
+// -----------------------------------------------------------------------------
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 $spacing-4 0;
+  font-family: $font-family-display;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  color: $text-primary;
+}
+
+h1 { @include heading(1); }
+h2 { @include heading(2); }
+h3 { @include heading(3); }
+h4 { @include heading(4); }
+h5 { @include heading(5); }
+h6 { @include heading(6); }
+
+p {
+  margin: 0 0 $spacing-4 0;
+  line-height: $line-height-relaxed;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+a {
+  color: $color-primary;
+  text-decoration: none;
+  transition: color $transition-fast;
+  
+  &:hover {
+    color: $color-primary-hover;
+    text-decoration: underline;
   }
   
-  .admin-button {
-    @apply px-4 py-2 rounded-fluent font-medium transition-colors duration-200 bg-primary text-white border-none cursor-pointer;
+  &:focus-visible {
+    @include focus-visible;
+  }
+}
+
+// Lists
+// -----------------------------------------------------------------------------
+
+ul, ol {
+  margin: 0 0 $spacing-4 0;
+  padding-left: $spacing-6;
+  
+  li {
+    margin-bottom: $spacing-1;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Code
+// -----------------------------------------------------------------------------
+
+code {
+  font-family: $font-family-secondary;
+  font-size: 0.875em;
+  background: rgba($color-primary, 0.1);
+  padding: 0.125rem 0.25rem;
+  border-radius: $border-radius-sm;
+  color: $color-primary;
+}
+
+pre {
+  font-family: $font-family-secondary;
+  background: $bg-secondary;
+  padding: $spacing-4;
+  border-radius: $border-radius-md;
+  overflow-x: auto;
+  margin: 0 0 $spacing-4 0;
+  
+  code {
+    background: none;
+    padding: 0;
+    color: inherit;
+  }
+}
+
+// Tables
+// -----------------------------------------------------------------------------
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: $spacing-6;
+  
+  th,
+  td {
+    padding: $spacing-3 $spacing-4;
+    text-align: left;
+    border-bottom: 1px solid $border-primary;
+  }
+  
+  th {
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+    background: $bg-secondary;
+  }
+  
+  tbody tr:hover {
+    background: rgba($color-primary, 0.05);
+  }
+}
+
+// Images
+// -----------------------------------------------------------------------------
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: $border-radius-base;
+}
+
+// Admin Layout Styles
+// -----------------------------------------------------------------------------
+
+.admin-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header {
+  @include admin-header;
+  position: sticky;
+  top: 0;
+  z-index: $z-index-sticky;
+  height: $nav-height;
+}
+
+.admin-main {
+  display: flex;
+  flex: 1;
+}
+
+.admin-sidebar {
+  width: $sidebar-width;
+  background: $admin-surface;
+  border-right: 1px solid $admin-border;
+  transition: width $transition-base;
+  
+  &.collapsed {
+    width: $sidebar-collapsed-width;
+  }
+  
+  @include respond-below('lg') {
+    position: fixed;
+    top: $nav-height;
+    left: 0;
+    bottom: 0;
+    z-index: $z-index-fixed;
+    transform: translateX(-100%);
+    
+    &.open {
+      transform: translateX(0);
+    }
+  }
+}
+
+.admin-content {
+  flex: 1;
+  padding: $spacing-6;
+  overflow-x: auto;
+  
+  @include respond-below('md') {
+    padding: $spacing-4;
+  }
+}
+
+// Admin Components
+// -----------------------------------------------------------------------------
+
+.admin-page-header {
+  @include flex-between;
+  margin-bottom: $spacing-8;
+  padding-bottom: $spacing-4;
+  border-bottom: 1px solid $border-primary;
+  
+  .page-title {
+    @include heading(2);
+    margin: 0;
+  }
+  
+  .page-subtitle {
+    color: $text-secondary;
+    margin-top: $spacing-1;
+  }
+  
+  .page-actions {
+    @include flex-start;
+    gap: $spacing-3;
+  }
+  
+  @include respond-below('md') {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-4;
+    
+    .page-actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+}
+
+.admin-stats-grid {
+  @include grid-responsive(1, $spacing-6);
+  margin-bottom: $spacing-8;
+  
+  @include respond-to('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @include respond-to('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.admin-content-grid {
+  @include grid-responsive(1, $spacing-6);
+  
+  @include respond-to('lg') {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+// Status Indicators
+// -----------------------------------------------------------------------------
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding: 0.25rem 0.5rem;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  border-radius: $border-radius-full;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  
+  &.status-success {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+  
+  &.status-warning {
+    background: rgba($color-warning, 0.1);
+    color: $color-warning;
+  }
+  
+  &.status-error {
+    background: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+  
+  &.status-info {
+    background: rgba($color-primary, 0.1);
+    color: $color-primary;
+  }
+  
+  .status-dot {
+    @include status-indicator;
+  }
+}
+
+// Loading States
+// -----------------------------------------------------------------------------
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  @include flex-center;
+  z-index: $z-index-modal;
+  
+  .loading-content {
+    text-align: center;
+    
+    .loading-spinner {
+      @include loading-spinner($icon-2xl, $color-primary);
+      margin: 0 auto $spacing-4;
+    }
+    
+    .loading-text {
+      color: $text-secondary;
+      font-weight: $font-weight-medium;
+    }
+  }
+}
+
+// Scrollbars
+// -----------------------------------------------------------------------------
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $border-secondary;
+  border-radius: $border-radius-full;
+  
+  &:hover {
+    background: $text-muted;
+  }
+}
+
+// Selection
+// -----------------------------------------------------------------------------
+
+::selection {
+  background: rgba($color-primary, 0.2);
+  color: $text-primary;
+}
+
+// Focus Management
+// -----------------------------------------------------------------------------
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  @include focus-visible;
+}
+
+// Print Styles
+// -----------------------------------------------------------------------------
+
+@media print {
+  .admin-sidebar,
+  .admin-header,
+  .btn,
+  .no-print {
+    display: none !important;
+  }
+  
+  .admin-content {
+    padding: 0;
+  }
+  
+  .card {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+}
+
+// Dark Mode
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  body {
+    background-color: $dark-bg-primary;
+    color: $dark-text-primary;
+  }
+  
+  .admin-header,
+  .admin-sidebar {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+  
+  table {
+    th {
+      background: $dark-bg-tertiary;
+      color: $dark-text-primary;
+    }
+    
+    th,
+    td {
+      border-color: $dark-border-primary;
+    }
+    
+    tbody tr:hover {
+      background: rgba($color-primary, 0.1);
+    }
+  }
+  
+  code {
+    background: rgba($color-primary, 0.2);
+  }
+  
+  pre {
+    background: $dark-bg-tertiary;
+  }
+  
+  .loading-overlay {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: $dark-bg-tertiary;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: $dark-border-secondary;
     
     &:hover {
-      @apply bg-primary-hover;
+      background: rgba($dark-text-secondary, 0.8);
     }
-    
-    &:disabled {
-      @apply bg-secondary-300 cursor-not-allowed;
-    }
-  }
-  
-  .admin-input {
-    @apply w-full px-3 py-2 border border-border rounded-fluent focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary;
   }
 }
 
-// Dark mode for admin
-@media (prefers-color-scheme: dark) {
-  body {
-    @apply bg-background-dark text-text-dark;
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+
+@include high-contrast {
+  * {
+    border-color: currentColor !important;
   }
   
-  .admin-card {
-    @apply bg-background-card-dark border-border-dark;
+  .card,
+  .btn,
+  .form-control {
+    border: 2px solid !important;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
   }
 }

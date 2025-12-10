@@ -1,0 +1,262 @@
+// =============================================================================
+// Spinner Components
+// =============================================================================
+
+.spinner {
+  @include loading-spinner($icon-md, $color-primary);
+  
+  // Size variants
+  &.spinner-sm {
+    @include loading-spinner($icon-sm, $color-primary);
+  }
+  
+  &.spinner-lg {
+    @include loading-spinner($icon-lg, $color-primary);
+  }
+  
+  &.spinner-xl {
+    @include loading-spinner($icon-xl, $color-primary);
+  }
+  
+  // Color variants
+  &.spinner-white {
+    border-color: rgba(255, 255, 255, 0.2);
+    border-top-color: white;
+  }
+  
+  &.spinner-success {
+    border-color: rgba($color-success, 0.2);
+    border-top-color: $color-success;
+  }
+  
+  &.spinner-warning {
+    border-color: rgba($color-warning, 0.2);
+    border-top-color: $color-warning;
+  }
+  
+  &.spinner-error {
+    border-color: rgba($color-error, 0.2);
+    border-top-color: $color-error;
+  }
+}
+
+// Dots Spinner
+// -----------------------------------------------------------------------------
+
+.spinner-dots {
+  @include flex-center;
+  gap: 0.25rem;
+  
+  .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: $color-primary;
+    border-radius: $border-radius-full;
+    animation: dotPulse 1.4s infinite ease-in-out both;
+    
+    &:nth-child(1) { animation-delay: -0.32s; }
+    &:nth-child(2) { animation-delay: -0.16s; }
+    &:nth-child(3) { animation-delay: 0s; }
+  }
+  
+  // Size variants
+  &.spinner-dots-sm .dot {
+    width: 0.25rem;
+    height: 0.25rem;
+  }
+  
+  &.spinner-dots-lg .dot {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+}
+
+// Pulse Spinner
+// -----------------------------------------------------------------------------
+
+.spinner-pulse {
+  width: 2rem;
+  height: 2rem;
+  background: $color-primary;
+  border-radius: $border-radius-full;
+  animation: pulse 2s infinite;
+  
+  // Size variants
+  &.spinner-pulse-sm {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  &.spinner-pulse-lg {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+// Ripple Spinner
+// -----------------------------------------------------------------------------
+
+.spinner-ripple {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border: 2px solid $color-primary;
+    border-radius: $border-radius-full;
+    animation: ripple 1s linear infinite;
+  }
+  
+  &::after {
+    animation-delay: -0.5s;
+  }
+}
+
+// Bars Spinner
+// -----------------------------------------------------------------------------
+
+.spinner-bars {
+  @include flex-center;
+  gap: 0.125rem;
+  
+  .bar {
+    width: 0.25rem;
+    height: 1rem;
+    background: $color-primary;
+    border-radius: $border-radius-sm;
+    animation: barScale 1.2s infinite ease-in-out;
+    
+    &:nth-child(1) { animation-delay: -1.1s; }
+    &:nth-child(2) { animation-delay: -1.0s; }
+    &:nth-child(3) { animation-delay: -0.9s; }
+    &:nth-child(4) { animation-delay: -0.8s; }
+    &:nth-child(5) { animation-delay: -0.7s; }
+  }
+  
+  // Size variants
+  &.spinner-bars-sm .bar {
+    width: 0.125rem;
+    height: 0.75rem;
+  }
+  
+  &.spinner-bars-lg .bar {
+    width: 0.375rem;
+    height: 1.5rem;
+  }
+}
+
+// Spinner with Text
+// -----------------------------------------------------------------------------
+
+.spinner-with-text {
+  @include flex-center;
+  flex-direction: column;
+  gap: $spacing-3;
+  
+  .spinner-text {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// Overlay Spinner
+// -----------------------------------------------------------------------------
+
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  @include flex-center;
+  z-index: $z-index-modal;
+  
+  .spinner-content {
+    @include flex-center;
+    flex-direction: column;
+    gap: $spacing-4;
+    padding: $spacing-6;
+    background: $bg-primary;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-xl;
+    
+    .spinner-title {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+    }
+    
+    .spinner-message {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      text-align: center;
+    }
+  }
+}
+
+// Inline Spinner
+// -----------------------------------------------------------------------------
+
+.spinner-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+  
+  .spinner {
+    @include loading-spinner($icon-sm, currentColor);
+  }
+  
+  .spinner-text {
+    font-size: inherit;
+    color: inherit;
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .spinner-overlay {
+    background: rgba(0, 0, 0, 0.8);
+    
+    .spinner-content {
+      background: $dark-bg-secondary;
+      
+      .spinner-title {
+        color: $dark-text-primary;
+      }
+      
+      .spinner-message {
+        color: $dark-text-secondary;
+      }
+    }
+  }
+  
+  .spinner-with-text .spinner-text {
+    color: $dark-text-secondary;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  .spinner,
+  .spinner-dots .dot,
+  .spinner-pulse,
+  .spinner-ripple::before,
+  .spinner-ripple::after,
+  .spinner-bars .bar {
+    animation: none;
+  }
+  
+  .spinner {
+    border: 2px solid $color-primary;
+    border-radius: $border-radius-full;
+  }
+}

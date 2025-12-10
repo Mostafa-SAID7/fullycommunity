@@ -9,7 +9,8 @@ import { LogoButtonComponent } from '../../../shared/components/logo-button/logo
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule, LogoButtonComponent],
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
   private authService = inject(AuthService);
@@ -32,7 +33,7 @@ export class LoginComponent {
     this.errorMessage = '';
 
     this.authService.login(this.email, this.password).subscribe({
-      next: (response) => {
+      next: () => {
         this.loading = false;
         
         // Check if user has admin role

@@ -1,0 +1,149 @@
+// =============================================================================
+// Button States
+// =============================================================================
+
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    @include loading-spinner($icon-sm, rgba(255, 255, 255, 0.8));
+  }
+  
+  &.btn-secondary::after {
+    @include loading-spinner($icon-sm, $color-primary);
+  }
+  
+  &.btn-ghost::after {
+    @include loading-spinner($icon-sm, $text-secondary);
+  }
+}
+
+.btn-success-state {
+  @include fade-in;
+  background: $color-success !important;
+  color: $text-inverse !important;
+  
+  &::before {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+  }
+}
+
+.btn-error-state {
+  @include fade-in;
+  background: $color-error !important;
+  color: $text-inverse !important;
+  animation: errorShake 0.5s ease-in-out;
+  
+  &::before {
+    content: '✗';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+  }
+}
+
+// Disabled State
+// -----------------------------------------------------------------------------
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none !important;
+  
+  &:hover {
+    transform: none !important;
+  }
+}
+
+// Focus States
+// -----------------------------------------------------------------------------
+
+.btn:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba($color-primary, 0.5);
+}
+
+// Active States
+// -----------------------------------------------------------------------------
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+// Hover States
+// -----------------------------------------------------------------------------
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+// Dark Mode States
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .btn-secondary {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+    color: $dark-text-primary;
+    
+    &:hover:not(:disabled) {
+      background: $dark-bg-tertiary;
+      border-color: $color-primary;
+      color: $color-primary;
+    }
+  }
+  
+  .btn-ghost {
+    color: $dark-text-secondary;
+    
+    &:hover:not(:disabled) {
+      background: $dark-bg-secondary;
+      color: $dark-text-primary;
+    }
+  }
+}
+
+// High Contrast States
+// -----------------------------------------------------------------------------
+
+@include high-contrast {
+  .btn {
+    border: 2px solid currentColor;
+    
+    &:focus-visible {
+      outline: 3px solid;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Reduced Motion States
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  .btn {
+    transition: none;
+    
+    &:hover {
+      transform: none;
+    }
+  }
+  
+  .btn-loading::after {
+    animation: none;
+  }
+}

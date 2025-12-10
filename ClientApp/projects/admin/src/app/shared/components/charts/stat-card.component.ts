@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 
 export interface StatCardConfig {
   title: string;
-  value: string | number;
-  icon?: string;
+  value: number | string;
+  icon: string;
+  color: 'primary' | 'success' | 'warning' | 'danger' | 'info';
+  subtitle?: string;
   trend?: {
     value: number;
-    isPositive: boolean;
+    direction: 'up' | 'down';
   };
-  color?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
 }
 
 @Component({
@@ -17,62 +18,54 @@ export interface StatCardConfig {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
-      <div class="flex items-center justify-between">
-        <div class="flex-1">
-          <p class="text-sm font-medium text-gray-600 mb-1">{{ config.title }}</p>
-          <p class="text-3xl font-bold" [ngClass]="getValueColorClass()">
-            {{ config.value }}
-          </p>
-          <div *ngIf="config.trend" class="flex items-center gap-1 mt-2">
-            <svg *ngIf="config.trend.isPositive" class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
-            </svg>
-            <svg *ngIf="!config.trend.isPositive" class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-            </svg>
-            <span class="text-sm font-medium" [ngClass]="config.trend.isPositive ? 'text-green-600' : 'text-red-600'">
-              {{ config.trend.value }}%
-            </span>
-            <span class="text-xs text-gray-500 ml-1">vs last period</span>
-          </div>
+    <div class="stat-card">
+      <div class="stat-card-header">
+        <div class="stat-card-icon" [ngClass]="getIconBgClass()">
+          <span class="stat-card-icon-text">{{ config.icon }}</span>
         </div>
-        <div *ngIf="config.icon" class="flex-shrink-0">
-          <div class="w-12 h-12 rounded-lg flex items-center justify-center" [ngClass]="getIconBgClass()">
-            <span class="text-2xl">{{ config.icon }}</span>
-          </div>
+        <div *ngIf="config.trend" class="stat-card-trend" [ngClass]="getTrendClass()">
+          <svg class="stat-card-trend-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path *ngIf="config.trend.direction === 'up'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+            <path *ngIf="config.trend.direction === 'down'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
+          </svg>
+          <span>{{ config.trend.value }}%</span>
         </div>
+      </div>
+      <div class="stat-card-content">
+        <h3 class="stat-card-title">{{ config.title }}</h3>
+        <p class="stat-card-value" [ngClass]="getValueClass()">{{ config.value }}</p>
+        <p *ngIf="config.subtitle" class="stat-card-subtitle">{{ config.subtitle }}</p>
       </div>
     </div>
   `,
-  styles: [`
-    :host {
-      display: block;
-    }
-  `]
+  styleUrls: ['./stat-card.component.scss']
 })
 export class StatCardComponent {
   @Input() config!: StatCardConfig;
 
-  getValueColorClass(): string {
-    const colorMap = {
-      primary: 'text-blue-600',
-      success: 'text-green-600',
-      warning: 'text-yellow-600',
-      danger: 'text-red-600',
-      info: 'text-cyan-600'
+  getIconBgClass(): string {
+    const classes = {
+      primary: 'stat-card-icon-primary',
+      success: 'stat-card-icon-success',
+      warning: 'stat-card-icon-warning',
+      danger: 'stat-card-icon-danger',
+      info: 'stat-card-icon-info'
     };
-    return colorMap[this.config.color || 'primary'];
+    return classes[this.config.color] || classes.primary;
   }
 
-  getIconBgClass(): string {
-    const colorMap = {
-      primary: 'bg-blue-100',
-      success: 'bg-green-100',
-      warning: 'bg-yellow-100',
-      danger: 'bg-red-100',
-      info: 'bg-cyan-100'
+  getValueClass(): string {
+    const classes = {
+      primary: 'stat-card-value-primary',
+      success: 'stat-card-value-success',
+      warning: 'stat-card-value-warning',
+      danger: 'stat-card-value-danger',
+      info: 'stat-card-value-info'
     };
-    return colorMap[this.config.color || 'primary'];
+    return classes[this.config.color] || classes.primary;
+  }
+
+  getTrendClass(): string {
+    return this.config.trend?.direction === 'up' ? 'stat-card-trend-up' : 'stat-card-trend-down';
   }
 }

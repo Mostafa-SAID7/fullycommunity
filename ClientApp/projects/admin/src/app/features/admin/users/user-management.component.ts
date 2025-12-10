@@ -170,8 +170,9 @@ export class UserManagementComponent implements OnInit {
   }
 
   blockUser(user: AdminUser) {
-    if (confirm(`Are you sure you want to block ${user.firstName} ${user.lastName}?`)) {
-      this.usersService.blockUser(user.id).subscribe({
+    const reason = prompt('Reason for blocking this user:') || 'Blocked by admin';
+    if (reason && confirm(`Are you sure you want to block ${user.firstName} ${user.lastName}?`)) {
+      this.usersService.blockUser(user.id, reason).subscribe({
         next: () => this.loadUsers(),
         error: (err) => console.error('Error blocking user:', err)
       });

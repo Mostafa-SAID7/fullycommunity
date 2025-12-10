@@ -1,0 +1,42 @@
+// =============================================================================
+// Form Validation
+// =============================================================================
+
+.form-feedback {
+  font-size: $font-size-sm;
+  margin-top: $spacing-1;
+  
+  &.valid-feedback {
+    color: $color-success;
+  }
+  
+  &.invalid-feedback {
+    color: $color-error;
+  }
+}
+
+.form-text {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  margin-top: $spacing-1;
+}
+
+// Validation States
+// -----------------------------------------------------------------------------
+
+.is-valid {
+  @include input-success;
+}
+
+.is-invalid {
+  @include input-error;
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .form-text {
+    color: $dark-text-secondary;
+  }
+}

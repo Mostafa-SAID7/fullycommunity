@@ -8,7 +8,8 @@ import { TabNavigationComponent, Tab } from '../../../shared/components/tab-navi
   selector: 'admin-profile',
   standalone: true,
   imports: [CommonModule, FormsModule, TabNavigationComponent],
-  templateUrl: './admin-profile.component.html'
+  templateUrl: './admin-profile.component.html',
+  styleUrls: ['./admin-profile.component.scss']
 })
 export class AdminProfileComponent implements OnInit {
   private authService = inject(AuthService);

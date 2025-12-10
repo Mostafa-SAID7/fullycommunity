@@ -1,0 +1,267 @@
+// =============================================================================
+// Theme Switcher Component Styles
+// =============================================================================
+
+@import '../../styles/component-mixins';
+
+:host {
+  position: relative;
+  display: inline-block;
+}
+
+// Theme Switcher Button
+// -----------------------------------------------------------------------------
+
+.theme-switcher-btn {
+  @include flex-center;
+  gap: $spacing-2;
+  padding: $spacing-2 $spacing-3;
+  background: rgba($bg-primary, 0.8);
+  border: 1px solid rgba($border-primary, 0.5);
+  border-radius: $border-radius-lg;
+  color: $text-secondary;
+  cursor: pointer;
+  transition: all $transition-fast;
+  backdrop-filter: blur(8px);
+  
+  &:hover {
+    background: rgba($color-primary, 0.1);
+    border-color: rgba($color-primary, 0.3);
+    color: $color-primary;
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
+  }
+  
+  &:focus-visible {
+    @include focus-visible;
+  }
+  
+  .theme-icon {
+    font-size: $font-size-lg;
+    line-height: 1;
+  }
+  
+  .dropdown-arrow {
+    width: $icon-sm;
+    height: $icon-sm;
+    transition: transform $transition-fast;
+  }
+}
+
+// Dropdown Menu
+// -----------------------------------------------------------------------------
+
+.theme-dropdown {
+  position: absolute;
+  top: calc(100% + #{$spacing-2});
+  right: 0;
+  min-width: 200px;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-xl;
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  z-index: $z-index-dropdown;
+  animation: slideInDown $animation-duration-fast ease-out;
+  
+  .dropdown-header {
+    padding: $spacing-3 $spacing-4;
+    background: rgba($color-primary, 0.05);
+    border-bottom: 1px solid rgba($border-primary, 0.5);
+    
+    .dropdown-title {
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+      font-size: $font-size-sm;
+    }
+  }
+  
+  .dropdown-options {
+    padding: $spacing-2;
+  }
+  
+  .dropdown-footer {
+    padding: $spacing-2 $spacing-4;
+    background: rgba($bg-secondary, 0.5);
+    border-top: 1px solid rgba($border-primary, 0.5);
+    
+    .footer-text {
+      font-size: $font-size-xs;
+      color: $text-muted;
+    }
+  }
+}
+
+// Theme Options
+// -----------------------------------------------------------------------------
+
+.theme-option {
+  @include flex-between;
+  width: 100%;
+  padding: $spacing-3 $spacing-4;
+  background: none;
+  border: none;
+  border-radius: $border-radius-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+  text-align: left;
+  
+  &:hover {
+    background: rgba($color-primary, 0.08);
+    color: $color-primary;
+    transform: translateX(2px);
+  }
+  
+  &.active {
+    background: rgba($color-primary, 0.12);
+    color: $color-primary;
+    
+    &:hover {
+      background: rgba($color-primary, 0.15);
+    }
+  }
+  
+  .option-icon {
+    font-size: $font-size-lg;
+    margin-right: $spacing-3;
+  }
+  
+  .option-label {
+    flex: 1;
+    font-weight: $font-weight-medium;
+    font-size: $font-size-sm;
+  }
+  
+  .active-indicator {
+    width: $icon-sm;
+    height: $icon-sm;
+    color: $color-primary;
+  }
+}
+
+// Backdrop
+// -----------------------------------------------------------------------------
+
+.theme-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: $z-index-dropdown - 1;
+  background: transparent;
+}
+
+// Animations
+// -----------------------------------------------------------------------------
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .theme-switcher-btn {
+    background: rgba($dark-bg-secondary, 0.8);
+    border-color: rgba($dark-border-primary, 0.5);
+    color: $dark-text-secondary;
+    
+    &:hover {
+      background: rgba($color-primary, 0.15);
+      border-color: rgba($color-primary, 0.4);
+      color: $color-primary;
+    }
+  }
+  
+  .theme-dropdown {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+    
+    .dropdown-header {
+      background: rgba($color-primary, 0.1);
+      border-color: rgba($dark-border-primary, 0.5);
+      
+      .dropdown-title {
+        color: $dark-text-primary;
+      }
+    }
+    
+    .dropdown-footer {
+      background: rgba($dark-bg-tertiary, 0.5);
+      border-color: rgba($dark-border-primary, 0.5);
+      
+      .footer-text {
+        color: rgba($dark-text-secondary, 0.7);
+      }
+    }
+  }
+  
+  .theme-option {
+    color: $dark-text-secondary;
+    
+    &:hover {
+      background: rgba($color-primary, 0.15);
+      color: $color-primary;
+    }
+    
+    &.active {
+      background: rgba($color-primary, 0.2);
+      color: $color-primary;
+    }
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+
+@include high-contrast {
+  .theme-switcher-btn,
+  .theme-dropdown {
+    border: 2px solid;
+  }
+  
+  .theme-option:focus-visible {
+    outline: 2px solid;
+    outline-offset: 2px;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  .theme-switcher-btn,
+  .theme-option,
+  .dropdown-arrow {
+    transition: none;
+  }
+  
+  .theme-dropdown {
+    animation: none;
+  }
+  
+  .theme-option:hover {
+    transform: none;
+  }
+}
+
+// Responsive Design
+// -----------------------------------------------------------------------------
+
+@include respond-below('sm') {
+  .theme-dropdown {
+    right: auto;
+    left: 0;
+    min-width: 180px;
+  }
+}

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../../environments/environment';
+import { DateUtils } from '../../../../../core/utils/date.utils';
 
 interface PendingVideo {
   id: string;
@@ -124,13 +125,5 @@ export class VideosPendingComponent implements OnInit {
     });
   }
 
-  formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
+  formatDate = DateUtils.formatDate;
 }

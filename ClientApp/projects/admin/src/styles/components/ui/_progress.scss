@@ -1,0 +1,298 @@
+// =============================================================================
+// Progress Components
+// =============================================================================
+
+.progress {
+  width: 100%;
+  height: 0.5rem;
+  background: $bg-tertiary;
+  border-radius: $border-radius-full;
+  overflow: hidden;
+  position: relative;
+  
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, $color-primary, $color-primary-hover);
+    border-radius: inherit;
+    transition: width $transition-base;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      animation: progressShine 2s infinite;
+    }
+  }
+  
+  // Progress variants
+  &.progress-sm {
+    height: 0.25rem;
+  }
+  
+  &.progress-lg {
+    height: 0.75rem;
+  }
+  
+  &.progress-xl {
+    height: 1rem;
+  }
+  
+  // Color variants
+  &.progress-success .progress-bar {
+    background: linear-gradient(90deg, $color-success, lighten($color-success, 10%));
+  }
+  
+  &.progress-warning .progress-bar {
+    background: linear-gradient(90deg, $color-warning, lighten($color-warning, 10%));
+  }
+  
+  &.progress-error .progress-bar {
+    background: linear-gradient(90deg, $color-error, lighten($color-error, 10%));
+  }
+}
+
+// Circular Progress
+// -----------------------------------------------------------------------------
+
+.progress-circle {
+  position: relative;
+  width: 4rem;
+  height: 4rem;
+  
+  .progress-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    
+    .progress-track {
+      fill: none;
+      stroke: $bg-tertiary;
+      stroke-width: 4;
+    }
+    
+    .progress-fill {
+      fill: none;
+      stroke: $color-primary;
+      stroke-width: 4;
+      stroke-linecap: round;
+      transition: stroke-dashoffset $transition-base;
+    }
+  }
+  
+  .progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+  }
+  
+  // Size variants
+  &.progress-circle-sm {
+    width: 2rem;
+    height: 2rem;
+    
+    .progress-text {
+      font-size: $font-size-xs;
+    }
+  }
+  
+  &.progress-circle-lg {
+    width: 6rem;
+    height: 6rem;
+    
+    .progress-text {
+      font-size: $font-size-lg;
+    }
+  }
+}
+
+// Step Progress
+// -----------------------------------------------------------------------------
+
+.progress-steps {
+  @include flex-start;
+  width: 100%;
+  
+  .step {
+    @include flex-center;
+    flex-direction: column;
+    flex: 1;
+    position: relative;
+    
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 1rem;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: $border-secondary;
+      z-index: 0;
+    }
+    
+    .step-indicator {
+      @include flex-center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: $border-radius-full;
+      background: $bg-secondary;
+      border: 2px solid $border-secondary;
+      color: $text-muted;
+      font-weight: $font-weight-semibold;
+      font-size: $font-size-sm;
+      z-index: 1;
+      transition: all $transition-base;
+    }
+    
+    .step-label {
+      margin-top: $spacing-2;
+      font-size: $font-size-sm;
+      color: $text-muted;
+      text-align: center;
+    }
+    
+    // Step states
+    &.completed {
+      .step-indicator {
+        background: $color-success;
+        border-color: $color-success;
+        color: $text-inverse;
+      }
+      
+      .step-label {
+        color: $color-success;
+      }
+      
+      &::after {
+        background: $color-success;
+      }
+    }
+    
+    &.active {
+      .step-indicator {
+        background: $color-primary;
+        border-color: $color-primary;
+        color: $text-inverse;
+        box-shadow: 0 0 0 4px rgba($color-primary, 0.2);
+      }
+      
+      .step-label {
+        color: $color-primary;
+        font-weight: $font-weight-medium;
+      }
+    }
+    
+    &.error {
+      .step-indicator {
+        background: $color-error;
+        border-color: $color-error;
+        color: $text-inverse;
+      }
+      
+      .step-label {
+        color: $color-error;
+      }
+    }
+  }
+}
+
+// Indeterminate Progress
+// -----------------------------------------------------------------------------
+
+.progress-indeterminate {
+  width: 100%;
+  height: 0.25rem;
+  background: $bg-tertiary;
+  border-radius: $border-radius-full;
+  overflow: hidden;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      $color-primary,
+      transparent
+    );
+    animation: progressIndeterminate 2s infinite;
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .progress {
+    background: $dark-bg-tertiary;
+  }
+  
+  .progress-circle {
+    .progress-track {
+      stroke: $dark-bg-tertiary;
+    }
+    
+    .progress-text {
+      color: $dark-text-primary;
+    }
+  }
+  
+  .progress-steps {
+    .step {
+      &:not(:last-child)::after {
+        background: $dark-border-secondary;
+      }
+      
+      .step-indicator {
+        background: $dark-bg-secondary;
+        border-color: $dark-border-secondary;
+        color: $dark-text-secondary;
+      }
+      
+      .step-label {
+        color: $dark-text-secondary;
+      }
+    }
+  }
+  
+  .progress-indeterminate {
+    background: $dark-bg-tertiary;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  .progress-bar,
+  .progress-fill,
+  .step-indicator {
+    transition: none;
+  }
+  
+  .progress-bar::after {
+    animation: none;
+  }
+  
+  .progress-indeterminate::after {
+    animation: none;
+  }
+}

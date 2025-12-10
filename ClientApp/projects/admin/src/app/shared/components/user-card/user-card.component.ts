@@ -96,16 +96,21 @@ export class UserCardComponent {
     return `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase();
   }
 
-  getRoleBadgeClass(role: string): string {
+  getRoleBadgeClass(role: any): string {
+    const roleStr = typeof role === 'string' ? role : role.toString();
     const classes: Record<string, string> = {
       'SuperAdmin': 'bg-purple-100 text-purple-800',
       'UserAdmin': 'bg-blue-100 text-blue-800',
       'ContentAdmin': 'bg-indigo-100 text-indigo-800',
       'Expert': 'bg-green-100 text-green-800',
       'Reviewer': 'bg-yellow-100 text-yellow-800',
-      'User': 'bg-gray-100 text-gray-800'
+      'User': 'bg-gray-100 text-gray-800',
+      '3': 'bg-purple-100 text-purple-800', // SuperAdmin enum value
+      '2': 'bg-blue-100 text-blue-800',     // Admin enum value
+      '1': 'bg-indigo-100 text-indigo-800', // Moderator enum value
+      '0': 'bg-gray-100 text-gray-800'      // User enum value
     };
-    return classes[role] || 'bg-gray-100 text-gray-800';
+    return classes[roleStr] || 'bg-gray-100 text-gray-800';
   }
 
   getStatusBadgeClass(status: string): string {

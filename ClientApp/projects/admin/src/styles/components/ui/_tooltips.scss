@@ -1,0 +1,347 @@
+// =============================================================================
+// Tooltip Components for Admin Interface
+// =============================================================================
+
+// Base Tooltip Styles
+// -----------------------------------------------------------------------------
+
+.tooltip {
+  position: absolute;
+  z-index: $z-index-tooltip;
+  padding: $spacing-2 $spacing-3;
+  background: rgba(0, 0, 0, 0.9);
+  color: $text-inverse;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  border-radius: $border-radius-md;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all $transition-fast;
+  pointer-events: none;
+  
+  // Arrow
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 4px solid transparent;
+  }
+  
+  // Show tooltip
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// Tooltip Positions
+// -----------------------------------------------------------------------------
+
+.tooltip-top {
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  
+  &::after {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top-color: rgba(0, 0, 0, 0.9);
+  }
+  
+  &.show {
+    transform: translateX(-50%) translateY(-4px);
+  }
+}
+
+.tooltip-bottom {
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  
+  &::after {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom-color: rgba(0, 0, 0, 0.9);
+  }
+  
+  &.show {
+    transform: translateX(-50%) translateY(4px);
+  }
+}
+
+.tooltip-left {
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  
+  &::after {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left-color: rgba(0, 0, 0, 0.9);
+  }
+  
+  &.show {
+    transform: translateY(-50%) translateX(-4px);
+  }
+}
+
+.tooltip-right {
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  
+  &::after {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-right-color: rgba(0, 0, 0, 0.9);
+  }
+  
+  &.show {
+    transform: translateY(-50%) translateX(4px);
+  }
+}
+
+// Tooltip Variants
+// -----------------------------------------------------------------------------
+
+.tooltip-light {
+  background: $bg-primary;
+  color: $text-primary;
+  border: 1px solid $border-primary;
+  box-shadow: $shadow-lg;
+  
+  &.tooltip-top::after {
+    border-top-color: $bg-primary;
+  }
+  
+  &.tooltip-bottom::after {
+    border-bottom-color: $bg-primary;
+  }
+  
+  &.tooltip-left::after {
+    border-left-color: $bg-primary;
+  }
+  
+  &.tooltip-right::after {
+    border-right-color: $bg-primary;
+  }
+}
+
+.tooltip-primary {
+  background: $color-primary;
+  color: $text-inverse;
+  
+  &.tooltip-top::after {
+    border-top-color: $color-primary;
+  }
+  
+  &.tooltip-bottom::after {
+    border-bottom-color: $color-primary;
+  }
+  
+  &.tooltip-left::after {
+    border-left-color: $color-primary;
+  }
+  
+  &.tooltip-right::after {
+    border-right-color: $color-primary;
+  }
+}
+
+.tooltip-success {
+  background: $color-success;
+  color: $text-inverse;
+  
+  &.tooltip-top::after {
+    border-top-color: $color-success;
+  }
+  
+  &.tooltip-bottom::after {
+    border-bottom-color: $color-success;
+  }
+  
+  &.tooltip-left::after {
+    border-left-color: $color-success;
+  }
+  
+  &.tooltip-right::after {
+    border-right-color: $color-success;
+  }
+}
+
+.tooltip-warning {
+  background: $color-warning;
+  color: $text-inverse;
+  
+  &.tooltip-top::after {
+    border-top-color: $color-warning;
+  }
+  
+  &.tooltip-bottom::after {
+    border-bottom-color: $color-warning;
+  }
+  
+  &.tooltip-left::after {
+    border-left-color: $color-warning;
+  }
+  
+  &.tooltip-right::after {
+    border-right-color: $color-warning;
+  }
+}
+
+.tooltip-error {
+  background: $color-error;
+  color: $text-inverse;
+  
+  &.tooltip-top::after {
+    border-top-color: $color-error;
+  }
+  
+  &.tooltip-bottom::after {
+    border-bottom-color: $color-error;
+  }
+  
+  &.tooltip-left::after {
+    border-left-color: $color-error;
+  }
+  
+  &.tooltip-right::after {
+    border-right-color: $color-error;
+  }
+}
+
+// Tooltip Sizes
+// -----------------------------------------------------------------------------
+
+.tooltip-sm {
+  padding: $spacing-1 $spacing-2;
+  font-size: 0.625rem;
+  
+  &::after {
+    border-width: 3px;
+  }
+}
+
+.tooltip-lg {
+  padding: $spacing-3 $spacing-4;
+  font-size: $font-size-sm;
+  max-width: 200px;
+  white-space: normal;
+  
+  &::after {
+    border-width: 6px;
+  }
+}
+
+// Tooltip Wrapper
+// -----------------------------------------------------------------------------
+
+.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+  
+  &:hover .tooltip,
+  &:focus .tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  &:hover .tooltip-top,
+  &:focus .tooltip-top {
+    transform: translateX(-50%) translateY(-4px);
+  }
+  
+  &:hover .tooltip-bottom,
+  &:focus .tooltip-bottom {
+    transform: translateX(-50%) translateY(4px);
+  }
+  
+  &:hover .tooltip-left,
+  &:focus .tooltip-left {
+    transform: translateY(-50%) translateX(-4px);
+  }
+  
+  &:hover .tooltip-right,
+  &:focus .tooltip-right {
+    transform: translateY(-50%) translateX(4px);
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .tooltip {
+    background: rgba(255, 255, 255, 0.95);
+    color: $dark-bg-primary;
+    
+    &::after {
+      border-color: transparent;
+    }
+    
+    &.tooltip-top::after {
+      border-top-color: rgba(255, 255, 255, 0.95);
+    }
+    
+    &.tooltip-bottom::after {
+      border-bottom-color: rgba(255, 255, 255, 0.95);
+    }
+    
+    &.tooltip-left::after {
+      border-left-color: rgba(255, 255, 255, 0.95);
+    }
+    
+    &.tooltip-right::after {
+      border-right-color: rgba(255, 255, 255, 0.95);
+    }
+  }
+  
+  .tooltip-light {
+    background: $dark-bg-secondary;
+    color: $dark-text-primary;
+    border-color: $dark-border-primary;
+    
+    &.tooltip-top::after {
+      border-top-color: $dark-bg-secondary;
+    }
+    
+    &.tooltip-bottom::after {
+      border-bottom-color: $dark-bg-secondary;
+    }
+    
+    &.tooltip-left::after {
+      border-left-color: $dark-bg-secondary;
+    }
+    
+    &.tooltip-right::after {
+      border-right-color: $dark-bg-secondary;
+    }
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+
+@include reduced-motion {
+  .tooltip {
+    transition: none;
+  }
+  
+  .tooltip-wrapper:hover .tooltip-top,
+  .tooltip-wrapper:focus .tooltip-top,
+  .tooltip-wrapper:hover .tooltip-bottom,
+  .tooltip-wrapper:focus .tooltip-bottom,
+  .tooltip-wrapper:hover .tooltip-left,
+  .tooltip-wrapper:focus .tooltip-left,
+  .tooltip-wrapper:hover .tooltip-right,
+  .tooltip-wrapper:focus .tooltip-right {
+    transform: none;
+  }
+}

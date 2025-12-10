@@ -1,5 +1,4 @@
 export * from './login-request.interface';
-export * from './register-request.interface';
 export * from './forgot-password-request.interface';
 export * from './reset-password-request.interface';
 export * from './change-password-request.interface';

@@ -1,0 +1,426 @@
+// =============================================================================
+// SCSS Variables for Admin Interface
+// =============================================================================
+
+// Color Palette
+// -----------------------------------------------------------------------------
+
+// Primary Colors
+$primary-50: #eff6ff;
+$primary-100: #dbeafe;
+$primary-200: #bfdbfe;
+$primary-300: #93c5fd;
+$primary-400: #60a5fa;
+$primary-500: #3b82f6;
+$primary-600: #2563eb;
+$primary-700: #1d4ed8;
+$primary-800: #1e40af;
+$primary-900: #1e3a8a;
+
+// Secondary Colors
+$secondary-50: #f8fafc;
+$secondary-100: #f1f5f9;
+$secondary-200: #e2e8f0;
+$secondary-300: #cbd5e1;
+$secondary-400: #94a3b8;
+$secondary-500: #64748b;
+$secondary-600: #475569;
+$secondary-700: #334155;
+$secondary-800: #1e293b;
+$secondary-900: #0f172a;
+
+// Success Colors
+$success-50: #f0fdf4;
+$success-100: #dcfce7;
+$success-200: #bbf7d0;
+$success-300: #86efac;
+$success-400: #4ade80;
+$success-500: #22c55e;
+$success-600: #16a34a;
+$success-700: #15803d;
+$success-800: #166534;
+$success-900: #14532d;
+
+// Warning Colors (Orange)
+$warning-50: #fff7ed;
+$warning-100: #ffedd5;
+$warning-200: #fed7aa;
+$warning-300: #fdba74;
+$warning-400: #fb923c;
+$warning-500: #f97316;
+$warning-600: #ea580c;
+$warning-700: #c2410c;
+$warning-800: #9a3412;
+$warning-900: #7c2d12;
+
+// Purple Colors (for variety)
+$purple-50: #faf5ff;
+$purple-100: #f3e8ff;
+$purple-200: #e9d5ff;
+$purple-300: #d8b4fe;
+$purple-400: #c084fc;
+$purple-500: #a855f7;
+$purple-600: #9333ea;
+$purple-700: #7c3aed;
+$purple-800: #6b21a8;
+$purple-900: #581c87;
+
+// Indigo Colors
+$indigo-50: #eef2ff;
+$indigo-100: #e0e7ff;
+$indigo-200: #c7d2fe;
+$indigo-300: #a5b4fc;
+$indigo-400: #818cf8;
+$indigo-500: #6366f1;
+$indigo-600: #4f46e5;
+$indigo-700: #4338ca;
+$indigo-800: #3730a3;
+$indigo-900: #312e81;
+
+// Error/Red Colors (Automotive Red Theme)
+$red-50: #fef2f2;
+$red-100: #fee2e2;
+$red-200: #fecaca;
+$red-300: #fca5a5;
+$red-400: #f87171;
+$red-500: rgb(141, 7, 7);    // Deep automotive red (matching Tailwind primary)
+$red-600: rgb(187, 6, 6);    // Hover state
+$red-700: #b91c1c;
+$red-800: #991b1b;
+$red-900: #7f1d1d;
+
+// Error Colors (alias for red)
+$error-50: $red-50;
+$error-100: $red-100;
+$error-200: $red-200;
+$error-300: $red-300;
+$error-400: $red-400;
+$error-500: $red-500;
+$error-600: $red-600;
+$error-700: $red-700;
+$error-800: $red-800;
+$error-900: $red-900;
+
+// Neutral Colors
+$neutral-50: #fafafa;
+$neutral-100: #f5f5f5;
+$neutral-200: #e5e5e5;
+$neutral-300: #d4d4d4;
+$neutral-400: #a3a3a3;
+$neutral-500: #737373;
+$neutral-600: #525252;
+$neutral-700: #404040;
+$neutral-800: #262626;
+$neutral-900: #171717;
+
+// Semantic Color Assignments
+// -----------------------------------------------------------------------------
+$color-primary: $red-500;        // Deep automotive red
+$color-primary-hover: $red-600;  // Hover state
+$color-primary-light: $red-100;
+$color-primary-dark: $red-800;
+
+$color-secondary: $secondary-600;
+$color-secondary-hover: $secondary-700;
+$color-secondary-light: $secondary-100;
+
+$color-success: $success-600;
+$color-success-hover: $success-700;
+$color-success-light: $success-100;
+
+$color-warning: $warning-600;
+$color-warning-hover: $warning-700;
+$color-warning-light: $warning-100;
+
+$color-error: $red-500;
+$color-error-hover: $red-600;
+$color-error-light: $red-100;
+
+// Background Colors
+$bg-primary: #ffffff;
+$bg-secondary: $neutral-50;
+$bg-tertiary: $neutral-100;
+$bg-dark: $neutral-900;
+$bg-overlay: rgba(0, 0, 0, 0.5);
+
+// Text Colors
+$text-primary: $neutral-900;
+$text-secondary: $neutral-600;
+$text-tertiary: $neutral-500;
+$text-inverse: #ffffff;
+$text-muted: $neutral-400;
+
+// Border Colors
+$border-primary: $neutral-200;
+$border-secondary: $neutral-300;
+$border-focus: $primary-500;
+$border-error: $error-500;
+$border-success: $success-500;
+
+// Typography
+// -----------------------------------------------------------------------------
+
+// Font Families
+$font-family-primary: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+$font-family-secondary: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+$font-family-display: 'Inter', 'Segoe UI', sans-serif;
+
+// Font Weights
+$font-weight-thin: 100;
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+$font-weight-black: 900;
+
+// Font Sizes
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;   // 14px
+$font-size-base: 1rem;     // 16px
+$font-size-lg: 1.125rem;   // 18px
+$font-size-xl: 1.25rem;    // 20px
+$font-size-2xl: 1.5rem;    // 24px
+$font-size-3xl: 1.875rem;  // 30px
+$font-size-4xl: 2.25rem;   // 36px
+$font-size-5xl: 3rem;      // 48px
+$font-size-6xl: 3.75rem;   // 60px
+
+// Line Heights
+$line-height-tight: 1.25;
+$line-height-snug: 1.375;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.625;
+$line-height-loose: 2;
+
+// Spacing
+// -----------------------------------------------------------------------------
+$spacing-0: 0;
+$spacing-1: 0.25rem;   // 4px
+$spacing-2: 0.5rem;    // 8px
+$spacing-3: 0.75rem;   // 12px
+$spacing-4: 1rem;      // 16px
+$spacing-5: 1.25rem;   // 20px
+$spacing-6: 1.5rem;    // 24px
+$spacing-8: 2rem;      // 32px
+$spacing-10: 2.5rem;   // 40px
+$spacing-12: 3rem;     // 48px
+$spacing-16: 4rem;     // 64px
+$spacing-20: 5rem;     // 80px
+$spacing-24: 6rem;     // 96px
+$spacing-32: 8rem;     // 128px
+
+// Border Radius
+// -----------------------------------------------------------------------------
+$border-radius-none: 0;
+$border-radius-sm: 0.125rem;   // 2px
+$border-radius-base: 0.25rem;  // 4px
+$border-radius-md: 0.375rem;   // 6px
+$border-radius-lg: 0.5rem;     // 8px
+$border-radius-xl: 0.75rem;    // 12px
+$border-radius-2xl: 1rem;      // 16px
+$border-radius-3xl: 1.5rem;    // 24px
+$border-radius-full: 9999px;
+
+// Shadows
+// -----------------------------------------------------------------------------
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+$shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+// Z-Index Scale
+// -----------------------------------------------------------------------------
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+$z-index-toast: 1080;
+
+// Breakpoints
+// -----------------------------------------------------------------------------
+$breakpoint-xs: 0;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-2xl: 1400px;
+
+// Container Max Widths
+$container-sm: 540px;
+$container-md: 720px;
+$container-lg: 960px;
+$container-xl: 1140px;
+$container-2xl: 1320px;
+
+// Transitions
+// -----------------------------------------------------------------------------
+$transition-fast: 150ms ease-in-out;
+$transition-base: 200ms ease-in-out;
+$transition-slow: 300ms ease-in-out;
+$transition-slower: 500ms ease-in-out;
+
+// Cubic Bezier Curves
+$ease-in-out-cubic: cubic-bezier(0.4, 0, 0.2, 1);
+$ease-out-cubic: cubic-bezier(0, 0, 0.2, 1);
+$ease-in-cubic: cubic-bezier(0.4, 0, 1, 1);
+
+// Component Specific Variables
+// -----------------------------------------------------------------------------
+
+// Buttons
+$button-padding-sm: $spacing-2 $spacing-3;
+$button-padding-md: $spacing-3 $spacing-4;
+$button-padding-lg: $spacing-4 $spacing-6;
+$button-border-radius: $border-radius-md;
+$button-font-weight: $font-weight-medium;
+
+// Cards
+$card-padding: $spacing-6;
+$card-border-radius: $border-radius-lg;
+$card-shadow: $shadow-base;
+$card-border: 1px solid $border-primary;
+
+// Forms
+$input-padding: $spacing-3 $spacing-4;
+$input-border-radius: $border-radius-md;
+$input-border: 1px solid $border-primary;
+$input-focus-border: 2px solid $border-focus;
+$input-error-border: 2px solid $border-error;
+
+// Navigation
+$nav-height: 4rem;
+$sidebar-width: 16rem;
+$sidebar-collapsed-width: 4rem;
+
+// Theme System
+// -----------------------------------------------------------------------------
+
+// Light Theme Colors
+$light-theme: (
+  primary: $primary-600,
+  primary-hover: $primary-700,
+  primary-light: $primary-100,
+  secondary: $secondary-600,
+  background: #f8fafc,
+  surface: #ffffff,
+  border: #e2e8f0,
+  text-primary: $neutral-900,
+  text-secondary: $neutral-600,
+  text-muted: $neutral-400
+);
+
+// Dark Theme Colors
+$dark-theme: (
+  primary: $primary-500,
+  primary-hover: $primary-400,
+  primary-light: $primary-900,
+  secondary: $secondary-400,
+  background: #0f172a,
+  surface: #1e293b,
+  border: #334155,
+  text-primary: $neutral-100,
+  text-secondary: $neutral-300,
+  text-muted: $neutral-500
+);
+
+// Admin Specific Colors
+// -----------------------------------------------------------------------------
+$admin-primary: $primary-600;
+$admin-secondary: $secondary-600;
+$admin-accent: $indigo-600;
+$admin-background: #f8fafc;
+$admin-surface: #ffffff;
+$admin-border: #e2e8f0;
+
+// Card Color Variants (Tailwind Compatible)
+// -----------------------------------------------------------------------------
+$card-variants: (
+  blue: (
+    bg: $primary-100,
+    icon: $primary-600,
+    text: $primary-700
+  ),
+  purple: (
+    bg: $purple-100,
+    icon: $purple-600,
+    text: $purple-700
+  ),
+  orange: (
+    bg: $warning-100,
+    icon: $warning-600,
+    text: $warning-700
+  ),
+  green: (
+    bg: $success-100,
+    icon: $success-600,
+    text: $success-700
+  ),
+  red: (
+    bg: $error-100,
+    icon: $error-600,
+    text: $error-700
+  ),
+  indigo: (
+    bg: $indigo-100,
+    icon: $indigo-600,
+    text: $indigo-700
+  )
+);
+
+// Status Colors
+$status-online: $success-500;
+$status-offline: $error-500;
+$status-away: $warning-500;
+$status-busy: $error-600;
+
+// Chart Colors
+$chart-color-1: #3b82f6;
+$chart-color-2: #10b981;
+$chart-color-3: #f59e0b;
+$chart-color-4: #ef4444;
+$chart-color-5: #8b5cf6;
+$chart-color-6: #06b6d4;
+$chart-color-7: #84cc16;
+$chart-color-8: #f97316;
+
+// Dark Mode Variables
+// -----------------------------------------------------------------------------
+$dark-bg-primary: $neutral-900;
+$dark-bg-secondary: $neutral-800;
+$dark-bg-tertiary: $neutral-700;
+$dark-text-primary: $neutral-100;
+$dark-text-secondary: $neutral-300;
+$dark-border-primary: $neutral-700;
+$dark-border-secondary: $neutral-600;
+
+// Animation Durations
+// -----------------------------------------------------------------------------
+$animation-duration-fast: 150ms;
+$animation-duration-normal: 300ms;
+$animation-duration-slow: 500ms;
+$animation-duration-slower: 1000ms;
+
+// Component Heights
+// -----------------------------------------------------------------------------
+$height-xs: 1.5rem;
+$height-sm: 2rem;
+$height-md: 2.5rem;
+$height-lg: 3rem;
+$height-xl: 3.5rem;
+
+// Icon Sizes
+// -----------------------------------------------------------------------------
+$icon-xs: 0.75rem;
+$icon-sm: 1rem;
+$icon-md: 1.25rem;
+$icon-lg: 1.5rem;
+$icon-xl: 2rem;
+$icon-2xl: 2.5rem;
