@@ -1,177 +1,104 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import {
+  Story,
+  StoryGroup,
+  StoryView,
+  StoryReply,
+  CreateStoryRequest
+} from '../../interfaces/home/stories.interface';
 
-export interface Story {
-  id: string;
-  userId: string;
-  user: StoryUser;
-  pageId?: string;
-  page?: StoryPage;
-  mediaUrl: string;
-  thumbnailUrl?: string;
-  type: StoryType;
-  caption?: string;
-  backgroundColor?: string;
-  textColor?: string;
-  createdAt: string;
-  expiresAt: string;
-  isActive: boolean;
-  isArchived: boolean;
-  visibility: StoryVisibility;
-  viewCount: number;
-  likeCount: number;
-  replyCount: number;
-  isViewed: boolean;
-  isLiked: boolean;
-  canView: boolean;
-}
-
-export interface StoryUser {
-  id: string;
-  firstName: string;
-  lastName: string;
-  avatarUrl?: string;
-  isVerified: boolean;
-}
-
-export interface StoryPage {
-  id: string;
-  name: string;
-  username: string;
-  profileImageUrl?: string;
-  isVerified: boolean;
-  category: string;
-}
-
-export interface StoryView {
-  id: string;
-  userId: string;
-  user: StoryUser;
-  viewedAt: string;
-}
-
-export interface StoryReply {
-  id: string;
-  userId: string;
-  user: StoryUser;
-  content: string;
-  mediaUrl?: string;
-  type: StoryReplyType;
-  createdAt: string;
-}
-
-export enum StoryType {
-  Image = 'Image',
-  Video = 'Video',
-  Text = 'Text',
-  Boomerang = 'Boomerang',
-  Live = 'Live'
-}
-
-export enum StoryVisibility {
-  Public = 'Public',
-  Friends = 'Friends',
-  CloseFriends = 'CloseFriends',
-  Private = 'Private'
-}
-
-export enum StoryReplyType {
-  Text = 'Text',
-  Image = 'Image',
-  Video = 'Video',
-  Emoji = 'Emoji'
-}
-
-export interface StoryFilter {
-  userId?: string;
-  pageId?: string;
-  includeExpired?: boolean;
-  visibility?: StoryVisibility;
-  type?: StoryType;
-}
-
-export interface CreateStoryRequest {
-  pageId?: string;
-  mediaUrl: string;
-  thumbnailUrl?: string;
-  type: StoryType;
-  caption?: string;
-  backgroundColor?: string;
-  textColor?: string;
-  visibility: StoryVisibility;
-  viewerIds?: string[];
-}
-
-export interface CreateStoryReplyRequest {
-  content: string;
-  mediaUrl?: string;
-  type: StoryReplyType;
-}
-
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class StoriesService {
-  private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/api/stories`;
+  private readonly apiUrl = `${environment.apiUrl}/stories`;
 
-  stories = signal<Story[]>([]);
-  loading = signal(false);
+  constructor(private http: HttpClient) {}
 
-  getStories(filter: StoryFilter = {}): Observable<Story[]> {
-    let params = new HttpParams();
-    if (filter.userId) params = params.set('userId', filter.userId);
-    if (filter.pageId) params = params.set('pageId', filter.pageId);
-    if (filter.includeExpired !== undefined) params = params.set('includeExpired', filter.includeExpired);
-    if (filter.visibility) params = params.set('visibility', filter.visibility);
-    if (filter.type) params = params.set('type', filter.type);
-
-    return this.http.get<Story[]>(this.apiUrl, { params });
+  /**
+   * Get story groups (following users)
+   */
+  getStoryGroups(): Observable<StoryGroup[]> {
+    return this.http.get<StoryGroup[]>(`${this.apiUrl}/groups`);
   }
 
-  getStory(id: string): Observable<Story> {
-    return this.http.get<Story>(`${this.apiUrl}/${id}`);
+  /**
+   * Get user stories
+   */
+  getUserStories(userId: string): Observable<Story[]> {
+    return this.http.get<Story[]>(`${this.apiUrl}/user/${userId}`);
   }
 
-  createStory(request: CreateStoryRequest): Observable<Story> {
-    return this.http.post<Story>(this.apiUrl, request);
-  }
-
-  deleteStory(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
-  }
-
-  viewStory(id: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${id}/view`, {});
-  }
-
-  likeStory(id: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${id}/like`, {});
-  }
-
-  unlikeStory(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}/like`);
-  }
-
-  getStoryViews(id: string): Observable<StoryView[]> {
-    return this.http.get<StoryView[]>(`${this.apiUrl}/${id}/views`);
-  }
-
-  getStoryReplies(id: string): Observable<StoryReply[]> {
-    return this.http.get<StoryReply[]>(`${this.apiUrl}/${id}/replies`);
-  }
-
-  replyToStory(storyId: string, request: CreateStoryReplyRequest): Observable<StoryReply> {
-    return this.http.post<StoryReply>(`${this.apiUrl}/${storyId}/replies`, request);
-  }
-
+  /**
+   * Get my stories
+   */
   getMyStories(): Observable<Story[]> {
     return this.http.get<Story[]>(`${this.apiUrl}/my-stories`);
   }
 
-  getFollowingStories(): Observable<Story[]> {
-    return this.http.get<Story[]>(`${this.apiUrl}/following`);
+  /**
+   * Get story by ID
+   */
+  getStory(storyId: string): Observable<Story> {
+    return this.http.get<Story>(`${this.apiUrl}/${storyId}`);
   }
 
+  /**
+   * Create story
+   */
+  createStory(request: CreateStoryRequest): Observable<Story> {
+    return this.http.post<Story>(this.apiUrl, request);
+  }
 
+  /**
+   * Delete story
+   */
+  deleteStory(storyId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${storyId}`);
+  }
+
+  /**
+   * View story
+   */
+  viewStory(storyId: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${storyId}/view`, {});
+  }
+
+  /**
+   * Like story
+   */
+  likeStory(storyId: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${storyId}/like`, {});
+  }
+
+  /**
+   * Unlike story
+   */
+  unlikeStory(storyId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${storyId}/like`);
+  }
+
+  /**
+   * Get story views
+   */
+  getStoryViews(storyId: string): Observable<StoryView[]> {
+    return this.http.get<StoryView[]>(`${this.apiUrl}/${storyId}/views`);
+  }
+
+  /**
+   * Reply to story
+   */
+  replyToStory(storyId: string, message: string): Observable<StoryReply> {
+    return this.http.post<StoryReply>(`${this.apiUrl}/${storyId}/reply`, { message });
+  }
+
+  /**
+   * Get story replies
+   */
+  getStoryReplies(storyId: string): Observable<StoryReply[]> {
+    return this.http.get<StoryReply[]>(`${this.apiUrl}/${storyId}/replies`);
+  }
 }
