@@ -26,12 +26,7 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface RegisterRequest {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-}
+
 
 export interface UpdateProfileRequest {
   firstName?: string;

@@ -22,15 +22,7 @@ export const routes: Routes = [
           description: 'Admin login page for Community Car platform'
         }
       },
-      { 
-        path: 'register', 
-        loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent),
-        title: 'Admin Registration - Community Car',
-        data: { 
-          hideNavigation: true,
-          description: 'Admin registration page for Community Car platform'
-        }
-      },
+
       { path: '', redirectTo: 'login', pathMatch: 'full' }
     ]
   },

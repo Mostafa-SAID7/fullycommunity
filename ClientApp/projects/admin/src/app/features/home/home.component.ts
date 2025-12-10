@@ -37,7 +37,7 @@ import { RouterLink } from '@angular/router';
 
         <!-- CTA Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style="animation-delay: 0.2s;">
-          <a routerLink="/register" 
+          <a routerLink="/auth/login" 
              class="group bg-gradient-to-r from-primary to-primary-hover text-white font-bold py-4 px-10 rounded-xl shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-3">
             <span>Get Started</span>
             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,7 +45,7 @@ import { RouterLink } from '@angular/router';
             </svg>
           </a>
           
-          <a routerLink="/login" 
+          <a routerLink="/auth/login" 
              class="group bg-white text-primary font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 border-2 border-primary/20 hover:border-primary/40 flex items-center gap-3">
             <span>Sign In</span>
             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
