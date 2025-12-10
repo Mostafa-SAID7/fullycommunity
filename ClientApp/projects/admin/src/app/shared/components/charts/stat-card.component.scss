@@ -52,11 +52,11 @@
   }
   
   &.stat-card-icon-danger {
-    background-color: rgba($color-danger, 0.1);
+    background-color: rgba($color-error, 0.1);
   }
   
   &.stat-card-icon-info {
-    background-color: rgba($color-info, 0.1);
+    background-color: rgba($color-primary, 0.1);
   }
 }
 
@@ -79,7 +79,7 @@
   }
   
   &.stat-card-trend-down {
-    color: $color-danger;
+    color: $color-error;
   }
 }
 
@@ -122,11 +122,11 @@
   }
   
   &.stat-card-value-danger {
-    color: $color-danger;
+    color: $color-error;
   }
   
   &.stat-card-value-info {
-    color: $color-info;
+    color: $color-primary;
   }
 }
 
@@ -175,7 +175,7 @@
   }
   
   .stat-card-subtitle {
-    color: $dark-text-muted;
+    color: $dark-text-secondary;
   }
   
   // Icon backgrounds in dark mode
@@ -193,11 +193,11 @@
     }
     
     &.stat-card-icon-danger {
-      background-color: rgba($color-danger, 0.2);
+      background-color: rgba($color-error, 0.2);
     }
     
     &.stat-card-icon-info {
-      background-color: rgba($color-info, 0.2);
+      background-color: rgba($color-primary, 0.2);
     }
   }
 }

@@ -1,45 +1,42 @@
-<div class="min-h-screen p-6 pt-12">
-  <div class="max-w-7xl mx-auto">
+<div class="dashboard-container">
+  <div class="dashboard-wrapper">
     <!-- Header -->
-    <div class="mb-8 animate-fade-in">
-      <h1 class="text-4xl font-bold bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent mb-2">Admin Dashboard</h1>
-      <p class="text-gray-600 text-lg">
+    <div class="dashboard-header">
+      <h1 class="dashboard-title">Admin Dashboard</h1>
+      <p class="dashboard-subtitle">
         Welcome back! Here's what's happening with your platform.
       </p>
     </div>
 
     <!-- Loading State -->
-    <div *ngIf="loading()" class="flex justify-center items-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    <div *ngIf="loading()" class="loading-container">
+      <div class="loading-spinner"></div>
     </div>
 
     <!-- Error State -->
-    <div
-      *ngIf="error() && !loading()"
-      class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6"
-    >
-      <div class="flex items-center gap-2">
+    <div *ngIf="error() && !loading()" class="error-banner">
+      <div class="error-content">
         <span>{{ error() }}</span>
       </div>
     </div>
 
     <!-- System Health Banner -->
-    <div class="mb-6 p-4 rounded-lg border" [ngClass]="{
-      'bg-green-50 border-green-200': systemHealth() === 'healthy',
-      'bg-yellow-50 border-yellow-200': systemHealth() === 'warning',
-      'bg-red-50 border-red-200': systemHealth() === 'critical'
+    <div class="system-health-banner" [ngClass]="{
+      'healthy': systemHealth() === 'healthy',
+      'warning': systemHealth() === 'warning',
+      'critical': systemHealth() === 'critical'
     }">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-3 h-3 rounded-full" [ngClass]="{
-            'bg-green-500': systemHealth() === 'healthy',
-            'bg-yellow-500': systemHealth() === 'warning',
-            'bg-red-500': systemHealth() === 'critical'
+      <div class="health-content">
+        <div class="health-status">
+          <div class="status-indicator" [ngClass]="{
+            'healthy': systemHealth() === 'healthy',
+            'warning': systemHealth() === 'warning',
+            'critical': systemHealth() === 'critical'
           }"></div>
-          <span class="font-medium" [ngClass]="{
-            'text-green-800': systemHealth() === 'healthy',
-            'text-yellow-800': systemHealth() === 'warning',
-            'text-red-800': systemHealth() === 'critical'
+          <span class="status-text" [ngClass]="{
+            'healthy': systemHealth() === 'healthy',
+            'warning': systemHealth() === 'warning',
+            'critical': systemHealth() === 'critical'
           }">
             System Status: {{ systemHealth() | titlecase }}
           </span>
@@ -62,151 +59,139 @@
     <!-- Dashboard Content -->
     <div *ngIf="overview() && !loading()">
       <!-- Stats Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="stats-grid">
         <!-- Total Users Card -->
-        <div
-          class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 hover:scale-105 animate-slide-up"
-        >
-          <div class="flex items-center justify-between mb-4">
-            <div class="p-3 bg-blue-100 rounded-lg">
-              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="stat-card featured">
+          <div class="stat-header">
+            <div class="stat-icon blue">
+              <svg class="blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
               </svg>
             </div>
-            <span class="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
+            <span class="stat-badge success">
               +{{ overview()!.users.newUsersThisMonth }}
             </span>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Total Users</h3>
-          <p class="text-3xl font-bold text-gray-900">
+          <h3 class="stat-title">Total Users</h3>
+          <p class="stat-value">
             {{ overview()!.users.totalUsers | number }}
           </p>
-          <p class="text-xs text-gray-500 mt-2">
+          <p class="stat-subtitle">
             {{ overview()!.users.activeUsers | number }} active
           </p>
         </div>
 
         <!-- Content Items Card -->
-        <div
-          class="bg-white rounded-lg shadow-sm p-6 border border-gray-200 hover:shadow-md transition-shadow"
-        >
-          <div class="flex items-center justify-between mb-4">
-            <div class="p-3 bg-purple-100 rounded-lg">
-              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon purple">
+              <svg class="purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
             </div>
-            <span class="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
+            <span class="stat-badge info">
               {{ overview()!.content.totalPosts }}
             </span>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Content Items</h3>
-          <p class="text-3xl font-bold text-gray-900">
+          <h3 class="stat-title">Content Items</h3>
+          <p class="stat-value">
             {{ getTotalContent() | number }}
           </p>
-          <p class="text-xs text-gray-500 mt-2">Posts, Guides, Reviews</p>
+          <p class="stat-subtitle">Postssm font-meReviews</p>
         </div>
 
         <!-- Pending Moderation Card -->
-        <div
-          class="bg-white rounded-lg shadow-sm p-6 border border-gray-200 hover:shadow-md transition-shadow"
-        >
-          <div class="flex items-center justify-between mb-4">
-            <div class="p-3 bg-orange-100 rounded-lg">
-              <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon orange">
+              <svg class="orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
               </svg>
             </div>
-            <span
-              class="text-sm font-medium px-2 py-1 rounded"
-              [ngClass]="overview()!.content.pendingModeration > 0 ? 'text-red-600 bg-red-50' : 'text-green-600 bg-green-50'"
-            >
+            <span class="stat-badge" [ngClass]="overview()!.content.pendingModeration > 0 ? 'error' : 'success'">
               {{ overview()!.content.pendingModeration > 0 ? 'Action needed' : 'All clear' }}
             </span>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Pending Moderation</h3>
-          <p class="text-3xl font-bold text-gray-900">
+          <h3 class="stat-title">Pending Moderation</h3>
+          <p class="stat-value">
             {{ overview()!.content.pendingModeration }}
           </p>
-          <p class="text-xs text-gray-500 mt-2">Items awaiting review</p>
+          <p class="stat-subtitle">Items awaiting review</p>
         </div>
 
         <!-- Community Stats Card -->
-        <div
-          class="bg-white rounded-lg shadow-sm p-6 border border-gray-200 hover:shadow-md transition-shadow"
-        >
-          <div class="flex items-center justify-between mb-4">
-            <div class="p-3 bg-green-100 rounded-lg">
-              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon green">
+              <svg class="green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
               </svg>
             </div>
-            <span class="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
+            <span class="stat-badge info">
               {{ overview()!.community.totalGroups }}
             </span>
           </div>
-          <h3 class="text-gray-600 text-sm font-medium mb-1">Active Communities</h3>
-          <p class="text-3xl font-bold text-gray-900">
+          <h3 class="stat-title">Active Communities</h3>
+          <p class="stat-value">
             {{ overview()!.community.activeDiscussions | number }}
           </p>
-          <p class="text-xs text-gray-500 mt-2">
+          <p class="stat-subtitle">
             {{ overview()!.community.totalComments | number }} comments
           </p>
         </div>
       </div>
 
       <!-- Quick Actions -->
-      <div class="mb-8">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="quick-actions-section">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="actions-grid">
           <a *ngFor="let action of quickActions" 
              [routerLink]="action.route"
-             class="block p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md hover:border-primary/30 transition-all duration-200 group">
-            <div class="flex items-center gap-3 mb-3">
-              <div class="p-2 rounded-lg" [ngClass]="action.color">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+             class="action-card">
+            <div class="action-header">
+              <div class="action-icon" [ngClass]="getActionColorClass(action.color)">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="action.icon"/>
                 </svg>
               </div>
-              <h3 class="font-semibold text-gray-900 group-hover:text-primary transition-colors">{{ action.title }}</h3>
+              <h3 class="action-title">{{ action.title }}</h3>
             </div>
-            <p class="text-sm text-gray-600">{{ action.description }}</p>
+            <p class="action-description">{{ action.description }}</p>
           </a>
         </div>
       </div>
 
       <!-- Main Content Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="main-content-grid">
         <!-- Recent Activity -->
-        <div class="lg:col-span-2 bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-gray-900">Recent Activity</h2>
-            <a routerLink="/admin/activity-log" class="text-sm text-primary hover:text-primary-hover font-medium">
+        <div class="activity-card">
+          <div class="activity-header">
+            <h2 class="activity-title">Recent Activity</h2>
+            <a routerLink="/admin/activity-log" class="view-all-link">
               View All →
             </a>
           </div>
-          <div class="space-y-4">
+          <div class="activity-list">
             <div *ngFor="let activity of recentActivity(); let i = index" 
-                 class="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
-                 [class.border-l-4]="i < 3"
-                 [class.border-blue-500]="activity.type === 'user_registered'"
-                 [class.border-green-500]="activity.type === 'content_posted'"
-                 [class.border-yellow-500]="activity.type === 'content_moderated'"
-                 [class.border-red-500]="activity.type === 'system_alert'">
-              <div class="flex-shrink-0 mt-1">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center" 
-                     [class]="'bg-' + (activity.type === 'user_registered' ? 'blue' : activity.type === 'content_posted' ? 'green' : activity.type === 'content_moderated' ? 'yellow' : 'red') + '-100'">
-                  <svg class="w-4 h-4" [class]="getActivityColor(activity.type, activity.severity)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 class="activity-item"
+                 [class.priority]="i < 3"
+                 [class.user-registered]="activity.type === 'user_registered'"
+                 [class.content-posted]="activity.type === 'content_posted'"
+                 [class.content-moderated]="activity.type === 'content_moderated'"
+                 [class.system-alert]="activity.type === 'system_alert'">
+              <div class="activity-icon">
+                <div class="icon-wrapper" [ngClass]="getActivityIconClass(activity.type)">
+                  <svg [ngClass]="getActivityIconClass(activity.type)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="getActivityIcon(activity.type)"/>
                   </svg>
                 </div>
               </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900">{{ activity.message }}</p>
-                <div class="flex items-center gap-2 mt-1">
-                  <span class="text-xs text-gray-500">{{ activity.timestamp | date:'short' }}</span>
-                  <span class="text-xs text-gray-400">•</span>
-                  <span class="text-xs text-gray-500">{{ activity.user }}</span>
+              <div class="activity-content">
+                <p class="activity-message">{{ activity.message }}</p>
+                <div class="activity-meta">
+                  <span class="activity-time">{{ activity.timestamp | date:'short' }}</span>
+                  <span class="meta-separator">•</span>
+                  <span class="activity-user">{{ activity.user }}</span>
                 </div>
               </div>
             </div>
@@ -214,57 +199,57 @@
         </div>
 
         <!-- System Status -->
-        <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-          <h2 class="text-lg font-semibold text-gray-900 mb-4">System Status</h2>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span class="text-sm text-gray-700">API Server</span>
+        <div class="system-status-card">
+          <h2 class="status-title">System Status</h2>
+          <div class="status-list">
+            <div class="status-item">
+              <div class="status-info">
+                <div class="status-dot online"></div>
+                <span class="status-name">API Server</span>
               </div>
-              <span class="text-xs font-medium text-green-600">Online</span>
+              <span class="status-value online">Online</span>
             </div>
 
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span class="text-sm text-gray-700">Database</span>
+            <div class="status-item">
+              <div class="status-info">
+                <div class="status-dot online"></div>
+                <span class="status-name">Database</span>
               </div>
-              <span class="text-xs font-medium text-green-600">{{ overview()!.system.status }}</span>
+              <span class="status-value online">{{ overview()!.system.status }}</span>
             </div>
 
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span class="text-sm text-gray-700">Cache</span>
+            <div class="status-item">
+              <div class="status-info">
+                <div class="status-dot online"></div>
+                <span class="status-name">Cache</span>
               </div>
-              <span class="text-xs font-medium text-green-600">Active</span>
+              <span class="status-value online">Active</span>
             </div>
 
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span class="text-sm text-gray-700">Storage</span>
+            <div class="status-item">
+              <div class="status-info">
+                <div class="status-dot online"></div>
+                <span class="status-name">Storage</span>
               </div>
-              <span class="text-xs font-medium text-green-600">Healthy</span>
+              <span class="status-value online">Healthy</span>
             </div>
           </div>
 
           <!-- User Statistics Summary -->
-          <div class="mt-6 pt-4 border-t border-gray-200">
-            <h3 class="text-sm font-semibold text-gray-900 mb-3">User Statistics</h3>
-            <div class="space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-gray-600">New Today</span>
-                <span class="text-sm font-medium text-gray-900">{{ overview()!.users.newUsersToday }}</span>
+          <div class="user-stats-section">
+            <h3 class="stats-title">User Statistics</h3>
+            <div class="stats-list">
+              <div class="stats-item">
+                <span class="stats-label">New Today</span>
+                <span class="stats-value">{{ overview()!.users.newUsersToday }}</span>
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-gray-600">New This Week</span>
-                <span class="text-sm font-medium text-gray-900">{{ overview()!.users.newUsersThisWeek }}</span>
+              <div class="stats-item">
+                <span class="stats-label">New This Week</span>
+                <span class="stats-value">{{ overview()!.users.newUsersThisWeek }}</span>
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-gray-600">Pending Approval</span>
-                <span class="text-sm font-medium text-gray-900">{{ overview()!.users.pendingApprovals }}</span>
+              <div class="stats-item">
+                <span class="stats-label">Pending Approval</span>
+                <span class="stats-value">{{ overview()!.users.pendingApprovals }}</span>
               </div>
             </div>
           </div>
@@ -272,33 +257,33 @@
       </div>
 
       <!-- Content Statistics -->
-      <div class="mt-6 bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-lg font-semibold text-gray-900">Content Overview</h2>
-          <a routerLink="/admin/content" class="text-sm text-primary hover:text-primary-hover font-medium">
+      <div class="content-overview-card">
+        <div class="content-header">
+          <h2 class="content-title">Content Overview</h2>
+          <a routerLink="/admin/content" class="manage-link">
             Manage Content →
           </a>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <div class="text-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer">
-            <p class="text-2xl font-bold text-blue-600">{{ overview()!.content.totalPosts }}</p>
-            <p class="text-sm text-gray-600 mt-1">Posts</p>
+        <div class="content-grid">
+          <div class="content-item posts">
+            <p class="content-count posts">{{ overview()!.content.totalPosts }}</p>
+            <p class="content-label">Posts</p>
           </div>
-          <div class="text-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors cursor-pointer">
-            <p class="text-2xl font-bold text-green-600">{{ overview()!.content.totalQuestions }}</p>
-            <p class="text-sm text-gray-600 mt-1">Questions</p>
+          <div class="content-item questions">
+            <p class="content-count questions">{{ overview()!.content.totalQuestions }}</p>
+            <p class="content-label">Questions</p>
           </div>
-          <div class="text-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors cursor-pointer">
-            <p class="text-2xl font-bold text-orange-600">{{ overview()!.content.totalReviews }}</p>
-            <p class="text-sm text-gray-600 mt-1">Reviews</p>
+          <div class="content-item reviews">
+            <p class="content-count reviews">{{ overview()!.content.totalReviews }}</p>
+            <p class="content-label">Reviews</p>
           </div>
-          <div class="text-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors cursor-pointer">
-            <p class="text-2xl font-bold text-pink-600">{{ overview()!.content.totalGuides }}</p>
-            <p class="text-sm text-gray-600 mt-1">Guides</p>
+          <div class="content-item guides">
+            <p class="content-count guides">{{ overview()!.content.totalGuides }}</p>
+            <p class="content-label">Guides</p>
           </div>
-          <div class="text-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors cursor-pointer">
-            <p class="text-2xl font-bold text-purple-600">{{ overview()!.content.totalPodcasts }}</p>
-            <p class="text-sm text-gray-600 mt-1">Podcasts</p>
+          <div class="content-item podcasts">
+            <p class="content-count podcasts">{{ overview()!.content.totalPodcasts }}</p>
+            <p class="content-label">Podcasts</p>
           </div>
         </div>
       </div>

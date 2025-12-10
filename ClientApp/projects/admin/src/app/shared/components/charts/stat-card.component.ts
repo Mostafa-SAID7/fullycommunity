@@ -38,7 +38,7 @@ export interface StatCardConfig {
       </div>
     </div>
   `,
-  styleUrls: ['./stat-card.component.scss']
+  styleUrl: './stat-card.component.scss'
 })
 export class StatCardComponent {
   @Input() config!: StatCardConfig;

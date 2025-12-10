@@ -43,7 +43,7 @@ import { CommonModule } from '@angular/common';
       </div>
     </button>
   `,
-  styleUrls: ['./refresh-button.component.scss']
+  styleUrl: './refresh-button.component.scss'
 })
 export class RefreshButtonComponent {
   // Inputs

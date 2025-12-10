@@ -27,7 +27,7 @@ import { DateUtils } from '../../../core/utils/date.utils';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './videos-admin.component.html',
-  styleUrls: ['./videos-admin.component.scss']
+  styleUrl: './videos-admin.component.scss'
 })
 export class VideosAdminComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

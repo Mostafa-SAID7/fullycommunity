@@ -85,7 +85,7 @@ export interface BarChartConfig {
       </div>
     </div>
   `,
-  styleUrls: ['./charts-demo.component.scss']
+  styleUrl: './charts-demo.component.scss'
 })
 export class ChartsDemoComponent {
   // Stat Cards Configuration

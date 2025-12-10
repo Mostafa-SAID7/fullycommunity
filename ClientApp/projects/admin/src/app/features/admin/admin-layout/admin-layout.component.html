@@ -1,123 +1,15 @@
-<div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30 flex flex-col">
-  <div *ngIf="sidebarOpen()" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" (click)="toggleSidebar()"></div>
+<div class="admin-layout">
+  <!-- Mobile overlay for sidebar -->
+  <div *ngIf="sidebarOpen() && isMobile()" class="mobile-overlay" (click)="toggleSidebar()"></div>
   
-  <app-admin-header (toggleSidebar)="toggleSidebar()">
-    <div *ngIf="isSuperAdmin()" class="relative">
-      <button (click)="toggleRoleSwitcher()" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/10 to-primary-hover/10 hover:from-primary/20 hover:to-primary-hover/20 rounded-xl transition-all duration-200 border border-primary/20">
-        <span class="text-xl">{{ getCurrentRoleDisplay().icon }}</span>
-        <span class="font-medium text-gray-700">{{ getCurrentRoleDisplay().displayName }}</span>
-        <svg class="w-4 h-4 text-gray-500 transition-transform duration-200" [class.rotate-180]="showRoleSwitcher()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-        </svg>
-      </button>
-      <div *ngIf="showRoleSwitcher()" class="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden animate-slide-down">
-        <div class="px-4 py-3 bg-gradient-to-r from-primary to-primary-hover text-white font-semibold">Switch Admin View</div>
-        <div class="p-2">
-          <button *ngFor="let role of adminRoles; trackBy: trackByRoleId" 
-            (click)="switchRole(role)" 
-            class="w-full flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-gray-50 transition-colors duration-150"
-            [ngClass]="{'bg-primary/10': currentViewRole() === role.id}">
-            <span class="text-2xl">{{ role.icon }}</span>
-            <div class="flex-1 text-left">
-              <div class="font-medium text-gray-900">{{ role.displayName }}</div>
-              <div class="text-xs text-gray-500">{{ role.description }}</div>
-            </div>
-            <svg *ngIf="currentViewRole() === role.id" class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <div class="relative">
-      <button (click)="toggleNotifications()" class="relative p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200">
-        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-        </svg>
-        <span *ngIf="notificationService.unreadCount() > 0" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-bounce">{{ notificationService.unreadCount() }}</span>
-      </button>
-      <div *ngIf="showNotifications()" class="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden animate-slide-down max-h-[60vh] flex flex-col">
-        <div class="px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white flex items-center justify-between">
-          <span class="font-semibold">Notifications</span>
-          <div class="flex items-center gap-2">
-            <button *ngIf="notificationService.notifications().length > 0" (click)="markAllAsRead()" class="text-xs hover:underline">Mark all read</button>
-            <button (click)="createTestNotification()" class="text-xs hover:underline">+ Test</button>
-          </div>
-        </div>
-        <div class="flex-1 overflow-y-auto">
-          <div *ngIf="notificationService.loading()" class="flex items-center justify-center py-12">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          </div>
-          <div *ngIf="!notificationService.loading() && notificationService.notifications().length === 0" class="flex flex-col items-center justify-center py-12 text-gray-400">
-            <svg class="w-16 h-16 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-            </svg>
-            <p class="font-medium">No notifications yet</p>
-          </div>
-          <div *ngIf="!notificationService.loading() && notificationService.notifications().length > 0">
-            <div *ngFor="let notification of notificationService.notifications(); trackBy: trackByNotificationId" (click)="markAsRead(notification)" class="px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors duration-150 flex items-start gap-3" [class.bg-blue-50]="!notification.isRead">
-              <span class="text-2xl">{{ notificationService.getNotificationIcon(notification.type) }}</span>
-              <div class="flex-1 min-w-0">
-                <p class="font-medium text-gray-900 text-sm">{{ notification.title }}</p>
-                <p *ngIf="notification.message" class="text-xs text-gray-600 mt-1">{{ notification.message }}</p>
-                <span class="text-xs text-gray-400 mt-1 block">{{ notificationService.getTimeAgo(notification.createdAt) }}</span>
-              </div>
-              <button (click)="deleteNotification($event, notification.id)" class="text-gray-400 hover:text-red-500 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="notificationService.notifications().length > 0" class="px-4 py-3 bg-gray-50 border-t border-gray-200">
-          <button (click)="clearAllNotifications()" class="text-sm text-red-600 hover:text-red-700 font-medium">Clear all notifications</button>
-        </div>
-      </div>
-    </div>
-    
-    <div class="relative group">
-      <button (click)="toggleUserMenu()" class="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 rounded-xl transition-colors duration-200" [attr.aria-expanded]="showUserMenu() ? 'true' : 'false'">
-        <img *ngIf="currentUser()?.avatarUrl" [src]="currentUser()?.avatarUrl" alt="Avatar" class="w-10 h-10 rounded-full object-cover border-2 border-primary/20">
-        <div *ngIf="!currentUser()?.avatarUrl" class="w-10 h-10 bg-gradient-to-br from-accent to-accent-hover rounded-full flex items-center justify-center text-white font-bold shadow-md">{{ getUserInitials() }}</div>
-        <div class="text-left hidden sm:block">
-          <div class="font-medium text-gray-900 text-sm">{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</div>
-          <div class="text-xs text-gray-500">{{ getCurrentRoleDisplay().displayName }}</div>
-        </div>
-        <svg class="w-4 h-4 text-gray-500 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-        </svg>
-      </button>
-      <div *ngIf="showUserMenu()" class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden animate-slide-down z-50">
-        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-          <div class="font-medium text-gray-900">{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</div>
-          <div class="text-xs text-gray-500">{{ getCurrentRoleDisplay().displayName }}</div>
-        </div>
-        <div class="py-2">
-          <a routerLink="profile" class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors duration-150" (click)="toggleUserMenu()">
-            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-            </svg>
-            <span>My Profile</span>
-          </a>
-          <button (click)="logout()" class="w-full flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors duration-150 text-red-600">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-            </svg>
-            <span>Logout</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </app-admin-header>
+  <app-admin-header (toggleSidebar)="toggleSidebar()"></app-admin-header>
 
-  <div class="flex flex-1 overflow-hidden pt-16">
-    <app-admin-sidebar [sidebarClasses]="getSidebarClasses()" (sidebarToggled)="onSidebarToggled($event)"></app-admin-sidebar>
-    <main class="flex-1 overflow-y-auto transition-all duration-300" [class.ml-64]="sidebarOpen()" [class.ml-16]="!sidebarOpen()">
+  <div class="main-content">
+    <app-admin-sidebar [sidebarClasses]="getSidebarClasses()" [isOpen]="sidebarOpen()"></app-admin-sidebar>
+    <main class="content-area" [class.with-sidebar-open]="sidebarOpen()" [class.with-sidebar-closed]="!sidebarOpen()">
       <router-outlet></router-outlet>
     </main>
   </div>
 </div>
 
-<app-toast-container></app-toast-container>
+<app-toast-container class="toast-container"></app-toast-container>

@@ -211,11 +211,11 @@ img {
 
 .admin-content {
   flex: 1;
-  padding: $spacing-6;
+  padding: 0; // Remove default padding - let components handle their own spacing
   overflow-x: auto;
   
   @include respond-below('md') {
-    padding: $spacing-4;
+    padding: 0; // Remove default padding on mobile too
   }
 }
 

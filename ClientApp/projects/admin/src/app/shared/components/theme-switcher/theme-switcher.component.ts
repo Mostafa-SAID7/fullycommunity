@@ -81,7 +81,7 @@ import { ThemeService, Theme } from '../../../core/services/theme/theme.service'
       (click)="closeDropdown()">
     </div>
   `,
-  styleUrls: ['./theme-switcher.component.scss']
+  styleUrl: './theme-switcher.component.scss'
 })
 export class ThemeSwitcherComponent {
   themeService = inject(ThemeService);

@@ -509,7 +509,7 @@
 }
 
 @mixin admin-content {
-  padding: $spacing-6;
+  padding: 0; // Remove default padding - let components handle their own spacing
 }
 
 @mixin status-indicator($status: 'success') {

@@ -10,7 +10,7 @@ import { LogoButtonComponent } from '../../../shared/components/logo-button/logo
   standalone: true,
   imports: [CommonModule, FormsModule, LogoButtonComponent],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   private authService = inject(AuthService);

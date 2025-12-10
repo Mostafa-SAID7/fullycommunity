@@ -1,0 +1,168 @@
+// =============================================================================
+// Admin Layout Component Styles
+// =============================================================================
+
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
+
+.admin-layout {
+  min-height: 100vh;
+  background: linear-gradient(135deg, $bg-secondary 0%, rgba($primary-100, 0.3) 50%, rgba($indigo-100, 0.3) 100%);
+  @include flex-start;
+  flex-direction: column;
+
+  // Mobile overlay for sidebar
+  .mobile-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 35; // Below sidebar but above content
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease-out;
+    cursor: pointer; // Indicate it's clickable
+    
+    // Enhanced mobile overlay
+    @include respond-below('md') {
+      background-color: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+    }
+    
+    @include respond-to('lg') {
+      display: none;
+    }
+  }
+
+  // Main content area
+  .main-content {
+    position: absolute;
+    top: $nav-height; // Start right after header
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    min-height: calc(100vh - #{$nav-height});
+
+    .content-area {
+      position: absolute;
+      top: 0.5rem; // Small gap from header to match sidebar
+      right: 0.5rem; // Small gap from right edge
+      bottom: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 0;
+      margin: 0;
+      
+      // Remove all gaps on mobile for maximum space utilization
+      @include respond-below('sm') {
+        top: 0 !important; // Force no gap on mobile
+        right: 0 !important; // Force no gap on mobile
+        bottom: 0 !important; // Force no gap on mobile
+      }
+
+      &.with-sidebar-open {
+        left: calc(16rem + 0.5rem); // Small gap from sidebar
+        
+        @include respond-below('lg') {
+          left: calc(14rem + 0.5rem);
+        }
+        
+        @include respond-below('md') {
+          left: calc(12rem + 0.5rem);
+        }
+        
+        @include respond-below('sm') {
+          left: 0;
+          right: 0;
+          top: 0; // NO GAP - content starts right after header on mobile
+          // Full screen on mobile when sidebar is open (behind overlay)
+        }
+      }
+
+      &.with-sidebar-closed {
+        left: calc(4rem + 0.5rem); // Small gap from collapsed sidebar
+        
+        @include respond-below('md') {
+          left: calc(4rem + 0.5rem); // Keep space for icon-only sidebar on tablet
+        }
+        
+        @include respond-below('sm') {
+          left: 4rem; // NO GAP - sidebar touches main content on mobile
+          right: 0;
+          top: 0; // NO GAP - content starts right after header on mobile
+        }
+      }
+      
+      // Enhanced mobile scrolling
+      @include respond-below('sm') {
+        -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+        overscroll-behavior: contain; // Prevent scroll chaining
+      }
+    }
+  }
+}
+
+// Toast Container
+// -----------------------------------------------------------------------------
+
+.toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: $z-index-toast;
+}
+
+// Animations
+// -----------------------------------------------------------------------------
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+
+@include dark-mode {
+  .admin-layout {
+    background: linear-gradient(135deg, $dark-bg-primary 0%, rgba($dark-bg-secondary, 0.8) 50%, rgba($dark-bg-tertiary, 0.6) 100%);
+    
+    .mobile-overlay {
+      background-color: rgba(0, 0, 0, 0.8);
+      
+      @include respond-below('md') {
+        background-color: rgba(0, 0, 0, 0.85);
+      }
+    }
+  }
+}

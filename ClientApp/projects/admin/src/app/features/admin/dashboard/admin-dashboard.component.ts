@@ -29,6 +29,7 @@ interface RecentActivity {
   standalone: true,
   imports: [CommonModule, RouterLink, RefreshButtonComponent],
   templateUrl: './admin-dashboard.component.html',
+  styleUrl: './admin-dashboard.component.scss'
 })
 export class AdminDashboardComponent implements OnInit, OnDestroy {
   private dashboardService = inject(DashboardService);
@@ -241,5 +242,35 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     }).finally(() => {
       this.loading.set(false);
     });
+  }
+
+  getActionColorClass(tailwindColor: string): string {
+    switch (tailwindColor) {
+      case 'bg-blue-500':
+        return 'blue';
+      case 'bg-green-500':
+        return 'green';
+      case 'bg-purple-500':
+        return 'purple';
+      case 'bg-gray-500':
+        return 'gray';
+      default:
+        return 'blue';
+    }
+  }
+
+  getActivityIconClass(type: string): string {
+    switch (type) {
+      case 'user_registered':
+        return 'blue';
+      case 'content_posted':
+        return 'green';
+      case 'content_moderated':
+        return 'yellow';
+      case 'system_alert':
+        return 'red';
+      default:
+        return 'blue';
+    }
   }
 }
