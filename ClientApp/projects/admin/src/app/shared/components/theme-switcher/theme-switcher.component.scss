@@ -2,7 +2,8 @@
 // Theme Switcher Component Styles
 // =============================================================================
 
-@import '../../styles/component-mixins';
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
 
 :host {
   position: relative;

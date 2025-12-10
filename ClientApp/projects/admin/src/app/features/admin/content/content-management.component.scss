@@ -1,0 +1,660 @@
+// ============================================================================
+// Content Management Component Styles - Fully Responsive
+// =============================================================================
+
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+// Main Container
+// -----------------------------------------------------------------------------
+.content-management {
+  padding: $spacing-6;
+  padding-top: $spacing-12;
+  @include flex-start;
+  flex-direction: column;
+  gap: $spacing-6;
+  width: 100%;
+  min-height: calc(100vh - #{$nav-height});
+  
+  @include respond-below('lg') {
+    padding: $spacing-5;
+    padding-top: $spacing-10;
+    gap: $spacing-5;
+  }
+  
+  @include respond-below('md') {
+    padding: $spacing-4;
+    padding-top: $spacing-8;
+    gap: $spacing-4;
+  }
+  
+  @include respond-below('sm') {
+    padding: $spacing-3;
+    padding-top: $spacing-6;
+    gap: $spacing-3;
+  }
+}
+
+// Page Header
+// -----------------------------------------------------------------------------
+.page-header {
+  @include flex-between;
+  gap: $spacing-4;
+  width: 100%;
+  
+  @include respond-below('md') {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-3;
+  }
+  
+  .header-info {
+    h1 {
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin-bottom: $spacing-2;
+      
+      @include respond-below('md') {
+        font-size: $font-size-2xl;
+      }
+      
+      @include respond-below('sm') {
+        font-size: $font-size-xl;
+      }
+    }
+    
+    p {
+      font-size: $font-size-base;
+      color: $text-muted;
+      
+      @include respond-below('sm') {
+        font-size: $font-size-sm;
+      }
+    }
+  }
+  
+  .header-actions {
+    @include flex-start;
+    gap: $spacing-3;
+    
+    @include respond-below('md') {
+      width: 100%;
+    }
+    
+    .btn-secondary {
+      padding: $spacing-3 $spacing-4;
+      background: $bg-secondary;
+      color: $text-primary;
+      border: 1px solid $border-primary;
+      border-radius: $border-radius-lg;
+      font-weight: $font-weight-medium;
+      cursor: pointer;
+      transition: all $transition-fast;
+      
+      &:hover {
+        background: $bg-tertiary;
+        border-color: $border-secondary;
+        box-shadow: $shadow-sm;
+      }
+      
+      @include respond-below('md') {
+        width: 100%;
+      }
+      
+      @include respond-below('sm') {
+        padding: $spacing-2 $spacing-3;
+        font-size: $font-size-sm;
+      }
+    }
+  }
+}
+
+// Stats Grid
+// -----------------------------------------------------------------------------
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-6;
+  width: 100%;
+  
+  @include respond-below('xl') {
+    gap: $spacing-5;
+  }
+  
+  @include respond-below('lg') {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-4;
+  }
+  
+  @include respond-below('sm') {
+    grid-template-columns: 1fr;
+    gap: $spacing-3;
+  }
+  
+  // StatCardComponent handles its own styling
+}
+
+// Filters Card
+// -----------------------------------------------------------------------------
+.filters-card {
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-xl;
+  padding: $spacing-6;
+  @include flex-start;
+  gap: $spacing-4;
+  width: 100%;
+  
+  @include respond-below('lg') {
+    padding: $spacing-5;
+    flex-wrap: wrap;
+  }
+  
+  @include respond-below('md') {
+    padding: $spacing-4;
+    flex-direction: column;
+    gap: $spacing-3;
+  }
+  
+  .search-input {
+    flex: 2;
+    padding: $spacing-3 $spacing-4;
+    border: 1px solid $border-primary;
+    border-radius: $border-radius-lg;
+    font-size: $font-size-base;
+    background: $bg-secondary;
+    color: $text-primary;
+    transition: all $transition-fast;
+    
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+    }
+    
+    &::placeholder {
+      color: $text-muted;
+    }
+    
+    @include respond-below('md') {
+      width: 100%;
+    }
+    
+    @include respond-below('sm') {
+      padding: $spacing-2 $spacing-3;
+      font-size: $font-size-sm;
+    }
+  }
+  
+  .filter-select {
+    flex: 1;
+    padding: $spacing-3 $spacing-4;
+    border: 1px solid $border-primary;
+    border-radius: $border-radius-lg;
+    font-size: $font-size-base;
+    background: $bg-secondary;
+    color: $text-primary;
+    cursor: pointer;
+    transition: all $transition-fast;
+    
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+    }
+    
+    @include respond-below('lg') {
+      min-width: 150px;
+    }
+    
+    @include respond-below('md') {
+      width: 100%;
+    }
+    
+    @include respond-below('sm') {
+      padding: $spacing-2 $spacing-3;
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+// Loading State
+// -----------------------------------------------------------------------------
+.loading-container {
+  @include flex-center;
+  padding: $spacing-12 0;
+  
+  .spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 3px solid rgba($color-primary, 0.2);
+    border-top: 3px solid $color-primary;
+    border-radius: $border-radius-full;
+    animation: spin 1s linear infinite;
+  }
+}
+
+// Error Message
+// -----------------------------------------------------------------------------
+.error-message {
+  background: rgba($error-50, 0.8);
+  border: 1px solid $error-200;
+  border-radius: $border-radius-xl;
+  padding: $spacing-4;
+  @include flex-between;
+  color: $error-800;
+  font-weight: $font-weight-medium;
+  
+  @include respond-below('sm') {
+    flex-direction: column;
+    gap: $spacing-3;
+    text-align: center;
+  }
+  
+  .retry-btn {
+    padding: $spacing-2 $spacing-4;
+    background: $error-600;
+    color: $text-inverse;
+    border: none;
+    border-radius: $border-radius-lg;
+    cursor: pointer;
+    font-weight: $font-weight-medium;
+    transition: background-color $transition-fast;
+    
+    &:hover {
+      background: $error-700;
+    }
+    
+    @include respond-below('sm') {
+      width: 100%;
+    }
+  }
+}
+
+// Content List
+// -----------------------------------------------------------------------------
+.content-list {
+  width: 100%;
+  @include flex-start;
+  flex-direction: column;
+  gap: $spacing-4;
+  
+  .content-item {
+    background: $bg-primary;
+    border: 1px solid $border-primary;
+    border-radius: $border-radius-xl;
+    padding: $spacing-6;
+    @include flex-between;
+    gap: $spacing-4;
+    transition: all $transition-fast;
+    
+    &:hover {
+      box-shadow: $shadow-md;
+      border-color: rgba($color-primary, 0.3);
+    }
+    
+    @include respond-below('lg') {
+      padding: $spacing-5;
+      flex-wrap: wrap;
+    }
+    
+    @include respond-below('md') {
+      padding: $spacing-4;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .content-main {
+      flex: 2;
+      min-width: 0;
+      
+      @include respond-below('md') {
+        width: 100%;
+      }
+      
+      .content-title {
+        font-size: $font-size-lg;
+        font-weight: $font-weight-semibold;
+        color: $text-primary;
+        margin-bottom: $spacing-2;
+        line-height: $line-height-tight;
+        
+        @include respond-below('sm') {
+          font-size: $font-size-base;
+        }
+      }
+      
+      .content-meta {
+        @include flex-start;
+        gap: $spacing-3;
+        flex-wrap: wrap;
+        
+        @include respond-below('sm') {
+          gap: $spacing-2;
+        }
+        
+        .content-type {
+          padding: $spacing-1 $spacing-2;
+          border-radius: $border-radius-base;
+          font-size: $font-size-xs;
+          font-weight: $font-weight-medium;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          
+          &.type-post {
+            background: rgba($primary-100, 0.8);
+            color: $primary-700;
+          }
+          
+          &.type-review {
+            background: rgba($success-100, 0.8);
+            color: $success-700;
+          }
+          
+          &.type-guide {
+            background: rgba($purple-100, 0.8);
+            color: $purple-700;
+          }
+          
+          &.type-question {
+            background: rgba($warning-100, 0.8);
+            color: $warning-700;
+          }
+          
+          &.type-podcast {
+            background: rgba($indigo-100, 0.8);
+            color: $indigo-700;
+          }
+        }
+        
+        .content-author,
+        .content-date {
+          font-size: $font-size-sm;
+          color: $text-muted;
+          
+          @include respond-below('sm') {
+            font-size: $font-size-xs;
+          }
+        }
+      }
+    }
+    
+    .content-stats {
+      @include flex-start;
+      gap: $spacing-3;
+      font-size: $font-size-sm;
+      color: $text-muted;
+      
+      @include respond-below('lg') {
+        flex-wrap: wrap;
+      }
+      
+      @include respond-below('md') {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      @include respond-below('sm') {
+        gap: $spacing-2;
+        font-size: $font-size-xs;
+      }
+    }
+    
+    .content-status {
+      .status-badge {
+        padding: $spacing-2 $spacing-3;
+        border-radius: $border-radius-full;
+        font-size: $font-size-xs;
+        font-weight: $font-weight-medium;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        
+        &.status-published {
+          background: rgba($success-100, 0.8);
+          color: $success-700;
+        }
+        
+        &.status-draft {
+          background: rgba($neutral-100, 0.8);
+          color: $neutral-700;
+        }
+        
+        &.status-pending {
+          background: rgba($warning-100, 0.8);
+          color: $warning-700;
+        }
+        
+        &.status-rejected {
+          background: rgba($error-100, 0.8);
+          color: $error-700;
+        }
+      }
+    }
+    
+    .content-actions {
+      @include flex-start;
+      gap: $spacing-2;
+      flex-wrap: wrap;
+      
+      @include respond-below('md') {
+        width: 100%;
+        justify-content: flex-end;
+      }
+      
+      @include respond-below('sm') {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .action-btn {
+        padding: $spacing-2 $spacing-3;
+        border: 1px solid;
+        border-radius: $border-radius-lg;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        cursor: pointer;
+        transition: all $transition-fast;
+        
+        &.edit {
+          background: rgba($primary-50, 0.8);
+          border-color: $primary-200;
+          color: $primary-700;
+          
+          &:hover {
+            background: rgba($primary-100, 0.8);
+            border-color: $primary-300;
+          }
+        }
+        
+        &.view {
+          background: rgba($neutral-50, 0.8);
+          border-color: $neutral-200;
+          color: $neutral-700;
+          
+          &:hover {
+            background: rgba($neutral-100, 0.8);
+            border-color: $neutral-300;
+          }
+        }
+        
+        &.approve {
+          background: rgba($success-50, 0.8);
+          border-color: $success-200;
+          color: $success-700;
+          
+          &:hover {
+            background: rgba($success-100, 0.8);
+            border-color: $success-300;
+          }
+        }
+        
+        &.reject {
+          background: rgba($warning-50, 0.8);
+          border-color: $warning-200;
+          color: $warning-700;
+          
+          &:hover {
+            background: rgba($warning-100, 0.8);
+            border-color: $warning-300;
+          }
+        }
+        
+        &.delete {
+          background: rgba($error-50, 0.8);
+          border-color: $error-200;
+          color: $error-700;
+          
+          &:hover {
+            background: rgba($error-100, 0.8);
+            border-color: $error-300;
+          }
+        }
+        
+        @include respond-below('sm') {
+          padding: $spacing-1 $spacing-2;
+          font-size: $font-size-xs;
+        }
+      }
+    }
+  }
+  
+  .empty-state {
+    @include flex-center;
+    padding: $spacing-12 $spacing-6;
+    text-align: center;
+    
+    p {
+      font-size: $font-size-lg;
+      color: $text-muted;
+      
+      @include respond-below('sm') {
+        font-size: $font-size-base;
+      }
+    }
+  }
+}
+
+// Animations
+// -----------------------------------------------------------------------------
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .content-management {
+    .page-header {
+      .header-info {
+        h1 {
+          color: $dark-text-primary;
+        }
+        
+        p {
+          color: $dark-text-secondary;
+        }
+      }
+      
+      .header-actions {
+        .btn-secondary {
+          background: $dark-bg-secondary;
+          color: $dark-text-primary;
+          border-color: $dark-border-primary;
+          
+          &:hover {
+            background: $dark-bg-tertiary;
+            border-color: $dark-border-secondary;
+          }
+        }
+      }
+    }
+  }
+  
+  .filters-card,
+  .content-item {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+  
+  .search-input,
+  .filter-select {
+    background: $dark-bg-tertiary;
+    color: $dark-text-primary;
+    border-color: $dark-border-primary;
+    
+    &::placeholder {
+      color: $dark-text-secondary;
+    }
+    
+    &:focus {
+      border-color: $color-primary;
+    }
+  }
+  
+  .content-title {
+    color: $dark-text-primary;
+  }
+  
+  .content-author,
+  .content-date,
+  .content-stats {
+    color: $dark-text-secondary;
+  }
+  
+  .error-message {
+    background: rgba($error-900, 0.8);
+    border-color: $error-700;
+    color: $error-200;
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+@include high-contrast {
+  .filters-card,
+  .content-item,
+  .search-input,
+  .filter-select,
+  .action-btn,
+  .btn-secondary {
+    border: 2px solid currentColor;
+  }
+  
+  .status-badge,
+  .content-type {
+    border: 1px solid currentColor;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  .content-item,
+  .action-btn,
+  .btn-secondary {
+    transition: none;
+  }
+  
+  .content-item:hover {
+    transform: none;
+  }
+  
+  .spinner {
+    animation: none;
+  }
+}
+
+
+

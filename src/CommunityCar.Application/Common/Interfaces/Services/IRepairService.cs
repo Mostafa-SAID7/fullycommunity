@@ -1,5 +1,6 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Services.Repairs;
+using CommunityCar.Application.DTOs.Response.Services.Repairs;
+using CommunityCar.Application.DTOs.Requests.Services.Repairs;
 
 namespace CommunityCar.Application.Common.Interfaces.Services;
 

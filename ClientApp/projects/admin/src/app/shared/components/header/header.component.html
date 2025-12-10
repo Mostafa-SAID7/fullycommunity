@@ -1,0 +1,33 @@
+<header class="header">
+  <nav class="nav">
+    <a routerLink="/" class="brand-link">
+      <svg class="brand-icon" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+      </svg>
+      <span class="brand-text">Fully Community</span>
+    </a>
+    
+    <div class="nav-actions">
+      @if (authService.currentUser()) {
+        <div class="user-section">
+          <a routerLink="/profile" class="profile-link">
+            Profile
+          </a>
+          <div class="user-info">
+            <div class="user-avatar">
+              {{ authService.currentUser()?.firstName?.[0] || 'U' }}
+            </div>
+            <span class="user-name">{{ authService.currentUser()?.firstName }}</span>
+          </div>
+          <button (click)="authService.logout()" class="logout-button">
+            Logout
+          </button>
+        </div>
+      } @else {
+        <a routerLink="/login" class="login-button">
+          Admin Login
+        </a>
+      }
+    </div>
+  </nav>
+</header>

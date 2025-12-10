@@ -1,0 +1,121 @@
+// =============================================================================
+// Pagination Component Styles
+// =============================================================================
+
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+// Pagination Container
+// -----------------------------------------------------------------------------
+.pagination-container {
+  background: $bg-primary;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-sm;
+  border: 1px solid $border-primary;
+  padding: $spacing-4 $spacing-6;
+  @include flex-between;
+  
+  @include respond-below('sm') {
+    padding: $spacing-3 $spacing-4;
+    flex-direction: column;
+    gap: $spacing-3;
+    text-align: center;
+  }
+}
+
+// Display Text
+// -----------------------------------------------------------------------------
+.pagination-text {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  
+  @include respond-below('sm') {
+    font-size: $font-size-xs;
+  }
+}
+
+// Pagination Controls
+// -----------------------------------------------------------------------------
+.pagination-controls {
+  @include flex-start;
+  gap: $spacing-2;
+  
+  @include respond-below('sm') {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.pagination-button {
+  padding: $spacing-2 $spacing-4;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-lg;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  background: $bg-primary;
+  cursor: pointer;
+  transition: all $transition-fast;
+  
+  &:hover:not(:disabled) {
+    background: $bg-secondary;
+    border-color: $border-secondary;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  @include respond-below('sm') {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-xs;
+    flex: 1;
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .pagination-container {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+  
+  .pagination-text {
+    color: $dark-text-secondary;
+  }
+  
+  .pagination-button {
+    background: $dark-bg-tertiary;
+    border-color: $dark-border-primary;
+    color: $dark-text-secondary;
+    
+    &:hover:not(:disabled) {
+      background: $dark-bg-primary;
+      border-color: $dark-border-secondary;
+    }
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+@include high-contrast {
+  .pagination-container,
+  .pagination-button {
+    border: 2px solid currentColor;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  .pagination-button {
+    transition: none;
+  }
+}

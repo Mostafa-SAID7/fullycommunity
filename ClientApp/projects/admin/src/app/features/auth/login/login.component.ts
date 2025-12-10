@@ -21,6 +21,7 @@ export class LoginComponent {
   rememberMe = false;
   loading = false;
   errorMessage = '';
+  showPassword = false;
   currentYear = new Date().getFullYear();
 
   onSubmit() {
@@ -55,5 +56,9 @@ export class LoginComponent {
         }
       }
     });
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 }

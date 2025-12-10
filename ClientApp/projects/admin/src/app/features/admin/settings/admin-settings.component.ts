@@ -8,6 +8,7 @@ import {
   SecuritySettings
 } from '../../../core/interfaces/admin/settings.interface';
 import { TabNavigationComponent, Tab } from '../../../shared/components/tab-navigation/tab-navigation.component';
+import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
 
 @Component({
   selector: 'admin-settings',
@@ -15,9 +16,11 @@ import { TabNavigationComponent, Tab } from '../../../shared/components/tab-navi
   imports: [
     CommonModule,
     FormsModule,
-    TabNavigationComponent
+    TabNavigationComponent,
+    RefreshButtonComponent
   ],
-  templateUrl: './admin-settings.component.html'
+  templateUrl: './admin-settings.component.html',
+  styleUrl: './admin-settings.component.scss'
 })
 export class AdminSettingsComponent implements OnInit {
   private settingsService = inject(AdminSettingsService);

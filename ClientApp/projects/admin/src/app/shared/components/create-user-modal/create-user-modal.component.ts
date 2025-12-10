@@ -14,7 +14,8 @@ export interface NewUser {
   selector: 'app-create-user-modal',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './create-user-modal.component.html'
+  templateUrl: './create-user-modal.component.html',
+  styleUrl: './create-user-modal.component.scss'
 })
 export class CreateUserModalComponent {
   show = input.required<boolean>();

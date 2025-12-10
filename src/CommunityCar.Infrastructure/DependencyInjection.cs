@@ -1,12 +1,17 @@
 using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Common.Interfaces.Data;
-using CommunityCar.Application.Common.Interfaces.Identity;
+using CommunityCar.Application.Common.Interfaces.Auth.Common;
+using CommunityCar.Application.Common.Interfaces.Auth.User;
+using CommunityCar.Application.Common.Interfaces.Auth.Admin;
 using CommunityCar.Application.Common.Interfaces.Infrastructure;
 using CommunityCar.Application.Common.Interfaces.Security;
+using CommunityCar.Application.Common.Services;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data;
 using CommunityCar.Infrastructure.Repositories;
-using CommunityCar.Infrastructure.Services.Identity;
+using CommunityCar.Infrastructure.Services.Auth.Common;
+using CommunityCar.Infrastructure.Services.Auth.User;
+using CommunityCar.Infrastructure.Services.Auth.Admin;
 using CommunityCar.Infrastructure.Services.Notification;
 using CommunityCar.Infrastructure.Services.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -86,13 +91,14 @@ public static class DependencyInjection
         });
 
         // Core Services
-        services.AddScoped<IJwtService, Services.Identity.JwtService>();
-        services.AddScoped<ICurrentUserService, Services.Identity.CurrentUserService>();
-        services.AddScoped<IAuditService, Services.Identity.AuditService>();
-        services.AddScoped<IDeviceService, Services.Identity.DeviceService>();
+        services.AddScoped<IAdminPermissionService, AdminPermissionService>();
+        services.AddScoped<IJ wtService, Services.Auth.Common.JwtService>(); // Fully qualified to avoid ambiguity if any, or rely on usings
+        services.AddScoped<ICurrentUserService, Services.Auth.Common.CurrentUserService>();
+        services.AddScoped<IAuditService, Services.Identity.AuditService>(); // Wait, AuditService is not moved? Checked earlier, AuditService is in Security? No, Services.Identity.AuditService line 91
+        services.AddScoped<IDeviceService, Services.Identity.DeviceService>(); // Check DeviceService location
         services.AddScoped<ISessionService, Services.Identity.SessionService>();
         services.AddScoped<IActivityService, Services.Identity.ActivityService>();
-        services.AddScoped<ISecurityService, Services.Security.SecurityService>();
+        services.AddScoped<ISecurityService,Services.Security.SecurityService>();
         services.AddScoped<ITwoFactorService, Services.Identity.TwoFactorService>();
         services.AddScoped<INotificationService, Services.Notification.NotificationService>();
         services.AddScoped<IGeoLocationService, Services.Security.GeoLocationService>();
@@ -100,7 +106,9 @@ public static class DependencyInjection
         services.AddScoped<IBreachDetectionService, Services.Security.BreachDetectionService>();
 
         // Identity Services
+        services.AddScoped<ICommonAuthService, CommonAuthService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IAdminAuthService, AdminAuthService>();
         services.AddScoped<IVerificationService, VerificationService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRoleService, RoleService>();

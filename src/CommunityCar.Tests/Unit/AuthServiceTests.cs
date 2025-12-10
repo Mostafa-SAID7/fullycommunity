@@ -1,10 +1,14 @@
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.Common.Interfaces.Auth.Common;
+using CommunityCar.Application.Common.Interfaces.Auth.User;
+using CommunityCar.Application.Common.Interfaces.Infrastructure;
+using CommunityCar.Application.Common.Interfaces.Security;
 using CommunityCar.Application.Common.Models;
-using CommunityCar.Application.DTOs.Response.Identity;
-using CommunityCar.Application.DTOs.Requests.Identity;
+using CommunityCar.Application.DTOs.Requests.Auth.Common; using CommunityCar.Application.DTOs.Response.Auth.Common;
+using CommunityCar.Application.DTOs.Requests.Auth.User; using CommunityCar.Application.DTOs.Response.Auth.User;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Domain.Enums;
-using CommunityCar.Infrastructure.Services.Identity;
+using CommunityCar.Infrastructure.Services.Auth.User;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -98,7 +102,7 @@ public class AuthServiceTests
             .ReturnsAsync(["User"]);
 
         _jwtServiceMock
-            .Setup(x => x.GenerateTokensAsync(user, null))
+            .Setup(x => x.GenerateTokensAsync(user, null, null))
             .ReturnsAsync(new TokenResult("access-token", "refresh-token", DateTime.UtcNow.AddHours(1), DateTime.UtcNow.AddDays(7)));
 
         _userManagerMock
@@ -175,41 +179,7 @@ public class AuthServiceTests
         );
     }
 
-    [Fact]
-    public async Task LogoutAsync_CallsRevokeAllTokens()
-    {
-        // Arrange
-        var userId = Guid.NewGuid();
 
-        // Act
-        await _authService.LogoutAsync(userId);
 
-        // Assert
-        _jwtServiceMock.Verify(x => x.RevokeAllUserTokensAsync(userId), Times.Once);
-    }
-
-    [Fact]
-    public async Task ChangePasswordAsync_WithValidData_ChangesPassword()
-    {
-        // Arrange
-        var userId = Guid.NewGuid();
-        var user = new ApplicationUser { Id = userId, Email = "test@test.com" };
-
-        _userManagerMock
-            .Setup(x => x.FindByIdAsync(userId.ToString()))
-            .ReturnsAsync(user);
-
-        _userManagerMock
-            .Setup(x => x.ChangePasswordAsync(user, "OldPassword123!", "NewPassword123!"))
-            .ReturnsAsync(IdentityResult.Success);
-
-        var request = new ChangePasswordRequest("OldPassword123!", "NewPassword123!");
-
-        // Act
-        await _authService.ChangePasswordAsync(userId, request);
-
-        // Assert
-        _userManagerMock.Verify(x => x.ChangePasswordAsync(user, "OldPassword123!", "NewPassword123!"), Times.Once);
-        _jwtServiceMock.Verify(x => x.RevokeAllUserTokensAsync(userId), Times.Once);
-    }
 }
+

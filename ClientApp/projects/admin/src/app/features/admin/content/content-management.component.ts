@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminContentService } from '../../../core/services/content/admin-content.service';
 import { ContentItem, ContentStats } from '../../../core/interfaces/content/admin-content.interface';
+import { StatCardComponent, StatCardConfig } from '../../../shared/components/charts/stat-card.component';
+import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
 
 @Component({
   selector: 'content-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './content-management.component.html'
+  imports: [CommonModule, FormsModule, StatCardComponent, RefreshButtonComponent],
+  templateUrl: './content-management.component.html',
+  styleUrl: './content-management.component.scss'
 })
 export class ContentManagementComponent implements OnInit {
   private contentService = inject(AdminContentService);
@@ -24,6 +27,43 @@ export class ContentManagementComponent implements OnInit {
   currentPage = 1;
   pageSize = 10;
   totalCount = 0;
+
+  // Computed stat cards
+  get statCards(): StatCardConfig[] {
+    const stats = this.stats();
+    if (!stats) return [];
+    
+    return [
+      {
+        title: 'Total Posts',
+        value: stats.totalPosts,
+        icon: '📝',
+        color: 'primary',
+        subtitle: 'Published content'
+      },
+      {
+        title: 'Reviews',
+        value: stats.totalReviews,
+        icon: '⭐',
+        color: 'success',
+        subtitle: 'User reviews'
+      },
+      {
+        title: 'Guides',
+        value: stats.totalGuides,
+        icon: '📚',
+        color: 'info',
+        subtitle: 'How-to guides'
+      },
+      {
+        title: 'Pending Approval',
+        value: stats.pendingApproval,
+        icon: '⏳',
+        color: stats.pendingApproval > 0 ? 'warning' : 'success',
+        subtitle: stats.pendingApproval > 0 ? 'Needs review' : 'All approved'
+      }
+    ];
+  }
 
   ngOnInit() {
     this.loadStats();
@@ -109,5 +149,10 @@ export class ContentManagementComponent implements OnInit {
 
   exportData() {
     console.log('Export data');
+  }
+
+  refreshContent() {
+    this.loadStats();
+    this.loadContent();
   }
 }

@@ -1,0 +1,298 @@
+// =============================================================================
+// Header Component Styles
+// =============================================================================
+
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+// Header Container
+// -----------------------------------------------------------------------------
+.header {
+  background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+  box-shadow: $shadow-lg;
+  position: sticky;
+  top: 0;
+  z-index: $z-index-sticky;
+  backdrop-filter: blur(8px);
+  background-color: rgba($color-primary, 0.95);
+}
+
+// Navigation
+// -----------------------------------------------------------------------------
+.nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-4;
+  @include flex-between;
+  
+  @include respond-below('md') {
+    padding: $spacing-3;
+  }
+  
+  @include respond-below('sm') {
+    flex-direction: column;
+    gap: $spacing-3;
+    align-items: center;
+  }
+}
+
+// Logo/Brand
+// -----------------------------------------------------------------------------
+.brand-link {
+  @include flex-start;
+  gap: $spacing-2;
+  color: $text-inverse;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  letter-spacing: -0.025em;
+  text-decoration: none;
+  transition: transform $transition-fast;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+  
+  .brand-icon {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+  }
+  
+  .brand-text {
+    background: linear-gradient(135deg, $text-inverse, rgba($text-inverse, 0.8));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    @include respond-below('sm') {
+      font-size: $font-size-xl;
+    }
+  }
+  
+  @include respond-below('md') {
+    font-size: $font-size-xl;
+  }
+}
+
+// Navigation Actions
+// -----------------------------------------------------------------------------
+.nav-actions {
+  @include flex-start;
+  gap: $spacing-4;
+  
+  @include respond-below('sm') {
+    flex-direction: column;
+    gap: $spacing-2;
+    width: 100%;
+    align-items: center;
+  }
+}
+
+// User Section (when authenticated)
+// -----------------------------------------------------------------------------
+.user-section {
+  @include flex-start;
+  gap: $spacing-4;
+  
+  @include respond-below('sm') {
+    flex-direction: column;
+    gap: $spacing-2;
+    width: 100%;
+    align-items: center;
+  }
+}
+
+.profile-link {
+  color: $text-inverse;
+  text-decoration: none;
+  padding: $spacing-2 $spacing-4;
+  border-radius: $border-radius-lg;
+  font-weight: $font-weight-medium;
+  transition: all $transition-fast;
+  
+  &:hover {
+    color: rgba($text-inverse, 0.9);
+    background: rgba($text-inverse, 0.1);
+  }
+  
+  @include respond-below('sm') {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-sm;
+  }
+}
+
+.user-info {
+  @include flex-start;
+  gap: $spacing-3;
+  padding: $spacing-2 $spacing-4;
+  background: rgba($text-inverse, 0.1);
+  border-radius: $border-radius-lg;
+  backdrop-filter: blur(4px);
+  
+  @include respond-below('sm') {
+    padding: $spacing-2 $spacing-3;
+  }
+  
+  .user-avatar {
+    width: 2rem;
+    height: 2rem;
+    background: linear-gradient(135deg, $secondary-600, $secondary-700);
+    border-radius: $border-radius-full;
+    @include flex-center;
+    color: $text-inverse;
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-sm;
+    box-shadow: $shadow-md;
+    flex-shrink: 0;
+    
+    @include respond-below('sm') {
+      width: 1.75rem;
+      height: 1.75rem;
+      font-size: $font-size-xs;
+    }
+  }
+  
+  .user-name {
+    color: $text-inverse;
+    font-weight: $font-weight-medium;
+    
+    @include respond-below('sm') {
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+// Buttons
+// -----------------------------------------------------------------------------
+.logout-button {
+  color: $text-inverse;
+  background: rgba($text-inverse, 0.1);
+  border: 1px solid rgba($text-inverse, 0.2);
+  padding: $spacing-2 $spacing-5;
+  border-radius: $border-radius-lg;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: all $transition-fast;
+  
+  &:hover {
+    background: rgba($text-inverse, 0.2);
+    border-color: rgba($text-inverse, 0.4);
+    box-shadow: $shadow-lg;
+  }
+  
+  @include respond-below('sm') {
+    padding: $spacing-2 $spacing-4;
+    font-size: $font-size-sm;
+    width: 100%;
+  }
+}
+
+.login-button {
+  background: $text-inverse;
+  color: $color-primary;
+  padding: 0.625rem $spacing-6;
+  border-radius: $border-radius-lg;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+  box-shadow: $shadow-md;
+  transition: all $transition-fast;
+  
+  &:hover {
+    background: rgba($text-inverse, 0.9);
+    box-shadow: $shadow-xl;
+    transform: scale(1.05);
+  }
+  
+  @include respond-below('sm') {
+    padding: $spacing-2 $spacing-4;
+    font-size: $font-size-sm;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .header {
+    background: linear-gradient(135deg, $dark-bg-primary, $dark-bg-secondary);
+    border-bottom: 1px solid $dark-border-primary;
+  }
+  
+  .brand-text {
+    background: linear-gradient(135deg, $dark-text-primary, rgba($dark-text-primary, 0.8));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .profile-link {
+    color: $dark-text-primary;
+    
+    &:hover {
+      color: rgba($dark-text-primary, 0.9);
+      background: rgba($dark-text-primary, 0.1);
+    }
+  }
+  
+  .user-info {
+    background: rgba($dark-text-primary, 0.1);
+    
+    .user-name {
+      color: $dark-text-primary;
+    }
+  }
+  
+  .logout-button {
+    color: $dark-text-primary;
+    background: rgba($dark-text-primary, 0.1);
+    border-color: rgba($dark-text-primary, 0.2);
+    
+    &:hover {
+      background: rgba($dark-text-primary, 0.2);
+      border-color: rgba($dark-text-primary, 0.4);
+    }
+  }
+  
+  .login-button {
+    background: $dark-text-primary;
+    color: $dark-bg-primary;
+    
+    &:hover {
+      background: rgba($dark-text-primary, 0.9);
+    }
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+@include high-contrast {
+  .header,
+  .user-info,
+  .logout-button,
+  .login-button {
+    border: 2px solid currentColor;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  .brand-link,
+  .profile-link,
+  .logout-button,
+  .login-button {
+    transition: none;
+  }
+  
+  .brand-link:hover,
+  .login-button:hover {
+    transform: none;
+  }
+}

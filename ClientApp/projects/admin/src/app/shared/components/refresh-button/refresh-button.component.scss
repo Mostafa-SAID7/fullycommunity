@@ -2,198 +2,285 @@
 // Refresh Button Component Styles
 // =============================================================================
 
-@import '../../styles/component-mixins';
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
 
 :host {
   display: inline-block;
 }
 
-// Enhanced refresh button styles - inherits from main button component
-:host {
-  .btn {
-    position: relative;
-    overflow: hidden;
-    
-    // Ripple effect on click
-    &::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.3);
-      transform: translate(-50%, -50%);
-      transition: width $transition-base, height $transition-base;
-      pointer-events: none;
+// Base Button Styles
+// -----------------------------------------------------------------------------
+.refresh-button {
+  position: relative;
+  @include flex-center;
+  font-weight: $font-weight-medium;
+  border-radius: $border-radius-lg;
+  transition: all $transition-fast;
+  cursor: pointer;
+  border: none;
+  
+  &:focus-visible {
+    @include focus-visible;
+  }
+  
+  &:not(:disabled) {
+    &:hover {
+      transform: scale(1.05);
     }
     
-    &:active::before {
-      width: 100px;
-      height: 100px;
+    &:active {
+      transform: scale(0.95);
     }
+  }
+  
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none !important;
+  }
+}
+
+// Size Variants
+// -----------------------------------------------------------------------------
+.refresh-button {
+  &.size-sm {
+    padding: $spacing-1 $spacing-2;
+    font-size: $font-size-xs;
     
-    // Loading state
-    &.loading {
-      color: transparent;
-      
-      .refresh-icon {
-        animation: spin 1s linear infinite;
-      }
-    }
-    
-    // Success state animation
-    &.success-state {
-      animation: successPulse 0.6s ease-out;
-    }
-    
-    // Error state animation
-    &.error-state {
-      animation: errorShake 0.5s ease-in-out;
-    }
-    
-    // Icon styling
     .refresh-icon {
-      width: $icon-sm;
-      height: $icon-sm;
-      transition: transform $transition-base;
-      
-      &.rotate-effect {
-        transition: transform $transition-slow;
-      }
+      width: 1rem;
+      height: 1rem;
     }
+  }
+  
+  &.size-md {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-sm;
     
-    // Text styling
-    .refresh-text {
-      font-weight: $font-weight-medium;
-      margin-left: $spacing-2;
+    .refresh-icon {
+      width: 1rem;
+      height: 1rem;
     }
+  }
+  
+  &.size-lg {
+    padding: $spacing-2 $spacing-4;
+    font-size: $font-size-base;
     
-    // Hover effects
-    &:hover:not(:disabled) {
-      .refresh-icon.rotate-effect {
-        transform: rotate(180deg);
-      }
+    .refresh-icon {
+      width: 1.25rem;
+      height: 1.25rem;
     }
   }
 }
 
-// Status indicator styles
+// Variant Styles
+// -----------------------------------------------------------------------------
+.refresh-button {
+  &.variant-primary {
+    background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+    color: $text-inverse;
+    box-shadow: $shadow-lg;
+    
+    &:hover:not(:disabled) {
+      box-shadow: $shadow-xl;
+    }
+    
+    &:disabled {
+      background: linear-gradient(135deg, $neutral-400, $neutral-500);
+    }
+  }
+  
+  &.variant-secondary {
+    background: $bg-primary;
+    border: 2px solid $border-secondary;
+    color: $text-secondary;
+    box-shadow: $shadow-md;
+    
+    &:hover:not(:disabled) {
+      border-color: $color-primary;
+      color: $color-primary;
+      box-shadow: $shadow-lg;
+    }
+    
+    &:disabled {
+      background: $bg-secondary;
+      border-color: $border-primary;
+      color: $text-muted;
+    }
+  }
+  
+  &.variant-ghost {
+    background: transparent;
+    color: $text-secondary;
+    
+    &:hover:not(:disabled) {
+      background: $bg-secondary;
+      color: $text-primary;
+    }
+    
+    &:disabled {
+      color: $text-muted;
+    }
+  }
+  
+  &.variant-success {
+    background: linear-gradient(135deg, $success-500, $success-600);
+    color: $text-inverse;
+    box-shadow: $shadow-lg;
+    
+    &:hover:not(:disabled) {
+      box-shadow: $shadow-xl;
+    }
+    
+    &:disabled {
+      background: linear-gradient(135deg, $neutral-400, $neutral-500);
+    }
+  }
+  
+  &.variant-warning {
+    background: linear-gradient(135deg, $warning-500, $warning-600);
+    color: $text-inverse;
+    box-shadow: $shadow-lg;
+    
+    &:hover:not(:disabled) {
+      box-shadow: $shadow-xl;
+    }
+    
+    &:disabled {
+      background: linear-gradient(135deg, $neutral-400, $neutral-500);
+    }
+  }
+}
+
+// Icon Styles
+// -----------------------------------------------------------------------------
+.refresh-icon {
+  transition: transform $transition-slow;
+  
+  &.loading {
+    animation: spin 1s linear infinite;
+  }
+  
+  &.rotate-effect {
+    transform: rotate(180deg);
+  }
+}
+
+// Button Text
+// -----------------------------------------------------------------------------
+.button-text {
+  margin-left: $spacing-2;
+  font-weight: $font-weight-medium;
+}
+
+// Status Indicator
+// -----------------------------------------------------------------------------
 .status-indicator {
   position: absolute;
-  top: -$spacing-1;
-  right: -$spacing-1;
+  top: -0.25rem;
+  right: -0.25rem;
   width: 0.75rem;
   height: 0.75rem;
   border-radius: $border-radius-full;
   
   &.success {
-    @include status-indicator('success');
+    background: $success-400;
   }
   
   &.error {
-    @include status-indicator('error');
+    background: $error-400;
   }
   
   &.warning {
-    @include status-indicator('warning');
+    background: $warning-400;
+    animation: pulse 2s infinite;
   }
 }
 
-// Tooltip styles
-.refresh-tooltip {
-  position: absolute;
-  bottom: calc(100% + #{$spacing-2});
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.9);
-  color: $text-inverse;
-  padding: $spacing-1 $spacing-2;
-  border-radius: $border-radius-sm;
-  font-size: $font-size-xs;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity $transition-fast;
-  z-index: $z-index-tooltip;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 4px solid transparent;
-    border-top-color: rgba(0, 0, 0, 0.9);
+// Animations
+// -----------------------------------------------------------------------------
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
-.refresh-button:hover .refresh-tooltip {
-  opacity: 1;
-}
-
-// Responsive design
-@include respond-below('sm') {
-  .refresh-button.responsive {
-    padding: $spacing-2;
-    
-    .refresh-text {
-      display: none;
-    }
-    
-    .refresh-icon {
-      margin: 0;
-    }
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
   }
 }
 
-// Dark mode support
+// Dark Mode Support
+// -----------------------------------------------------------------------------
 @include dark-mode {
-  .refresh-tooltip {
-    background: rgba(255, 255, 255, 0.9);
-    color: $dark-bg-primary;
+  .refresh-button {
+    &.variant-secondary {
+      background: $dark-bg-secondary;
+      border-color: $dark-border-secondary;
+      color: $dark-text-secondary;
+      
+      &:hover:not(:disabled) {
+        border-color: $color-primary;
+        color: $color-primary;
+      }
+      
+      &:disabled {
+        background: $dark-bg-tertiary;
+        border-color: $dark-border-primary;
+        color: $dark-text-secondary;
+      }
+    }
     
-    &::after {
-      border-top-color: rgba(255, 255, 255, 0.9);
+    &.variant-ghost {
+      color: $dark-text-secondary;
+      
+      &:hover:not(:disabled) {
+        background: $dark-bg-tertiary;
+        color: $dark-text-primary;
+      }
+      
+      &:disabled {
+        color: $dark-text-secondary;
+      }
     }
   }
 }
 
-// High contrast mode
+// High Contrast Mode
+// -----------------------------------------------------------------------------
 @include high-contrast {
   .refresh-button {
     border: 2px solid currentColor;
   }
 }
 
-// Reduced motion support
+// Reduced Motion
+// -----------------------------------------------------------------------------
 @include reduced-motion {
-  .refresh-button {
-    &::before {
-      transition: none;
-    }
-    
-    .refresh-icon {
-      transition: none;
-      
-      &.rotate-effect {
-        transition: none;
-      }
-    }
-    
-    &.primary {
-      animation: none;
-      background: $color-primary;
-    }
-    
-    &.loading .refresh-icon {
-      animation: none;
-    }
-    
-    &.success-state,
-    &.error-state {
-      animation: none;
-    }
+  .refresh-button,
+  .refresh-icon {
+    transition: none;
+  }
+  
+  .refresh-icon.loading {
+    animation: none;
+  }
+  
+  .status-indicator.warning {
+    animation: none;
+  }
+  
+  .refresh-button:hover,
+  .refresh-button:active {
+    transform: none;
   }
 }

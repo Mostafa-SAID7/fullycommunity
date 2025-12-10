@@ -13,32 +13,8 @@ export interface PieChartConfig {
   selector: 'app-pie-chart',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="relative w-full" [style.height.px]="config.height || 300">
-      <canvas #chartCanvas class="w-full h-full"></canvas>
-      <div *ngIf="!hasData" class="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-lg">
-        <div class="text-center">
-          <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-3">
-            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
-            </svg>
-          </div>
-          <p class="text-gray-400 text-sm">No chart data available</p>
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [`
-    :host {
-      display: block;
-      width: 100%;
-    }
-    canvas {
-      max-width: 100%;
-      height: auto !important;
-    }
-  `]
+  templateUrl: './pie-chart.component.html',
+  styleUrl: './pie-chart.component.scss'
 })
 export class PieChartComponent implements OnInit, OnChanges, OnDestroy {
   @Input() config!: PieChartConfig;

@@ -1,0 +1,197 @@
+// =============================================================================
+// Logo Button Component Styles
+// =============================================================================
+
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
+
+:host {
+  display: inline-block;
+}
+
+// Logo Container
+// -----------------------------------------------------------------------------
+.logo-container {
+  position: relative;
+  @include flex-center;
+  background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+  border-radius: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transform-origin: center;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  
+  &:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 
+      0 0 50px rgba($color-primary, 0.8),
+      0 0 70px rgba($color-primary, 0.5),
+      0 0 100px rgba($color-primary, 0.3),
+      0 15px 35px -5px rgba($color-primary, 0.4);
+  }
+  
+  &:active {
+    transform: translateY(0px) scale(0.98);
+    box-shadow: 
+      0 0 30px rgba($color-primary, 0.6),
+      0 0 50px rgba($color-primary, 0.4),
+      0 0 70px rgba($color-primary, 0.2),
+      0 5px 15px -5px rgba($color-primary, 0.3);
+  }
+}
+
+// 3D Effect Layers
+// -----------------------------------------------------------------------------
+.highlight-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.5rem;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0.5;
+}
+
+.shadow-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.5rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+}
+
+// Shine Effect
+// -----------------------------------------------------------------------------
+.shine-container {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  
+  .shine-effect {
+    position: absolute;
+    inset: -100%;
+    background: linear-gradient(
+      to right, 
+      transparent, 
+      rgba(255, 255, 255, 0.2), 
+      transparent
+    );
+    transform: skewX(-12deg);
+    transition: transform 1.5s ease-in-out;
+    
+    .logo-container:hover & {
+      animation: shimmer 1.5s ease-in-out;
+    }
+  }
+}
+
+// Logo Text
+// -----------------------------------------------------------------------------
+.logo-text {
+  position: relative;
+  z-index: 10;
+  font-weight: $font-weight-black;
+  color: $text-inverse;
+  letter-spacing: -0.05em;
+  font-family: $font-family-primary;
+  user-select: none;
+  line-height: 1;
+}
+
+// Bottom Shadow for 3D Depth
+// -----------------------------------------------------------------------------
+.depth-shadow {
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 75%;
+  height: 1rem;
+  background: rgba($color-primary, 0.2);
+  filter: blur(0.75rem);
+  border-radius: $border-radius-full;
+}
+
+// Animations
+// -----------------------------------------------------------------------------
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .logo-container {
+    &:hover {
+      box-shadow: 
+        0 0 50px rgba($color-primary, 0.9),
+        0 0 70px rgba($color-primary, 0.6),
+        0 0 100px rgba($color-primary, 0.4),
+        0 15px 35px -5px rgba($color-primary, 0.5);
+    }
+    
+    &:active {
+      box-shadow: 
+        0 0 30px rgba($color-primary, 0.7),
+        0 0 50px rgba($color-primary, 0.5),
+        0 0 70px rgba($color-primary, 0.3),
+        0 5px 15px -5px rgba($color-primary, 0.4);
+    }
+  }
+  
+  .depth-shadow {
+    background: rgba($color-primary, 0.3);
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+@include high-contrast {
+  .logo-container {
+    border: 2px solid $text-inverse;
+    
+    &:focus-visible {
+      outline: 3px solid $text-inverse;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  .logo-container {
+    transition: none;
+    
+    &:hover {
+      transform: none;
+    }
+    
+    &:active {
+      transform: none;
+    }
+  }
+  
+  .shine-effect {
+    animation: none !important;
+  }
+}
+
+// Responsive Adjustments
+// -----------------------------------------------------------------------------
+@include respond-below('sm') {
+  .logo-container {
+    &:hover {
+      transform: scale(1.05);
+    }
+    
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}

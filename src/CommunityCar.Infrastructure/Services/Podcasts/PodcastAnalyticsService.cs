@@ -1,7 +1,7 @@
 using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Common.Interfaces.Data;
 using CommunityCar.Application.Common.Interfaces.Podcasts;
-using CommunityCar.Application.Features.Podcasts;
+using CommunityCar.Application.DTOs.Response.Podcasts;
 using CommunityCar.Domain.Entities.Podcasts.Shows;
 using CommunityCar.Domain.Entities.Podcasts.Engagement;
 using CommunityCar.Domain.Entities.Podcasts.Analytics;

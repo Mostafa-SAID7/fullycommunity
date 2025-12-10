@@ -1,5 +1,6 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Services.Customization;
+using CommunityCar.Application.DTOs.Requests.Services.Customization;
+using CommunityCar.Application.DTOs.Response.Services.Customization;
 
 namespace CommunityCar.Application.Common.Interfaces.Services;
 

@@ -5,40 +5,24 @@
       <p>Manage all platform content including posts, reviews, and guides</p>
     </div>
     <div class="header-actions">
+      <app-refresh-button
+        (refresh)="refreshContent()"
+        [loading]="loading()"
+        [variant]="'secondary'"
+        [size]="'md'"
+        [showText]="false"
+        [title]="'Refresh content data'">
+      </app-refresh-button>
       <button class="btn-secondary" (click)="exportData()">Export Data</button>
     </div>
   </div>
 
   <!-- Stats Cards -->
   <div class="stats-grid" *ngIf="stats()">
-    <div class="stat-card">
-      <div class="stat-icon posts">📝</div>
-      <div class="stat-info">
-        <span class="stat-value">{{ stats()!.totalPosts }}</span>
-        <span class="stat-label">Total Posts</span>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon reviews">⭐</div>
-      <div class="stat-info">
-        <span class="stat-value">{{ stats()!.totalReviews }}</span>
-        <span class="stat-label">Reviews</span>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon guides">📚</div>
-      <div class="stat-info">
-        <span class="stat-value">{{ stats()!.totalGuides }}</span>
-        <span class="stat-label">Guides</span>
-      </div>
-    </div>
-    <div class="stat-card pending">
-      <div class="stat-icon">⏳</div>
-      <div class="stat-info">
-        <span class="stat-value">{{ stats()!.pendingApproval }}</span>
-        <span class="stat-label">Pending Approval</span>
-      </div>
-    </div>
+    <app-stat-card 
+      *ngFor="let card of statCards" 
+      [config]="card">
+    </app-stat-card>
   </div>
 
   <!-- Filters -->

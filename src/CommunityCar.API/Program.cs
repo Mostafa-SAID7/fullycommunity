@@ -24,11 +24,11 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(c =>
 {
     // API Groups by Section
-    c.SwaggerDoc("identity", new OpenApiInfo 
+    c.SwaggerDoc("auth", new OpenApiInfo 
     { 
-        Title = "Identity API", 
+        Title = "Auth API", 
         Version = "v1", 
-        Description = "Authentication, Registration & User Management" 
+        Description = "Authentication, Registration & User Management (User & Admin)" 
     });
     c.SwaggerDoc("dashboard", new OpenApiInfo 
     { 
@@ -105,8 +105,8 @@ builder.Services.AddSwaggerGen(c =>
         
         return docName switch
         {
-            "identity" => relativePath.StartsWith("api/auth") || relativePath.StartsWith("api/account"),
-            "dashboard" => relativePath.StartsWith("api/dashboard") || relativePath.StartsWith("api/admin"),
+            "auth" => relativePath.StartsWith("api/auth") || relativePath.StartsWith("api/account") || relativePath.StartsWith("api/admin/auth"),
+            "dashboard" => relativePath.StartsWith("api/dashboard") || relativePath.StartsWith("api/admin/management"),
             "community" => relativePath.StartsWith("api/community") || relativePath.StartsWith("api/posts") || 
                           relativePath.StartsWith("api/groups") || relativePath.StartsWith("api/events") ||
                           relativePath.StartsWith("api/qa") || relativePath.StartsWith("api/guides") ||
@@ -232,7 +232,7 @@ app.UseRequestResponseLogging();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/identity/swagger.json", "Identity API");
+    c.SwaggerEndpoint("/swagger/auth/swagger.json", "Auth API");
     c.SwaggerEndpoint("/swagger/dashboard/swagger.json", "Dashboard & Admin API");
     c.SwaggerEndpoint("/swagger/community/swagger.json", "Community API");
     c.SwaggerEndpoint("/swagger/marketplace/swagger.json", "Marketplace API");

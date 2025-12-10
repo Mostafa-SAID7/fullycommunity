@@ -1,0 +1,456 @@
+// =============================================================================
+// Notification Dropdown Component Styles
+// =============================================================================
+
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
+
+:host {
+  position: relative;
+  display: block;
+}
+
+// Notification Button
+// -----------------------------------------------------------------------------
+.notification-button {
+  position: relative;
+  padding: $spacing-2;
+  color: $text-secondary;
+  background: none;
+  border: none;
+  border-radius: $border-radius-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+  
+  &:hover {
+    color: $text-primary;
+    background: $bg-secondary;
+  }
+  
+  .notification-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+// Notification Badge
+// -----------------------------------------------------------------------------
+.notification-badge {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  background: $error-500;
+  color: $text-inverse;
+  font-size: $font-size-xs;
+  border-radius: $border-radius-full;
+  height: 1.25rem;
+  width: 1.25rem;
+  @include flex-center;
+  font-weight: $font-weight-medium;
+  box-shadow: 0 0 0 2px $bg-primary;
+}
+
+// Dropdown Panel
+// -----------------------------------------------------------------------------
+.dropdown-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  width: 24rem;
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-xl;
+  border: 1px solid $border-primary;
+  z-index: $z-index-dropdown;
+  max-height: 24rem;
+  overflow: hidden;
+  
+  @include respond-below('sm') {
+    width: 20rem;
+    right: -2rem;
+  }
+}
+
+// Header
+// -----------------------------------------------------------------------------
+.dropdown-header {
+  padding: $spacing-3 $spacing-4;
+  border-bottom: 1px solid $border-primary;
+  background: $bg-secondary;
+  
+  .header-content {
+    @include flex-between;
+    
+    .header-title {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+    }
+    
+    .header-actions {
+      @include flex-start;
+      gap: $spacing-2;
+      
+      .header-button {
+        font-size: $font-size-xs;
+        font-weight: $font-weight-medium;
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: color $transition-fast;
+        
+        &.mark-all-button {
+          color: $color-primary;
+          
+          &:hover {
+            color: $color-primary-hover;
+          }
+        }
+        
+        &.clear-all-button {
+          color: $text-muted;
+          
+          &:hover {
+            color: $text-secondary;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Notifications List
+// -----------------------------------------------------------------------------
+.notifications-list {
+  max-height: 20rem;
+  overflow-y: auto;
+  
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $bg-secondary;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $border-secondary;
+    border-radius: $border-radius-full;
+    
+    &:hover {
+      background: $text-muted;
+    }
+  }
+}
+
+// Empty State
+// -----------------------------------------------------------------------------
+.empty-state {
+  padding: $spacing-8 $spacing-4;
+  text-align: center;
+  color: $text-muted;
+  
+  .empty-icon {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto $spacing-4;
+    color: $border-secondary;
+  }
+  
+  .empty-text {
+    font-size: $font-size-sm;
+  }
+}
+
+// Notification Item
+// -----------------------------------------------------------------------------
+.notification-item {
+  padding: $spacing-3 $spacing-4;
+  border-bottom: 1px solid $border-primary;
+  cursor: pointer;
+  transition: background-color $transition-fast;
+  
+  &:hover {
+    background: $bg-secondary;
+  }
+  
+  &.unread {
+    background: rgba($primary-50, 0.5);
+  }
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  .notification-content {
+    @include flex-start;
+    gap: $spacing-3;
+    align-items: flex-start;
+    
+    .priority-indicator {
+      flex-shrink: 0;
+      margin-top: 0.25rem;
+      
+      .priority-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: $border-radius-full;
+        
+        &.critical {
+          background: $error-500;
+        }
+        
+        &.high {
+          background: $warning-500;
+        }
+        
+        &.medium {
+          background: $warning-400;
+        }
+        
+        &.low {
+          background: $primary-500;
+        }
+      }
+    }
+    
+    .notification-body {
+      flex: 1;
+      min-width: 0;
+      
+      .notification-header {
+        @include flex-start;
+        justify-content: space-between;
+        gap: $spacing-2;
+        align-items: flex-start;
+        
+        .notification-title {
+          flex: 1;
+          font-size: $font-size-sm;
+          font-weight: $font-weight-medium;
+          color: $text-primary;
+          @include text-truncate;
+        }
+        
+        .category-badge {
+          flex-shrink: 0;
+          padding: 0.125rem 0.5rem;
+          font-size: $font-size-xs;
+          font-weight: $font-weight-medium;
+          border-radius: $border-radius-full;
+          
+          &.system {
+            background: rgba($primary-100, 0.8);
+            color: $primary-800;
+          }
+          
+          &.user {
+            background: rgba($success-100, 0.8);
+            color: $success-800;
+          }
+          
+          &.content {
+            background: rgba($purple-100, 0.8);
+            color: $purple-800;
+          }
+          
+          &.security {
+            background: rgba($error-100, 0.8);
+            color: $error-800;
+          }
+          
+          &.performance {
+            background: rgba($warning-100, 0.8);
+            color: $warning-800;
+          }
+        }
+      }
+      
+      .notification-message {
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        margin-top: 0.25rem;
+        line-height: $line-height-relaxed;
+        @include text-clamp(2);
+      }
+      
+      .notification-footer {
+        @include flex-between;
+        margin-top: $spacing-2;
+        
+        .notification-time {
+          font-size: $font-size-xs;
+          color: $text-muted;
+        }
+        
+        .notification-actions {
+          @include flex-start;
+          gap: $spacing-2;
+          
+          .action-button {
+            font-size: $font-size-xs;
+            font-weight: $font-weight-medium;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color $transition-fast;
+            
+            &.primary-action {
+              color: $color-primary;
+              
+              &:hover {
+                color: $color-primary-hover;
+              }
+            }
+            
+            &.remove-button {
+              color: $text-muted;
+              
+              &:hover {
+                color: $text-secondary;
+              }
+              
+              .remove-icon {
+                width: 1rem;
+                height: 1rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Footer
+// -----------------------------------------------------------------------------
+.dropdown-footer {
+  padding: $spacing-3 $spacing-4;
+  border-top: 1px solid $border-primary;
+  background: $bg-secondary;
+  
+  .view-all-button {
+    width: 100%;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-primary;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: color $transition-fast;
+    
+    &:hover {
+      color: $color-primary-hover;
+    }
+  }
+}
+
+// Backdrop
+// -----------------------------------------------------------------------------
+.dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: $z-index-dropdown - 10;
+  background: transparent;
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .dropdown-panel {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+  
+  .dropdown-header,
+  .dropdown-footer {
+    background: $dark-bg-tertiary;
+    border-color: $dark-border-primary;
+  }
+  
+  .header-title {
+    color: $dark-text-primary;
+  }
+  
+  .notification-item {
+    border-color: $dark-border-primary;
+    
+    &:hover {
+      background: $dark-bg-tertiary;
+    }
+    
+    &.unread {
+      background: rgba($primary-900, 0.3);
+    }
+  }
+  
+  .notification-title {
+    color: $dark-text-primary;
+  }
+  
+  .notification-message {
+    color: $dark-text-secondary;
+  }
+  
+  .notification-time {
+    color: $dark-text-secondary;
+  }
+  
+  .empty-state {
+    color: $dark-text-secondary;
+    
+    .empty-icon {
+      color: $dark-border-secondary;
+    }
+  }
+  
+  // Dark mode badge colors
+  .category-badge {
+    &.system {
+      background: rgba($primary-900, 0.3);
+      color: $primary-300;
+    }
+    
+    &.user {
+      background: rgba($success-900, 0.3);
+      color: $success-300;
+    }
+    
+    &.content {
+      background: rgba($purple-900, 0.3);
+      color: $purple-300;
+    }
+    
+    &.security {
+      background: rgba($error-900, 0.3);
+      color: $error-300;
+    }
+    
+    &.performance {
+      background: rgba($warning-900, 0.3);
+      color: $warning-300;
+    }
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+@include high-contrast {
+  .dropdown-panel,
+  .notification-item,
+  .category-badge {
+    border: 2px solid currentColor;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  .notification-button,
+  .notification-item,
+  .action-button {
+    transition: none;
+  }
+}

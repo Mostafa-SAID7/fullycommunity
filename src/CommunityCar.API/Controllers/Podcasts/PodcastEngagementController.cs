@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces.Podcasts;
-using CommunityCar.Application.Features.Podcasts;
+using CommunityCar.Application.DTOs.Response.Podcasts;
 using System.Security.Claims;
 
 namespace CommunityCar.API.Controllers.Podcasts;

@@ -9,6 +9,7 @@ import { UserCardComponent } from '../../../shared/components/user-card/user-car
 import { UserFiltersComponent } from '../../../shared/components/user-filters/user-filters.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { CreateUserModalComponent, NewUser } from '../../../shared/components/create-user-modal/create-user-modal.component';
+import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
 
 @Component({
   selector: 'user-management',
@@ -20,9 +21,11 @@ import { CreateUserModalComponent, NewUser } from '../../../shared/components/cr
     UserCardComponent,
     UserFiltersComponent,
     PaginationComponent,
-    CreateUserModalComponent
+    CreateUserModalComponent,
+    RefreshButtonComponent
   ],
-  templateUrl: './user-management.component.html'
+  templateUrl: './user-management.component.html',
+  styleUrl: './user-management.component.scss'
 })
 export class UserManagementComponent implements OnInit {
   users = signal<AdminUser[]>([]);
@@ -217,5 +220,9 @@ export class UserManagementComponent implements OnInit {
     this.selectedUserType.set('user');
     this.createError.set('');
     this.createSuccess.set(false);
+  }
+
+  refreshUsers() {
+    this.loadUsers();
   }
 }

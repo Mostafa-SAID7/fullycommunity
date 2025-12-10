@@ -1,0 +1,74 @@
+<div class="user-table-container">
+  <table class="user-table">
+    <thead class="table-header">
+      <tr class="header-row">
+        <th class="header-cell">User</th>
+        <th class="header-cell">Email</th>
+        <th class="header-cell">Roles</th>
+        <th class="header-cell">Status</th>
+        <th class="header-cell">Joined</th>
+        <th class="header-cell">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="table-body">
+      <tr *ngFor="let user of users()" class="table-row">
+        <td class="table-cell user-info">
+          <div class="user-details">
+            <div class="user-avatar">
+              {{ getInitials(user) }}
+            </div>
+            <div class="user-text">
+              <div class="user-name">{{ user.firstName }} {{ user.lastName }}</div>
+              <div class="user-username">{{ user.userName }}</div>
+            </div>
+          </div>
+        </td>
+        <td class="table-cell user-email">{{ user.email }}</td>
+        <td class="table-cell user-roles">
+          <div class="roles-container">
+            <span
+              *ngFor="let role of user.roles"
+              class="role-badge"
+              [ngClass]="getRoleBadgeClass(role)">
+              {{ role }}
+            </span>
+          </div>
+        </td>
+        <td class="table-cell user-status">
+          <span 
+            class="status-badge"
+            [ngClass]="getStatusBadgeClass(user.accountStatus)">
+            {{ user.accountStatus }}
+          </span>
+        </td>
+        <td class="table-cell user-joined">{{ user.createdAt | date : "mediumDate" }}</td>
+        <td class="table-cell user-actions">
+          <div class="actions-container">
+            <button 
+              (click)="edit.emit(user)"
+              class="action-button edit-button">
+              Edit
+            </button>
+            <button
+              *ngIf="user.accountStatus !== 'Active'"
+              (click)="activate.emit(user)"
+              class="action-button activate-button">
+              Activate
+            </button>
+            <button
+              *ngIf="user.accountStatus === 'Active'"
+              (click)="block.emit(user)"
+              class="action-button block-button">
+              Block
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="users().length === 0" class="table-row empty-row">
+        <td colspan="6" class="table-cell empty-cell">
+          {{ emptyMessage() }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

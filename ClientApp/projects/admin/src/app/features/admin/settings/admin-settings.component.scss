@@ -1,0 +1,351 @@
+// =============================================================================
+// Admin Settings Component Styles
+// =============================================================================
+
+@import '../../../styles/abstracts/variables';
+@import '../../../styles/abstracts/mixins';
+
+// Component Root
+// -----------------------------------------------------------------------------
+:host {
+  display: block;
+}
+
+.settings-container {
+  @include admin-content;
+  padding: $spacing-6;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+
+  @include respond-below('md') {
+    padding: $spacing-4;
+  }
+}
+
+// Page Header
+// -----------------------------------------------------------------------------
+.page-header {
+  @include flex-between;
+  gap: $spacing-4;
+
+  @include respond-below('sm') {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-content {
+    h1 {
+      @include heading(2);
+      margin-bottom: $spacing-1;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: $font-size-base;
+      margin: 0;
+    }
+  }
+}
+
+// Alert Messages
+// -----------------------------------------------------------------------------
+.alert {
+  padding: $spacing-3 $spacing-4;
+  border-radius: $border-radius-lg;
+  border: 1px solid;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+
+  &.alert-success {
+    background: $success-50;
+    border-color: $success-200;
+    color: $success-800;
+  }
+
+  &.alert-error {
+    background: $error-50;
+    border-color: $error-200;
+    color: $error-800;
+  }
+}
+
+// Settings Forms
+// -----------------------------------------------------------------------------
+.settings-form {
+  @include card-base;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-lg;
+  padding: $spacing-6;
+
+  .form-title {
+    @include heading(5);
+    margin-bottom: $spacing-6;
+  }
+
+  .form-content {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-6;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-6;
+
+    @include respond-to('md') {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+
+    .form-label {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $text-secondary;
+    }
+
+    .form-input {
+      @include input-base;
+    }
+
+    .form-textarea {
+      @include input-base;
+      resize: none;
+      min-height: 5rem;
+    }
+  }
+
+  .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-4;
+
+    .checkbox-item {
+      @include flex-start;
+      gap: $spacing-2;
+
+      input[type="checkbox"] {
+        width: 1rem;
+        height: 1rem;
+        border-radius: $border-radius-sm;
+        border: 2px solid $border-secondary;
+        background: $bg-primary;
+        cursor: pointer;
+        transition: all $transition-fast;
+
+        &:checked {
+          background: $color-primary;
+          border-color: $color-primary;
+        }
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+        }
+      }
+
+      .checkbox-label {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        color: $text-secondary;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .form-actions {
+    padding-top: $spacing-4;
+    border-top: 1px solid $border-primary;
+    @include flex-start;
+    gap: $spacing-4;
+
+    .btn {
+      @include button-base;
+      @include button-size('md');
+
+      &.btn-primary {
+        @include button-variant('primary');
+      }
+
+      &.btn-secondary {
+        @include button-variant('secondary');
+      }
+    }
+  }
+}
+
+// System Information
+// -----------------------------------------------------------------------------
+.system-info {
+  @include card-base;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-lg;
+  padding: $spacing-6;
+
+  .info-title {
+    @include heading(5);
+    margin-bottom: $spacing-6;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-6;
+    margin-bottom: $spacing-8;
+
+    @include respond-to('md') {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include respond-to('lg') {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .info-card {
+      background: $bg-secondary;
+      border-radius: $border-radius-lg;
+      padding: $spacing-4;
+
+      .info-label {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        color: $text-secondary;
+        margin-bottom: $spacing-2;
+      }
+
+      .info-value {
+        font-size: $font-size-lg;
+        font-weight: $font-weight-semibold;
+        color: $text-primary;
+      }
+    }
+  }
+
+  .actions-section {
+    .actions-title {
+      @include heading(6);
+      margin-bottom: $spacing-4;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: $spacing-4;
+
+      @include respond-to('md') {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .action-card {
+        padding: $spacing-4;
+        border: 1px solid $border-primary;
+        border-radius: $border-radius-lg;
+        cursor: pointer;
+        transition: all $transition-base;
+
+        &:hover {
+          background: $bg-secondary;
+          border-color: $color-primary;
+        }
+
+        .action-content {
+          @include flex-start;
+          gap: $spacing-3;
+
+          .action-icon {
+            padding: $spacing-2;
+            border-radius: $border-radius-lg;
+            @include flex-center;
+
+            &.blue {
+              background: $primary-100;
+              
+              svg {
+                width: 1.25rem;
+                height: 1.25rem;
+                color: $primary-600;
+              }
+            }
+
+            &.green {
+              background: $success-100;
+              
+              svg {
+                width: 1.25rem;
+                height: 1.25rem;
+                color: $success-600;
+              }
+            }
+          }
+
+          .action-details {
+            .action-title {
+              font-weight: $font-weight-medium;
+              color: $text-primary;
+              margin-bottom: $spacing-1;
+            }
+
+            .action-description {
+              font-size: $font-size-sm;
+              color: $text-secondary;
+              margin: 0;
+            }
+          }
+        }
+
+        &.disabled {
+          cursor: default;
+          opacity: 0.6;
+
+          &:hover {
+            background: transparent;
+            border-color: $border-primary;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .settings-form,
+  .system-info {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+
+  .form-actions {
+    border-color: $dark-border-primary;
+  }
+
+  .info-card {
+    background: $dark-bg-tertiary;
+  }
+
+  .action-card {
+    border-color: $dark-border-primary;
+
+    &:hover {
+      background: $dark-bg-tertiary;
+      border-color: $color-primary;
+    }
+  }
+}
+
+// Reduced Motion Support
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  .action-card {
+    transition: none;
+  }
+}

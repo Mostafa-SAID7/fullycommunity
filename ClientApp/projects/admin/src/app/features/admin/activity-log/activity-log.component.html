@@ -1,0 +1,138 @@
+<div class="activity-log-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Activity Log</h1>
+      <p>Track all administrative actions and system events</p>
+    </div>
+    <app-refresh-button
+      (refresh)="refreshLog()"
+      [loading]="loading"
+      [variant]="'primary'"
+      [size]="'md'"
+      [showText]="false"
+      [title]="'Refresh activity log'">
+    </app-refresh-button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label class="filter-label">Action Type</label>
+        <select [(ngModel)]="filters.actionType" 
+                (ngModelChange)="applyFilters()"
+                class="filter-select">
+          <option value="">All Actions</option>
+          <option value="user_created">User Created</option>
+          <option value="user_updated">User Updated</option>
+          <option value="user_deleted">User Deleted</option>
+          <option value="content_moderated">Content Moderated</option>
+          <option value="settings_changed">Settings Changed</option>
+          <option value="login">Login</option>
+          <option value="logout">Logout</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">User</label>
+        <input type="text" 
+               [(ngModel)]="filters.user"
+               (ngModelChange)="applyFilters()"
+               placeholder="Filter by user..."
+               class="filter-input">
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Date From</label>
+        <input type="date" 
+               [(ngModel)]="filters.dateFrom"
+               (ngModelChange)="applyFilters()"
+               class="filter-input">
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Date To</label>
+        <input type="date" 
+               [(ngModel)]="filters.dateTo"
+               (ngModelChange)="applyFilters()"
+               class="filter-input">
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Timeline -->
+  <div class="timeline-card">
+    <div class="card-header">
+      <h2 class="card-title">Recent Activity</h2>
+    </div>
+    
+    <div class="card-content">
+      <!-- Loading State -->
+      <div *ngIf="loading" class="loading-state">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading activity log...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!loading && filteredEntries.length === 0" class="empty-state">
+        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        </svg>
+        <p class="empty-text">No activity entries found</p>
+      </div>
+
+      <!-- Activity Entries -->
+      <div *ngIf="!loading && filteredEntries.length > 0" class="activity-timeline">
+        <div *ngFor="let entry of filteredEntries; trackBy: trackByEntryId" 
+             class="timeline-entry">
+          
+          <!-- Timeline Dot -->
+          <div class="timeline-dot-container">
+            <div class="timeline-dot" [ngClass]="getActionTypeClass(entry.actionType)"></div>
+          </div>
+
+          <!-- Content -->
+          <div class="entry-content">
+            <div class="entry-header">
+              <div class="entry-main">
+                <h4 class="entry-title">{{ entry.action }}</h4>
+                <p class="entry-description">{{ entry.description }}</p>
+                
+                <!-- Details -->
+                <div *ngIf="entry.details" class="entry-details">
+                  <div class="details-container">
+                    <pre class="details-text">{{ entry.details | json }}</pre>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Metadata -->
+              <div class="entry-metadata">
+                <div class="metadata-user">{{ entry.performedBy }}</div>
+                <div class="metadata-time">{{ entry.timestamp | date:'medium' }}</div>
+                <div class="metadata-ip">IP: {{ entry.ipAddress }}</div>
+                <span class="action-badge" [ngClass]="getActionTypeBadgeClass(entry.actionType)">
+                  {{ entry.actionType | titlecase }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="!loading && filteredEntries.length > 0" class="pagination-container">
+        <div class="pagination-info">
+          Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, totalEntries) }} of {{ totalEntries }} entries
+        </div>
+        <app-pagination
+          [currentPage]="currentPage"
+          [totalPages]="totalPages"
+          [showFirstLast]="true"
+          (pageChange)="onPageChange($event)">
+        </app-pagination>
+      </div>
+    </div>
+  </div>
+</div>

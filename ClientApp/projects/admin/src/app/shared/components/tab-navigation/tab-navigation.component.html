@@ -1,0 +1,22 @@
+<div class="tab-container">
+  <nav class="tab-navigation" aria-label="Tabs">
+    <button
+      *ngFor="let tab of tabs"
+      (click)="selectTab(tab)"
+      [disabled]="tab.disabled"
+      class="tab-button"
+      [class.active]="activeTabId === tab.id">
+      <div class="tab-content">
+        <span *ngIf="tab.icon" class="tab-icon">{{ tab.icon }}</span>
+        <span class="tab-label">{{ tab.label }}</span>
+        <span 
+          *ngIf="tab.badge !== undefined && tab.badge > 0" 
+          class="tab-badge"
+          [class.active-badge]="activeTabId === tab.id"
+          [class.inactive-badge]="activeTabId !== tab.id">
+          {{ tab.badge }}
+        </span>
+      </div>
+    </button>
+  </nav>
+</div>

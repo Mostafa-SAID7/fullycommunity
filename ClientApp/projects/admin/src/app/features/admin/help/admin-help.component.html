@@ -1,0 +1,172 @@
+<div class="help-container">
+  <!-- Header -->
+  <div class="help-header">
+    <div class="help-header__content">
+      <h1 class="help-header__title">Help & Documentation</h1>
+      <p class="help-header__subtitle">Admin guides, documentation, and support resources</p>
+    </div>
+    <div class="help-header__actions">
+      <button (click)="contactSupport()" class="btn btn--primary">
+        <svg class="btn__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+        </svg>
+        Contact Support
+      </button>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-section">
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery"
+          (input)="searchContent()"
+          placeholder="Search documentation, guides, and FAQs..."
+          class="search-input">
+        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Links -->
+  <div class="quick-links">
+    <a href="#getting-started" class="quick-link">
+      <div class="quick-link__header">
+        <div class="quick-link__icon quick-link__icon--blue">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+          </svg>
+        </div>
+        <h3 class="quick-link__title">Getting Started</h3>
+      </div>
+      <p class="quick-link__description">Learn the basics of admin panel navigation and core features</p>
+    </a>
+
+    <a href="#user-management" class="quick-link">
+      <div class="quick-link__header">
+        <div class="quick-link__icon quick-link__icon--green">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+        </div>
+        <h3 class="quick-link__title">User Management</h3>
+      </div>
+      <p class="quick-link__description">Manage users, roles, permissions, and access controls</p>
+    </a>
+
+    <a href="#content-moderation" class="quick-link">
+      <div class="quick-link__header">
+        <div class="quick-link__icon quick-link__icon--orange">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+        </div>
+        <h3 class="quick-link__title">Content Moderation</h3>
+      </div>
+      <p class="quick-link__description">Review, approve, and moderate user-generated content</p>
+    </a>
+
+    <a href="#system-settings" class="quick-link">
+      <div class="quick-link__header">
+        <div class="quick-link__icon quick-link__icon--purple">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <h3 class="quick-link__title">System Settings</h3>
+      </div>
+      <p class="quick-link__description">Configure system settings, security, and integrations</p>
+    </a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Documentation Articles -->
+    <div class="documentation-section">
+      <div class="section-header">
+        <h2 class="section-title">Documentation</h2>
+      </div>
+      
+      <div class="articles-list">
+        <div *ngFor="let article of filteredArticles()" class="article-item">
+          <div class="article-header">
+            <div class="article-info">
+              <h3 class="article-title">{{ article.title }}</h3>
+              <div class="article-meta">
+                <span class="article-category">{{ article.category }}</span>
+                <span class="article-date">Updated {{ article.lastUpdated | date:'short' }}</span>
+                <span class="article-views">{{ article.views }} views</span>
+              </div>
+            </div>
+          </div>
+          
+          <p class="article-excerpt">{{ getArticleExcerpt(article.content) }}</p>
+          
+          <div class="article-footer">
+            <div class="article-tags">
+              <span *ngFor="let tag of article.tags" class="tag">
+                {{ tag }}
+              </span>
+            </div>
+            <div class="article-actions">
+              <button (click)="markHelpful(article)" class="action-btn action-btn--helpful">
+                <svg class="action-btn__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+                </svg>
+                {{ article.helpful }}
+              </button>
+              <button (click)="readArticle(article)" class="action-btn action-btn--read">
+                Read More →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+      <div class="section-header">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+      </div>
+      
+      <div class="faq-list">
+        <div *ngFor="let faq of filteredFAQs()" class="faq-item">
+          <button (click)="toggleFAQ(faq)" class="faq-question">
+            <span class="faq-question__text">{{ faq.question }}</span>
+            <svg class="faq-question__icon" [class.faq-question__icon--expanded]="faq.isExpanded" 
+                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div *ngIf="faq.isExpanded" class="faq-answer">
+            <div class="faq-answer__content">{{ faq.answer }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Support Contact -->
+  <div class="support-section">
+    <div class="support-content">
+      <div class="support-info">
+        <h2 class="support-title">Need Additional Help?</h2>
+        <p class="support-description">Our support team is here to assist you with any questions or issues.</p>
+      </div>
+      <div class="support-actions">
+        <button (click)="openTicket()" class="btn btn--secondary">
+          Open Support Ticket
+        </button>
+        <button (click)="scheduleCall()" class="btn btn--outline">
+          Schedule Call
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

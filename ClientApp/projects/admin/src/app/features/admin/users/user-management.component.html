@@ -1,17 +1,28 @@
-<div class="p-6 pt-12 space-y-6">
+<div class="user-management-container">
   <!-- Page Header -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-      <h1 class="text-2xl font-bold text-gray-900">User Management</h1>
-      <p class="text-sm text-gray-600 mt-1">Manage platform users and their roles</p>
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">User Management</h1>
+      <p class="page-subtitle">Manage platform users and their roles</p>
     </div>
-    @if (isSuperAdmin()) {
-      <button 
-        (click)="openCreateModal()"
-        class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-primary-hover text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium">
-        <span class="text-lg">+</span> Add New User
-      </button>
-    }
+    <div class="header-actions">
+      <app-refresh-button
+        (refresh)="refreshUsers()"
+        [loading]="loading()"
+        [variant]="'secondary'"
+        [size]="'md'"
+        [showText]="false"
+        [title]="'Refresh users list'">
+      </app-refresh-button>
+      
+      @if (isSuperAdmin()) {
+        <button 
+          (click)="openCreateModal()"
+          class="add-user-btn">
+          <span class="add-icon">+</span> Add New User
+        </button>
+      }
+    </div>
   </div>
 
   <!-- Filters using user-filters component -->
@@ -25,22 +36,22 @@
   </app-user-filters>
 
   <!-- Loading -->
-  <div *ngIf="loading()" class="flex items-center justify-center py-12">
-    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+  <div *ngIf="loading()" class="loading-container">
+    <div class="loading-spinner"></div>
   </div>
 
   <!-- Error -->
-  <div *ngIf="error()" class="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center justify-between">
-    <span class="text-red-800">{{ error() }}</span>
+  <div *ngIf="error()" class="error-container">
+    <span class="error-message">{{ error() }}</span>
     <button 
       (click)="loadUsers()" 
-      class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+      class="retry-btn">
       Retry
     </button>
   </div>
 
   <!-- Users Table and Cards using UI components -->
-  <div *ngIf="!loading() && !error()">
+  <div *ngIf="!loading() && !error()" class="content-area">
     <app-user-table
       [users]="users()"
       (edit)="editUser($event)"

@@ -19,6 +19,9 @@ import {
 import { BarChartComponent, BarChartConfig } from '../../../shared/components/charts/bar-chart.component';
 import { LineChartComponent, LineChartConfig } from '../../../shared/components/charts/line-chart.component';
 import { PieChartComponent, PieChartConfig } from '../../../shared/components/charts/pie-chart.component';
+import { StatCardComponent, StatCardConfig } from '../../../shared/components/charts/stat-card.component';
+import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
+import { TabNavigationComponent } from '../../../shared/components/tab-navigation/tab-navigation.component';
 
 @Component({
   selector: 'reports',
@@ -29,9 +32,13 @@ import { PieChartComponent, PieChartConfig } from '../../../shared/components/ch
     RouterModule,
     BarChartComponent,
     LineChartComponent,
-    PieChartComponent
+    PieChartComponent,
+    StatCardComponent,
+    RefreshButtonComponent,
+    TabNavigationComponent
   ],
-  templateUrl: './reports.component.html'
+  templateUrl: './reports.component.html',
+  styleUrl: './reports.component.scss'
 })
 export class ReportsComponent implements OnInit, OnDestroy {
   private reportsService = inject(AdminReportsService);
@@ -56,6 +63,52 @@ export class ReportsComponent implements OnInit, OnDestroy {
   selectedPeriod: ReportPeriod = 'month';
   contentType = '';
   activeAnalyticsTab: 'overview' | 'user-growth' | 'content-engagement' | 'localization' = 'overview';
+
+  // Computed properties for UI components
+  get overviewStatCards(): StatCardConfig[] {
+    const overview = this.overview();
+    if (!overview) return [];
+    
+    return [
+      {
+        title: 'User Growth',
+        value: `${overview.userGrowthPercent > 0 ? '+' : ''}${overview.userGrowthPercent}%`,
+        icon: '📈',
+        color: overview.userGrowthPercent > 0 ? 'success' : 'danger',
+        subtitle: 'User growth rate'
+      },
+      {
+        title: 'Content Engagement',
+        value: `${overview.contentEngagementPercent > 0 ? '+' : ''}${overview.contentEngagementPercent}%`,
+        icon: '💬',
+        color: overview.contentEngagementPercent > 0 ? 'success' : 'danger',
+        subtitle: 'Engagement rate'
+      },
+      {
+        title: 'Active Users',
+        value: `${overview.activeUsersPercent}%`,
+        icon: '👥',
+        color: 'info',
+        subtitle: 'Active user percentage'
+      },
+      {
+        title: 'Revenue Growth',
+        value: `${overview.revenueGrowthPercent > 0 ? '+' : ''}${overview.revenueGrowthPercent}%`,
+        icon: '💰',
+        color: overview.revenueGrowthPercent > 0 ? 'success' : 'danger',
+        subtitle: 'Revenue growth rate'
+      }
+    ];
+  }
+
+  get analyticsTabItems() {
+    return [
+      { id: 'overview', label: 'Overview', active: this.activeAnalyticsTab === 'overview' },
+      { id: 'user-growth', label: 'User Growth Trends', active: this.activeAnalyticsTab === 'user-growth' },
+      { id: 'content-engagement', label: 'Content Engagement Analytics', active: this.activeAnalyticsTab === 'content-engagement' },
+      { id: 'localization', label: 'Localization Stats', active: this.activeAnalyticsTab === 'localization' }
+    ];
+  }
 
   private maxNewUsers = 100;
   private realtimeInterval: any;
@@ -198,6 +251,14 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
   onAnalyticsTabChange(tab: string) {
     this.activeAnalyticsTab = tab as 'overview' | 'user-growth' | 'content-engagement' | 'localization';
+  }
+
+  refreshReports() {
+    // Clear cache to force fresh data
+    this.cache.clear();
+    this.loadData();
+    this.loadRealtimeStats();
+    this.loadSummary();
   }
 
   getBarHeight(value: number, type: string): number {

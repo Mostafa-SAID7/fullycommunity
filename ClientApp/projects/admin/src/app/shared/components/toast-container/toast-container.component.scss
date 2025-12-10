@@ -1,0 +1,128 @@
+// =============================================================================
+// Toast Container Component Styles
+// =============================================================================
+
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
+
+:host {
+  pointer-events: none;
+}
+
+// Toast Container
+// -----------------------------------------------------------------------------
+.toast-container {
+  position: fixed;
+  top: $spacing-4;
+  right: $spacing-4;
+  z-index: $z-index-toast;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  
+  @include respond-below('sm') {
+    top: $spacing-3;
+    right: $spacing-3;
+    left: $spacing-3;
+  }
+  
+  // Enable pointer events for child elements
+  > * {
+    pointer-events: auto;
+  }
+}
+
+// Toast Item (for future implementation)
+// -----------------------------------------------------------------------------
+.toast-item {
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-lg;
+  padding: $spacing-4;
+  min-width: 300px;
+  max-width: 400px;
+  animation: slideInRight $animation-duration-normal ease-out;
+  
+  @include respond-below('sm') {
+    min-width: auto;
+    max-width: none;
+  }
+  
+  &.success {
+    border-left: 4px solid $success-500;
+    background: rgba($success-50, 0.9);
+  }
+  
+  &.error {
+    border-left: 4px solid $error-500;
+    background: rgba($error-50, 0.9);
+  }
+  
+  &.warning {
+    border-left: 4px solid $warning-500;
+    background: rgba($warning-50, 0.9);
+  }
+  
+  &.info {
+    border-left: 4px solid $primary-500;
+    background: rgba($primary-50, 0.9);
+  }
+}
+
+// Animations
+// -----------------------------------------------------------------------------
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .toast-item {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+    
+    &.success {
+      background: rgba($success-900, 0.3);
+    }
+    
+    &.error {
+      background: rgba($error-900, 0.3);
+    }
+    
+    &.warning {
+      background: rgba($warning-900, 0.3);
+    }
+    
+    &.info {
+      background: rgba($primary-900, 0.3);
+    }
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  .toast-item {
+    animation: none;
+  }
+}

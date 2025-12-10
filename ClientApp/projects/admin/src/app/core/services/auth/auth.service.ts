@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { tap, catchError, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
-  User,
-  AuthResponse,
+  AdminUser,
+  AdminAuthResponse,
   LoginRequest,
   UpdateProfileRequest,
   RefreshTokenRequest,
@@ -14,20 +14,18 @@ import {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/api/auth`;
-  currentUser = signal<User | null>(null);
+  private readonly apiUrl = `${environment.apiUrl}/api/admin/auth`;
+  currentUser = signal<AdminUser | null>(null);
 
   constructor() {
     this.loadUser();
   }
 
-  login(email: string, password: string) {
-    const request: LoginRequest = { email, password };
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request)
+  login(email: string, password: string, twoFactorCode?: string) {
+    const request: LoginRequest = { email, password, twoFactorCode };
+    return this.http.post<AdminAuthResponse>(`${this.apiUrl}/login`, request)
       .pipe(tap(res => this.setSession(res)));
   }
-
-
 
   updateProfile(data: UpdateProfileRequest) {
     return this.http.put<void>(`${this.apiUrl}/me`, data).pipe(
@@ -50,8 +48,8 @@ export class AuthService {
         const user = this.currentUser();
         if (user) {
           // Prepend API URL if the avatar URL is relative
-          const fullAvatarUrl = res.avatarUrl.startsWith('http') 
-            ? res.avatarUrl 
+          const fullAvatarUrl = res.avatarUrl.startsWith('http')
+            ? res.avatarUrl
             : `${environment.apiUrl}${res.avatarUrl}`;
           const updated = { ...user, avatarUrl: fullAvatarUrl };
           localStorage.setItem('admin_user', JSON.stringify(updated));
@@ -66,7 +64,7 @@ export class AuthService {
     if (!refreshToken) return of(null);
 
     const request: RefreshTokenRequest = { refreshToken };
-    return this.http.post<AuthResponse>(`${this.apiUrl}/refresh-token`, request)
+    return this.http.post<AdminAuthResponse>(`${this.apiUrl}/refresh`, request)
       .pipe(
         tap(res => this.setSession(res)),
         catchError(() => {
@@ -78,8 +76,9 @@ export class AuthService {
 
   logout() {
     const token = this.getToken();
-    if (token) {
-      this.http.post(`${this.apiUrl}/logout`, {}).subscribe();
+    const refreshToken = localStorage.getItem('admin_refresh_token');
+    if (token && refreshToken) {
+      this.http.post(`${this.apiUrl}/logout`, { refreshToken }).subscribe();
     }
     localStorage.removeItem('admin_token');
     localStorage.removeItem('admin_refresh_token');
@@ -94,7 +93,7 @@ export class AuthService {
   isAuthenticated(): boolean {
     const token = this.getToken();
     if (!token) return false;
-    
+
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       return payload.exp * 1000 > Date.now();
@@ -108,20 +107,35 @@ export class AuthService {
     return user?.roles?.includes(role) ?? false;
   }
 
-  isAdmin(): boolean {
-    return this.hasRole('SuperAdmin') || this.hasRole('Admin') || 
-           this.hasRole('Moderator') || this.hasRole('UserAdmin') || 
-           this.hasRole('ContentAdmin');
+  hasPermission(permission: string): boolean {
+    const user = this.currentUser();
+    return user?.permissions?.includes(permission) ?? false;
   }
 
-  private setSession(res: AuthResponse) {
+  isAdmin(): boolean {
+    return this.hasRole('SuperAdmin') || this.hasRole('Admin') ||
+      this.hasRole('Moderator') || this.hasRole('UserAdmin') ||
+      this.hasRole('ContentAdmin');
+  }
+
+  private setSession(res: AdminAuthResponse) {
     localStorage.setItem('admin_token', res.accessToken);
     localStorage.setItem('admin_refresh_token', res.refreshToken);
-    // Fix avatar URL if relative
-    const user = { ...res.user };
-    if (user.avatarUrl && !user.avatarUrl.startsWith('http')) {
-      user.avatarUrl = `${environment.apiUrl}${user.avatarUrl}`;
-    }
+
+    // Map AdminAuthResponse to AdminUser
+    const user: AdminUser = {
+      id: res.userId,
+      email: res.email,
+      firstName: res.firstName,
+      lastName: res.lastName,
+      avatarUrl: res.avatarUrl && !res.avatarUrl.startsWith('http')
+        ? `${environment.apiUrl}${res.avatarUrl}`
+        : res.avatarUrl,
+      roles: res.roles,
+      adminRoleType: res.adminRoleType,
+      permissions: res.permissions
+    };
+
     localStorage.setItem('admin_user', JSON.stringify(user));
     this.currentUser.set(user);
   }

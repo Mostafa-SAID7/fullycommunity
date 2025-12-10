@@ -1,6 +1,6 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Services.Common;
-using CommunityCar.Application.Features.Services.GarageRentals;
+using CommunityCar.Application.DTOs.Requests.Services.Garage;
+using CommunityCar.Application.DTOs.Response.Services.Garage;
 
 namespace CommunityCar.Application.Common.Interfaces.Services;
 

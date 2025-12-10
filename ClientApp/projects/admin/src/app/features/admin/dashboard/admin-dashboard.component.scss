@@ -174,101 +174,7 @@
   }
 }
 
-.stat-card {
-  background: $bg-primary;
-  border-radius: $border-radius-2xl;
-  box-shadow: $shadow-lg;
-  padding: $spacing-6;
-  border: 1px solid rgba($border-primary, 0.5);
-  transition: all $transition-fast;
-  animation: slideUp 0.6s ease-out;
-  width: 100%;
-  min-width: 0; // Allow shrinking
-  
-  &:hover {
-    box-shadow: $shadow-xl;
-    transform: translateY(-2px);
-  }
-  
-  &.featured {
-    border-radius: $border-radius-2xl;
-    
-    &:hover {
-      transform: scale(1.02);
-    }
-  }
-  
-  .stat-header {
-    @include flex-between;
-    margin-bottom: $spacing-4;
-    
-    .stat-icon {
-      padding: $spacing-3;
-      border-radius: $border-radius-lg;
-      
-      &.blue { background: rgba($primary-100, 0.8); }
-      &.purple { background: rgba($purple-100, 0.8); }
-      &.orange { background: rgba($warning-100, 0.8); }
-      &.green { background: rgba($success-100, 0.8); }
-      
-      svg {
-        width: $icon-md;
-        height: $icon-md;
-        
-        &.blue { color: $primary-600; }
-        &.purple { color: $purple-600; }
-        &.orange { color: $warning-600; }
-        &.green { color: $success-600; }
-      }
-    }
-    
-    .stat-badge {
-      font-size: $font-size-sm;
-      font-weight: $font-weight-medium;
-      padding: $spacing-1 $spacing-2;
-      border-radius: $border-radius-base;
-      
-      &.success {
-        color: $success-600;
-        background: rgba($success-50, 0.8);
-      }
-      
-      &.info {
-        color: $primary-600;
-        background: rgba($primary-50, 0.8);
-      }
-      
-      &.warning {
-        color: $warning-600;
-        background: rgba($warning-50, 0.8);
-      }
-      
-      &.error {
-        color: $error-600;
-        background: rgba($error-50, 0.8);
-      }
-    }
-  }
-  
-  .stat-title {
-    color: $text-muted;
-    font-size: $font-size-sm;
-    font-weight: $font-weight-medium;
-    margin-bottom: $spacing-1;
-  }
-  
-  .stat-value {
-    font-size: $font-size-3xl;
-    font-weight: $font-weight-bold;
-    color: $text-primary;
-  }
-  
-  .stat-subtitle {
-    font-size: $font-size-xs;
-    color: $text-muted;
-    margin-top: $spacing-2;
-  }
-}
+// Stats grid now uses StatCardComponent - no custom styles needed
 
 // Quick Actions
 // -----------------------------------------------------------------------------
@@ -788,7 +694,6 @@
     }
   }
   
-  .stat-card,
   .activity-card,
   .system-status-card,
   .content-overview-card {
@@ -796,7 +701,6 @@
     border-color: $dark-border-primary;
   }
   
-  .stat-title,
   .activity-title,
   .status-title,
   .content-title,
@@ -804,11 +708,6 @@
     color: $dark-text-primary;
   }
   
-  .stat-value {
-    color: $dark-text-primary;
-  }
-  
-  .stat-subtitle,
   .activity-time,
   .activity-user,
   .status-name,
@@ -913,9 +812,7 @@
     }
   }
   
-  .stat-card {
-    padding: $spacing-4;
-  }
+  // StatCardComponent handles its own responsive padding
   
   .activity-card,
   .system-status-card,
@@ -928,7 +825,6 @@
 // -----------------------------------------------------------------------------
 
 @include high-contrast {
-  .stat-card,
   .activity-card,
   .system-status-card,
   .content-overview-card,
@@ -945,14 +841,12 @@
 // -----------------------------------------------------------------------------
 
 @include reduced-motion {
-  .stat-card,
   .action-card,
   .activity-item,
   .content-item {
     transition: none;
   }
   
-  .stat-card:hover,
   .action-card:hover {
     transform: none;
   }
@@ -962,7 +856,6 @@
   }
   
   .dashboard-header,
-  .stat-card:hover,
   .action-card:hover {
     transform: none;
   }
@@ -971,8 +864,7 @@
     animation: none;
   }
   
-  .dashboard-header,
-  .stat-card {
+  .dashboard-header {
     animation: none;
   }
 }

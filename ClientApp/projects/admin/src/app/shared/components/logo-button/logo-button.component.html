@@ -1,0 +1,26 @@
+<div 
+  [class]="containerClasses"
+  class="logo-container"
+  [style.width.px]="size"
+  [style.height.px]="size">
+  
+  <!-- 3D Effect Layers -->
+  <div class="highlight-layer"></div>
+  <div class="shadow-layer"></div>
+  
+  <!-- Shine Effect -->
+  <div class="shine-container">
+    <div class="shine-effect"></div>
+  </div>
+  
+  <!-- Logo Text -->
+  <span 
+    [class]="textClasses"
+    class="logo-text"
+    [style.fontSize.px]="fontSize">
+    {{ text }}
+  </span>
+  
+  <!-- Bottom Shadow for 3D depth -->
+  <div class="depth-shadow"></div>
+</div>

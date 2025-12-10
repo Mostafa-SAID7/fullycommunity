@@ -1,5 +1,5 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Videos.Content;
+using CommunityCar.Application.DTOs.Videos;
 
 namespace CommunityCar.Application.Common.Interfaces.Videos;
 

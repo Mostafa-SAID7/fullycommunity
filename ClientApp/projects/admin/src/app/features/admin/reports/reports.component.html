@@ -1,33 +1,42 @@
-<div class="min-h-screen p-6 pt-12">
-  <div class="max-w-7xl mx-auto">
+<div class="reports-container">
     <!-- Page Header -->
-    <div class="mb-8 flex items-center justify-between animate-fade-in">
-      <div>
-        <h1 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent mb-2">Reports & Analytics</h1>
-        <p class="text-gray-600 text-sm sm:text-lg">Platform performance metrics and insights</p>
+    <div class="page-header">
+      <div class="header-content">
+        <h1>Reports & Analytics</h1>
+        <p>Platform performance metrics and insights</p>
       </div>
-      <div class="flex items-center gap-3">
+      <div class="header-actions">
+        <app-refresh-button
+          (refresh)="refreshReports()"
+          [loading]="loading()"
+          [variant]="'secondary'"
+          [size]="'md'"
+          [showText]="false"
+          [title]="'Refresh reports data'">
+        </app-refresh-button>
+        
         <label class="sr-only" for="periodSelect">Period</label>
         <select id="periodSelect" [(ngModel)]="selectedPeriod" (change)="onPeriodChange()" aria-label="Select report period"
-                class="px-3 py-2 border rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-150 outline-none bg-white text-sm">
+                class="period-select">
           <option value="day">Today</option>
           <option value="week">This Week</option>
           <option value="month">This Month</option>
           <option value="quarter">This Quarter</option>
           <option value="year">This Year</option>
         </select>
-        <div class="flex items-center gap-2">
+        
+        <div class="export-buttons">
           <button (click)="exportReport('users', 'csv')" aria-label="Export users report" title="Export users report"
-                  class="px-3 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow transition-transform hover:scale-105 text-sm">
+                  class="export-btn users-btn">
             Users CSV
           </button>
           <button (click)="exportReport('content', 'xlsx')" aria-label="Export content report" title="Export content report"
-                  class="px-3 py-2 bg-green-500 text-white font-semibold rounded-lg shadow transition-transform hover:scale-105 text-sm">
+                  class="export-btn content-btn">
             Content Excel
           </button>
           <button (click)="exportReport('engagement', 'pdf')" aria-label="Export engagement report" title="Export engagement report"
-                  class="px-4 py-2 bg-gradient-to-r from-primary to-primary-hover text-white font-semibold rounded-lg shadow transition-transform hover:scale-105 text-sm">
-            <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  class="export-btn primary-btn">
+            <svg class="export-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
             Export PDF
@@ -37,146 +46,121 @@
     </div>
 
     <!-- Error / Loading -->
-    <div *ngIf="error()" role="alert" class="mb-6 p-4 bg-red-50 text-red-700 rounded-lg">
+    <div *ngIf="error()" role="alert" class="error-alert">
       {{ error() }}
     </div>
 
     <!-- Realtime Stats Banner -->
-    <div *ngIf="realtimeStats() as rt" class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl shadow-xl p-6 mb-6 text-white animate-slide-up" role="region" aria-label="Realtime statistics">
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div class="flex items-center gap-3">
-          <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse" aria-hidden="true"></div>
-          <div>
-            <div class="text-xs opacity-90">Active Now</div>
-            <div class="text-lg sm:text-2xl font-bold">{{ rt.activeUsers }}</div>
+    <div *ngIf="realtimeStats() as rt" class="realtime-banner" role="region" aria-label="Realtime statistics">
+      <div class="realtime-grid">
+        <div class="realtime-item">
+          <div class="status-dot" aria-hidden="true"></div>
+          <div class="realtime-content">
+            <div class="label">Active Now</div>
+            <div class="value">{{ rt.activeUsers }}</div>
           </div>
         </div>
-        <div>
-          <div class="text-xs opacity-90">Today's Posts</div>
-          <div class="text-lg sm:text-2xl font-bold">{{ rt.todayPosts }}</div>
+        <div class="realtime-item">
+          <div class="realtime-content">
+            <div class="label">Today's Posts</div>
+            <div class="value">{{ rt.todayPosts }}</div>
+          </div>
         </div>
-        <div>
-          <div class="text-xs opacity-90">Today's Reviews</div>
-          <div class="text-lg sm:text-2xl font-bold">{{ rt.todayReviews }}</div>
+        <div class="realtime-item">
+          <div class="realtime-content">
+            <div class="label">Today's Reviews</div>
+            <div class="value">{{ rt.todayReviews }}</div>
+          </div>
         </div>
-        <div>
-          <div class="text-xs opacity-90">Today's Questions</div>
-          <div class="text-lg sm:text-2xl font-bold">{{ rt.todayQuestions || 0 }}</div>
+        <div class="realtime-item">
+          <div class="realtime-content">
+            <div class="label">Today's Questions</div>
+            <div class="value">{{ rt.todayQuestions || 0 }}</div>
+          </div>
         </div>
-        <div>
-          <div class="text-xs opacity-90">Today's Guides</div>
-          <div class="text-lg sm:text-2xl font-bold">{{ rt.todayGuides || 0 }}</div>
+        <div class="realtime-item">
+          <div class="realtime-content">
+            <div class="label">Today's Guides</div>
+            <div class="value">{{ rt.todayGuides || 0 }}</div>
+          </div>
         </div>
-        <div>
-          <div class="text-xs opacity-90">Server Load</div>
-          <div class="text-lg sm:text-2xl font-bold">{{ rt.serverLoad || 0 }}%</div>
+        <div class="realtime-item">
+          <div class="realtime-content">
+            <div class="label">Server Load</div>
+            <div class="value">{{ rt.serverLoad || 0 }}%</div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Overview Cards -->
-    <div *ngIf="overview() as ov" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 animate-slide-up">
-      <div class="bg-white rounded-lg shadow p-4 border hover:shadow-lg transition" [class.border-green-200]="ov.userGrowthPercent > 0">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center text-xl shadow">📈</div>
-          <div class="flex-1">
-            <div class="text-2xl font-bold" [class.text-green-600]="ov.userGrowthPercent > 0" [class.text-red-600]="ov.userGrowthPercent < 0">{{ ov.userGrowthPercent > 0 ? '+' : '' }}{{ ov.userGrowthPercent }}%</div>
-            <div class="text-xs text-gray-600">User Growth</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-lg shadow p-4 border hover:shadow-lg transition">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center text-xl shadow">💬</div>
-          <div class="flex-1">
-            <div class="text-2xl font-bold" [class.text-green-600]="ov.contentEngagementPercent > 0" [class.text-red-600]="ov.contentEngagementPercent < 0">{{ ov.contentEngagementPercent > 0 ? '+' : '' }}{{ ov.contentEngagementPercent }}%</div>
-            <div class="text-xs text-gray-600">Content Engagement</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-lg shadow p-4 border hover:shadow-lg transition">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center text-xl shadow">👥</div>
-          <div class="flex-1">
-            <div class="text-2xl font-bold text-purple-600">{{ ov.activeUsersPercent }}%</div>
-            <div class="text-xs text-gray-600">Active Users</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-lg shadow p-4 border hover:shadow-lg transition">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center text-xl shadow">💰</div>
-          <div class="flex-1">
-            <div class="text-2xl font-bold" [class.text-green-600]="ov.revenueGrowthPercent > 0" [class.text-red-600]="ov.revenueGrowthPercent < 0">{{ ov.revenueGrowthPercent > 0 ? '+' : '' }}{{ ov.revenueGrowthPercent }}%</div>
-            <div class="text-xs text-gray-600">Revenue Growth</div>
-          </div>
-        </div>
-      </div>
+    <div *ngIf="overview()" class="overview-stats-grid">
+      <app-stat-card 
+        *ngFor="let card of overviewStatCards" 
+        [config]="card">
+      </app-stat-card>
     </div>
 
     <!-- Platform Summary -->
-    <section *ngIf="summary() as sum" class="bg-white rounded-lg shadow p-6 mb-6" aria-label="Platform summary">
-      <h3 class="text-lg font-bold text-gray-900 mb-4">Platform Summary</h3>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div class="text-center p-3 bg-blue-50 rounded">
-          <div class="text-2xl">👤</div>
-          <div class="text-xl font-bold text-blue-600">{{ sum.users.total | number }}</div>
-          <div class="text-xs text-gray-500">+{{ sum.users.newThisMonth }} this month</div>
+    <section *ngIf="summary() as sum" class="platform-summary" aria-label="Platform summary">
+      <h3>Platform Summary</h3>
+      <div class="summary-grid">
+        <div class="summary-item blue">
+          <div class="icon">👤</div>
+          <div class="value">{{ sum.users.total | number }}</div>
+          <div class="label">+{{ sum.users.newThisMonth }} this month</div>
         </div>
-        <div class="text-center p-3 bg-green-50 rounded">
-          <div class="text-2xl">📝</div>
-          <div class="text-xl font-bold text-green-600">{{ sum.content.posts | number }}</div>
-          <div class="text-xs text-gray-500">Posts</div>
+        <div class="summary-item green">
+          <div class="icon">📝</div>
+          <div class="value">{{ sum.content.posts | number }}</div>
+          <div class="label">Posts</div>
         </div>
-        <div class="text-center p-3 bg-yellow-50 rounded">
-          <div class="text-2xl">⭐</div>
-          <div class="text-xl font-bold text-yellow-600">{{ sum.content.reviews | number }}</div>
-          <div class="text-xs text-gray-500">Reviews</div>
+        <div class="summary-item yellow">
+          <div class="icon">⭐</div>
+          <div class="value">{{ sum.content.reviews | number }}</div>
+          <div class="label">Reviews</div>
         </div>
-        <div class="text-center p-3 bg-purple-50 rounded">
-          <div class="text-2xl">📚</div>
-          <div class="text-xl font-bold text-purple-600">{{ sum.content.guides | number }}</div>
-          <div class="text-xs text-gray-500">Guides</div>
+        <div class="summary-item purple">
+          <div class="icon">📚</div>
+          <div class="value">{{ sum.content.guides | number }}</div>
+          <div class="label">Guides</div>
         </div>
-        <div class="text-center p-3 bg-pink-50 rounded">
-          <div class="text-2xl">❓</div>
-          <div class="text-xl font-bold text-pink-600">{{ sum.content.questions | number }}</div>
-          <div class="text-xs text-gray-500">Questions</div>
+        <div class="summary-item pink">
+          <div class="icon">❓</div>
+          <div class="value">{{ sum.content.questions | number }}</div>
+          <div class="label">Questions</div>
         </div>
-        <div class="text-center p-3 bg-indigo-50 rounded">
-          <div class="text-2xl">👁️</div>
-          <div class="text-xl font-bold text-indigo-600">{{ sum.engagement.totalViews | number }}</div>
-          <div class="text-xs text-gray-500">Total Views</div>
+        <div class="summary-item indigo">
+          <div class="icon">👁️</div>
+          <div class="value">{{ sum.engagement.totalViews | number }}</div>
+          <div class="label">Total Views</div>
         </div>
       </div>
     </section>
 
     <!-- Loading skeleton -->
-    <div *ngIf="loading()" class="space-y-4 py-8">
-      <div class="h-6 bg-gray-200 rounded animate-pulse w-1/3"></div>
-      <div class="h-40 bg-gray-100 rounded animate-pulse"></div>
+    <div *ngIf="loading()" class="loading-skeleton">
+      <div class="skeleton-item title"></div>
+      <div class="skeleton-item chart"></div>
     </div>
 
     <!-- Enhanced Charts Section -->
-    <div *ngIf="!loading()" class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+    <div *ngIf="!loading()" class="charts-grid">
       <!-- User Growth Chart -->
-      <div class="xl:col-span-2 bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-        <div class="flex items-center justify-between mb-6">
-          <div>
-            <h3 class="text-xl font-bold text-gray-900">User Growth Trends</h3>
-            <p class="text-sm text-gray-600 mt-1">New user registrations over time</p>
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-info"></div>
+            <h3>User Growth Trends</h3>
+            <p>New user registrations over time</p>
           </div>
-          <div class="flex items-center gap-4">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></span>
-              <span class="text-sm font-medium text-gray-700">New Users</span>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="legend-dot blue"></span>
+              <span class="legend-label">New Users</span>
             </div>
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 bg-gradient-to-r from-green-500 to-green-600 rounded-full"></span>
-              <span class="text-sm font-medium text-gray-700">Active Users</span>
+            <div class="legend-item">
+              <span class="legend-dot green"></span>
+              <span class="legend-label">Active Users</span>
             </div>
           </div>
         </div>
@@ -187,11 +171,11 @@
       </div>
 
       <!-- Content Distribution Pie Chart -->
-      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-        <div class="flex items-center justify-between mb-6">
-          <div>
-            <h3 class="text-xl font-bold text-gray-900">Content Distribution</h3>
-            <p class="text-sm text-gray-600 mt-1">Content types breakdown</p>
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-info"></div>
+            <h3>Content Distribution</h3>
+            <p>Content types breakdown</p>
           </div>
         </div>
         <app-pie-chart
@@ -202,24 +186,24 @@
     </div>
 
     <!-- Content Engagement Analytics -->
-    <div *ngIf="!loading()" class="bg-white rounded-xl shadow-lg p-6 border border-gray-200 mb-6">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h3 class="text-xl font-bold text-gray-900">Content Engagement Analytics</h3>
-          <p class="text-sm text-gray-600 mt-1">Views, likes, and comments over time</p>
+    <div *ngIf="!loading()" class="chart-card">
+      <div class="chart-header">
+        <div class="chart-info">
+          <h3>Content Engagement Analytics</h3>
+          <p>Views, likes, and comments over time</p>
         </div>
-        <div class="flex items-center gap-4">
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 bg-purple-500 rounded-full"></span>
-            <span class="text-sm font-medium text-gray-700">Views</span>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-dot purple"></span>
+            <span class="legend-label">Views</span>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 bg-pink-500 rounded-full"></span>
-            <span class="text-sm font-medium text-gray-700">Likes</span>
+          <div class="legend-item">
+            <span class="legend-dot pink"></span>
+            <span class="legend-label">Likes</span>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
-            <span class="text-sm font-medium text-gray-700">Comments</span>
+          <div class="legend-item">
+            <span class="legend-dot blue"></span>
+            <span class="legend-label">Comments</span>
           </div>
         </div>
       </div>
@@ -312,21 +296,10 @@
     <!-- Enhanced Analytics Tabs -->
     <div class="mt-8">
       <!-- Tab Navigation -->
-      <div class="mb-6 border-b border-gray-200">
-        <nav class="flex space-x-8">
-          <button *ngFor="let tab of ['overview', 'user-growth', 'content-engagement', 'localization']"
-                  (click)="onAnalyticsTabChange(tab)"
-                  [class.border-primary]="activeAnalyticsTab === tab"
-                  [class.text-primary]="activeAnalyticsTab === tab"
-                  [class.text-gray-500]="activeAnalyticsTab !== tab"
-                  class="py-2 px-1 border-b-2 font-medium text-sm capitalize transition-colors hover:text-primary">
-            {{ tab === 'user-growth' ? 'User Growth Trends' : 
-               tab === 'content-engagement' ? 'Content Engagement Analytics' : 
-               tab === 'localization' ? 'Localization Stats' : 
-               'Overview' }}
-          </button>
-        </nav>
-      </div>
+      <app-tab-navigation
+        [tabs]="analyticsTabItems"
+        (tabChange)="onAnalyticsTabChange($event)">
+      </app-tab-navigation>
 
       <!-- Overview Tab (Default) -->
       <div *ngIf="activeAnalyticsTab === 'overview'" class="space-y-6">

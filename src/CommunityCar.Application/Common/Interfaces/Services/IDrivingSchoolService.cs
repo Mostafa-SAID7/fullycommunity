@@ -1,5 +1,6 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Services.DrivingSchool;
+using CommunityCar.Application.DTOs.Requests.Services.DrivingSchool;
+using CommunityCar.Application.DTOs.Response.Services.DrivingSchool;
 
 namespace CommunityCar.Application.Common.Interfaces.Services;
 

@@ -1,0 +1,75 @@
+<div class="user-cards-container">
+  @for (user of users(); track user.id) {
+    <div class="user-card">
+      <div class="card-header">
+        <div class="user-info">
+          <div class="user-avatar">
+            {{ getInitials(user) }}
+          </div>
+          <div class="user-details">
+            <div class="user-name">{{ user.firstName }} {{ user.lastName }}</div>
+            <div class="user-username">{{ user.userName }}</div>
+          </div>
+        </div>
+        <div class="card-actions">
+          <button 
+            (click)="edit.emit(user)"
+            class="action-button edit-button">
+            Edit
+          </button>
+          <button
+            *ngIf="user.accountStatus !== 'Active'"
+            (click)="activate.emit(user)"
+            class="action-button activate-button">
+            Activate
+          </button>
+          <button
+            *ngIf="user.accountStatus === 'Active'"
+            (click)="block.emit(user)"
+            class="action-button block-button">
+            Block
+          </button>
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <div class="info-row">
+          <span class="info-label">Email:</span>
+          <span class="info-value">{{ user.email }}</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="info-label">Roles:</span>
+          <div class="roles-container">
+            <span
+              *ngFor="let role of user.roles"
+              class="role-badge"
+              [ngClass]="getRoleBadgeClass(role)">
+              {{ role }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="info-row">
+          <span class="info-label">Status:</span>
+          <span 
+            class="status-badge"
+            [ngClass]="getStatusBadgeClass(user.accountStatus)">
+            {{ user.accountStatus }}
+          </span>
+        </div>
+        
+        <div class="info-row">
+          <span class="info-label">Joined:</span>
+          <span class="info-value">{{ user.createdAt | date : "mediumDate" }}</span>
+        </div>
+      </div>
+    </div>
+  }
+  
+  <div *ngIf="users().length === 0" class="empty-state">
+    <div class="empty-icon">👥</div>
+    <h3 class="empty-title">No users found</h3>
+    <p class="empty-message">{{ emptyMessage() }}</p>
+  </div>
+</div>

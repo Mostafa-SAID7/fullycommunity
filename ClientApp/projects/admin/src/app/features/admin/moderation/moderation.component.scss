@@ -1,0 +1,269 @@
+// =============================================================================
+// Moderation Component Styles
+// =============================================================================
+
+@import '../../../styles/abstracts/variables';
+@import '../../../styles/abstracts/mixins';
+
+// Component Root
+// -----------------------------------------------------------------------------
+:host {
+  display: block;
+}
+
+.moderation-container {
+  @include admin-content;
+  padding: $spacing-6;
+  padding-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+
+  @include respond-below('md') {
+    padding: $spacing-4;
+    padding-top: 2rem;
+  }
+}
+
+// Page Header
+// -----------------------------------------------------------------------------
+.page-header {
+  @include flex-between;
+  gap: $spacing-4;
+
+  @include respond-below('sm') {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-content {
+    h1 {
+      @include heading(2);
+      margin-bottom: $spacing-1;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: $font-size-sm;
+      margin: 0;
+    }
+  }
+}
+
+// Stats Grid
+// -----------------------------------------------------------------------------
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-4;
+
+  @include respond-to('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Loading
+// -----------------------------------------------------------------------------
+.loading-container {
+  @include flex-center;
+  padding: 3rem 0;
+
+  .loading-spinner {
+    @include loading-spinner(3rem, $color-primary);
+  }
+}
+
+// Moderation Queue
+// -----------------------------------------------------------------------------
+.moderation-queue {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+// Empty State
+// -----------------------------------------------------------------------------
+.empty-state {
+  @include card-base;
+  text-align: center;
+  padding: 3rem $spacing-4;
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: $spacing-4;
+  }
+
+  .empty-title {
+    @include heading(5);
+    margin-bottom: $spacing-2;
+  }
+
+  .empty-description {
+    color: $text-muted;
+    font-size: $font-size-sm;
+    margin: 0;
+  }
+}
+
+// Modal Styles
+// -----------------------------------------------------------------------------
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: $bg-overlay;
+  z-index: $z-index-modal;
+  @include flex-center;
+  padding: $spacing-4;
+}
+
+.modal-container {
+  @include card-base;
+  background: $bg-primary;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-2xl;
+  max-width: 32rem;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  @include flex-between;
+  padding: $spacing-6;
+  border-bottom: 1px solid $border-primary;
+
+  .modal-title {
+    @include heading(4);
+    margin: 0;
+  }
+
+  .modal-close-btn {
+    @include button-base;
+    @include button-variant('ghost');
+    @include button-size('sm');
+    padding: $spacing-2;
+    color: $text-muted;
+
+    &:hover {
+      color: $text-secondary;
+    }
+
+    .close-icon {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+}
+
+.modal-body {
+  padding: $spacing-6;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+
+  .item-details {
+    background: $bg-secondary;
+    border-radius: $border-radius-lg;
+    padding: $spacing-4;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+
+    .detail-row {
+      @include flex-between;
+      font-size: $font-size-sm;
+
+      .detail-label {
+        font-weight: $font-weight-medium;
+        color: $text-secondary;
+      }
+
+      .detail-value {
+        color: $text-primary;
+        text-align: right;
+        max-width: 60%;
+        word-break: break-word;
+      }
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+
+    .form-label {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $text-secondary;
+    }
+
+    .form-textarea {
+      @include input-base;
+      resize: none;
+      min-height: 5rem;
+    }
+  }
+}
+
+.modal-footer {
+  @include flex-start;
+  justify-content: flex-end;
+  gap: $spacing-3;
+  padding: $spacing-6;
+  border-top: 1px solid $border-primary;
+
+  .btn {
+    @include button-base;
+    @include button-size('md');
+
+    &.btn-secondary {
+      @include button-variant('secondary');
+    }
+
+    &.btn-success {
+      @include button-variant('success');
+    }
+
+    &.btn-danger {
+      @include button-variant('error');
+    }
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .modal-container {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+
+  .modal-header {
+    border-color: $dark-border-primary;
+  }
+
+  .modal-footer {
+    border-color: $dark-border-primary;
+  }
+
+  .item-details {
+    background: $dark-bg-tertiary;
+  }
+}
+
+// Reduced Motion Support
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  .modal-overlay {
+    animation: none;
+  }
+}

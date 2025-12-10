@@ -1,0 +1,25 @@
+<div class="filters-container">
+  <div class="filters-grid">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="search.emit(searchTerm())"
+      [placeholder]="searchPlaceholder()"
+      class="filter-input"
+    />
+    <select 
+      [(ngModel)]="selectedRole" 
+      (change)="roleChange.emit(selectedRole())" 
+      class="filter-select">
+      <option value="">All Roles</option>
+      <option *ngFor="let role of roles()" [value]="role">{{ role }}</option>
+    </select>
+    <select 
+      [(ngModel)]="selectedStatus" 
+      (change)="statusChange.emit(selectedStatus())" 
+      class="filter-select">
+      <option value="">All Status</option>
+      <option *ngFor="let status of statuses()" [value]="status">{{ status }}</option>
+    </select>
+  </div>
+</div>""

@@ -1,0 +1,220 @@
+// =============================================================================
+// User Management Component Styles
+// =============================================================================
+
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+// Main Container
+// -----------------------------------------------------------------------------
+.user-management-container {
+  padding: $spacing-6;
+  padding-top: $spacing-12;
+  @include flex-start;
+  flex-direction: column;
+  gap: $spacing-6;
+  width: 100%;
+  min-height: calc(100vh - #{$nav-height});
+}
+
+// Page Header
+// -----------------------------------------------------------------------------
+.page-header {
+  @include flex-between;
+  gap: $spacing-4;
+  width: 100%;
+  
+  @include respond-below('sm') {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .header-content {
+    .page-title {
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin-bottom: $spacing-1;
+    }
+    
+    .page-subtitle {
+      font-size: $font-size-sm;
+      color: $text-muted;
+    }
+  }
+  
+  .header-actions {
+    @include flex-start;
+    gap: $spacing-3;
+    
+    .add-user-btn {
+      @include flex-start;
+      gap: $spacing-2;
+      padding: $spacing-2 $spacing-4;
+      background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+      color: $text-inverse;
+      border-radius: $border-radius-lg;
+      border: none;
+      font-weight: $font-weight-medium;
+      cursor: pointer;
+      transition: all $transition-fast;
+      
+      &:hover {
+        box-shadow: $shadow-lg;
+        transform: translateY(-1px);
+      }
+      
+      .add-icon {
+        font-size: $font-size-lg;
+      }
+    }
+  }
+}
+
+// Loading State
+// -----------------------------------------------------------------------------
+.loading-container {
+  @include flex-center;
+  padding: $spacing-12 0;
+  
+  .loading-spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 2px solid rgba($color-primary, 0.2);
+    border-top: 2px solid $color-primary;
+    border-radius: $border-radius-full;
+    animation: spin 1s linear infinite;
+  }
+}
+
+// Error State
+// -----------------------------------------------------------------------------
+.error-container {
+  background: rgba($error-50, 0.8);
+  border: 1px solid $error-200;
+  border-radius: $border-radius-xl;
+  padding: $spacing-4;
+  @include flex-between;
+  
+  .error-message {
+    color: $error-800;
+    font-weight: $font-weight-medium;
+  }
+  
+  .retry-btn {
+    padding: $spacing-2 $spacing-4;
+    background: $error-600;
+    color: $text-inverse;
+    border-radius: $border-radius-lg;
+    border: none;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+    
+    &:hover {
+      background: $error-700;
+    }
+  }
+}
+
+// Content Area
+// -----------------------------------------------------------------------------
+.content-area {
+  width: 100%;
+  @include flex-start;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
+// Animations
+// -----------------------------------------------------------------------------
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .user-management-container {
+    .page-header {
+      .header-content {
+        .page-title {
+          color: $dark-text-primary;
+        }
+        
+        .page-subtitle {
+          color: $dark-text-secondary;
+        }
+      }
+    }
+  }
+  
+  .error-container {
+    background: rgba($error-900, 0.8);
+    border-color: $error-700;
+    
+    .error-message {
+      color: $error-200;
+    }
+  }
+}
+
+// Responsive Design
+// -----------------------------------------------------------------------------
+@include respond-below('md') {
+  .user-management-container {
+    padding: $spacing-4;
+    padding-top: $spacing-8;
+  }
+}
+
+@include respond-below('sm') {
+  .user-management-container {
+    padding: $spacing-3;
+    padding-top: $spacing-6;
+    gap: $spacing-4;
+  }
+  
+  .page-header {
+    .header-actions {
+      width: 100%;
+      
+      .add-user-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+// High Contrast Mode
+// -----------------------------------------------------------------------------
+@include high-contrast {
+  .add-user-btn,
+  .retry-btn {
+    border: 2px solid currentColor;
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  .add-user-btn,
+  .retry-btn {
+    transition: none;
+  }
+  
+  .loading-spinner {
+    animation: none;
+  }
+}

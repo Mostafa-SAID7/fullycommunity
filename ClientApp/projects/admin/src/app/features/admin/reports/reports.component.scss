@@ -1,0 +1,277 @@
+// =============================================================================
+// Reports Component Styles
+// =============================================================================
+
+@import '../../../styles/abstracts/variables';
+@import '../../../styles/abstracts/mixins';
+
+// Component Root
+// -----------------------------------------------------------------------------
+:host {
+  display: block;
+  min-height: 100vh;
+  background: $bg-secondary;
+  padding: $spacing-6;
+  padding-top: 3rem;
+
+  @include respond-below('md') {
+    padding: $spacing-4;
+    padding-top: 2rem;
+  }
+}
+
+// Container
+// -----------------------------------------------------------------------------
+.reports-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+// Page Header
+// -----------------------------------------------------------------------------
+.page-header {
+  @include flex-between;
+  margin-bottom: $spacing-8;
+  animation: fadeIn 0.6s ease-out;
+
+  @include respond-below('md') {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-4;
+  }
+
+  .header-content {
+    h1 {
+      @include heading(1);
+      background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: $spacing-2;
+      
+      @include respond-below('md') {
+        font-size: $font-size-2xl;
+      }
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: $font-size-lg;
+      margin: 0;
+      
+      @include respond-below('md') {
+        font-size: $font-size-base;
+      }
+    }
+  }
+
+  .header-actions {
+    @include flex-start;
+    gap: $spacing-4;
+    flex-wrap: wrap;
+
+    @include respond-below('md') {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+}
+
+// Period Select
+// -----------------------------------------------------------------------------
+.period-select {
+  @include input-base;
+  width: auto;
+  min-width: 140px;
+  padding: $spacing-3 $spacing-4;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  background: $bg-primary;
+  border: 2px solid $border-primary;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $color-primary;
+  }
+
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+}
+
+// Export Buttons
+// -----------------------------------------------------------------------------
+.export-buttons {
+  @include flex-start;
+  gap: $spacing-2;
+  flex-wrap: wrap;
+
+  .export-btn {
+    @include button-base;
+    @include button-size('sm');
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    transition: all $transition-fast;
+
+    &.users-btn {
+      background: $bg-primary;
+      color: $text-secondary;
+      border: 1px solid $border-secondary;
+
+      &:hover {
+        background: $color-secondary;
+        color: $text-inverse;
+        transform: translateY(-1px);
+      }
+    }
+
+    &.content-btn {
+      background: linear-gradient(135deg, $success-500, $success-600);
+      color: $text-inverse;
+
+      &:hover {
+        background: linear-gradient(135deg, $success-600, $success-700);
+        transform: translateY(-1px);
+      }
+    }
+
+    &.primary-btn {
+      @include button-variant('primary');
+      
+      .export-icon {
+        width: $icon-sm;
+        height: $icon-sm;
+      }
+    }
+  }
+}
+
+// Overview Stats Grid
+// -----------------------------------------------------------------------------
+.overview-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: $spacing-6;
+  margin-bottom: $spacing-6;
+
+  @include respond-to('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Charts Section
+// -----------------------------------------------------------------------------
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-6;
+  margin-bottom: $spacing-6;
+
+  @include respond-to('xl') {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.chart-card {
+  @include card-base;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-lg;
+  padding: $spacing-6;
+
+  .chart-header {
+    @include flex-between;
+    margin-bottom: $spacing-6;
+
+    .chart-info {
+      h3 {
+        @include heading(4);
+        margin-bottom: $spacing-1;
+      }
+
+      p {
+        color: $text-secondary;
+        font-size: $font-size-sm;
+        margin: 0;
+      }
+    }
+
+    .chart-legend {
+      @include flex-start;
+      gap: $spacing-4;
+      flex-wrap: wrap;
+
+      .legend-item {
+        @include flex-start;
+        gap: $spacing-2;
+
+        .legend-dot {
+          width: 0.75rem;
+          height: 0.75rem;
+          border-radius: 50%;
+
+          &.blue { background: linear-gradient(135deg, $primary-500, $primary-600); }
+          &.green { background: linear-gradient(135deg, $success-500, $success-600); }
+          &.purple { background: linear-gradient(135deg, $purple-500, $purple-600); }
+          &.pink { background: linear-gradient(135deg, rgb(236, 72, 153), rgb(219, 39, 119)); }
+        }
+
+        .legend-label {
+          font-size: $font-size-sm;
+          font-weight: $font-weight-medium;
+          color: $text-secondary;
+        }
+      }
+    }
+  }
+}
+
+// Animations
+// -----------------------------------------------------------------------------
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  :host {
+    background: $dark-bg-primary;
+  }
+
+  .chart-card {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+
+  .period-select {
+    background: $dark-bg-secondary;
+    color: $dark-text-primary;
+    border-color: $dark-border-primary;
+  }
+}
+
+// Reduced Motion Support
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

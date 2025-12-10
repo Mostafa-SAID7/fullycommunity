@@ -1,5 +1,6 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Services.FuelCharging;
+using CommunityCar.Application.DTOs.Requests.Services.FuelCharging;
+using CommunityCar.Application.DTOs.Response.Services.FuelCharging;
 
 namespace CommunityCar.Application.Common.Interfaces.Services;
 

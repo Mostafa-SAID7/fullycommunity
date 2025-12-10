@@ -5,27 +5,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-pagination',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 px-6 py-4 flex items-center justify-between">
-      <span class="text-sm text-gray-700">
-        {{ displayText() }}
-      </span>
-      <div class="flex gap-2">
-        <button 
-          (click)="previous.emit()" 
-          [disabled]="currentPage() === 1" 
-          class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-          Previous
-        </button>
-        <button 
-          (click)="next.emit()" 
-          [disabled]="currentPage() >= totalPages()" 
-          class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-          Next
-        </button>
-      </div>
-    </div>
-  `
+  templateUrl: './pagination.component.html',
+  styleUrl: './pagination.component.scss'
 })
 export class PaginationComponent {
   currentPage = input.required<number>();

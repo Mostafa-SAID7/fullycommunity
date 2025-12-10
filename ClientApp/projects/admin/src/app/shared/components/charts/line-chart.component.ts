@@ -19,21 +19,8 @@ export interface LineChartConfig {
   selector: 'app-line-chart',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="relative w-full" [style.height.px]="config.height || 300">
-      <canvas #chartCanvas class="w-full h-full"></canvas>
-      <div *ngIf="!hasData" class="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-lg">
-        <div class="text-center">
-          <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-3">
-            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
-            </svg>
-          </div>
-          <p class="text-gray-400 text-sm">No chart data available</p>
-        </div>
-      </div>
-    </div>
-  `,
+  templateUrl: './line-chart.component.html',
+  styleUrl: './line-chart.component.scss',
   styles: [`
     :host {
       display: block;

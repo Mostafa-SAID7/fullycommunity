@@ -1,0 +1,393 @@
+// =============================================================================
+// Activity Log Component Styles
+// =============================================================================
+
+@import '../../../styles/abstracts/variables';
+@import '../../../styles/abstracts/mixins';
+
+// Component Root
+// -----------------------------------------------------------------------------
+:host {
+  display: block;
+}
+
+.activity-log-container {
+  @include admin-content;
+  padding: $spacing-6;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+
+  @include respond-below('md') {
+    padding: $spacing-4;
+  }
+}
+
+// Page Header
+// -----------------------------------------------------------------------------
+.page-header {
+  @include flex-between;
+  gap: $spacing-4;
+
+  @include respond-below('sm') {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-content {
+    h1 {
+      @include heading(2);
+      margin-bottom: $spacing-1;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: $font-size-base;
+      margin: 0;
+    }
+  }
+}
+
+// Filters Card
+// -----------------------------------------------------------------------------
+.filters-card {
+  @include card-base;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-lg;
+  padding: $spacing-4;
+
+  .filters-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-4;
+
+    @include respond-to('md') {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+
+    .filter-label {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $text-secondary;
+    }
+
+    .filter-select,
+    .filter-input {
+      @include input-base;
+      padding: $spacing-3;
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+// Timeline Card
+// -----------------------------------------------------------------------------
+.timeline-card {
+  @include card-base;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-lg;
+
+  .card-header {
+    padding: $spacing-6 $spacing-6 0;
+    border-bottom: 1px solid $border-primary;
+    margin-bottom: 0;
+    padding-bottom: $spacing-4;
+
+    .card-title {
+      @include heading(5);
+      margin: 0;
+    }
+  }
+
+  .card-content {
+    padding: $spacing-6;
+  }
+}
+
+// Loading State
+// -----------------------------------------------------------------------------
+.loading-state {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-8 0;
+
+  .loading-spinner {
+    @include loading-spinner(2rem, $color-primary);
+    margin-bottom: $spacing-4;
+  }
+
+  .loading-text {
+    color: $text-muted;
+    font-size: $font-size-sm;
+    margin: 0;
+  }
+}
+
+// Empty State
+// -----------------------------------------------------------------------------
+.empty-state {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-8 0;
+  color: $text-muted;
+
+  .empty-icon {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: $spacing-4;
+    opacity: 0.5;
+  }
+
+  .empty-text {
+    font-size: $font-size-base;
+    margin: 0;
+  }
+}
+
+// Activity Timeline
+// -----------------------------------------------------------------------------
+.activity-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.timeline-entry {
+  @include flex-start;
+  gap: $spacing-4;
+  padding: $spacing-4;
+  border-radius: $border-radius-lg;
+  border: 1px solid $border-primary;
+  transition: all $transition-base;
+
+  &:hover {
+    background: $bg-secondary;
+    border-color: $color-primary;
+    transform: translateY(-1px);
+    box-shadow: $shadow-sm;
+  }
+
+  .timeline-dot-container {
+    flex-shrink: 0;
+    margin-top: $spacing-2;
+
+    .timeline-dot {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+
+      &.dot-success {
+        background: $success-500;
+        box-shadow: 0 0 8px rgba($success-500, 0.4);
+      }
+
+      &.dot-danger {
+        background: $error-500;
+        box-shadow: 0 0 8px rgba($error-500, 0.4);
+      }
+
+      &.dot-warning {
+        background: $warning-500;
+        box-shadow: 0 0 8px rgba($warning-500, 0.4);
+      }
+
+      &.dot-info {
+        background: $primary-500;
+        box-shadow: 0 0 8px rgba($primary-500, 0.4);
+      }
+
+      &.dot-primary {
+        background: $purple-500;
+        box-shadow: 0 0 8px rgba($purple-500, 0.4);
+      }
+
+      &.dot-secondary {
+        background: $secondary-500;
+        box-shadow: 0 0 8px rgba($secondary-500, 0.4);
+      }
+    }
+  }
+
+  .entry-content {
+    flex: 1;
+    min-width: 0;
+
+    .entry-header {
+      @include flex-start;
+      justify-content: space-between;
+      gap: $spacing-4;
+      align-items: flex-start;
+
+      @include respond-below('md') {
+        flex-direction: column;
+        gap: $spacing-3;
+      }
+
+      .entry-main {
+        flex: 1;
+        min-width: 0;
+
+        .entry-title {
+          font-size: $font-size-sm;
+          font-weight: $font-weight-medium;
+          color: $text-primary;
+          margin-bottom: $spacing-1;
+        }
+
+        .entry-description {
+          font-size: $font-size-sm;
+          color: $text-secondary;
+          margin-bottom: $spacing-2;
+          line-height: $line-height-relaxed;
+        }
+
+        .entry-details {
+          margin-top: $spacing-2;
+
+          .details-container {
+            background: $bg-secondary;
+            border-radius: $border-radius-lg;
+            padding: $spacing-3;
+
+            .details-text {
+              font-size: $font-size-xs;
+              color: $text-secondary;
+              white-space: pre-wrap;
+              margin: 0;
+              font-family: $font-family-secondary;
+            }
+          }
+        }
+      }
+
+      .entry-metadata {
+        text-align: right;
+        flex-shrink: 0;
+
+        @include respond-below('md') {
+          text-align: left;
+          width: 100%;
+        }
+
+        .metadata-user {
+          font-size: $font-size-sm;
+          font-weight: $font-weight-medium;
+          color: $text-primary;
+          margin-bottom: $spacing-1;
+        }
+
+        .metadata-time {
+          font-size: $font-size-xs;
+          color: $text-muted;
+          margin-bottom: $spacing-1;
+        }
+
+        .metadata-ip {
+          font-size: $font-size-xs;
+          color: $text-muted;
+          margin-bottom: $spacing-2;
+        }
+
+        .action-badge {
+          display: inline-flex;
+          align-items: center;
+          padding: $spacing-1 $spacing-2;
+          border-radius: $border-radius-full;
+          font-size: $font-size-xs;
+          font-weight: $font-weight-medium;
+
+          &.badge-success {
+            background: $success-100;
+            color: $success-800;
+          }
+
+          &.badge-danger {
+            background: $error-100;
+            color: $error-800;
+          }
+
+          &.badge-warning {
+            background: $warning-100;
+            color: $warning-800;
+          }
+
+          &.badge-info {
+            background: $primary-100;
+            color: $primary-800;
+          }
+
+          &.badge-primary {
+            background: $purple-100;
+            color: $purple-800;
+          }
+
+          &.badge-secondary {
+            background: $secondary-100;
+            color: $secondary-800;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Pagination
+// -----------------------------------------------------------------------------
+.pagination-container {
+  @include flex-between;
+  margin-top: $spacing-6;
+  gap: $spacing-4;
+
+  @include respond-below('md') {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pagination-info {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .filters-card,
+  .timeline-card {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+
+  .card-header {
+    border-color: $dark-border-primary;
+  }
+
+  .timeline-entry {
+    border-color: $dark-border-primary;
+
+    &:hover {
+      background: $dark-bg-tertiary;
+      border-color: $color-primary;
+    }
+  }
+
+  .details-container {
+    background: $dark-bg-tertiary;
+  }
+}
+
+// Reduced Motion Support
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  .timeline-entry {
+    transition: none;
+  }
+}

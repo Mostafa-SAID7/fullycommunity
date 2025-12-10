@@ -4,6 +4,7 @@ import { interval, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SystemHealthService } from '../../../core/services/system/system-health.service';
 import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
+import { StatCardComponent, StatCardConfig } from '../../../shared/components/charts/stat-card.component';
 
 interface SystemMetric {
   name: string;
@@ -25,124 +26,11 @@ interface ServiceStatus {
 @Component({
   selector: 'app-system-health',
   standalone: true,
-  imports: [CommonModule, RefreshButtonComponent],
-  template: `
-    <div class="p-6 space-y-6">
-      <!-- Header -->
-      <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-2xl font-bold text-gray-900">System Health Monitor</h1>
-          <p class="text-gray-600 mt-1">Real-time system performance and service status</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2">
-            <div class="w-3 h-3 rounded-full" [class]="overallStatus === 'healthy' ? 'bg-green-500' : overallStatus === 'warning' ? 'bg-yellow-500' : 'bg-red-500'"></div>
-            <span class="text-sm font-medium" [class]="overallStatus === 'healthy' ? 'text-green-700' : overallStatus === 'warning' ? 'text-yellow-700' : 'text-red-700'">
-              {{ overallStatus | titlecase }}
-            </span>
-          </div>
-          <app-refresh-button
-            (refresh)="refreshData()"
-            [loading]="loading"
-            [variant]="'primary'"
-            [size]="'md'"
-            [showText]="false"
-            [title]="'Refresh system health data'"
-            [showStatusIndicator]="true"
-            [status]="refreshStatus"
-            [lastRefresh]="lastRefreshTime">
-          </app-refresh-button>
-        </div>
-      </div>
+  imports: [CommonModule, RefreshButtonComponent, StatCardComponent],
+  templateUrl: './system-health.component.html',
+  styleUrl: './system-health.component.scss'
 
-      <!-- System Metrics Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div *ngFor="let metric of systemMetrics" 
-             class="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
-          <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center gap-3">
-              <div class="p-2 rounded-lg" [class]="getMetricBgClass(metric.status)">
-                <svg class="w-5 h-5" [class]="getMetricTextClass(metric.status)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="metric.icon"/>
-                </svg>
-              </div>
-              <h3 class="font-semibold text-gray-900">{{ metric.name }}</h3>
-            </div>
-            <div class="w-3 h-3 rounded-full" [class]="getStatusDotClass(metric.status)"></div>
-          </div>
-          <div class="space-y-2">
-            <div class="flex items-baseline gap-2">
-              <span class="text-2xl font-bold text-gray-900">{{ metric.value }}</span>
-              <span class="text-sm text-gray-500">{{ metric.unit }}</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="h-2 rounded-full transition-all duration-300" 
-                   [class]="getProgressBarClass(metric.status)"
-                   [style.width.%]="(metric.value / metric.threshold) * 100"></div>
-            </div>
-            <p class="text-xs text-gray-500">Threshold: {{ metric.threshold }}{{ metric.unit }}</p>
-          </div>
-        </div>
-      </div>
 
-      <!-- Services Status -->
-      <div class="bg-white rounded-lg border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h2 class="text-lg font-semibold text-gray-900">Service Status</h2>
-        </div>
-        <div class="p-6">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div *ngFor="let service of services" 
-                 class="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
-              <div class="flex items-center gap-3">
-                <div class="w-3 h-3 rounded-full" [class]="getServiceStatusClass(service.status)"></div>
-                <div>
-                  <h4 class="font-medium text-gray-900">{{ service.name }}</h4>
-                  <p class="text-sm text-gray-500">Response: {{ service.responseTime }}ms</p>
-                </div>
-              </div>
-              <div class="text-right">
-                <div class="text-sm font-medium" [class]="getServiceTextClass(service.status)">
-                  {{ service.status | titlecase }}
-                </div>
-                <div class="text-xs text-gray-500">
-                  Uptime: {{ service.uptime }}%
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Recent Alerts -->
-      <div class="bg-white rounded-lg border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h2 class="text-lg font-semibold text-gray-900">Recent Alerts</h2>
-        </div>
-        <div class="p-6">
-          <div *ngIf="alerts.length === 0" class="text-center py-8 text-gray-500">
-            <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <p>No recent alerts. System is running smoothly.</p>
-          </div>
-          <div *ngIf="alerts.length > 0" class="space-y-3">
-            <div *ngFor="let alert of alerts" 
-                 class="flex items-start gap-3 p-3 rounded-lg" 
-                 [class]="alert.severity === 'critical' ? 'bg-red-50 border border-red-200' : alert.severity === 'warning' ? 'bg-yellow-50 border border-yellow-200' : 'bg-blue-50 border border-blue-200'">
-              <div class="flex-shrink-0 mt-0.5">
-                <div class="w-2 h-2 rounded-full" [class]="alert.severity === 'critical' ? 'bg-red-500' : alert.severity === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'"></div>
-              </div>
-              <div class="flex-1">
-                <p class="text-sm font-medium text-gray-900">{{ alert.message }}</p>
-                <p class="text-xs text-gray-500 mt-1">{{ alert.timestamp | date:'medium' }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
 })
 export class SystemHealthComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -368,6 +256,36 @@ export class SystemHealthComponent implements OnInit, OnDestroy {
       case 'degraded': return 'text-yellow-700';
       case 'offline': return 'text-red-700';
       default: return 'text-gray-700';
+    }
+  }
+
+  getMetricCards(): StatCardConfig[] {
+    return this.systemMetrics.map(metric => ({
+      title: metric.name,
+      value: `${metric.value}${metric.unit}`,
+      icon: this.getMetricIcon(metric.name),
+      color: this.getStatCardColor(metric.status),
+      subtitle: `Threshold: ${metric.threshold}${metric.unit}`,
+      progress: metric.threshold > 0 ? (metric.value / metric.threshold) * 100 : undefined
+    }));
+  }
+
+  private getMetricIcon(name: string): string {
+    switch (name) {
+      case 'CPU Usage': return '🖥️';
+      case 'Memory Usage': return '💾';
+      case 'Disk Usage': return '💿';
+      case 'Active Users': return '👥';
+      default: return '📊';
+    }
+  }
+
+  private getStatCardColor(status: string): 'primary' | 'success' | 'warning' | 'danger' | 'info' {
+    switch (status) {
+      case 'healthy': return 'success';
+      case 'warning': return 'warning';
+      case 'critical': return 'danger';
+      default: return 'info';
     }
   }
 }

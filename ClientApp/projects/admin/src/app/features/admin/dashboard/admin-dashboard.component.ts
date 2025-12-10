@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { DashboardService } from '../../../core/services/dashboard/dashboard.service';
 import { AdminDashboardOverview } from '../../../core/interfaces/dashboard/dashboard.interface';
 import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
+import { StatCardComponent, StatCardConfig } from '../../../shared/components/charts/stat-card.component';
 
 interface QuickAction {
   title: string;
@@ -27,7 +28,7 @@ interface RecentActivity {
 @Component({
   selector: 'admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, RefreshButtonComponent],
+  imports: [CommonModule, RouterLink, RefreshButtonComponent, StatCardComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
 })
@@ -44,6 +45,51 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   // Refresh button state
   refreshStatus = signal<'success' | 'error' | 'warning' | null>(null);
   lastRefreshTime = signal<Date | null>(null);
+  
+  // Computed stat cards
+  get statCards(): StatCardConfig[] {
+    const overview = this.overview();
+    if (!overview) return [];
+    
+    return [
+      {
+        title: 'Total Users',
+        value: overview.users.totalUsers,
+        icon: '👥',
+        color: 'primary',
+        subtitle: `${overview.users.activeUsers} active`,
+        trend: {
+          value: Math.round((overview.users.newUsersThisMonth / overview.users.totalUsers) * 100),
+          direction: 'up'
+        }
+      },
+      {
+        title: 'Content Items',
+        value: this.getTotalContent(),
+        icon: '📄',
+        color: 'info',
+        subtitle: 'Posts, Reviews, Guides'
+      },
+      {
+        title: 'Pending Moderation',
+        value: overview.content.pendingModeration,
+        icon: '⚠️',
+        color: overview.content.pendingModeration > 0 ? 'warning' : 'success',
+        subtitle: overview.content.pendingModeration > 0 ? 'Action needed' : 'All clear'
+      },
+      {
+        title: 'Active Communities',
+        value: overview.community.activeDiscussions,
+        icon: '🚀',
+        color: 'success',
+        subtitle: `${overview.community.totalComments} comments`,
+        trend: {
+          value: 12,
+          direction: 'up'
+        }
+      }
+    ];
+  }
   
   quickActions: QuickAction[] = [
     {

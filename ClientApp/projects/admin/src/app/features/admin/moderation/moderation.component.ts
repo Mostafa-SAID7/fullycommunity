@@ -6,6 +6,7 @@ import { ModerationItem, ModerationStats } from '../../../core/interfaces/admin/
 import { StatCardComponent, StatCardConfig } from '../../../shared/components/charts/stat-card.component';
 import { TabNavigationComponent, Tab } from '../../../shared/components/tab-navigation/tab-navigation.component';
 import { ModerationItemCardComponent } from '../../../shared/components/moderation-item-card/moderation-item-card.component';
+import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
 
 @Component({
   selector: 'moderation',
@@ -15,9 +16,11 @@ import { ModerationItemCardComponent } from '../../../shared/components/moderati
     FormsModule,
     StatCardComponent,
     TabNavigationComponent,
-    ModerationItemCardComponent
+    ModerationItemCardComponent,
+    RefreshButtonComponent
   ],
-  templateUrl: './moderation.component.html'
+  templateUrl: './moderation.component.html',
+  styleUrl: './moderation.component.scss'
 })
 export class ModerationComponent implements OnInit {
   private moderationService = inject(AdminModerationService);

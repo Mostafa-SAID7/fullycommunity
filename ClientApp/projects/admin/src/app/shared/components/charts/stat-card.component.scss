@@ -2,7 +2,8 @@
 // Stat Card Component Styles
 // =============================================================================
 
-@import '../../styles/component-mixins';
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
 
 :host {
   display: block;

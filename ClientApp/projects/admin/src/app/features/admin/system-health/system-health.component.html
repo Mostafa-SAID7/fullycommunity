@@ -1,0 +1,90 @@
+<div class="system-health-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>System Health Monitor</h1>
+      <p>Real-time system performance and service status</p>
+    </div>
+    <div class="header-actions">
+      <div class="status-indicator">
+        <div class="status-dot" [ngClass]="'status-' + overallStatus"></div>
+        <span class="status-text" [ngClass]="'text-' + overallStatus">
+          {{ overallStatus | titlecase }}
+        </span>
+      </div>
+      <app-refresh-button
+        (refresh)="refreshData()"
+        [loading]="loading"
+        [variant]="'primary'"
+        [size]="'md'"
+        [showText]="false"
+        [title]="'Refresh system health data'"
+        [showStatusIndicator]="true"
+        [status]="refreshStatus"
+        [lastRefresh]="lastRefreshTime">
+      </app-refresh-button>
+    </div>
+  </div>
+
+  <!-- System Metrics Grid -->
+  <div class="metrics-grid">
+    <app-stat-card
+      *ngFor="let card of getMetricCards()"
+      [config]="card">
+    </app-stat-card>
+  </div>
+
+  <!-- Services Status -->
+  <div class="services-card">
+    <div class="card-header">
+      <h2 class="card-title">Service Status</h2>
+    </div>
+    <div class="card-content">
+      <div class="services-grid">
+        <div *ngFor="let service of services" class="service-item">
+          <div class="service-info">
+            <div class="status-dot" [ngClass]="'status-' + service.status"></div>
+            <div class="service-details">
+              <h4 class="service-name">{{ service.name }}</h4>
+              <p class="service-response">Response: {{ service.responseTime }}ms</p>
+            </div>
+          </div>
+          <div class="service-stats">
+            <div class="service-status" [ngClass]="'text-' + service.status">
+              {{ service.status | titlecase }}
+            </div>
+            <div class="service-uptime">
+              Uptime: {{ service.uptime }}%
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Alerts -->
+  <div class="alerts-card">
+    <div class="card-header">
+      <h2 class="card-title">Recent Alerts</h2>
+    </div>
+    <div class="card-content">
+      <div *ngIf="alerts.length === 0" class="empty-state">
+        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p class="empty-text">No recent alerts. System is running smoothly.</p>
+      </div>
+      <div *ngIf="alerts.length > 0" class="alerts-list">
+        <div *ngFor="let alert of alerts" 
+             class="alert-item" 
+             [ngClass]="'alert-' + alert.severity">
+          <div class="alert-dot" [ngClass]="'dot-' + alert.severity"></div>
+          <div class="alert-content">
+            <p class="alert-message">{{ alert.message }}</p>
+            <p class="alert-timestamp">{{ alert.timestamp | date:'medium' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

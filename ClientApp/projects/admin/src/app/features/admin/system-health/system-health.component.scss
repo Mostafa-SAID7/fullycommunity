@@ -1,0 +1,421 @@
+// =============================================================================
+// System Health Component Styles
+// =============================================================================
+
+@import '../../../styles/abstracts/variables';
+@import '../../../styles/abstracts/mixins';
+
+// Component Root
+// -----------------------------------------------------------------------------
+:host {
+  display: block;
+}
+
+.system-health-container {
+  @include admin-content;
+  padding: $spacing-6;
+  padding-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+
+  @include respond-below('md') {
+    padding: $spacing-4;
+    padding-top: 2rem;
+  }
+}
+
+// Page Header
+// -----------------------------------------------------------------------------
+.page-header {
+  @include flex-between;
+  gap: $spacing-4;
+
+  @include respond-below('md') {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-content {
+    h1 {
+      @include heading(2);
+      margin-bottom: $spacing-1;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: $font-size-base;
+      margin: 0;
+    }
+  }
+
+  .header-actions {
+    @include flex-start;
+    gap: $spacing-4;
+    align-items: center;
+
+    @include respond-below('md') {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+}
+
+// Status Indicator
+// -----------------------------------------------------------------------------
+.status-indicator {
+  @include flex-start;
+  gap: $spacing-2;
+  padding: $spacing-2 $spacing-3;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-lg;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+
+  .status-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    @include status-indicator();
+
+    &.status-healthy {
+      @include status-indicator('success');
+    }
+
+    &.status-warning {
+      @include status-indicator('warning');
+    }
+
+    &.status-critical {
+      @include status-indicator('error');
+    }
+  }
+
+  .status-text {
+    &.text-healthy {
+      color: $success-600;
+    }
+
+    &.text-warning {
+      color: $warning-600;
+    }
+
+    &.text-critical {
+      color: $error-600;
+    }
+  }
+}
+
+// Metrics Grid
+// -----------------------------------------------------------------------------
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-6;
+
+  @include respond-to('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Services Card
+// -----------------------------------------------------------------------------
+.services-card {
+  @include card-base;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-lg;
+
+  .card-header {
+    padding: $spacing-6 $spacing-6 0;
+
+    .card-title {
+      @include heading(4);
+      margin: 0;
+    }
+  }
+
+  .card-content {
+    padding: $spacing-6;
+  }
+
+  .services-grid {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-4;
+  }
+
+  .service-item {
+    @include flex-between;
+    padding: $spacing-4;
+    background: $bg-secondary;
+    border: 1px solid $border-primary;
+    border-radius: $border-radius-lg;
+    transition: all $transition-base;
+
+    &:hover {
+      background: $bg-tertiary;
+      border-color: $color-primary;
+      transform: translateY(-1px);
+      box-shadow: $shadow-md;
+    }
+
+    .service-info {
+      @include flex-start;
+      gap: $spacing-3;
+
+      .status-dot {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+        flex-shrink: 0;
+        margin-top: 0.125rem;
+
+        &.status-online {
+          background: $success-500;
+          box-shadow: 0 0 8px rgba($success-500, 0.6);
+        }
+
+        &.status-degraded {
+          background: $warning-500;
+          box-shadow: 0 0 8px rgba($warning-500, 0.6);
+          animation: pulse 2s infinite;
+        }
+
+        &.status-offline {
+          background: $error-500;
+          box-shadow: 0 0 8px rgba($error-500, 0.6);
+        }
+      }
+
+      .service-details {
+        .service-name {
+          font-weight: $font-weight-semibold;
+          color: $text-primary;
+          margin-bottom: $spacing-1;
+          font-size: $font-size-base;
+        }
+
+        .service-response {
+          font-size: $font-size-sm;
+          color: $text-secondary;
+          margin: 0;
+        }
+      }
+    }
+
+    .service-stats {
+      text-align: right;
+
+      .service-status {
+        font-weight: $font-weight-medium;
+        font-size: $font-size-sm;
+        margin-bottom: $spacing-1;
+
+        &.text-online {
+          color: $success-600;
+        }
+
+        &.text-degraded {
+          color: $warning-600;
+        }
+
+        &.text-offline {
+          color: $error-600;
+        }
+      }
+
+      .service-uptime {
+        font-size: $font-size-xs;
+        color: $text-muted;
+      }
+    }
+  }
+}
+
+// Alerts Card
+// -----------------------------------------------------------------------------
+.alerts-card {
+  @include card-base;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-lg;
+
+  .card-header {
+    padding: $spacing-6 $spacing-6 0;
+
+    .card-title {
+      @include heading(4);
+      margin: 0;
+    }
+  }
+
+  .card-content {
+    padding: $spacing-6;
+  }
+
+  .empty-state {
+    @include flex-center;
+    flex-direction: column;
+    padding: $spacing-8 $spacing-4;
+    color: $text-muted;
+
+    .empty-icon {
+      width: 3rem;
+      height: 3rem;
+      margin-bottom: $spacing-4;
+      opacity: 0.5;
+    }
+
+    .empty-text {
+      font-size: $font-size-base;
+      margin: 0;
+    }
+  }
+
+  .alerts-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-3;
+  }
+
+  .alert-item {
+    @include flex-start;
+    gap: $spacing-3;
+    padding: $spacing-4;
+    border-radius: $border-radius-lg;
+    border: 1px solid;
+    transition: all $transition-base;
+
+    &.alert-warning {
+      background: $warning-50;
+      border-color: $warning-200;
+
+      .alert-dot.dot-warning {
+        background: $warning-500;
+      }
+    }
+
+    &.alert-critical {
+      background: $error-50;
+      border-color: $error-200;
+
+      .alert-dot.dot-critical {
+        background: $error-500;
+      }
+    }
+
+    &.alert-info {
+      background: $primary-50;
+      border-color: $primary-200;
+
+      .alert-dot.dot-info {
+        background: $primary-500;
+      }
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: $shadow-sm;
+    }
+
+    .alert-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 0.375rem;
+    }
+
+    .alert-content {
+      flex: 1;
+
+      .alert-message {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        color: $text-primary;
+        margin-bottom: $spacing-1;
+        line-height: $line-height-relaxed;
+      }
+
+      .alert-timestamp {
+        font-size: $font-size-xs;
+        color: $text-muted;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Animations
+// -----------------------------------------------------------------------------
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .status-indicator {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+
+  .services-card,
+  .alerts-card {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+
+  .service-item {
+    background: $dark-bg-tertiary;
+    border-color: $dark-border-primary;
+
+    &:hover {
+      background: $dark-bg-primary;
+      border-color: $color-primary;
+    }
+  }
+
+  .alert-item {
+    &.alert-warning {
+      background: rgba($warning-500, 0.1);
+      border-color: rgba($warning-500, 0.3);
+    }
+
+    &.alert-critical {
+      background: rgba($error-500, 0.1);
+      border-color: rgba($error-500, 0.3);
+    }
+
+    &.alert-info {
+      background: rgba($primary-500, 0.1);
+      border-color: rgba($primary-500, 0.3);
+    }
+  }
+}
+
+// Reduced Motion Support
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  .service-item,
+  .alert-item {
+    transition: none;
+  }
+
+  .status-dot.status-degraded {
+    animation: none;
+  }
+}

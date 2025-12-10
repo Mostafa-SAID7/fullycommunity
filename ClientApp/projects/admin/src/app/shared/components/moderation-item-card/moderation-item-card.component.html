@@ -1,0 +1,51 @@
+<div class="moderation-card">
+  <div class="card-header">
+    <div class="content-section">
+      <div class="badge-row">
+        <span class="content-badge" [ngClass]="getContentTypeClass()">
+          {{ item.contentType | titlecase }}
+        </span>
+        <span class="priority-badge" [ngClass]="getPriorityClass()">
+          {{ item.priority | titlecase }}
+        </span>
+      </div>
+      <h3 class="content-title">{{ item.contentTitle }}</h3>
+      <p class="content-preview">{{ item.contentPreview }}</p>
+      <div class="content-meta">
+        <span>Reported by: {{ item.reporterName }}</span>
+        <span>{{ item.reportedAt | date:'short' }}</span>
+      </div>
+    </div>
+    <div class="actions-section">
+      <button 
+        (click)="approve.emit(item)"
+        class="action-button approve-button">
+        Approve
+      </button>
+      <button 
+        (click)="reject.emit(item)"
+        class="action-button reject-button">
+        Reject
+      </button>
+      <button 
+        (click)="dismiss.emit(item)"
+        class="action-button dismiss-button">
+        Dismiss
+      </button>
+      <button 
+        (click)="more.emit(item)"
+        class="action-button more-button">
+        More
+      </button>
+    </div>
+  </div>
+  <div class="report-section">
+    <div class="report-header">
+      <svg class="report-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+      </svg>
+      <span class="report-title">Report Reason</span>
+    </div>
+    <p class="report-reason">{{ item.reportReason }}</p>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Services.CarWash;
-using CommunityCar.Application.Features.Services.Common;
+using CommunityCar.Application.DTOs.Requests.Services.CarWash;
+using CommunityCar.Application.DTOs.Response.Services.CarWash;
 
 namespace CommunityCar.Application.Common.Interfaces.Services;
 
