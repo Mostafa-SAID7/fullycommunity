@@ -12,6 +12,8 @@ export * from './profile-achievements.interface';
 export * from './profile-verification.interface';
 export * from './profile-professional.interface';
 export * from './profile-stats.interface';
+export * from './profile-customization.interface';
+export * from './profile-messaging.interface';
 
 // Enums
 export * from './enums';

@@ -11,3 +11,5 @@ export * from './profile-achievements.service';
 export * from './profile-verification.service';
 export * from './profile-professional.service';
 export * from './profile-stats.service';
+export * from './profile-customization.service';
+export * from './profile-messaging.service';
