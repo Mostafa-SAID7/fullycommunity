@@ -1,5 +1,5 @@
-using CommunityCar.Application.DTOs.Response.Identity;
-using CommunityCar.Application.DTOs.Requests.Identity;
+using CommunityCar.Application.DTOs.Response.Auth.Admin;
+using CommunityCar.Application.DTOs.Requests.Auth.Admin;
 
 namespace CommunityCar.Application.Common.Interfaces.Auth.Admin;
 

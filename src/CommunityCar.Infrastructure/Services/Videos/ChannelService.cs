@@ -1,6 +1,7 @@
 using CommunityCar.Application.Common.Interfaces.Videos;
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Videos.Channels;
+using CommunityCar.Application.DTOs.Requests.Videos;
+using CommunityCar.Application.DTOs.Response.Videos;
 using CommunityCar.Domain.Entities.Videos.Channels;
 using CommunityCar.Domain.Entities.Videos.Common;
 using CommunityCar.Infrastructure.Data;

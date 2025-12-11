@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces.Services;
-using CommunityCar.Application.Features.Services.Insurance;
+
 using System.Security.Claims;
 
 namespace CommunityCar.API.Controllers.Services;

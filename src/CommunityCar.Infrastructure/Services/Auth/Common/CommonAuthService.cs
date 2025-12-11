@@ -2,7 +2,7 @@ using CommunityCar.Application.Common.Interfaces.Auth.Common;
 using CommunityCar.Application.Common.Interfaces.Security;
 using CommunityCar.Application.Common.Interfaces.Infrastructure;
 using CommunityCar.Application.DTOs.Requests.Auth.Common; using CommunityCar.Application.DTOs.Response.Auth.Common;
-using CommunityCar.Application.DTOs.Requests.Auth.User; using CommunityCar.Application.DTOs.Response.Auth.User; // For ChangePasswordRequest
+using CommunityCar.Application.DTOs.Requests.Auth.User;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Domain.Enums;
 using Microsoft.AspNetCore.Identity;

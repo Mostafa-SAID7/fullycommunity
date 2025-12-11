@@ -2,6 +2,7 @@ using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Common.Interfaces.Data;
 using CommunityCar.Application.Common.Interfaces.Podcasts;
 using CommunityCar.Application.Common.Pagination;
+using CommunityCar.Application.DTOs.Requests.Podcasts;
 using CommunityCar.Application.DTOs.Response.Podcasts;
 using CommunityCar.Domain.Entities.Podcasts.Shows;
 using CommunityCar.Domain.Entities.Podcasts.Engagement;
@@ -30,7 +31,7 @@ public class PodcastEngagementService : IPodcastEngagementService
         var items = await query.Skip((page - 1) * pageSize).Take(pageSize)
             .Select(s => new PodcastShowListItemDto(s.PodcastShow.Id, s.PodcastShow.Title, s.PodcastShow.Description, s.PodcastShow.Slug,
                 s.PodcastShow.CoverImageUrl, s.PodcastShow.Owner.UserName ?? "", s.PodcastShow.Owner.AvatarUrl, s.PodcastShow.Category, s.PodcastShow.EpisodeCount, s.PodcastShow.SubscriberCount,
-                s.PodcastShow.AverageRating, s.PodcastShow.ExplicitContent, s.PodcastShow.PublishedAt)).ToListAsync(ct);
+                s.PodcastShow.AverageRating, s.PodcastShow.ExplicitContent == ExplicitContent.Explicit, s.PodcastShow.PublishedAt)).ToListAsync(ct);
         return new PagedResult<PodcastShowListItemDto>(items, total, page, pageSize);
     }
 

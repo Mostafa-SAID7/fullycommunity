@@ -1,5 +1,5 @@
 using CommunityCar.Application.Common.Interfaces.Infrastructure;
-using CommunityCar.Application.DTOs.Requests.Identity;
+using CommunityCar.Application.DTOs.Requests.Auth.User;
 using CommunityCar.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

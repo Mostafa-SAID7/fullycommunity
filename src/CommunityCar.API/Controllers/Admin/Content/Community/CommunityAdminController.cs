@@ -1,4 +1,5 @@
-using CommunityCar.Application.Features.Admin.Dashboard.Community;
+using CommunityCar.Application.DTOs.Response.Admin;
+using CommunityCar.Application.DTOs.Requests.Admin;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

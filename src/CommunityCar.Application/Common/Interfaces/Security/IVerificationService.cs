@@ -1,5 +1,5 @@
-using CommunityCar.Application.DTOs.Response.Identity;
-using CommunityCar.Application.DTOs.Requests.Identity;
+using CommunityCar.Application.DTOs.Response.Security;
+using CommunityCar.Application.DTOs.Requests.Security;
 
 namespace CommunityCar.Application.Common.Interfaces.Security;
 

@@ -1,5 +1,5 @@
 using CommunityCar.Application.DTOs.Requests.Auth.Common; using CommunityCar.Application.DTOs.Response.Auth.Common;
-using CommunityCar.Application.DTOs.Requests.Auth.User; using CommunityCar.Application.DTOs.Response.Auth.User; // For ChangePasswordRequest
+using CommunityCar.Application.DTOs.Requests.Auth.User;
 
 namespace CommunityCar.Application.Common.Interfaces.Auth.Common;
 

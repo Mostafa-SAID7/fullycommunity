@@ -4,7 +4,7 @@ using CommunityCar.Application.Common.Interfaces.Auth.Common;
 using CommunityCar.Application.Common.Interfaces.Infrastructure;
 using CommunityCar.Application.Common.Interfaces.Security;
 using CommunityCar.Application.DTOs.Requests.Auth.Common; using CommunityCar.Application.DTOs.Response.Auth.Common;
-using CommunityCar.Application.DTOs.Requests.Auth.User; using CommunityCar.Application.DTOs.Response.Auth.User;
+using CommunityCar.Application.DTOs.Requests.Auth.User;
 using CommunityCar.Domain.Enums;
 using CommunityCar.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;

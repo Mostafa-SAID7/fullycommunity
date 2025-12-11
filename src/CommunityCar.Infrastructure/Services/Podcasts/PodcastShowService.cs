@@ -2,6 +2,7 @@ using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Common.Interfaces.Data;
 using CommunityCar.Application.Common.Interfaces.Podcasts;
 using CommunityCar.Application.Common.Pagination;
+using CommunityCar.Application.DTOs.Requests.Podcasts;
 using CommunityCar.Application.DTOs.Response.Podcasts;
 using CommunityCar.Domain.Entities.Podcasts.Shows;
 using CommunityCar.Domain.Entities.Podcasts.Common;
@@ -122,7 +123,7 @@ public class PodcastShowService : IPodcastShowService
             Category = request.Category,
             Tags = request.Tags ?? [],
             Language = request.Language,
-            ExplicitContent = request.ExplicitContent,
+            ExplicitContent = request.ExplicitContent ? ExplicitContent.Explicit : ExplicitContent.Clean,
             AllowComments = request.AllowComments,
             AllowDownloads = request.AllowDownloads,
             Status = PodcastStatus.Draft
@@ -218,8 +219,8 @@ public class PodcastShowService : IPodcastShowService
 
     private static PodcastShowDto MapToDto(PodcastShow p) => new(
         p.Id, p.OwnerId, p.Owner?.UserName ?? "", p.Owner?.AvatarUrl, p.Title, p.Description, p.Slug, p.Summary, p.CoverImageUrl, p.BannerImageUrl,
-        p.Type, p.Status, p.Visibility, p.ExplicitContent, p.Category, p.Tags, p.Language,
-        p.PublishedAt, p.EpisodeCount, p.SubscriberCount, p.TotalPlays, p.AverageRating, p.RatingCount,
+        p.Type, p.Status, p.Visibility, p.ExplicitContent == ExplicitContent.Explicit, p.Category, p.Tags, p.Language,
+        p.PublishedAt, (long)p.EpisodeCount, (long)p.SubscriberCount, p.TotalPlays, p.AverageRating, (long)p.RatingCount,
         p.AllowComments, p.AllowDownloads, p.ApplePodcastsUrl, p.SpotifyUrl, p.WebsiteUrl, p.Copyright, p.Author,
         p.Hosts.Select(h => new PodcastHostDto(h.Id, h.UserId, h.Name, h.Bio, h.AvatarUrl, h.WebsiteUrl, h.TwitterUrl, h.InstagramUrl, h.IsPrimaryHost)).ToList(),
         p.CreatedAt
@@ -227,6 +228,6 @@ public class PodcastShowService : IPodcastShowService
 
     private static PodcastShowListItemDto MapToListItem(PodcastShow p) => new(
         p.Id, p.Title, p.Description, p.Slug, p.CoverImageUrl, p.Owner?.UserName ?? "", p.Owner?.AvatarUrl, p.Category,
-        p.EpisodeCount, p.SubscriberCount, p.AverageRating, p.ExplicitContent, p.PublishedAt
+        p.EpisodeCount, p.SubscriberCount, p.AverageRating, p.ExplicitContent == ExplicitContent.Explicit, p.PublishedAt
     );
 }

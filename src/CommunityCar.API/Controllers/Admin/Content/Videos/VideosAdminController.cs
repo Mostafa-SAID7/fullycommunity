@@ -1,5 +1,6 @@
 using CommunityCar.Application.Common.Interfaces;
-using CommunityCar.Application.Features.Admin.Dashboard.Videos;
+using CommunityCar.Application.DTOs.Requests.Videos;
+using CommunityCar.Application.DTOs.Requests.Admin;
 using CommunityCar.Domain.Entities.Videos.Channels;
 using CommunityCar.Domain.Entities.Videos.Content;
 using CommunityCar.Domain.Entities.Videos.LiveStream;

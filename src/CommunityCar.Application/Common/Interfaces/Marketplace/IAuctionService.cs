@@ -1,6 +1,6 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Marketplace.Auctions;
-using CommunityCar.Application.Features.Marketplace.Orders;
+using CommunityCar.Application.DTOs.Requests.Marketplace;
+using CommunityCar.Application.DTOs.Response.Marketplace;
 
 namespace CommunityCar.Application.Common.Interfaces.Marketplace;
 

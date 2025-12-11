@@ -1,5 +1,6 @@
-using CommunityCar.Application.Common.Interfaces.Identity;
-using CommunityCar.Application.DTOs.Requests.Identity;
+using CommunityCar.Application.Common.Interfaces.Auth.Common;
+using CommunityCar.Application.DTOs.Requests.Auth.User;
+using CommunityCar.Application.DTOs.Requests.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -11,9 +12,9 @@ namespace CommunityCar.API.Controllers.Auth;
 [ApiExplorerSettings(GroupName = "identity")]
 public class PasswordController : ControllerBase
 {
-    private readonly IAuthService _authService;
+    private readonly ICommonAuthService _authService;
 
-    public PasswordController(IAuthService authService)
+    public PasswordController(ICommonAuthService authService)
     {
         _authService = authService;
     }

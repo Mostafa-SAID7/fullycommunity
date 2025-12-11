@@ -2,7 +2,7 @@ using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Common.Interfaces.Auth.Common;
 using CommunityCar.Application.Common.Interfaces.Security;
 using CommunityCar.Application.DTOs.Requests.Auth.Common; using CommunityCar.Application.DTOs.Response.Auth.Common;
-using CommunityCar.Application.DTOs.Requests.Auth.User; using CommunityCar.Application.DTOs.Response.Auth.User;
+using CommunityCar.Application.DTOs.Requests.Auth.User;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
@@ -83,7 +83,7 @@ public class UserService : IUserService
     {
         var user = await _userManager.FindByIdAsync(userId.ToString())
             ?? throw new InvalidOperationException("User not found");
-        await _userManager.AddLoginAsync(user, new UserLoginInfo(request.Provider, request.IdToken, request.Provider));
+        await _userManager.AddLoginAsync(user, new UserLoginInfo(request.Provider, request.ProviderKey, request.Provider));
     }
 
     public async Task UnlinkExternalLoginAsync(Guid userId, string provider)

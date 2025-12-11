@@ -1,7 +1,7 @@
-using CommunityCar.Application.Features.Admin.Dashboard.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 
 namespace CommunityCar.API.Controllers.Admin.Dashboard.Analytics;
 
@@ -27,9 +27,9 @@ public class SettingsAdminController : ControllerBase
     }
 
     [HttpGet("site")]
-    public ActionResult<SiteSettingsDto> GetSiteSettings()
+    public ActionResult<object> GetSiteSettings()
     {
-        var settings = new SiteSettingsDto
+        var settings = new
         {
             SiteName = _configuration["SiteSettings:Name"] ?? "CommunityCar",
             SiteDescription = _configuration["SiteSettings:Description"] ?? "Community platform for car enthusiasts",
@@ -46,16 +46,16 @@ public class SettingsAdminController : ControllerBase
     }
 
     [HttpPut("site")]
-    public ActionResult UpdateSiteSettings([FromBody] SiteSettingsDto settings)
+    public ActionResult UpdateSiteSettings([FromBody] object settings)
     {
         _logger.LogInformation("Site settings updated");
         return NoContent();
     }
 
     [HttpGet("email")]
-    public ActionResult<EmailSettingsDto> GetEmailSettings()
+    public ActionResult<object> GetEmailSettings()
     {
-        var settings = new EmailSettingsDto
+        var settings = new
         {
             SmtpHost = _configuration["Email:SmtpHost"] ?? "",
             SmtpPort = int.TryParse(_configuration["Email:SmtpPort"], out var port) ? port : 587,
@@ -68,7 +68,7 @@ public class SettingsAdminController : ControllerBase
     }
 
     [HttpPut("email")]
-    public ActionResult UpdateEmailSettings([FromBody] EmailSettingsDto settings)
+    public ActionResult UpdateEmailSettings([FromBody] object settings)
     {
         _logger.LogInformation("Email settings updated");
         return NoContent();
@@ -81,9 +81,9 @@ public class SettingsAdminController : ControllerBase
     }
 
     [HttpGet("security")]
-    public ActionResult<SecuritySettingsDto> GetSecuritySettings()
+    public ActionResult<object> GetSecuritySettings()
     {
-        var settings = new SecuritySettingsDto
+        var settings = new
         {
             MaxLoginAttempts = 5,
             LockoutDurationMinutes = 15,
@@ -99,7 +99,7 @@ public class SettingsAdminController : ControllerBase
     }
 
     [HttpPut("security")]
-    public ActionResult UpdateSecuritySettings([FromBody] SecuritySettingsDto settings)
+    public ActionResult UpdateSecuritySettings([FromBody] object settings)
     {
         _logger.LogInformation("Security settings updated");
         return NoContent();

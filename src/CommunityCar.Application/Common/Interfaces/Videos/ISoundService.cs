@@ -1,5 +1,6 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Videos.Sounds;
+using CommunityCar.Application.DTOs.Requests.Videos;
+using CommunityCar.Application.DTOs.Response.Videos;
 
 namespace CommunityCar.Application.Common.Interfaces.Videos;
 
@@ -19,5 +20,5 @@ public interface ISoundService
     Task UnfavoriteAsync(Guid soundId, Guid userId, CancellationToken ct = default);
     Task<List<SoundListItemDto>> GetUserFavoritesAsync(Guid userId, CancellationToken ct = default);
     
-    Task<PagedResult<Features.Videos.Content.VideoListItemDto>> GetVideosUsingSoundAsync(Guid soundId, int page, int pageSize, CancellationToken ct = default);
+    Task<PagedResult<VideoListItemDto>> GetVideosUsingSoundAsync(Guid soundId, int page, int pageSize, CancellationToken ct = default);
 }

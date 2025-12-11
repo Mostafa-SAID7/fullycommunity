@@ -2,6 +2,7 @@ using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Common.Interfaces.Data;
 using CommunityCar.Application.Common.Interfaces.Podcasts;
 using CommunityCar.Application.Common.Pagination;
+using CommunityCar.Application.DTOs.Requests.Podcasts;
 using CommunityCar.Application.DTOs.Response.Podcasts;
 using CommunityCar.Domain.Entities.Podcasts.Shows;
 using CommunityCar.Domain.Entities.Podcasts.Engagement;
@@ -85,8 +86,8 @@ public class PodcastEpisodeService : IPodcastEpisodeService
         var episode = new PodcastEpisode
         {
             PodcastShowId = podcastId, Title = request.Title, Description = request.Description,
-            Slug = request.Title.ToLower().Replace(" ", "-"), EpisodeNumber = request.EpisodeNumber,
-            Type = request.Type, ExplicitContent = request.ExplicitContent, Status = EpisodeStatus.Draft
+            Slug = request.Title.ToLower().Replace(" ", "-"), EpisodeNumber = request.EpisodeNumber ?? 1,
+            Type = request.Type, ExplicitContent = request.ExplicitContent ? ExplicitContent.Explicit : ExplicitContent.Clean, Status = EpisodeStatus.Draft
         };
         _context.Set<PodcastEpisode>().Add(episode);
         await _context.SaveChangesAsync(ct);
@@ -193,13 +194,13 @@ public class PodcastEpisodeService : IPodcastEpisodeService
 
     private static EpisodeDto MapToDto(PodcastEpisode e, List<EpisodeChapter> chapters) => new(
         e.Id, e.PodcastShowId, e.PodcastShow.Title, e.PodcastShow.CoverImageUrl, e.Title, e.Description, e.Slug, e.Summary, e.ShowNotes,
-        e.SeasonNumber, e.EpisodeNumber, e.AudioUrl, e.VideoUrl, e.ThumbnailUrl, e.Duration, e.Type, e.Status, e.ExplicitContent,
-        e.PublishedAt, e.PlayCount, e.DownloadCount, e.LikeCount, e.CommentCount, e.AllowComments, e.AllowDownloads, e.TranscriptUrl,
+        e.SeasonNumber, e.EpisodeNumber, e.AudioUrl, e.VideoUrl, e.ThumbnailUrl, e.Duration, e.Type, e.Status, e.ExplicitContent == ExplicitContent.Explicit,
+        e.PublishedAt, e.PlayCount, (long)e.DownloadCount, (long)e.LikeCount, (long)e.CommentCount, e.AllowComments, e.AllowDownloads, e.TranscriptUrl,
         chapters.Select(c => new EpisodeChapterDto(c.Id, c.Title, c.Description, c.ImageUrl, c.Url, c.StartTime, c.EndTime)).ToList(), null, e.CreatedAt
     );
 
     private static EpisodeListItemDto MapToListItem(PodcastEpisode e) => new(
         e.Id, e.PodcastShowId, e.PodcastShow.Title, e.PodcastShow.CoverImageUrl, e.Title, e.Description, e.Slug, e.SeasonNumber, e.EpisodeNumber,
-        e.ThumbnailUrl, e.Duration, e.Type, e.ExplicitContent, e.PublishedAt, e.PlayCount, e.LikeCount, e.CommentCount
+        e.ThumbnailUrl, e.Duration, e.Type, e.ExplicitContent == ExplicitContent.Explicit, e.PublishedAt, e.PlayCount, (long)e.LikeCount, (long)e.CommentCount
     );
 }

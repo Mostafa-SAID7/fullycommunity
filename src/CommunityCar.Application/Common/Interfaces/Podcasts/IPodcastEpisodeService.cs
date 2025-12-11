@@ -1,4 +1,5 @@
 using CommunityCar.Application.Common.Pagination;
+using CommunityCar.Application.DTOs.Requests.Podcasts;
 using CommunityCar.Application.DTOs.Response.Podcasts;
 
 namespace CommunityCar.Application.Common.Interfaces.Podcasts;

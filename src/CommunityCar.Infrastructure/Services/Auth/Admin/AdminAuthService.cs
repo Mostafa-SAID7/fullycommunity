@@ -105,12 +105,9 @@ public class AdminAuthService : IAdminAuthService
 
     public async Task<AdminAuthResponse> RefreshTokenAsync(string refreshToken)
     {
-        var principal = _jwtService.ValidateRefreshToken(refreshToken);
-        if (principal == null)
-            throw new UnauthorizedAccessException("Invalid refresh token");
-
-        var userIdClaim = principal.FindFirst("sub")?.Value;
-        if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+        var tokenResult = await _jwtService.RefreshTokensAsync(refreshToken);
+        var userId = _jwtService.GetUserIdFromToken(tokenResult.AccessToken);
+        if (userId == null)
             throw new UnauthorizedAccessException("Invalid token claims");
 
         var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -157,7 +154,6 @@ public class AdminAuthService : IAdminAuthService
             // Invalidate refresh token (if you have a token store)
             // await _jwtService.RevokeRefreshTokenAsync(refreshToken);
             
-            await _securityService.RecordLogoutAsync(userId);
             await _auditService.LogAsync("AdminLogout", "User", user.Id.ToString(), user.Id, user.Email);
             _logger.LogInformation("Admin user {UserId} logged out", userId);
         }

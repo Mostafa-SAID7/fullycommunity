@@ -14,7 +14,7 @@
       </div>
       <button (click)="runSecurityScan()" 
               [disabled]="scanInProgress()"
-              class="btn btn--primary">
+              class="btn btn--primary btn--scan">
         <svg class="btn__icon" [class.btn__icon--spinning]="scanInProgress()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
         </svg>
@@ -27,7 +27,7 @@
   <div class="security-metrics">
     <div *ngFor="let metric of securityMetrics()" class="metric-card">
       <div class="metric-card__header">
-        <div class="metric-card__info">
+        <div class="metric-card__icon-wrapper">
           <div class="metric-card__icon" [class]="getMetricIconClass(metric.status)">
             <svg [class]="getMetricIconColor(metric.status)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
@@ -41,7 +41,7 @@
           </div>
         </div>
         <div class="metric-card__trend">
-          <svg [class]="getTrendColor(metric.trend)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="trend-icon" [class]="getTrendColor(metric.trend)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path *ngIf="metric.trend === 'up'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
             <path *ngIf="metric.trend === 'down'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
             <path *ngIf="metric.trend === 'stable'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
@@ -53,10 +53,10 @@
 
   <!-- Security Alerts -->
   <div class="alerts-section">
-    <div class="alerts-section__header">
-      <div class="alerts-section__title-wrapper">
-        <h2 class="alerts-section__title">Security Alerts</h2>
-        <div class="alerts-section__controls">
+    <div class="alerts-header">
+      <div class="alerts-header__content">
+        <h2 class="alerts-header__title">Security Alerts</h2>
+        <div class="alerts-header__controls">
           <select [(ngModel)]="alertFilter" (change)="filterAlerts()" class="filter-select">
             <option value="">All Alerts</option>
             <option value="critical">Critical</option>
@@ -64,14 +64,14 @@
             <option value="medium">Medium</option>
             <option value="low">Low</option>
           </select>
-          <button (click)="refreshAlerts()" class="btn btn--secondary btn--sm">
+          <button (click)="refreshAlerts()" class="btn btn--secondary btn--small">
             Refresh
           </button>
         </div>
       </div>
     </div>
     
-    <div class="alerts-section__content">
+    <div class="alerts-content">
       <div *ngIf="filteredAlerts().length === 0" class="alerts-empty">
         <svg class="alerts-empty__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
@@ -82,64 +82,62 @@
 
       <div *ngIf="filteredAlerts().length > 0" class="alerts-list">
         <div *ngFor="let alert of filteredAlerts()" 
-             class="alert-item" 
+             class="alert-card" 
              [class]="getAlertBorderClass(alert.severity)">
-          <div class="alert-item__content">
-            <div class="alert-item__main">
-              <div class="alert-item__header">
-                <div class="alert-item__icon" [class]="getAlertIconClass(alert.severity)">
-                  <svg [class]="getAlertIconColor(alert.severity)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                  </svg>
-                </div>
-                <h3 class="alert-item__title">{{ alert.title }}</h3>
-                <span class="badge" [class]="getSeverityClass(alert.severity)">
-                  {{ alert.severity | titlecase }}
-                </span>
-                <span class="badge" [class]="getStatusClass(alert.status)">
-                  {{ alert.status | titlecase }}
-                </span>
+          <div class="alert-card__content">
+            <div class="alert-card__header">
+              <div class="alert-card__icon" [class]="getAlertIconClass(alert.severity)">
+                <svg [class]="getAlertIconColor(alert.severity)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
               </div>
-              
-              <p class="alert-item__description">{{ alert.description }}</p>
-              
-              <div class="alert-item__details">
-                <div class="alert-detail">
-                  <span class="alert-detail__label">Type:</span>
-                  <span class="alert-detail__value">{{ alert.type | titlecase }}</span>
-                </div>
-                <div class="alert-detail">
-                  <span class="alert-detail__label">Source:</span>
-                  <span class="alert-detail__value">{{ alert.source }}</span>
-                </div>
-                <div class="alert-detail">
-                  <span class="alert-detail__label">Time:</span>
-                  <span class="alert-detail__value">{{ alert.timestamp | date:'short' }}</span>
-                </div>
-                <div *ngIf="alert.affectedUsers" class="alert-detail">
-                  <span class="alert-detail__label">Affected Users:</span>
-                  <span class="alert-detail__value">{{ alert.affectedUsers | number }}</span>
-                </div>
-              </div>
+              <h3 class="alert-card__title">{{ alert.title }}</h3>
+              <span class="badge badge--severity" [class]="getSeverityClass(alert.severity)">
+                {{ alert.severity | titlecase }}
+              </span>
+              <span class="badge badge--status" [class]="getStatusClass(alert.status)">
+                {{ alert.status | titlecase }}
+              </span>
             </div>
             
-            <div class="alert-item__actions">
-              <button (click)="investigateAlert(alert)" class="action-btn action-btn--investigate" title="Investigate">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-              </button>
-              <button (click)="resolveAlert(alert)" class="action-btn action-btn--resolve" title="Resolve">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-              </button>
-              <button (click)="dismissAlert(alert)" class="action-btn action-btn--dismiss" title="Dismiss">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-              </button>
+            <p class="alert-card__description">{{ alert.description }}</p>
+            
+            <div class="alert-card__details">
+              <div class="detail-item">
+                <span class="detail-item__label">Type:</span>
+                <span class="detail-item__value">{{ alert.type | titlecase }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-item__label">Source:</span>
+                <span class="detail-item__value">{{ alert.source }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-item__label">Time:</span>
+                <span class="detail-item__value">{{ alert.timestamp | date:'short' }}</span>
+              </div>
+              <div *ngIf="alert.affectedUsers" class="detail-item">
+                <span class="detail-item__label">Affected Users:</span>
+                <span class="detail-item__value">{{ alert.affectedUsers | number }}</span>
+              </div>
             </div>
+          </div>
+          
+          <div class="alert-card__actions">
+            <button (click)="investigateAlert(alert)" class="action-btn action-btn--investigate" title="Investigate">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </button>
+            <button (click)="resolveAlert(alert)" class="action-btn action-btn--resolve" title="Resolve">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </button>
+            <button (click)="dismissAlert(alert)" class="action-btn action-btn--dismiss" title="Dismiss">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -152,39 +150,43 @@
     <div class="settings-card">
       <h2 class="settings-card__title">Access Control</h2>
       <div class="settings-card__content">
-        <label class="setting-item">
+        <div class="setting-item">
           <span class="setting-item__label">Two-Factor Authentication Required</span>
-          <input type="checkbox" 
-                 [(ngModel)]="securitySettings.twoFactorRequired"
-                 (change)="updateSecuritySettings()"
-                 class="setting-item__checkbox">
-        </label>
+          <label class="toggle-switch">
+            <input type="checkbox" 
+                   [(ngModel)]="securitySettings.twoFactorRequired"
+                   (change)="updateSecuritySettings()">
+            <span class="toggle-switch__slider"></span>
+          </label>
+        </div>
         
-        <label class="setting-item">
+        <div class="setting-item">
           <span class="setting-item__label">IP Whitelist Enabled</span>
-          <input type="checkbox" 
-                 [(ngModel)]="securitySettings.ipWhitelistEnabled"
-                 (change)="updateSecuritySettings()"
-                 class="setting-item__checkbox">
-        </label>
+          <label class="toggle-switch">
+            <input type="checkbox" 
+                   [(ngModel)]="securitySettings.ipWhitelistEnabled"
+                   (change)="updateSecuritySettings()">
+            <span class="toggle-switch__slider"></span>
+          </label>
+        </div>
         
-        <label class="setting-item">
+        <div class="setting-item">
           <span class="setting-item__label">Session Timeout (minutes)</span>
           <input type="number" 
                  [(ngModel)]="securitySettings.sessionTimeout"
                  (change)="updateSecuritySettings()"
                  min="5" max="480"
-                 class="setting-item__input">
-        </label>
+                 class="number-input">
+        </div>
         
-        <label class="setting-item">
+        <div class="setting-item">
           <span class="setting-item__label">Max Login Attempts</span>
           <input type="number" 
                  [(ngModel)]="securitySettings.maxLoginAttempts"
                  (change)="updateSecuritySettings()"
                  min="3" max="10"
-                 class="setting-item__input">
-        </label>
+                 class="number-input">
+        </div>
       </div>
     </div>
 
@@ -192,39 +194,45 @@
     <div class="settings-card">
       <h2 class="settings-card__title">Monitoring Settings</h2>
       <div class="settings-card__content">
-        <label class="setting-item">
+        <div class="setting-item">
           <span class="setting-item__label">Real-time Threat Detection</span>
-          <input type="checkbox" 
-                 [(ngModel)]="securitySettings.threatDetectionEnabled"
-                 (change)="updateSecuritySettings()"
-                 class="setting-item__checkbox">
-        </label>
+          <label class="toggle-switch">
+            <input type="checkbox" 
+                   [(ngModel)]="securitySettings.threatDetectionEnabled"
+                   (change)="updateSecuritySettings()">
+            <span class="toggle-switch__slider"></span>
+          </label>
+        </div>
         
-        <label class="setting-item">
+        <div class="setting-item">
           <span class="setting-item__label">Automated Response</span>
-          <input type="checkbox" 
-                 [(ngModel)]="securitySettings.automatedResponseEnabled"
-                 (change)="updateSecuritySettings()"
-                 class="setting-item__checkbox">
-        </label>
+          <label class="toggle-switch">
+            <input type="checkbox" 
+                   [(ngModel)]="securitySettings.automatedResponseEnabled"
+                   (change)="updateSecuritySettings()">
+            <span class="toggle-switch__slider"></span>
+          </label>
+        </div>
         
-        <label class="setting-item">
-          <span class="setting-item__label">
-</div>>
-  </div/div    <
-div></el>
-           </labut">
-   item__inpg-tin class="set               
- "365"ax="30" m  min=           "
-    ings()ecuritySett"updateSge)=   (chan            nDays"
-  tentiottings.logRetySeecuriodel)]="sngM        [(       er" 
-  mbe="nuput typ <in   pan>
-      ys)</stention (daog Rem__label">L"setting-itepan class=    <s
-      ">ing-itemss="settl cla    <labe 
-    >
-       label
-        </kbox">tem__chec-iss="setting    cla           gs()"
-  ritySettindateSecuange)="up   (ch           led"
-   ilAlertsEnabettings.emaurityS="secdel)]gMo[(n         
-        "checkbox" e=input typ
-          <erts</span>>Email Al
+        <div class="setting-item">
+          <span class="setting-item__label">Email Alerts</span>
+          <label class="toggle-switch">
+            <input type="checkbox" 
+                   [(ngModel)]="securitySettings.emailAlertsEnabled"
+                   (change)="updateSecuritySettings()">
+            <span class="toggle-switch__slider"></span>
+          </label>
+        </div>
+        
+        <div class="setting-item">
+          <span class="setting-item__label">Log Retention (days)</span>
+          <input type="number" 
+                 [(ngModel)]="securitySettings.logRetentionDays"
+                 (change)="updateSecuritySettings()"
+                 min="30" max="365"
+                 class="number-input">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>""

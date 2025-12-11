@@ -128,9 +128,11 @@
         </div>
         <app-pagination
           [currentPage]="currentPage"
-          [totalPages]="totalPages"
-          [showFirstLast]="true"
-          (pageChange)="onPageChange($event)">
+          [pageSize]="pageSize"
+          [totalCount]="totalEntries"
+          itemName="entries"
+          (previous)="previousPage()"
+          (next)="nextPage()">
         </app-pagination>
       </div>
     </div>

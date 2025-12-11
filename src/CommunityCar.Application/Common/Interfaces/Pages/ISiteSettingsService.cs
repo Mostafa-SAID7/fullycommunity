@@ -1,4 +1,5 @@
-using CommunityCar.Application.Features.Pages;
+using CommunityCar.Application.DTOs.Requests.Pages;
+using CommunityCar.Application.DTOs.Response.Pages;
 using CommunityCar.Domain.Entities.Pages;
 
 namespace CommunityCar.Application.Common.Interfaces.Pages;

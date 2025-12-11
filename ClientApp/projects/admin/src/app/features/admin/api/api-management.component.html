@@ -1,0 +1,272 @@
+<div class="api-management-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">API Management</h1>
+      <p class="page-subtitle">Manage API keys, endpoints, and rate limiting</p>
+    </div>
+    <div class="header-actions">
+      <app-refresh-button
+        (refresh)="refreshData()"
+        [loading]="loading()"
+        [variant]="'secondary'"
+        [size]="'md'"
+        [showText]="false"
+        [title]="'Refresh API data'">
+      </app-refresh-button>
+      
+      <button (click)="generateApiKey()" 
+              class="btn btn-primary">
+        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-11.83 1M9 7a2 2 0 012 2m4 0a6 6 0 01-11.83 1"/>
+        </svg>
+        Generate API Key
+      </button>
+    </div>
+  </div>
+
+  <!-- API Statistics -->
+  <div class="stats-grid">
+    <div class="stat-card blue">
+      <div class="stat-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Requests Today</div>
+        <div class="stat-value">24,567</div>
+      </div>
+    </div>
+
+    <div class="stat-card green">
+      <div class="stat-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Avg Response Time</div>
+        <div class="stat-value">145ms</div>
+      </div>
+    </div>
+
+    <div class="stat-card red">
+      <div class="stat-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Error Rate</div>
+        <div class="stat-value">0.8%</div>
+      </div>
+    </div>
+
+    <div class="stat-card purple">
+      <div class="stat-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-11.83 1M9 7a2 2 0 012 2m4 0a6 6 0 01-11.83 1"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-label">Active API Keys</div>
+        <div class="stat-value">{{ activeApiKeys() }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Loading API data...</p>
+  </div>
+
+  <!-- API Keys Management -->
+  <div *ngIf="!loading()" class="content-card">
+    <div class="card-header">
+      <h2 class="card-title">API Keys</h2>
+      <div class="card-actions">
+        <button (click)="generateApiKey()" class="btn btn-outline">
+          <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          New Key
+        </button>
+      </div>
+    </div>
+    
+    <div class="card-content">
+      <div *ngIf="apiKeys().length === 0" class="empty-state">
+        <div class="empty-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">oint)t(endpureEndpoinck)="config (clitton        <bu>
+       </button     etails
+     D View        >
+      </svg       >
+      2-7z"/8-2.943-9.54.26-842 7-4.477 0 7-9.5-5.064-1.274 4.057943 9.542 70 8.268 2.478  5 12 5c4..943 7.5233.732 78 12CM2.45="" de-width="2trok s""roundjoin=ke-linetro"round" secap=h stroke-linpat           </>
+     6 0z"0 01 3 3 6 0 3 0 11-12a3"M15  d="2"e-width=und" strokoin="roejlin" stroke-ound"rcap=ine stroke-lath       <p
+         24">x="0 0 24 or" viewBontCol"curreoke="none" str=-icon" fill"btnvg class= <s         >
+    ne btn-sm"utli btn-o="btn    class          " 
+      oint)Details(endpiewEndpoint"v (click)=  <button
+          t-actions">="endpoindiv class <      /div>
+
+     <        </div>
+          pan>
+          </s   
+   Rate }}%rorndpoint.er     {{ e         
+  Rate > 5">int.erroror]="endposs.text-err[cla            "
+        rRate <= 5erropoint.&& ende > 1 atorRndpoint.err"eg]=-warnin.text [class                 
+   1" <=rRatendpoint.erro"esuccess]=ass.text-      [cl          ue" 
+    "stat-val class=pan  <s       an>
+     r Rate</sp>Errol"belass="stat-span cla   <        
+   at-item">ss="stcla      <div v>
+            </di
+      n>e }}ms</spaimesponseTndpoint.avgRue">{{ evalstat-ass="an cl   <sp       /span>
+    vg Response<">A-labelclass="stat<span            em">
+   -itat"stiv class=         <d/div>
+          <  span>
+   }}</| number ay tsTodpoint.requese">{{ endat-valuclass="st    <span         span>
+   Today</estsbel">Requ-la"statlass=   <span c           
+stat-item">="div class           </div>
+          <   pan>
+/s/min<it }}oint.rateLimue">{{ endpstat-valss="n cla       <spa      </span>
+ ">Rate Limit"stat-labeln class=        <spa
+      tat-item">iv class="s         <d   t-stats">
+"endpoin class=iv      <d
+              >
+   </div
+       ></div       
+         </span>        
+  ate' }}PrivPublic' : ' ? '.isPublicpointend{{                 blic">
+nt.isPu!endpoiarning]="ge-ws.bad    [clas            lic"
+    dpoint.isPub"enge-success]=ss.badla         [c     
+       adge"class="b <span       ">
+       oint-badgeslass="endp  <div c   
+       div>        </}}</p>
+    ption descri endpoint.">{{n-descriptiontss="endpoi <p cla         div>
+            </    /code>
+  h }}<ndpoint.patath">{{ e-ps="endpointclas<code         n>
+        spa          </     }
+ method }nt.ndpoi      {{ e   
+         )">od.methointClass(endpod]="getMeth" [ngClassadgeod-bss="meth cla <span              ">
+ pathnt-method-"endpoi<div class=           nfo">
+   endpoint-i"lass= <div c    >
+       nt-header"s="endpoiclasiv <d
+          oint-item">"endp class=dpoints()" apiEnnt ofoindpr="let egFodiv *n      <st">
+  nts-li"endpoilass=     <div content">
+ "card-cs=   <div clas    
+ /div>
+   <iv>
+ ration</dguand confiformance  perpointitor end>Montitle"-subss="card  <div cla
+    ints</h2>poI Endle">APcard-titss=" <h2 cla>
+     er"card-head"div class=>
+    <ard"="content-class cding()"f="!loa<div *ngIints -->
+   Endpo- API!-  <v>
+
+v>
+  </di</diiv>
+        </d</div>
+          
+div>    </   div>
+   </   
+          </div>       pan>
+         </s            n }}
+ permissio     {{              ">
+sion-tagpermislass="         c         
+     "ermissionsof apiKey.pion t permissr="legFo    <span *n       
+     -tags">sions"permisdiv class=       <
+        </div>       an>
+      </sprmissions:>Pe"elssions-lab"permispan class=    <   
+         s-header">ssionpermiclass="      <div        ist">
+ s-lsionmis="periv class<d         >
+
+   </div               </div>
+
+           </span> }} granteds.lengthonrmissiKey.pelue">{{ apiss="stat-va  <span cla        
+      an>spons</Permissit-label">ass="staan cl   <sp      
+       em">ss="stat-itv cla   <di          div>
+          </
+     r }}</span> numbeount |eCusagpiKey. at-value">{{"staspan class=        <>
+        Count</spange -label">Usaat class="st   <span           
+  t-item">"stadiv class=      <  >
+      div      </         }}</span>
+ate:'short'd | dtUse apiKey.last-value">{{="staasspan cl       <s   pan>
+      sed</sel">Last Uab"stat-lass=pan cl          <s>
+      item"tat-v class="s       <div>
+            </di         
+' }}</span> date:'shortt |.createdAeyiK{ apt-value">{ass="sta <span cl         
+      n>ated</spabel">Cres="stat-la <span clas           >
+    stat-item"=" <div class           
+  ey-stats">"api-k class= <div      
+
+           </div>   >
+         </div>
+        /button  <              g>
+  </sv                
+"/> 2 0 002 2z00-2 2v8a2-8a2 2 0 0-2-2ha2 2 0 02v-8 2 0 002-m-6 12h8a2 2v2 0122-2h8a2 2 0 0 0101-2-2V6a2 2 2 0 6a2"M8 16Hth="2" d=oke-widnd" strn="rounejoie-litrokd" sunnecap="rooke-li   <path str              
+   24"> 24  0ewBox="0" viColorcurrent" stroke="="none   <svg fill     
+          ">clipboarde="Copy to itl  t                " 
+      sn-x"btn-icoss=        cla            
+    ey.key)" y(apiKKeopyApi (click)="cutton  <b              }}</code>
+Key.key) apipiKey(>{{ maskAy-code"i-ke class="ap<code             play">
+   "key-disass=   <div cl
+           >ey</labelPI K">A-labelield"fel class=ab      <l>
+        field"pi-key-ss="av cla      <di    ails">
+  pi-key-det class="a     <div 
+     >
+             </div      >
+     </div    n>
+        </butto       
+  g>        </sv     "/>
+   4 7h163M0 00-1 1v1h-4a1 1  00-1-1 0V4a1 1-106v6m 7m5 4v6m4-58L5.8995-11. 01- 2 0.862a2116.138 21H742A2 2 0 067 12.17l-.89 "2" d="M1width=" stroke-drounejoin="stroke-lind" ouncap="re-lineth strok  <pa           ">
+     24 24ox="0 0 or" viewBrentColtroke="cur" s="none fill        <svg
+        "> keyAPIelete ="Ditle    t            
+      ext-error" -icon-sm ttn   class="b              )" 
+     eypiKpiKey(ak)="deleteAlic <button (c             on>
+     </butt    g>
+             </sv        118 0z"/>
+8 0 9 9 0 0 0 11-112a9 99-4h.01M21 m-6 4h8m-h1m4 0h156 0M9 1001-5.64.828a4 4 0 "M14.828 1" d="2th=idstroke-w"round" ejoin=stroke-lin" decap="rounroke-linstath         <p          0 24 24">
+iewBox="0 ntColor" vke="curre" stro="none" fillActivey.is"!apiKe<svg *ngIf=           /svg>
+            <         18 0z"/>
+9 0 0118 0 9 11-9 0 v6m7-3a9 4-6="M10 9v6m"2" doke-width=" str="roundlinejoin" stroke-ndp="roulinecah stroke-   <pat            4">
+   4 20 2wBox="0 or" vietCol"currene=trok" sill="nonective" fapiKey.isAf="svg *ngI  <      ">
+        ate': 'Active' ivat? 'Deacttive .isAceye]="apiK      [titl            ive"
+    Actey.isrror]="apiKclass.text-e       [            "
+   ey.isActiveess]="!apiKss.text-succ [cla                 
+    sm"icon-n-btclass="                     
+ Key)" (apiggleApiKey="to (click)on<butt             utton>
+    </b            </svg>
+            86z"/>
+   l8.586-8.528 15H9v-2.81.828.828 2.828L10 1124a2 2 -9.41-5m-1.4140 002-2v2 2h11a2 2  2 0 002 2v11a22 0 00-2 "M11 5H6a" d=="2e-widthd" strokroun-linejoin="" stroke"roundcap=linestroke- <path             
+     ">"0 0 24 24r" viewBox=ntColorre stroke="cu="none" <svg fill           key">
+    I "Edit APle=   tit                " 
+   -icon-smass="btn          cl      
+      y)" (apiKepiKey"editA=tton (click)        <bu">
+      y-actionskei-"apv class=  <di        >
+  div         </div>
+           </     </span>
+          min
+       imit }} req/eLey.rat   {{ apiK              -info">
+ dge badgebas="laspan c       <s
+           </span>     }
+         'Inactive' }: tive' e ? 'AciKey.isActivap        {{ 
+          ">ctive.isAr]="!apiKeyadge-erroclass.b    [                  isActive"
+]="apiKey.e-successs.badg    [clas               e" 
+   dgclass="ba  <span           ">
+    -key-badges="api  <div class           3>
+ .name }}</heyiK{ apame">{key-nclass="api-  <h3        ">
+     key-infoi-class="apv   <di     
+     ">ey-header"api-kdiv class=
+          <y-item">api-ke)" class="of apiKeys(let apiKey For="*ngv di <       ">
+keys-listclass="api-ngth > 0" piKeys().le"aIf= *ng  <divdiv>
+
+     </ton>
+            </butPI Key
+  Generate A
+         primary">btn btn-" class="piKey()="generateAton (click)     <butp>
+   ed</art get st tot API keyirsyour fGenerate ription">descpty-p class="em      <
+  3>ys found</hke">No API empty-titles=" <h3 clas       div>
+     </    </svg>
+   
+      1.83 1"/>1-1m4 0a6 6 0 0 2 7a2 2 0 012.83 1M9a6 6 0 01-11m4 012 2 7a2 2 0 0"M15th="2" d=oke-wid" strundejoin="roroke-linround" st="capstroke-line      <path 
+      

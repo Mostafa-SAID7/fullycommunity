@@ -1,6 +1,7 @@
 using CommunityCar.Application.Common.Interfaces.Videos;
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.Features.Videos.Content;
+using CommunityCar.Application.DTOs.Requests.Videos;
+using CommunityCar.Application.DTOs.Response.Videos;
 using CommunityCar.Domain.Entities.Videos.Common;
 using CommunityCar.Domain.Entities.Videos.Content;
 using CommunityCar.Infrastructure.Data;
@@ -32,11 +33,12 @@ public class VideoService(AppDbContext context) : IVideoService
             .Include(v => v.Channel)
             .Where(v => !v.IsDeleted && v.Status == VideoStatus.Published);
 
-        if (!string.IsNullOrEmpty(request.Keywords))
-            query = query.Where(v => v.Title.Contains(request.Keywords) || (v.Description != null && v.Description.Contains(request.Keywords)));
+        if (!string.IsNullOrEmpty(request.SearchTerm))
+            query = query.Where(v => v.Title.Contains(request.SearchTerm) || (v.Description != null && v.Description.Contains(request.SearchTerm)));
 
-        if (request.Type.HasValue)
-            query = query.Where(v => v.Type == request.Type.Value);
+        // Note: VideoSearchRequest doesn't have Type property, filtering by CategoryId instead
+        if (request.CategoryId.HasValue)
+            query = query.Where(v => v.CategoryId == request.CategoryId.Value);
 
         if (request.ChannelId.HasValue)
             query = query.Where(v => v.ChannelId == request.ChannelId.Value);
@@ -122,7 +124,7 @@ public class VideoService(AppDbContext context) : IVideoService
         var hashtagStats = videos
             .SelectMany(v => v.Hashtags.Select(h => new { Hashtag = h.TrimStart('#'), Views = v.ViewCount }))
             .GroupBy(x => x.Hashtag)
-            .Select((g, idx) => new TrendingHashtagDto(g.Key, g.Count(), g.Sum(x => x.Views), idx + 1))
+            .Select((g, idx) => new TrendingHashtagDto(g.Key, g.Count(), (int)g.Sum(x => x.Views), idx + 1))
             .OrderByDescending(h => h.VideoCount)
             .Take(count)
             .ToList();
@@ -135,7 +137,7 @@ public class VideoService(AppDbContext context) : IVideoService
         var categories = await context.VideoCategories
             .Where(c => c.IsActive)
             .OrderBy(c => c.SortOrder)
-            .Select(c => new VideoCategoryDto(c.Id, c.Name, c.Description ?? "", c.Slug, c.IconUrl, c.VideoCount, c.IsFeatured))
+            .Select(c => new VideoCategoryDto(c.Id, c.Name, c.Description ?? "", c.Slug ?? "", c.IconUrl, c.VideoCount, c.IsFeatured))
             .ToListAsync(ct);
 
         return categories;

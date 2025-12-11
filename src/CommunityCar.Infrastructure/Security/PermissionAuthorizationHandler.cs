@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using CommunityCar.Application.Common.Interfaces;
-using CommunityCar.Application.Common.Interfaces.Identity;
+using CommunityCar.Application.Common.Interfaces.Auth.Common;
 using System.Security.Claims;
 
 namespace CommunityCar.Infrastructure.Security;

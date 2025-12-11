@@ -8,3 +8,8 @@ public record ExternalLoginRequest(
     string? LastName = null,
     string? DeviceId = null
 );
+
+public record LinkExternalLoginRequest(
+    string Provider,
+    string ProviderKey
+);

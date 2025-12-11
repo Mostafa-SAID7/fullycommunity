@@ -1,5 +1,6 @@
 using CommunityCar.Application.Common.Pagination;
-using CommunityCar.Application.DTOs.Videos;
+using CommunityCar.Application.DTOs.Requests.Videos;
+using CommunityCar.Application.DTOs.Response.Videos;
 
 namespace CommunityCar.Application.Common.Interfaces.Videos;
 

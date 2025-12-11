@@ -1,4 +1,3 @@
-using CommunityCar.Application.Features.Admin.Dashboard;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +24,7 @@ public class DashboardController : ControllerBase
     /// Get admin dashboard overview with all statistics
     /// </summary>
     [HttpGet("overview")]
-    public async Task<ActionResult<AdminDashboardOverviewDto>> GetOverview()
+    public async Task<ActionResult<object>> GetOverview()
     {
         try
         {
@@ -34,9 +33,9 @@ public class DashboardController : ControllerBase
             var weekAgo = now.AddDays(-7);
             var monthAgo = now.AddMonths(-1);
 
-            var overview = new AdminDashboardOverviewDto
+            var overview = new
             {
-                Users = new UserStatistics
+                Users = new
                 {
                     TotalUsers = await _context.Users.CountAsync(u => !u.IsDeleted),
                     ActiveUsers = await _context.Users.CountAsync(
@@ -67,7 +66,7 @@ public class DashboardController : ControllerBase
                         .Select(g => new { Role = g.Key, Count = g.Count() })
                         .ToDictionaryAsync(x => x.Role ?? "Unknown", x => x.Count),
                 },
-                Content = new ContentStatistics
+                Content = new
                 {
                     TotalPosts = await _context.Posts.CountAsync(p => !p.IsDeleted),
                     TotalQuestions = await _context.Questions.CountAsync(q => !q.IsDeleted),
@@ -80,7 +79,7 @@ public class DashboardController : ControllerBase
                             && p.Status == PostStatus.Draft
                     ),
                 },
-                Community = new CommunityStatistics
+                Community = new
                 {
                     TotalGroups = await _context.Groups.CountAsync(g => !g.IsDeleted),
                     TotalEvents = await _context.Events.CountAsync(e => !e.IsDeleted),
@@ -89,7 +88,7 @@ public class DashboardController : ControllerBase
                     ),
                     TotalComments = await _context.PostComments.CountAsync(),
                 },
-                Revenue = new RevenueStatistics
+                Revenue = new
                 {
                     TotalRevenue = 0, // Implement when marketplace is ready
                     RevenueToday = 0,
@@ -97,7 +96,7 @@ public class DashboardController : ControllerBase
                     TotalOrders = 0,
                     PendingOrders = 0,
                 },
-                System = new SystemHealth
+                System = new
                 {
                     Status = "Healthy",
                     DatabaseSize = 0, // Can be calculated if needed

@@ -2,6 +2,7 @@ using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Common.Interfaces.Data;
 using CommunityCar.Application.Common.Interfaces.Podcasts;
 using CommunityCar.Application.Common.Pagination;
+using CommunityCar.Application.DTOs.Requests.Podcasts;
 using CommunityCar.Application.DTOs.Response.Podcasts;
 using CommunityCar.Domain.Entities.Podcasts.Shows;
 using CommunityCar.Domain.Entities.Podcasts.Live;

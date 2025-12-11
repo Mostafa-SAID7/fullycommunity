@@ -92,14 +92,14 @@ public static class DependencyInjection
 
         // Core Services
         services.AddScoped<IAdminPermissionService, AdminPermissionService>();
-        services.AddScoped<IJ wtService, Services.Auth.Common.JwtService>(); // Fully qualified to avoid ambiguity if any, or rely on usings
+        services.AddScoped<IJwtService, Services.Auth.Common.JwtService>();
         services.AddScoped<ICurrentUserService, Services.Auth.Common.CurrentUserService>();
-        services.AddScoped<IAuditService, Services.Identity.AuditService>(); // Wait, AuditService is not moved? Checked earlier, AuditService is in Security? No, Services.Identity.AuditService line 91
-        services.AddScoped<IDeviceService, Services.Identity.DeviceService>(); // Check DeviceService location
-        services.AddScoped<ISessionService, Services.Identity.SessionService>();
-        services.AddScoped<IActivityService, Services.Identity.ActivityService>();
+        services.AddScoped<IAuditService, Services.Security.AuditService>();
+        services.AddScoped<IDeviceService, Services.Security.DeviceService>();
+        services.AddScoped<ISessionService, Services.Security.SessionService>();
+        services.AddScoped<IActivityService, Services.Security.ActivityService>();
         services.AddScoped<ISecurityService,Services.Security.SecurityService>();
-        services.AddScoped<ITwoFactorService, Services.Identity.TwoFactorService>();
+        services.AddScoped<ITwoFactorService, Services.Security.TwoFactorService>();
         services.AddScoped<INotificationService, Services.Notification.NotificationService>();
         services.AddScoped<IGeoLocationService, Services.Security.GeoLocationService>();
         services.AddScoped<IIpSecurityService, Services.Security.IpSecurityService>();
@@ -109,7 +109,7 @@ public static class DependencyInjection
         services.AddScoped<ICommonAuthService, CommonAuthService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IAdminAuthService, AdminAuthService>();
-        services.AddScoped<IVerificationService, VerificationService>();
+        services.AddScoped<IVerificationService, Services.Security.VerificationService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IAdminUserService, AdminUserService>();
@@ -171,14 +171,14 @@ public static class DependencyInjection
         services.AddScoped<Application.Common.Interfaces.Community.IFriendshipService, Services.Community.Friendships.FriendshipService>();
 
         // Video Services
-        services.AddScoped<Application.Common.Interfaces.Videos.IVideoService, Services.Videos.VideoService>();
-        services.AddScoped<Application.Common.Interfaces.Videos.IChannelService, Services.Videos.ChannelService>();
-        services.AddScoped<Application.Common.Interfaces.Videos.IVideoEngagementService, Services.Videos.VideoEngagementService>();
+        //services.AddScoped<Application.Common.Interfaces.Videos.IVideoService, Services.Videos.VideoService>();
+        //services.AddScoped<Application.Common.Interfaces.Videos.IChannelService, Services.Videos.ChannelService>();
+        //services.AddScoped<Application.Common.Interfaces.Videos.IVideoEngagementService, Services.Videos.VideoEngagementService>();
 
         // Podcast Services
-        services.AddScoped<Application.Common.Interfaces.Podcasts.IPodcastShowService, Services.Podcasts.PodcastShowService>();
-        services.AddScoped<Application.Common.Interfaces.Podcasts.IPodcastEpisodeService, Services.Podcasts.PodcastEpisodeService>();
-        services.AddScoped<Application.Common.Interfaces.Podcasts.IPodcastEngagementService, Services.Podcasts.PodcastEngagementService>();
+        //services.AddScoped<Application.Common.Interfaces.Podcasts.IPodcastShowService, Services.Podcasts.PodcastShowService>();
+        //services.AddScoped<Application.Common.Interfaces.Podcasts.IPodcastEpisodeService, Services.Podcasts.PodcastEpisodeService>();
+        //services.AddScoped<Application.Common.Interfaces.Podcasts.IPodcastEngagementService, Services.Podcasts.PodcastEngagementService>();
 
         return services;
     }

@@ -17,3 +17,21 @@ public record ExpertDto(
     int ReviewCount,
     decimal HourlyRate
 );
+
+public record AITriageResultDto(
+    string Summary,
+    string Severity,
+    List<string> PossibleIssues,
+    List<string> RecommendedActions,
+    bool RequiresExpert,
+    List<Guid>? SuggestedExpertIds
+);
+
+public record StartConsultationResponse(
+    Guid ConsultationId,
+    string RoomUrl,
+    string Token,
+    DateTime StartsAt,
+    int DurationMinutes
+);
+

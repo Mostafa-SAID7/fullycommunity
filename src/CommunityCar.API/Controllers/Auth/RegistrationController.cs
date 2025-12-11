@@ -1,6 +1,6 @@
-using CommunityCar.Application.Common.Interfaces.Identity;
-using CommunityCar.Application.DTOs.Response.Identity;
-using CommunityCar.Application.DTOs.Requests.Identity;
+using CommunityCar.Application.Common.Interfaces.Auth.User;
+using CommunityCar.Application.DTOs.Response.Auth.Common;
+using CommunityCar.Application.DTOs.Requests.Auth.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CommunityCar.API.Controllers.Auth;

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces.Videos;
-using CommunityCar.Application.Features.Videos.DTOs;
-using CommunityCar.Application.Features.Videos.Engagement;
+
+
 using CommunityCar.Domain.Entities.Videos.Common;
 using System.Security.Claims;
 

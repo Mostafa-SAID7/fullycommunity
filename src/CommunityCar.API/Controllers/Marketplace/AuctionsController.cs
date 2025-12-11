@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces.Marketplace;
-using CommunityCar.Application.Features.Marketplace.Auctions;
-using CommunityCar.Application.Features.Marketplace.Orders;
+using CommunityCar.Application.DTOs.Requests.Marketplace;
 using System.Security.Claims;
 
 namespace CommunityCar.API.Controllers.Marketplace;

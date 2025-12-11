@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces.Pages;
-using CommunityCar.Application.Features.Pages;
+
 using CommunityCar.Domain.Entities.Pages;
 
 namespace CommunityCar.API.Controllers.Public;

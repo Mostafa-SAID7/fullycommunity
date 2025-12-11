@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.DTOs.Requests.Admin;
 using CommunityCar.Domain.Entities.Services.Common;
 using CommunityCar.Domain.Entities.Services.Maintenance;
 using CommunityCar.Domain.Entities.Services.Repairs;
@@ -10,7 +11,7 @@ using CommunityCar.Domain.Entities.Services.Inspection;
 using CommunityCar.Domain.Entities.Profiles;
 using Microsoft.EntityFrameworkCore;
 
-using CommunityCar.Application.Features.Admin.Shared.DTOs;
+
 
 namespace CommunityCar.API.Controllers.Admin.Dashboard.Services;
 

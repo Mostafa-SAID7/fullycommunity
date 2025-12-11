@@ -1,8 +1,8 @@
 using CommunityCar.Application.Common.Interfaces.Auth.Admin;
 using CommunityCar.Application.Common.Interfaces.Auth.Common;
 using CommunityCar.Application.Common.Interfaces.Security;
-using CommunityCar.Application.DTOs.Requests.Auth.Admin; using CommunityCar.Application.DTOs.Response.Auth.Admin;
-using CommunityCar.Application.DTOs.Requests.Auth.Common; using CommunityCar.Application.DTOs.Response.Auth.Common;
+using CommunityCar.Application.DTOs.Requests.Auth.Admin; 
+using CommunityCar.Application.DTOs.Response.Auth.Admin;
 using CommunityCar.Domain.Enums;
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Infrastructure.Data;
@@ -188,17 +188,31 @@ public class AdminUserService : IAdminUserService
     {
         return await _context.UserLoginHistory.Where(l => l.UserId == userId)
             .OrderByDescending(l => l.LoginAt).Take(50)
-            .Select(l => new UserLoginHistoryDto(l.Id, l.IpAddress, l.Country, l.City, l.Browser, l.Platform, l.IsSuccessful, l.LoginAt))
+            .Select(l => new UserLoginHistoryDto(
+                l.Id, 
+                l.LoginAt, 
+                l.IpAddress ?? "", 
+                $"{l.Platform} {l.Browser}".Trim(), 
+                l.IsSuccessful))
             .ToListAsync();
     }
 
     public async Task<IEnumerable<UserDeviceDto>> GetUserDevicesAsync(Guid userId)
     {
         var devices = await _deviceService.GetUserDevicesAsync(userId);
-        return devices.Select(d => new UserDeviceDto(d.Id, d.DeviceId, d.DeviceName, d.DeviceType, d.Platform, d.IsTrusted, d.LastSeenAt));
+        return devices.Select(d => new UserDeviceDto(
+            d.Id, 
+            d.DeviceName ?? d.DeviceId, 
+            d.DeviceType ?? "Unknown", 
+            d.LastSeenAt, 
+            d.IsActive));
     }
 
     private static AdminUserListDto MapToAdminDto(ApplicationUser user, IList<string> roles) => new(
-        user.Id, user.Email!, user.FirstName, user.LastName, user.UserType.ToString(),
-        user.IsActive, user.IsVerified, user.CreatedAt, user.LastLoginAt, roles);
+        user.Id, 
+        user.Email!, 
+        $"{user.FirstName} {user.LastName}".Trim(), 
+        roles.ToList(), 
+        user.AccountStatus.ToString(), 
+        user.CreatedAt);
 }

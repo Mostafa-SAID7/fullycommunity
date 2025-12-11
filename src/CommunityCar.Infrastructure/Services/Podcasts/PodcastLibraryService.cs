@@ -2,6 +2,7 @@ using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Common.Interfaces.Data;
 using CommunityCar.Application.Common.Interfaces.Podcasts;
 using CommunityCar.Application.Common.Pagination;
+using CommunityCar.Application.DTOs.Requests.Podcasts;
 using CommunityCar.Application.DTOs.Response.Podcasts;
 using CommunityCar.Domain.Entities.Podcasts.Shows;
 using CommunityCar.Domain.Entities.Podcasts.Library;
@@ -25,7 +26,7 @@ public class PodcastLibraryService : IPodcastLibraryService
         var items = await query.Skip((page - 1) * pageSize).Take(pageSize)
             .Select(s => new EpisodeListItemDto(s.Episode.Id, s.Episode.PodcastShowId, s.Episode.PodcastShow.Title, s.Episode.PodcastShow.CoverImageUrl,
                 s.Episode.Title, s.Episode.Description, s.Episode.Slug, s.Episode.SeasonNumber, s.Episode.EpisodeNumber,
-                s.Episode.ThumbnailUrl, s.Episode.Duration, s.Episode.Type, s.Episode.ExplicitContent, s.Episode.PublishedAt,
+                s.Episode.ThumbnailUrl, s.Episode.Duration, s.Episode.Type, s.Episode.ExplicitContent == ExplicitContent.Explicit, s.Episode.PublishedAt,
                 s.Episode.PlayCount, s.Episode.LikeCount, s.Episode.CommentCount)).ToListAsync(ct);
         return new PagedResult<EpisodeListItemDto>(items, total, page, pageSize);
     }

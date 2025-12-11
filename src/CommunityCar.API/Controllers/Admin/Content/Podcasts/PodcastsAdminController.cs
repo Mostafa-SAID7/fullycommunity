@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces;
+using CommunityCar.Application.DTOs.Requests.Admin;
 using CommunityCar.Domain.Entities.Podcasts.Shows;
 using CommunityCar.Domain.Entities.Podcasts.Live;
 using CommunityCar.Domain.Entities.Podcasts.Moderation;
 using CommunityCar.Domain.Entities.Podcasts.Common;
 using Microsoft.EntityFrameworkCore;
 
-using CommunityCar.Application.Features.Admin.Shared.DTOs;
+
 
 namespace CommunityCar.API.Controllers.Admin.Dashboard.Podcasts;
 

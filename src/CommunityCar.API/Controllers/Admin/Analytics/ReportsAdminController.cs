@@ -1,4 +1,3 @@
-using CommunityCar.Application.Features.Admin.Dashboard.Analytics;
 using CommunityCar.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +21,7 @@ public class ReportsAdminController : ControllerBase
     }
 
     [HttpGet("overview")]
-    public async Task<ActionResult<AnalyticsOverviewDto>> GetOverview([FromQuery] string period = "month")
+    public async Task<ActionResult<object>> GetOverview([FromQuery] string period = "month")
     {
         try
         {
@@ -48,7 +47,7 @@ public class ReportsAdminController : ControllerBase
             var activeUsers = await _context.Users.CountAsync(u => !u.IsDeleted && u.LastLoginAt >= startDate);
             var activeUsersPercent = totalUsers > 0 ? Math.Round((decimal)activeUsers / totalUsers * 100, 1) : 0;
 
-            var overview = new AnalyticsOverviewDto
+            var overview = new
             {
                 UserGrowthPercent = CalculateGrowth(previousUsers, currentUsers),
                 ContentEngagementPercent = CalculateGrowth(previousContent, currentContent),
@@ -66,7 +65,7 @@ public class ReportsAdminController : ControllerBase
     }
 
     [HttpGet("user-growth")]
-    public async Task<ActionResult<IEnumerable<UserGrowthDataDto>>> GetUserGrowth(
+    public async Task<ActionResult<IEnumerable<object>>> GetUserGrowth(
         [FromQuery] string startDate, 
         [FromQuery] string endDate)
     {
@@ -78,7 +77,7 @@ public class ReportsAdminController : ControllerBase
             var data = await _context.Users
                 .Where(u => !u.IsDeleted && u.CreatedAt >= start && u.CreatedAt <= end)
                 .GroupBy(u => u.CreatedAt.Date)
-                .Select(g => new UserGrowthDataDto
+                .Select(g => new
                 {
                     Date = g.Key.ToString("yyyy-MM-dd"),
                     NewUsers = g.Count(),
@@ -88,13 +87,18 @@ public class ReportsAdminController : ControllerBase
                 .ToListAsync();
 
             var runningTotal = await _context.Users.CountAsync(u => !u.IsDeleted && u.CreatedAt < start);
+            var result = new List<object>();
             foreach (var item in data)
             {
                 runningTotal += item.NewUsers;
-                item.TotalUsers = runningTotal;
+                result.Add(new {
+                    item.Date,
+                    item.NewUsers,
+                    TotalUsers = runningTotal
+                });
             }
 
-            return Ok(data);
+            return Ok(result);
         }
         catch (Exception ex)
         {
@@ -104,7 +108,7 @@ public class ReportsAdminController : ControllerBase
     }
 
     [HttpGet("content-engagement")]
-    public async Task<ActionResult<IEnumerable<ContentEngagementDataDto>>> GetContentEngagement(
+    public async Task<ActionResult<IEnumerable<object>>> GetContentEngagement(
         [FromQuery] string startDate, 
         [FromQuery] string endDate)
     {
@@ -116,7 +120,7 @@ public class ReportsAdminController : ControllerBase
             var data = await _context.Posts
                 .Where(p => !p.IsDeleted && p.CreatedAt >= start && p.CreatedAt <= end)
                 .GroupBy(p => p.CreatedAt.Date)
-                .Select(g => new ContentEngagementDataDto
+                .Select(g => new
                 {
                     Date = g.Key.ToString("yyyy-MM-dd"),
                     Views = g.Sum(p => p.ViewCount),
@@ -137,13 +141,13 @@ public class ReportsAdminController : ControllerBase
     }
 
     [HttpGet("top-content")]
-    public async Task<ActionResult<IEnumerable<TopContentDto>>> GetTopContent(
+    public async Task<ActionResult<IEnumerable<object>>> GetTopContent(
         [FromQuery] int limit = 10, 
         [FromQuery] string? type = null)
     {
         try
         {
-            var results = new List<TopContentDto>();
+            var results = new List<object>();
 
             // Get posts
             if (string.IsNullOrEmpty(type) || type == "post")
@@ -152,7 +156,7 @@ public class ReportsAdminController : ControllerBase
                     .Where(p => !p.IsDeleted)
                     .OrderByDescending(p => p.ViewCount)
                     .Take(limit)
-                    .Select(p => new TopContentDto
+                    .Select(p => new
                     {
                         Id = p.Id.ToString(),
                         Title = p.Title,
@@ -160,7 +164,7 @@ public class ReportsAdminController : ControllerBase
                         Views = p.ViewCount,
                         Engagement = p.ViewCount > 0 
                             ? Math.Round((decimal)(p.LikeCount + p.CommentCount) / p.ViewCount * 100, 1) 
-                            : 0
+                            : 0m
                     })
                     .ToListAsync();
                 results.AddRange(posts);
@@ -173,13 +177,13 @@ public class ReportsAdminController : ControllerBase
                     .Where(r => !r.IsDeleted)
                     .OrderByDescending(r => r.HelpfulCount)
                     .Take(limit)
-                    .Select(r => new TopContentDto
+                    .Select(r => new
                     {
                         Id = r.Id.ToString(),
                         Title = r.Title ?? "Review",
                         Type = "review",
                         Views = r.HelpfulCount * 10, // Approximate views from helpful count
-                        Engagement = r.HelpfulCount > 0 ? Math.Min(r.HelpfulCount * 5, 100) : 0
+                        Engagement = r.HelpfulCount > 0 ? (decimal)Math.Min(r.HelpfulCount * 5, 100) : 0m
                     })
                     .ToListAsync();
                 results.AddRange(reviews);
@@ -192,7 +196,7 @@ public class ReportsAdminController : ControllerBase
                     .Where(g => !g.IsDeleted)
                     .OrderByDescending(g => g.ViewCount)
                     .Take(limit)
-                    .Select(g => new TopContentDto
+                    .Select(g => new
                     {
                         Id = g.Id.ToString(),
                         Title = g.Title,
@@ -200,7 +204,7 @@ public class ReportsAdminController : ControllerBase
                         Views = g.ViewCount,
                         Engagement = g.ViewCount > 0 
                             ? Math.Round((decimal)g.LikeCount / g.ViewCount * 100, 1) 
-                            : 0
+                            : 0m
                     })
                     .ToListAsync();
                 results.AddRange(guides);
@@ -208,7 +212,7 @@ public class ReportsAdminController : ControllerBase
 
             // Sort by views and take top results
             var data = results
-                .OrderByDescending(c => c.Views)
+                .OrderByDescending(c => GetViewsCount(c))
                 .Take(limit)
                 .ToList();
 
@@ -222,11 +226,11 @@ public class ReportsAdminController : ControllerBase
     }
 
     [HttpGet("export/{type}")]
-    public async Task<IActionResult> ExportReport(string type, [FromQuery] string format = "csv")
+    public Task<IActionResult> ExportReport(string type, [FromQuery] string format = "csv")
     {
         var content = "Date,Value\n2024-01-01,100\n2024-01-02,150";
         var bytes = System.Text.Encoding.UTF8.GetBytes(content);
-        return File(bytes, "text/csv", $"{type}-report.csv");
+        return Task.FromResult<IActionResult>(File(bytes, "text/csv", $"{type}-report.csv"));
     }
 
     [HttpGet("realtime")]
@@ -301,5 +305,11 @@ public class ReportsAdminController : ControllerBase
     {
         if (previous == 0) return current > 0 ? 100 : 0;
         return Math.Round((decimal)(current - previous) / previous * 100, 1);
+    }
+
+    private int GetViewsCount(object item)
+    {
+        var property = item.GetType().GetProperty("Views");
+        return property != null ? (int)(property.GetValue(item) ?? 0) : 0;
     }
 }

@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces;
-using CommunityCar.Application.DTOs.Response.Identity;
-using CommunityCar.Application.DTOs.Requests.Identity;
-using CommunityCar.Application.Features.Admin.Dashboard.Users;
+using CommunityCar.Application.DTOs.Response.Auth;
+using CommunityCar.Application.DTOs.Response.Admin;
+using CommunityCar.Application.DTOs.Requests.Auth;
+using CommunityCar.Application.DTOs.Requests.Admin;
+
 using CommunityCar.Domain.Entities.Identity;
 using CommunityCar.Domain.Enums;
 using Microsoft.AspNetCore.Identity;

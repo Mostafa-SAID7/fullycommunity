@@ -1,4 +1,5 @@
-using CommunityCar.Application.Features.Marketplace.Cart;
+using CommunityCar.Application.DTOs.Response.Marketplace;
+using CommunityCar.Application.DTOs.Requests.Marketplace;
 
 namespace CommunityCar.Application.Common.Interfaces.Marketplace;
 

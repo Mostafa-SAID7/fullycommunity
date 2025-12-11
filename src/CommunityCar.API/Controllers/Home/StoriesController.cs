@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using CommunityCar.Application.Features.Stories.DTOs;
+using CommunityCar.Application.DTOs.Response.Home;
+using CommunityCar.Application.DTOs.Requests.Home;
 using CommunityCar.Domain.Entities.Home;
 using CommunityCar.Domain.Entities.Community.Pages;
 

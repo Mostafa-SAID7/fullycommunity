@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces.Pages;
-using CommunityCar.Application.Features.Pages;
+using CommunityCar.Application.DTOs.Requests.Pages;
 using CommunityCar.Domain.Entities.Pages;
 using System.Security.Claims;
 
-using CommunityCar.Application.Features.Admin.Shared.DTOs;
+
 
 namespace CommunityCar.API.Controllers.Admin.Dashboard.Content;
 
