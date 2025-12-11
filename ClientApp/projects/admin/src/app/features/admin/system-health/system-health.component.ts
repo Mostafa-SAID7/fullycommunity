@@ -35,6 +35,7 @@ interface ServiceStatus {
 export class SystemHealthComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private systemHealthService = inject(SystemHealthService);
+  private timeouts: number[] = []; // Track timeouts for cleanup
 
   loading = false;
   overallStatus: 'healthy' | 'warning' | 'critical' = 'healthy';
@@ -129,6 +130,10 @@ export class SystemHealthComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    // Clear all pending timeouts
+    this.timeouts.forEach(timeout => clearTimeout(timeout));
+    this.timeouts = [];
+    
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -136,10 +141,11 @@ export class SystemHealthComponent implements OnInit, OnDestroy {
   loadSystemHealth() {
     this.loading = true;
     // Simulate API call
-    setTimeout(() => {
+    const timeout1 = window.setTimeout(() => {
       this.updateMetrics();
       this.loading = false;
     }, 1000);
+    this.timeouts.push(timeout1);
   }
 
   refreshData() {
@@ -147,17 +153,19 @@ export class SystemHealthComponent implements OnInit, OnDestroy {
     this.loadSystemHealth();
     
     // Simulate success after loading
-    setTimeout(() => {
+    const timeout2 = window.setTimeout(() => {
       if (!this.loading) {
         this.refreshStatus = 'success';
         this.lastRefreshTime = new Date();
         
         // Clear success status after 3 seconds
-        setTimeout(() => {
+        const timeout3 = window.setTimeout(() => {
           this.refreshStatus = null;
         }, 3000);
+        this.timeouts.push(timeout3);
       }
     }, 1100);
+    this.timeouts.push(timeout2);
   }
 
   private startAutoRefresh() {

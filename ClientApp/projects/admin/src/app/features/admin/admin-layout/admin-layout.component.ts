@@ -5,6 +5,8 @@ import { AdminHeaderComponent } from '../../../shared/components/admin-header/ad
 import { AdminSidebarComponent } from '../../../shared/components/admin-sidebar/admin-sidebar.component';
 import { ToastContainerComponent } from '../../../shared/components/toast-container/toast-container.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'admin-layout',
@@ -16,6 +18,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 })
 export class AdminLayoutComponent implements OnInit, OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
+  private destroy$ = new Subject<void>();
   
   sidebarOpen = signal(true);
   isMobileScreen = signal(false);
@@ -23,6 +26,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Check if screen is mobile for overlay behavior only
     this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.TabletPortrait])
+      .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
         this.isMobileScreen.set(result.matches);
         // Note: We no longer auto-close/open sidebar based on screen size
@@ -31,7 +35,8 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Cleanup handled by breakpointObserver automatically
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   toggleSidebar() {

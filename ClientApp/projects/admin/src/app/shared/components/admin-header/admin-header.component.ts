@@ -1,7 +1,9 @@
-import { Component, output, inject, OnInit, signal } from '@angular/core';
+import { Component, output, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ThemeSwitcherComponent } from '../theme-switcher/theme-switcher.component';
 import { RefreshButtonComponent } from '../refresh-button/refresh-button.component';
 import { AuthService } from '../../../core/services/auth/auth.service';
@@ -23,10 +25,12 @@ interface AdminRole {
   templateUrl: './admin-header.component.html',
   styleUrl: './admin-header.component.scss'
 })
-export class AdminHeaderComponent implements OnInit {
+export class AdminHeaderComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   notificationService = inject(NotificationService);
+  private destroy$ = new Subject<void>();
+  private refreshTimeout: number | null = null;
 
   // Outputs
   toggleSidebar = output<void>();
@@ -71,8 +75,20 @@ export class AdminHeaderComponent implements OnInit {
     this.loadNotifications();
   }
 
+  ngOnDestroy() {
+    // Clear refresh timeout
+    if (this.refreshTimeout !== null) {
+      clearTimeout(this.refreshTimeout);
+    }
+    
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   loadNotifications() {
-    this.notificationService.loadNotifications().subscribe();
+    this.notificationService.loadNotifications()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 
   isSuperAdmin(): boolean {
@@ -115,9 +131,14 @@ export class AdminHeaderComponent implements OnInit {
   
   refreshData(): void {
     this.isRefreshing = true;
+    // Clear existing timeout
+    if (this.refreshTimeout !== null) {
+      clearTimeout(this.refreshTimeout);
+    }
     // Simulate refresh
-    setTimeout(() => {
+    this.refreshTimeout = window.setTimeout(() => {
       this.isRefreshing = false;
+      this.refreshTimeout = null;
     }, 2000);
   }
   
@@ -129,27 +150,37 @@ export class AdminHeaderComponent implements OnInit {
 
   markAsRead(notification: Notification) {
     if (!notification.isRead) {
-      this.notificationService.markAsRead(notification.id).subscribe();
+      this.notificationService.markAsRead(notification.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe();
     }
   }
 
   markAllAsRead() {
-    this.notificationService.markAllAsRead().subscribe();
+    this.notificationService.markAllAsRead()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 
   deleteNotification(event: Event, id: string) {
     event.stopPropagation();
-    this.notificationService.deleteNotification(id).subscribe();
+    this.notificationService.deleteNotification(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 
   clearAllNotifications() {
-    this.notificationService.clearAll().subscribe();
+    this.notificationService.clearAll()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 
   createTestNotification() {
-    this.notificationService.createTestNotification().subscribe(() => {
-      this.loadNotifications();
-    });
+    this.notificationService.createTestNotification()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.loadNotifications();
+      });
   }
   
   toggleProfileMenu(): void {

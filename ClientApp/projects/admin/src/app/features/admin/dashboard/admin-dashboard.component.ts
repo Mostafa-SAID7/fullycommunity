@@ -35,6 +35,7 @@ interface RecentActivity {
 export class AdminDashboardComponent implements OnInit, OnDestroy {
   private dashboardService = inject(DashboardService);
   private destroy$ = new Subject<void>();
+  private refreshTimeouts: number[] = []; // Track timeouts for cleanup
   
   overview = signal<AdminDashboardOverview | null>(null);
   loading = signal(false);
@@ -129,6 +130,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    // Clear all pending timeouts
+    this.refreshTimeouts.forEach(timeout => clearTimeout(timeout));
+    this.refreshTimeouts = [];
+    
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -137,17 +142,19 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.loading.set(true);
     this.error.set(null);
 
-    this.dashboardService.getOverview().subscribe({
-      next: (data) => {
-        this.overview.set(data);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set('Failed to load dashboard data. Please try again.');
-        this.loading.set(false);
-        console.error('Dashboard error:', err);
-      },
-    });
+    this.dashboardService.getOverview()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          this.overview.set(data);
+          this.loading.set(false);
+        },
+        error: (err) => {
+          this.error.set('Failed to load dashboard data. Please try again.');
+          this.loading.set(false);
+          console.error('Dashboard error:', err);
+        },
+      });
   }
 
   loadRecentActivity() {
@@ -267,6 +274,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.loading.set(true);
     this.refreshStatus.set(null);
     
+    // Clear existing timeouts
+    this.refreshTimeouts.forEach(timeout => clearTimeout(timeout));
+    this.refreshTimeouts = [];
+    
     Promise.all([
       this.loadDashboard(),
       this.loadRecentActivity()
@@ -275,16 +286,18 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       this.lastRefreshTime.set(new Date());
       
       // Clear success status after 3 seconds
-      setTimeout(() => {
+      const timeout1 = window.setTimeout(() => {
         this.refreshStatus.set(null);
       }, 3000);
+      this.refreshTimeouts.push(timeout1);
     }).catch(() => {
       this.refreshStatus.set('error');
       
       // Clear error status after 5 seconds
-      setTimeout(() => {
+      const timeout2 = window.setTimeout(() => {
         this.refreshStatus.set(null);
       }, 5000);
+      this.refreshTimeouts.push(timeout2);
     }).finally(() => {
       this.loading.set(false);
     });

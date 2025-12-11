@@ -2,7 +2,7 @@ import { Component, OnInit, signal, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { Subject, forkJoin, of } from 'rxjs';
+import { Subject, forkJoin, of, interval } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { AdminReportsService } from '../../../core/services/admin/reports.service';
 import {
@@ -298,17 +298,19 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }
 
   exportReport(type: 'users' | 'content' | 'engagement' = 'users', format: 'csv' | 'pdf' | 'xlsx' = 'csv') {
-    this.reportsService.exportReport(type, format, this.selectedPeriod).subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${type}-report-${this.selectedPeriod}.${format}`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: (err) => console.error('Error exporting report:', err)
-    });
+    this.reportsService.exportReport(type, format, this.selectedPeriod)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${type}-report-${this.selectedPeriod}.${format}`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error: (err) => console.error('Error exporting report:', err)
+      });
   }
 
   getUserGrowthChartConfig(): BarChartConfig {
