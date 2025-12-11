@@ -233,29 +233,29 @@
           <span>&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" *ngIf="selectedUser as user">
         <div class="user-details-content">
           <div class="detail-section">
             <h6>Basic Information</h6>
             <div class="detail-grid">
               <div class="detail-item">
                 <label>Username:</label>
-                <span>{{ selectedUser?.username }}</span>
+                <span>{{ user.username }}</span>
               </div>
               <div class="detail-item">
                 <label>Email:</label>
-                <span>{{ selectedUser?.email }}</span>
+                <span>{{ user.email }}</span>
               </div>
               <div class="detail-item">
                 <label>Role:</label>
-                <span class="role-badge" [class]="'role-' + selectedUser?.role" *ngIf="selectedUser?.role">
+                <span class="role-badge" [class]="'role-' + user.role" *ngIf="user.role">
                   {{ getSelectedUserRoleDisplayName() }}
                 </span>
               </div>
               <div class="detail-item">
                 <label>Status:</label>
-                <span class="status-badge" [class.active]="selectedUser && selectedUser.isActive">
-                  {{ selectedUser && selectedUser.isActive ? 'Active' : 'Inactive' }}
+                <span class="status-badge" [class.active]="user.isActive">
+                  {{ user.isActive ? 'Active' : 'Inactive' }}
                 </span>
               </div>
             </div>
@@ -266,18 +266,18 @@
             <div class="permission-list">
               <span 
                 class="permission-tag" 
-                *ngFor="let permission of selectedUser?.permissions">
+                *ngFor="let permission of user.permissions">
                 {{ getPermissionDisplayName(permission) }}
               </span>
             </div>
           </div>
 
-          <div class="detail-section" *ngIf="selectedUser?.customPermissions?.length">
+          <div class="detail-section" *ngIf="user.customPermissions?.length">
             <h6>Custom Permissions</h6>
             <div class="permission-list">
               <span 
                 class="permission-tag custom" 
-                *ngFor="let permission of selectedUser?.customPermissions">
+                *ngFor="let permission of user.customPermissions">
                 {{ getPermissionDisplayName(permission) }}
               </span>
             </div>

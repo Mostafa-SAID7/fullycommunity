@@ -146,6 +146,16 @@
   }
 }
 
+.login-help {
+  margin-top: $spacing-2;
+  color: $text-tertiary;
+  font-size: $font-size-xs;
+  a {
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+  }
+}
+
 // Login-specific form styles are now inherited from auth-form class in forms/_base.scss
 // This eliminates duplication and ensures consistency across auth forms
 

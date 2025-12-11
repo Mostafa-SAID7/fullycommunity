@@ -3,7 +3,7 @@
 // =============================================================================
 
 // Import global variables and mixins
-@import '../../../styles/abstracts/variables';
-@import '../../../styles/abstracts/mixins';
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
 
 // This file can be imported by individual components that need access to global mixins

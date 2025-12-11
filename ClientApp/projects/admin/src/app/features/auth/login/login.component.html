@@ -20,13 +20,16 @@
           Community Car Admin
         </h1>
         <p class="login-subtitle">Sign in to access the admin dashboard</p>
+        <div class="login-help">
+          <span>Use your admin email and password. Need help? <a href="mailto:support@communitycar.com">Contact support</a>.</span>
+        </div>
       </div>
 
       <!-- Form -->
       <form (ngSubmit)="onSubmit()" class="auth-form">
         <!-- Error Message -->
         @if (errorMessage) {
-          <div class="error-message">
+          <div class="error-message" role="alert" aria-live="assertive">
             {{ errorMessage }}
           </div>
         }
@@ -48,6 +51,7 @@
               [(ngModel)]="email"
               name="email"
               placeholder="admin@example.com"
+              autocomplete="username"
               required
               [disabled]="loading"
               class="form-input"
@@ -72,6 +76,7 @@
               [(ngModel)]="password"
               name="password"
               placeholder="Enter your password"
+              autocomplete="current-password"
               required
               [disabled]="loading"
               class="form-input"

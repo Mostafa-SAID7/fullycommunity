@@ -140,14 +140,16 @@ public class ReportsAdminController : ControllerBase
         }
     }
 
+    private record TopContentItem(string Id, string Title, string Type, int Views, decimal Engagement);
+
     [HttpGet("top-content")]
-    public async Task<ActionResult<IEnumerable<object>>> GetTopContent(
+    public async Task<ActionResult<IEnumerable<TopContentItem>>> GetTopContent(
         [FromQuery] int limit = 10, 
         [FromQuery] string? type = null)
     {
         try
         {
-            var results = new List<object>();
+            var results = new List<TopContentItem>();
 
             // Get posts
             if (string.IsNullOrEmpty(type) || type == "post")
@@ -156,16 +158,15 @@ public class ReportsAdminController : ControllerBase
                     .Where(p => !p.IsDeleted)
                     .OrderByDescending(p => p.ViewCount)
                     .Take(limit)
-                    .Select(p => new
-                    {
-                        Id = p.Id.ToString(),
-                        Title = p.Title,
-                        Type = "post",
-                        Views = p.ViewCount,
-                        Engagement = p.ViewCount > 0 
+                    .Select(p => new TopContentItem(
+                        p.Id.ToString(),
+                        p.Title,
+                        "post",
+                        p.ViewCount,
+                        p.ViewCount > 0 
                             ? Math.Round((decimal)(p.LikeCount + p.CommentCount) / p.ViewCount * 100, 1) 
                             : 0m
-                    })
+                    ))
                     .ToListAsync();
                 results.AddRange(posts);
             }
@@ -177,14 +178,13 @@ public class ReportsAdminController : ControllerBase
                     .Where(r => !r.IsDeleted)
                     .OrderByDescending(r => r.HelpfulCount)
                     .Take(limit)
-                    .Select(r => new
-                    {
-                        Id = r.Id.ToString(),
-                        Title = r.Title ?? "Review",
-                        Type = "review",
-                        Views = r.HelpfulCount * 10, // Approximate views from helpful count
-                        Engagement = r.HelpfulCount > 0 ? (decimal)Math.Min(r.HelpfulCount * 5, 100) : 0m
-                    })
+                    .Select(r => new TopContentItem(
+                        r.Id.ToString(),
+                        r.Title ?? "Review",
+                        "review",
+                        r.HelpfulCount * 10, // Approximate views from helpful count
+                        r.HelpfulCount > 0 ? (decimal)Math.Min(r.HelpfulCount * 5, 100) : 0m
+                    ))
                     .ToListAsync();
                 results.AddRange(reviews);
             }
@@ -196,23 +196,22 @@ public class ReportsAdminController : ControllerBase
                     .Where(g => !g.IsDeleted)
                     .OrderByDescending(g => g.ViewCount)
                     .Take(limit)
-                    .Select(g => new
-                    {
-                        Id = g.Id.ToString(),
-                        Title = g.Title,
-                        Type = "guide",
-                        Views = g.ViewCount,
-                        Engagement = g.ViewCount > 0 
+                    .Select(g => new TopContentItem(
+                        g.Id.ToString(),
+                        g.Title,
+                        "guide",
+                        g.ViewCount,
+                        g.ViewCount > 0 
                             ? Math.Round((decimal)g.LikeCount / g.ViewCount * 100, 1) 
                             : 0m
-                    })
+                    ))
                     .ToListAsync();
                 results.AddRange(guides);
             }
 
             // Sort by views and take top results
             var data = results
-                .OrderByDescending(c => GetViewsCount(c))
+                .OrderByDescending(c => c.Views)
                 .Take(limit)
                 .ToList();
 
@@ -307,9 +306,4 @@ public class ReportsAdminController : ControllerBase
         return Math.Round((decimal)(current - previous) / previous * 100, 1);
     }
 
-    private int GetViewsCount(object item)
-    {
-        var property = item.GetType().GetProperty("Views");
-        return property != null ? (int)(property.GetValue(item) ?? 0) : 0;
-    }
 }

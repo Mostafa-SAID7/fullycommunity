@@ -2,8 +2,8 @@
 // Logo Button Component Styles
 // =============================================================================
 
-@import '../../../../styles/abstracts/variables';
-@import '../../../../styles/abstracts/mixins';
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/mixins' as *;
 
 :host {
   display: inline-block;
@@ -19,26 +19,17 @@
   cursor: pointer;
   transition: all 0.3s ease;
   transform-origin: center;
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
   
+  // Keep hover/active calm—no glow/shadow pulse
   &:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 
-      0 0 50px rgba($color-primary, 0.8),
-      0 0 70px rgba($color-primary, 0.5),
-      0 0 100px rgba($color-primary, 0.3),
-      0 15px 35px -5px rgba($color-primary, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
   }
   
   &:active {
-    transform: translateY(0px) scale(0.98);
-    box-shadow: 
-      0 0 30px rgba($color-primary, 0.6),
-      0 0 50px rgba($color-primary, 0.4),
-      0 0 70px rgba($color-primary, 0.2),
-      0 5px 15px -5px rgba($color-primary, 0.3);
+    transform: translateY(0px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
   }
 }
 
