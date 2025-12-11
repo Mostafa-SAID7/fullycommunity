@@ -1,9 +1,3 @@
-// =============================================================================
-// Admin Sidebar Component Styles - Clean & Organized
-// =============================================================================
-
-@import '../../../../styles/abstracts/variables';
-@import '../../../../styles/abstracts/mixins';
 
 // CSS Custom Properties for Theme Support
 // -----------------------------------------------------------------------------
@@ -18,27 +12,34 @@
   --sidebar-shadow-heavy: #{$shadow-2xl};
 }
 
-[data-theme="dark"], .dark-theme, html.dark {
-  --sidebar-bg: #{$dark-bg-secondary};
+[data-theme="dark"],
+.dark-theme,
+html.dark {
+  --sidebar-bg: rgba(30, 41, 59, 0.95); // fallback
+
+  @supports (backdrop-filter: blur(12px)) {
+    --sidebar-bg: rgba(30, 41, 59, 0.85); // glass
+  }
+
   --sidebar-border: #{$dark-border-primary};
   --sidebar-text: #{$dark-text-secondary};
   --sidebar-text-primary: #{$dark-text-primary};
   --sidebar-text-muted: #{$dark-text-secondary};
-  --sidebar-hover-bg: #{$dark-bg-tertiary};
-  --sidebar-shadow-light: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.1); // more visible hover
+  --sidebar-shadow-light: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
   --sidebar-shadow-heavy: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-  
+
   // Dark mode scrollbar - match main content
   .scrollable-content {
     scrollbar-color: $dark-border-secondary $dark-bg-tertiary;
-    
+
     &::-webkit-scrollbar-track {
       background: $dark-bg-tertiary;
     }
-    
+
     &::-webkit-scrollbar-thumb {
       background: $dark-border-secondary;
-      
+
       &:hover {
         background: $dark-border-primary;
       }
@@ -66,7 +67,7 @@
     box-shadow: var(--sidebar-shadow-light);
     transition: all 0.3s ease;
 
-    // Width states
+    // Width states - desktop/tablet
     &.sidebar-open {
       width: 16rem;
     }
@@ -75,7 +76,7 @@
       width: 4rem;
     }
 
-    // Ensure visibility
+    // Ensure visibility - always visible on desktop/tablet
     transform: translateX(0);
     opacity: 1;
     visibility: visible;
@@ -138,7 +139,7 @@
   flex: 1;
   overflow-y: auto;
   padding: $spacing-4;
-  
+
   // Match main content scrollbar style
   scrollbar-width: thin;
   scrollbar-color: $border-secondary $bg-secondary;
@@ -155,7 +156,7 @@
   &::-webkit-scrollbar-thumb {
     background: $border-secondary; // Same as main content
     border-radius: $border-radius-full;
-    
+
     &:hover {
       background: $border-primary; // Darker on hover
     }
@@ -200,7 +201,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  
+
   &.section-content {
     margin-bottom: $spacing-2;
   }
@@ -428,69 +429,91 @@
   }
 }
 
-// Mobile screens (up to 575.98px) - Fixed Position with NO GAPS
+// Mobile screens (up to 575.98px) - Enhanced responsive drawer behavior
 @media screen and (max-width: 575.98px) {
   .admin-sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 999;
-    
     .sidebar-nav {
       position: fixed;
       left: 0;
-      top: 4rem; // NO GAP - starts right after header
-      bottom: 0;
-      height: calc(100vh - 4rem); // NO GAP - full height minus header
-      z-index: 999;
-      max-width: 100vw;
-      
+      top: calc(#{$nav-height} + 0.5rem);
+      height: calc(100vh - #{$nav-height} - 0.5rem);
+      z-index: $z-index-fixed; // Above overlay (z-index: 40) and content
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease, box-shadow 0.3s ease;
+      will-change: transform, width;
+      box-shadow: none; // No shadow when hidden
+      -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+
+      // Hidden by default on mobile - slides in when open
+      transform: translateX(-100%);
+      opacity: 1;
+      visibility: visible;
+      display: flex;
+
       &.sidebar-open {
-        width: min(16rem, 85vw);
+        width: min(16rem, 85vw); // Full width when open - shows full content
         max-width: 85vw;
+        background-color: rgba(255, 255, 255, 0.95); // High opacity for legibility
+
+        @supports (backdrop-filter: blur(12px)) {
+          background-color: rgba(255, 255, 255, 0.85);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+        }
+
+        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.3); // Deep shadow for layering
         overflow-y: auto;
         overflow-x: hidden;
-        box-shadow: var(--sidebar-shadow-heavy);
-        
+        overscroll-behavior: contain; // Prevent scroll chaining
+
+        // On mobile when open, always show full content (not icon-only)
+        .icon-only-section {
+          display: none !important;
+        }
+
+        // Ensure all full content sections are visible
+        .scrollable-content>div:not(.icon-only-section) {
+          display: block !important;
+        }
+
+        .dashboard-section,
+        .profile-section {
+          display: flex !important;
+        }
+
         // Mobile scrollbar - match main content
         scrollbar-width: thin;
         scrollbar-color: $border-secondary $bg-secondary;
-        
+
         &::-webkit-scrollbar {
           width: 8px;
         }
-        
+
         &::-webkit-scrollbar-track {
           background: $bg-secondary;
         }
-        
+
         &::-webkit-scrollbar-thumb {
           background: $border-secondary;
           border-radius: $border-radius-full;
+
+          &:hover {
+            background: $border-primary;
+          }
         }
       }
-      
+
       &.sidebar-closed {
-        width: 4rem;
-        max-width: 4rem;
+        width: min(16rem, 85vw); // Keep full width for smooth transition
+        max-width: 85vw;
+        transform: translateX(-100%); // Completely hidden when closed on mobile
         overflow-y: auto;
         overflow-x: hidden;
-        
-        // Mobile scrollbar for icon-only mode
-        scrollbar-width: thin;
-        scrollbar-color: $border-secondary $bg-secondary;
-        
-        &::-webkit-scrollbar {
-          width: 6px; // Slightly thinner for icon-only mode
-        }
-        
-        &::-webkit-scrollbar-track {
-          background: $bg-secondary;
-        }
-        
-        &::-webkit-scrollbar-thumb {
-          background: $border-secondary;
-          border-radius: $border-radius-full;
+
+        // Content hidden by parent transform, so we keep display: block for instant slide-in
+        .scrollable-content,
+        .dashboard-section,
+        .profile-section {
+          display: flex !important; // Ensure flex for sections that need it
         }
       }
     }
@@ -514,12 +537,12 @@
   // Ensure icon sections are visible when closed
   .icon-only-section {
     display: block;
-    
+
     .icon-link {
       display: flex;
       justify-content: center;
       padding: 0.75rem 0.5rem;
-      
+
       .icon {
         width: 2rem;
         height: 2rem;
@@ -529,12 +552,13 @@
 
   // Center dashboard and profile icons when closed
   .sidebar-nav.sidebar-closed {
+
     .dashboard-link.centered,
     .profile-link.centered,
     .help-link.centered {
       display: flex;
       justify-content: center;
-      
+
       .dashboard-icon,
       .profile-icon,
       .help-icon {
@@ -545,7 +569,8 @@
   }
 
   // Prevent horizontal scroll
-  html, body {
+  html,
+  body {
     overflow-x: hidden;
     max-width: 100vw;
   }
@@ -565,14 +590,14 @@
   .admin-sidebar .sidebar-nav {
     border-right: 2px solid;
   }
-  
+
   .dashboard-link,
   .nav-link,
   .icon-link,
   .help-link,
   .profile-link {
     border: 1px solid transparent;
-    
+
     &:focus-visible {
       border-color: currentColor;
       outline: 2px solid;
@@ -584,6 +609,7 @@
 // Reduced Motion
 // -----------------------------------------------------------------------------
 @include reduced-motion {
+
   .sidebar-nav,
   .dashboard-link,
   .nav-link,

@@ -7,6 +7,7 @@ import { ToastContainerComponent } from '../../../shared/components/toast-contai
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'admin-layout',
@@ -14,7 +15,18 @@ import { takeUntil } from 'rxjs/operators';
   imports: [CommonModule, RouterOutlet, AdminHeaderComponent, AdminSidebarComponent, ToastContainerComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './admin-layout.component.html',
-  styleUrl: './admin-layout.component.scss'
+  styleUrl: './admin-layout.component.scss',
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms ease-out', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class AdminLayoutComponent implements OnInit, OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
@@ -24,13 +36,31 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   isMobileScreen = signal(false);
 
   ngOnInit() {
-    // Check if screen is mobile for overlay behavior only
+    // Check initial screen size
+    if (typeof window !== 'undefined') {
+      const isMobile = window.innerWidth < 960; // Breakpoints.Handset/TabletPortrait threshold
+      this.isMobileScreen.set(isMobile);
+      // On mobile, start with sidebar closed (hidden)
+      if (isMobile) {
+        this.sidebarOpen.set(false);
+      }
+    }
+    
+    // Monitor screen size changes
     this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.TabletPortrait])
       .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
+        const wasMobile = this.isMobileScreen();
         this.isMobileScreen.set(result.matches);
-        // Note: We no longer auto-close/open sidebar based on screen size
-        // The sidebar behaves the same on all screen sizes (icon-only when closed, full when open)
+        
+        // When switching to mobile, close sidebar (it will slide in when toggled)
+        if (result.matches && !wasMobile) {
+          this.sidebarOpen.set(false);
+        }
+        // When switching to desktop, open sidebar
+        if (!result.matches && wasMobile) {
+          this.sidebarOpen.set(true);
+        }
       });
   }
 

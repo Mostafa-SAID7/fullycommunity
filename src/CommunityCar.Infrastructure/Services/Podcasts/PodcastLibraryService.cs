@@ -11,11 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CommunityCar.Infrastructure.Services.Podcasts;
 
-public class PodcastLibraryService : IPodcastLibraryService
+public class PodcastLibraryService(IAppDbContext context) : IPodcastLibraryService
 {
-    private readonly IAppDbContext _context;
-
-    public PodcastLibraryService(IAppDbContext context) => _context = context;
+    private readonly IAppDbContext _context = context;
 
     // Saved Episodes
     public async Task<PagedResult<EpisodeListItemDto>> GetSavedEpisodesAsync(Guid userId, int page, int pageSize, CancellationToken ct = default)
@@ -24,16 +22,36 @@ public class PodcastLibraryService : IPodcastLibraryService
             .Where(s => s.UserId == userId).OrderByDescending(s => s.SavedAt);
         var total = await query.CountAsync(ct);
         var items = await query.Skip((page - 1) * pageSize).Take(pageSize)
-            .Select(s => new EpisodeListItemDto(s.Episode.Id, s.Episode.PodcastShowId, s.Episode.PodcastShow.Title, s.Episode.PodcastShow.CoverImageUrl,
-                s.Episode.Title, s.Episode.Description, s.Episode.Slug, s.Episode.SeasonNumber, s.Episode.EpisodeNumber,
-                s.Episode.ThumbnailUrl, s.Episode.Duration, s.Episode.Type, s.Episode.ExplicitContent == ExplicitContent.Explicit, s.Episode.PublishedAt,
-                s.Episode.PlayCount, s.Episode.LikeCount, s.Episode.CommentCount)).ToListAsync(ct);
+            .Select(s => new EpisodeListItemDto(
+                s.Episode.Id, 
+                s.Episode.PodcastShowId, 
+                s.Episode.PodcastShow.Title, 
+                s.Episode.PodcastShow.CoverImageUrl,
+                s.Episode.Title, 
+                s.Episode.Description ?? string.Empty, 
+                s.Episode.Slug ?? string.Empty, 
+                s.Episode.SeasonNumber ?? 1, 
+                s.Episode.EpisodeNumber,
+                s.Episode.ThumbnailUrl, 
+                s.Episode.Duration, 
+                s.Episode.Type.ToString(), 
+                s.Episode.ExplicitContent == ExplicitContent.Explicit, 
+                s.Episode.PublishedAt ?? DateTime.MinValue,
+                s.Episode.PlayCount, 
+                s.Episode.LikeCount, 
+                s.Episode.CommentCount)).ToListAsync(ct);
         return new PagedResult<EpisodeListItemDto>(items, total, page, pageSize);
     }
 
     public async Task SaveEpisodeAsync(Guid userId, Guid episodeId, string? note, CancellationToken ct = default)
     {
+        // Check if episode exists
+        var episodeExists = await _context.Set<PodcastEpisode>().AnyAsync(e => e.Id == episodeId, ct);
+        if (!episodeExists) throw new KeyNotFoundException($"Episode with ID {episodeId} not found");
+        
+        // Check if already saved
         if (await _context.Set<SavedEpisode>().AnyAsync(s => s.UserId == userId && s.EpisodeId == episodeId, ct)) return;
+        
         _context.Set<SavedEpisode>().Add(new SavedEpisode { UserId = userId, EpisodeId = episodeId, Note = note });
         await _context.SaveChangesAsync(ct);
     }
@@ -41,7 +59,11 @@ public class PodcastLibraryService : IPodcastLibraryService
     public async Task UnsaveEpisodeAsync(Guid userId, Guid episodeId, CancellationToken ct = default)
     {
         var saved = await _context.Set<SavedEpisode>().FirstOrDefaultAsync(s => s.UserId == userId && s.EpisodeId == episodeId, ct);
-        if (saved is not null) { _context.Set<SavedEpisode>().Remove(saved); await _context.SaveChangesAsync(ct); }
+        if (saved is not null) 
+        { 
+            _context.Set<SavedEpisode>().Remove(saved); 
+            await _context.SaveChangesAsync(ct); 
+        }
     }
 
     // History
@@ -66,7 +88,11 @@ public class PodcastLibraryService : IPodcastLibraryService
     public async Task RemoveFromHistoryAsync(Guid userId, Guid episodeId, CancellationToken ct = default)
     {
         var item = await _context.Set<ListeningHistory>().FirstOrDefaultAsync(h => h.UserId == userId && h.EpisodeId == episodeId, ct);
-        if (item is not null) { _context.Set<ListeningHistory>().Remove(item); await _context.SaveChangesAsync(ct); }
+        if (item is not null) 
+        { 
+            _context.Set<ListeningHistory>().Remove(item); 
+            await _context.SaveChangesAsync(ct); 
+        }
     }
 
     // Queue
@@ -79,6 +105,13 @@ public class PodcastLibraryService : IPodcastLibraryService
 
     public async Task AddToQueueAsync(Guid userId, Guid episodeId, CancellationToken ct = default)
     {
+        // Check if episode exists
+        var episodeExists = await _context.Set<PodcastEpisode>().AnyAsync(e => e.Id == episodeId, ct);
+        if (!episodeExists) throw new KeyNotFoundException($"Episode with ID {episodeId} not found");
+        
+        // Check if already in queue
+        if (await _context.Set<PodcastQueue>().AnyAsync(q => q.UserId == userId && q.EpisodeId == episodeId, ct)) return;
+        
         var maxPos = await _context.Set<PodcastQueue>().Where(q => q.UserId == userId).MaxAsync(q => (int?)q.Position, ct) ?? 0;
         _context.Set<PodcastQueue>().Add(new PodcastQueue { UserId = userId, EpisodeId = episodeId, Position = maxPos + 1 });
         await _context.SaveChangesAsync(ct);
@@ -87,7 +120,11 @@ public class PodcastLibraryService : IPodcastLibraryService
     public async Task RemoveFromQueueAsync(Guid userId, Guid episodeId, CancellationToken ct = default)
     {
         var item = await _context.Set<PodcastQueue>().FirstOrDefaultAsync(q => q.UserId == userId && q.EpisodeId == episodeId, ct);
-        if (item is not null) { _context.Set<PodcastQueue>().Remove(item); await _context.SaveChangesAsync(ct); }
+        if (item is not null) 
+        { 
+            _context.Set<PodcastQueue>().Remove(item); 
+            await _context.SaveChangesAsync(ct); 
+        }
     }
 
     public async Task ReorderQueueAsync(Guid userId, List<Guid> episodeIds, CancellationToken ct = default)
@@ -137,18 +174,23 @@ public class PodcastLibraryService : IPodcastLibraryService
 
     public async Task DeletePlaylistAsync(Guid playlistId, CancellationToken ct = default)
     {
-        var playlist = await _context.Set<PodcastPlaylist>().FindAsync([playlistId], ct) ?? throw new KeyNotFoundException();
+        var playlist = await _context.Set<PodcastPlaylist>().FindAsync([playlistId], ct) ?? throw new KeyNotFoundException($"Playlist with ID {playlistId} not found");
         _context.Set<PodcastPlaylist>().Remove(playlist);
         await _context.SaveChangesAsync(ct);
     }
 
     public async Task AddToPlaylistAsync(Guid playlistId, Guid episodeId, CancellationToken ct = default)
     {
-        var playlist = await _context.Set<PodcastPlaylist>().Include(p => p.Items).FirstOrDefaultAsync(p => p.Id == playlistId, ct) ?? throw new KeyNotFoundException();
-        var episode = await _context.Set<PodcastEpisode>().FindAsync([episodeId], ct) ?? throw new KeyNotFoundException();
+        var playlist = await _context.Set<PodcastPlaylist>().Include(p => p.Items).FirstOrDefaultAsync(p => p.Id == playlistId, ct) ?? throw new KeyNotFoundException($"Playlist with ID {playlistId} not found");
+        var episode = await _context.Set<PodcastEpisode>().FindAsync([episodeId], ct) ?? throw new KeyNotFoundException($"Episode with ID {episodeId} not found");
+        
+        // Check if episode is already in playlist
+        if (playlist.Items.Any(i => i.EpisodeId == episodeId)) return;
+        
         var maxOrder = playlist.Items.Any() ? playlist.Items.Max(i => i.SortOrder) : 0;
         _context.Set<PodcastPlaylistItem>().Add(new PodcastPlaylistItem { PlaylistId = playlistId, EpisodeId = episodeId, SortOrder = maxOrder + 1 });
-        playlist.EpisodeCount++; playlist.TotalDuration += episode.Duration;
+        playlist.EpisodeCount++; 
+        playlist.TotalDuration += episode.Duration;
         await _context.SaveChangesAsync(ct);
     }
 
@@ -164,11 +206,13 @@ public class PodcastLibraryService : IPodcastLibraryService
 
     public async Task<PodcastPlaylistDto> UpdatePlaylistAsync(Guid playlistId, UpdatePlaylistRequest request, CancellationToken ct = default)
     {
-        var playlist = await _context.Set<PodcastPlaylist>().FindAsync([playlistId], ct) ?? throw new KeyNotFoundException();
+        var playlist = await _context.Set<PodcastPlaylist>().FindAsync([playlistId], ct) ?? throw new KeyNotFoundException($"Playlist with ID {playlistId} not found");
+        
         if (request.Title is not null) playlist.Title = request.Title;
         if (request.Description is not null) playlist.Description = request.Description;
         if (request.CoverImageUrl is not null) playlist.CoverImageUrl = request.CoverImageUrl;
         if (request.Visibility.HasValue) playlist.Visibility = request.Visibility.Value;
+        
         await _context.SaveChangesAsync(ct);
         return new PodcastPlaylistDto(playlist.Id, playlist.Title, playlist.Description, playlist.CoverImageUrl, playlist.Visibility, playlist.EpisodeCount, playlist.TotalDuration, null, playlist.CreatedAt);
     }

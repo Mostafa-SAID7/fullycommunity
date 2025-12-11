@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, signal, computed, OnInit, OnDestroy, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -30,7 +30,7 @@ export interface Contact {
   imports: [CommonModule, RouterModule],
   templateUrl: './right-sidebar.component.html'
 })
-export class RightSidebarComponent {
+export class RightSidebarComponent implements OnInit, OnDestroy {
   @Input() sponsoredItems: SponsoredItem[] = [];
   @Input() events: EventReminder[] = [];
   @Input() contacts: Contact[] = [];
@@ -40,6 +40,61 @@ export class RightSidebarComponent {
 
   // Mobile sidebar state
   isMobileOpen = signal(false);
+  isXlScreen = signal(false);
+  isRtl = signal(false);
+
+  // Computed transform style for sidebar
+  sidebarTransform = computed(() => {
+    if (this.isXlScreen() || this.isMobileOpen()) {
+      return 'translateX(0)';
+    }
+    // Hide on mobile
+    const isRtlDir = this.isRtl();
+    return isRtlDir ? 'translateX(-100%)' : 'translateX(100%)';
+  });
+
+  // Check RTL direction
+  private checkRtl() {
+    if (typeof document !== 'undefined') {
+      this.isRtl.set(document.documentElement.dir === 'rtl');
+    }
+  }
+
+  private resizeListener?: () => void;
+
+  constructor() {
+    // Close mobile sidebar when screen becomes xl
+    effect(() => {
+      if (this.isXlScreen() && this.isMobileOpen()) {
+        this.isMobileOpen.set(false);
+      }
+    });
+  }
+
+  ngOnInit() {
+    if (typeof window !== 'undefined') {
+      this.checkScreenSize();
+      this.checkRtl();
+      this.resizeListener = () => {
+        this.checkScreenSize();
+        this.checkRtl();
+      };
+      window.addEventListener('resize', this.resizeListener);
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.resizeListener && typeof window !== 'undefined') {
+      window.removeEventListener('resize', this.resizeListener);
+    }
+  }
+
+  private checkScreenSize() {
+    if (typeof window !== 'undefined') {
+      // xl breakpoint in Tailwind is 1280px
+      this.isXlScreen.set(window.innerWidth >= 1280);
+    }
+  }
 
   toggleMobileSidebar() {
     this.isMobileOpen.update(v => !v);

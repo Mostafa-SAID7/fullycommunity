@@ -1,4 +1,3 @@
-using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Common.Interfaces.Data;
 using CommunityCar.Application.Common.Interfaces.Podcasts;
 using CommunityCar.Application.Common.Pagination;
@@ -10,14 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CommunityCar.Infrastructure.Services.Podcasts;
 
-public class PodcastShowService : IPodcastShowService
+public class PodcastShowService(IAppDbContext context) : IPodcastShowService
 {
-    private readonly IAppDbContext _context;
-
-    public PodcastShowService(IAppDbContext context)
-    {
-        _context = context;
-    }
+    private readonly IAppDbContext _context = context;
 
     public async Task<PodcastShowDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
@@ -111,6 +105,10 @@ public class PodcastShowService : IPodcastShowService
 
     public async Task<PodcastShowDto> CreateAsync(Guid ownerId, CreatePodcastShowRequest request, CancellationToken ct = default)
     {
+        // Generate unique slug
+        var baseSlug = GenerateSlug(request.Title);
+        var slug = await GenerateUniqueSlugAsync(baseSlug, ct);
+
         var podcast = new PodcastShow
         {
             OwnerId = ownerId,
@@ -118,11 +116,11 @@ public class PodcastShowService : IPodcastShowService
             Description = request.Description,
             Summary = request.Summary,
             CoverImageUrl = request.CoverImageUrl,
-            Slug = GenerateSlug(request.Title),
+            Slug = slug,
             Type = request.Type,
             Category = request.Category,
             Tags = request.Tags ?? [],
-            Language = request.Language,
+            Language = request.Language ?? "en",
             ExplicitContent = request.ExplicitContent ? ExplicitContent.Explicit : ExplicitContent.Clean,
             AllowComments = request.AllowComments,
             AllowDownloads = request.AllowDownloads,
@@ -139,7 +137,11 @@ public class PodcastShowService : IPodcastShowService
         var podcast = await _context.Set<PodcastShow>().FindAsync([id], ct)
             ?? throw new KeyNotFoundException("Podcast not found");
 
-        if (request.Title is not null) podcast.Title = request.Title;
+        if (request.Title is not null) 
+        {
+            podcast.Title = request.Title;
+            podcast.Slug = await GenerateUniqueSlugAsync(GenerateSlug(request.Title), ct);
+        }
         if (request.Description is not null) podcast.Description = request.Description;
         if (request.CoverImageUrl is not null) podcast.CoverImageUrl = request.CoverImageUrl;
         if (request.Category.HasValue) podcast.Category = request.Category.Value;
@@ -170,7 +172,10 @@ public class PodcastShowService : IPodcastShowService
     {
         var podcast = await _context.Set<PodcastShow>().FindAsync([id], ct)
             ?? throw new KeyNotFoundException("Podcast not found");
+        
+        // Soft delete - mark as removed
         podcast.Status = PodcastStatus.Removed;
+        
         await _context.SaveChangesAsync(ct);
     }
 
@@ -186,12 +191,37 @@ public class PodcastShowService : IPodcastShowService
 
     public async Task<PodcastHostDto> AddHostAsync(Guid podcastId, CreateHostRequest request, CancellationToken ct = default)
     {
+        // Validate that the podcast exists
+        var podcastExists = await _context.Set<PodcastShow>().AnyAsync(p => p.Id == podcastId, ct);
+        if (!podcastExists)
+            throw new KeyNotFoundException("Podcast not found");
+
+        // If this is set as primary host, ensure no other host is primary
+        if (request.IsPrimaryHost)
+        {
+            var existingPrimaryHosts = await _context.Set<PodcastHost>()
+                .Where(h => h.PodcastShowId == podcastId && h.IsPrimaryHost)
+                .ToListAsync(ct);
+            
+            foreach (var existingHost in existingPrimaryHosts)
+            {
+                existingHost.IsPrimaryHost = false;
+            }
+        }
+
         var host = new PodcastHost
         {
-            PodcastShowId = podcastId, UserId = request.UserId, Name = request.Name, Bio = request.Bio,
-            AvatarUrl = request.AvatarUrl, WebsiteUrl = request.WebsiteUrl, TwitterUrl = request.TwitterUrl,
-            InstagramUrl = request.InstagramUrl, IsPrimaryHost = request.IsPrimaryHost
+            PodcastShowId = podcastId, 
+            UserId = request.UserId, 
+            Name = request.Name, 
+            Bio = request.Bio,
+            AvatarUrl = request.AvatarUrl, 
+            WebsiteUrl = request.WebsiteUrl, 
+            TwitterUrl = request.TwitterUrl,
+            InstagramUrl = request.InstagramUrl, 
+            IsPrimaryHost = request.IsPrimaryHost
         };
+        
         _context.Set<PodcastHost>().Add(host);
         await _context.SaveChangesAsync(ct);
         return new PodcastHostDto(host.Id, host.UserId, host.Name, host.Bio, host.AvatarUrl, host.WebsiteUrl, host.TwitterUrl, host.InstagramUrl, host.IsPrimaryHost);
@@ -201,8 +231,10 @@ public class PodcastShowService : IPodcastShowService
     {
         var host = await _context.Set<PodcastHost>().FindAsync([hostId], ct)
             ?? throw new KeyNotFoundException("Host not found");
+        
         if (request.Name is not null) host.Name = request.Name;
         if (request.Bio is not null) host.Bio = request.Bio;
+        
         await _context.SaveChangesAsync(ct);
         return new PodcastHostDto(host.Id, host.UserId, host.Name, host.Bio, host.AvatarUrl, host.WebsiteUrl, host.TwitterUrl, host.InstagramUrl, host.IsPrimaryHost);
     }
@@ -215,19 +247,56 @@ public class PodcastShowService : IPodcastShowService
         await _context.SaveChangesAsync(ct);
     }
 
-    private static string GenerateSlug(string title) => title.ToLower().Replace(" ", "-").Replace("--", "-");
+    private static string GenerateSlug(string title)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+            return string.Empty;
+
+        return title
+            .ToLowerInvariant()
+            .Trim()
+            .Replace(" ", "-")
+            .Replace("--", "-")
+            .Replace("---", "-")
+            .Trim('-');
+    }
+
+    private async Task<string> GenerateUniqueSlugAsync(string baseSlug, CancellationToken ct = default)
+    {
+        var slug = baseSlug;
+        var counter = 1;
+
+        while (await _context.Set<PodcastShow>().AnyAsync(p => p.Slug == slug, ct))
+        {
+            slug = $"{baseSlug}-{counter}";
+            counter++;
+        }
+
+        return slug;
+    }
 
     private static PodcastShowDto MapToDto(PodcastShow p) => new(
-        p.Id, p.OwnerId, p.Owner?.UserName ?? "", p.Owner?.AvatarUrl, p.Title, p.Description, p.Slug, p.Summary, p.CoverImageUrl, p.BannerImageUrl,
+        p.Id, p.OwnerId, p.Owner?.UserName ?? "", p.Owner?.AvatarUrl, p.Title, p.Description, p.Slug ?? "", p.Summary, p.CoverImageUrl, p.BannerImageUrl,
         p.Type, p.Status, p.Visibility, p.ExplicitContent == ExplicitContent.Explicit, p.Category, p.Tags, p.Language,
-        p.PublishedAt, (long)p.EpisodeCount, (long)p.SubscriberCount, p.TotalPlays, p.AverageRating, (long)p.RatingCount,
+        p.PublishedAt ?? DateTime.MinValue, p.EpisodeCount, p.SubscriberCount, p.TotalPlays, p.AverageRating, p.RatingCount,
         p.AllowComments, p.AllowDownloads, p.ApplePodcastsUrl, p.SpotifyUrl, p.WebsiteUrl, p.Copyright, p.Author,
-        p.Hosts.Select(h => new PodcastHostDto(h.Id, h.UserId, h.Name, h.Bio, h.AvatarUrl, h.WebsiteUrl, h.TwitterUrl, h.InstagramUrl, h.IsPrimaryHost)).ToList(),
+        [.. p.Hosts.Select(h => new PodcastHostDto(h.Id, h.UserId, h.Name, h.Bio, h.AvatarUrl, h.WebsiteUrl, h.TwitterUrl, h.InstagramUrl, h.IsPrimaryHost))],
         p.CreatedAt
     );
 
     private static PodcastShowListItemDto MapToListItem(PodcastShow p) => new(
-        p.Id, p.Title, p.Description, p.Slug, p.CoverImageUrl, p.Owner?.UserName ?? "", p.Owner?.AvatarUrl, p.Category,
-        p.EpisodeCount, p.SubscriberCount, p.AverageRating, p.ExplicitContent == ExplicitContent.Explicit, p.PublishedAt
+        p.Id, 
+        p.Title, 
+        p.Description, 
+        p.Slug ?? "", 
+        p.CoverImageUrl, 
+        p.Owner?.UserName ?? "", 
+        p.Owner?.AvatarUrl, 
+        p.Category,
+        p.EpisodeCount, 
+        p.SubscriberCount, 
+        p.AverageRating, 
+        p.ExplicitContent == ExplicitContent.Explicit, 
+        p.PublishedAt.HasValue ? p.PublishedAt.Value : DateTime.UtcNow
     );
 }

@@ -1,4 +1,3 @@
-using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Common.Interfaces.Data;
 using CommunityCar.Application.Common.Interfaces.Podcasts;
 using CommunityCar.Application.Common.Pagination;
@@ -9,15 +8,12 @@ using CommunityCar.Domain.Entities.Podcasts.Engagement;
 using CommunityCar.Domain.Entities.Podcasts.Library;
 using CommunityCar.Domain.Entities.Podcasts.Common;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 namespace CommunityCar.Infrastructure.Services.Podcasts;
 
-public class PodcastEpisodeService : IPodcastEpisodeService
+public class PodcastEpisodeService(IAppDbContext context) : IPodcastEpisodeService
 {
-    private readonly IAppDbContext _context;
-
-    public PodcastEpisodeService(IAppDbContext context) => _context = context;
+    private readonly IAppDbContext _context = context;
 
     public async Task<EpisodeDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
@@ -83,11 +79,20 @@ public class PodcastEpisodeService : IPodcastEpisodeService
 
     public async Task<EpisodeUploadResponse> InitiateUploadAsync(Guid podcastId, CreateEpisodeRequest request, CancellationToken ct = default)
     {
+        // Generate unique slug
+        var baseSlug = GenerateSlug(request.Title);
+        var slug = await EnsureUniqueSlugAsync(baseSlug, podcastId, ct);
+        
         var episode = new PodcastEpisode
         {
-            PodcastShowId = podcastId, Title = request.Title, Description = request.Description,
-            Slug = request.Title.ToLower().Replace(" ", "-"), EpisodeNumber = request.EpisodeNumber ?? 1,
-            Type = request.Type, ExplicitContent = request.ExplicitContent ? ExplicitContent.Explicit : ExplicitContent.Clean, Status = EpisodeStatus.Draft
+            PodcastShowId = podcastId, 
+            Title = request.Title, 
+            Description = request.Description,
+            Slug = slug, 
+            EpisodeNumber = request.EpisodeNumber ?? 1,
+            Type = request.Type, 
+            ExplicitContent = request.ExplicitContent ? ExplicitContent.Explicit : ExplicitContent.Clean, 
+            Status = EpisodeStatus.Draft
         };
         _context.Set<PodcastEpisode>().Add(episode);
         await _context.SaveChangesAsync(ct);
@@ -104,9 +109,17 @@ public class PodcastEpisodeService : IPodcastEpisodeService
 
     public async Task<EpisodeDto> UpdateAsync(Guid id, UpdateEpisodeRequest request, CancellationToken ct = default)
     {
-        var episode = await _context.Set<PodcastEpisode>().FindAsync([id], ct) ?? throw new KeyNotFoundException();
-        if (request.Title is not null) episode.Title = request.Title;
+        var episode = await _context.Set<PodcastEpisode>().FindAsync([id], ct) ?? throw new KeyNotFoundException($"Episode with ID {id} not found");
+        
+        if (request.Title is not null) 
+        {
+            episode.Title = request.Title;
+            // Update slug if title changed
+            var baseSlug = GenerateSlug(request.Title);
+            episode.Slug = await EnsureUniqueSlugAsync(baseSlug, episode.PodcastShowId, ct, id);
+        }
         if (request.Description is not null) episode.Description = request.Description;
+        
         await _context.SaveChangesAsync(ct);
         return (await GetByIdAsync(id, ct))!;
     }
@@ -171,7 +184,21 @@ public class PodcastEpisodeService : IPodcastEpisodeService
 
     public async Task<EpisodeChapterDto> AddChapterAsync(Guid episodeId, CreateChapterRequest request, CancellationToken ct = default)
     {
-        var chapter = new EpisodeChapter { EpisodeId = episodeId, Title = request.Title, StartTime = request.StartTime, EndTime = request.EndTime };
+        // Validate episode exists
+        var episodeExists = await _context.Set<PodcastEpisode>().AnyAsync(e => e.Id == episodeId, ct);
+        if (!episodeExists) throw new KeyNotFoundException($"Episode with ID {episodeId} not found");
+        
+        // Validate chapter timing
+        if (request.EndTime.HasValue && request.StartTime >= request.EndTime)
+            throw new ArgumentException("Start time must be before end time");
+        
+        var chapter = new EpisodeChapter 
+        { 
+            EpisodeId = episodeId, 
+            Title = request.Title, 
+            StartTime = request.StartTime, 
+            EndTime = request.EndTime 
+        };
         _context.Set<EpisodeChapter>().Add(chapter);
         await _context.SaveChangesAsync(ct);
         return new EpisodeChapterDto(chapter.Id, chapter.Title, chapter.Description, chapter.ImageUrl, chapter.Url, chapter.StartTime, chapter.EndTime);
@@ -179,8 +206,16 @@ public class PodcastEpisodeService : IPodcastEpisodeService
 
     public async Task<EpisodeChapterDto> UpdateChapterAsync(Guid chapterId, UpdateChapterRequest request, CancellationToken ct = default)
     {
-        var chapter = await _context.Set<EpisodeChapter>().FindAsync([chapterId], ct) ?? throw new KeyNotFoundException();
+        var chapter = await _context.Set<EpisodeChapter>().FindAsync([chapterId], ct) ?? throw new KeyNotFoundException($"Chapter with ID {chapterId} not found");
+        
         if (request.Title is not null) chapter.Title = request.Title;
+        if (request.StartTime.HasValue) chapter.StartTime = request.StartTime.Value;
+        if (request.EndTime.HasValue) chapter.EndTime = request.EndTime;
+        
+        // Validate timing if both are set
+        if (chapter.EndTime.HasValue && chapter.StartTime >= chapter.EndTime)
+            throw new ArgumentException("Start time must be before end time");
+        
         await _context.SaveChangesAsync(ct);
         return new EpisodeChapterDto(chapter.Id, chapter.Title, chapter.Description, chapter.ImageUrl, chapter.Url, chapter.StartTime, chapter.EndTime);
     }
@@ -193,14 +228,118 @@ public class PodcastEpisodeService : IPodcastEpisodeService
     }
 
     private static EpisodeDto MapToDto(PodcastEpisode e, List<EpisodeChapter> chapters) => new(
-        e.Id, e.PodcastShowId, e.PodcastShow.Title, e.PodcastShow.CoverImageUrl, e.Title, e.Description, e.Slug, e.Summary, e.ShowNotes,
-        e.SeasonNumber, e.EpisodeNumber, e.AudioUrl, e.VideoUrl, e.ThumbnailUrl, e.Duration, e.Type, e.Status, e.ExplicitContent == ExplicitContent.Explicit,
-        e.PublishedAt, e.PlayCount, (long)e.DownloadCount, (long)e.LikeCount, (long)e.CommentCount, e.AllowComments, e.AllowDownloads, e.TranscriptUrl,
-        chapters.Select(c => new EpisodeChapterDto(c.Id, c.Title, c.Description, c.ImageUrl, c.Url, c.StartTime, c.EndTime)).ToList(), null, e.CreatedAt
+        e.Id, 
+        e.PodcastShowId, 
+        e.PodcastShow.Title, 
+        e.PodcastShow.CoverImageUrl, 
+        e.Title, 
+        e.Description, 
+        e.Slug ?? string.Empty, 
+        e.Summary, 
+        e.ShowNotes,
+        e.SeasonNumber, 
+        e.EpisodeNumber, 
+        e.AudioUrl, 
+        e.VideoUrl, 
+        e.ThumbnailUrl, 
+        e.Duration, 
+        e.Type, 
+        e.Status, 
+        e.ExplicitContent == ExplicitContent.Explicit,
+        e.PublishedAt, 
+        e.PlayCount, 
+        (long)e.DownloadCount, 
+        (long)e.LikeCount, 
+        (long)e.CommentCount, 
+        e.AllowComments, 
+        e.AllowDownloads, 
+        e.TranscriptUrl,
+        chapters.Select(c => new EpisodeChapterDto(c.Id, c.Title, c.Description, c.ImageUrl, c.Url, c.StartTime, c.EndTime)).ToList(), 
+        null, 
+        e.CreatedAt
     );
 
     private static EpisodeListItemDto MapToListItem(PodcastEpisode e) => new(
-        e.Id, e.PodcastShowId, e.PodcastShow.Title, e.PodcastShow.CoverImageUrl, e.Title, e.Description, e.Slug, e.SeasonNumber, e.EpisodeNumber,
-        e.ThumbnailUrl, e.Duration, e.Type, e.ExplicitContent == ExplicitContent.Explicit, e.PublishedAt, e.PlayCount, (long)e.LikeCount, (long)e.CommentCount
+        e.Id, 
+        e.PodcastShowId, 
+        e.PodcastShow.Title, 
+        e.PodcastShow.CoverImageUrl, 
+        e.Title, 
+        e.Description ?? string.Empty, 
+        e.Slug ?? string.Empty, 
+        e.SeasonNumber ?? 1, 
+        e.EpisodeNumber,
+        e.ThumbnailUrl, 
+        e.Duration, 
+        e.Type.ToString(), 
+        e.ExplicitContent == ExplicitContent.Explicit, 
+        e.PublishedAt ?? DateTime.MinValue, 
+        e.PlayCount, 
+        e.LikeCount, 
+        e.CommentCount
     );
+
+    private static string GenerateSlug(string title)
+    {
+        if (string.IsNullOrWhiteSpace(title)) return "episode";
+        
+        return title.ToLowerInvariant()
+            .Replace(" ", "-")
+            .Replace("'", "")
+            .Replace("\"", "")
+            .Replace("!", "")
+            .Replace("?", "")
+            .Replace(".", "")
+            .Replace(",", "")
+            .Replace(":", "")
+            .Replace(";", "")
+            .Replace("(", "")
+            .Replace(")", "")
+            .Replace("[", "")
+            .Replace("]", "")
+            .Replace("{", "")
+            .Replace("}", "")
+            .Replace("/", "-")
+            .Replace("\\", "-")
+            .Replace("&", "and")
+            .Replace("@", "at")
+            .Replace("#", "")
+            .Replace("$", "")
+            .Replace("%", "")
+            .Replace("^", "")
+            .Replace("*", "")
+            .Replace("+", "")
+            .Replace("=", "")
+            .Replace("|", "")
+            .Replace("`", "")
+            .Replace("~", "")
+            .Replace("<", "")
+            .Replace(">", "")
+            .Trim('-');
+    }
+
+    private async Task<string> EnsureUniqueSlugAsync(string baseSlug, Guid podcastId, CancellationToken ct, Guid? excludeId = null)
+    {
+        var slug = baseSlug;
+        var counter = 1;
+        
+        while (await SlugExistsAsync(slug, podcastId, ct, excludeId))
+        {
+            slug = $"{baseSlug}-{counter}";
+            counter++;
+        }
+        
+        return slug;
+    }
+
+    private async Task<bool> SlugExistsAsync(string slug, Guid podcastId, CancellationToken ct, Guid? excludeId = null)
+    {
+        var query = _context.Set<PodcastEpisode>()
+            .Where(e => e.PodcastShowId == podcastId && e.Slug == slug);
+        
+        if (excludeId.HasValue)
+            query = query.Where(e => e.Id != excludeId.Value);
+        
+        return await query.AnyAsync(ct);
+    }
 }

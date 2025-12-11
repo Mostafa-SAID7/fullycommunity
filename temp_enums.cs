@@ -1,1 +1,0 @@
-namespace CommunityCar.Domain.Enums; 

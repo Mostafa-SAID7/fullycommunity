@@ -1,20 +1,3 @@
-// =============================================================================
-// Main Styles for Admin Interface
-// =============================================================================
-
-// Import abstracts (variables, mixins, animations)
-@import 'styles/abstracts/variables';
-@import 'styles/abstracts/mixins';
-@import 'styles/abstracts/animations';
-
-// Import utilities
-@import 'styles/utilities/utilities';
-
-// Import component styles (organized structure)
-@import 'styles/components/index';
-
-// Base Styles
-// -----------------------------------------------------------------------------
 
 * {
   box-sizing: border-box;
@@ -163,117 +146,18 @@ img {
   border-radius: $border-radius-base;
 }
 
-// Admin Layout Styles
+// Responsive Utilities
 // -----------------------------------------------------------------------------
 
-.admin-layout {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+// Ensure content never overflows horizontally
+* {
+  box-sizing: border-box;
 }
 
-.admin-header {
-  @include admin-header;
-  position: sticky;
-  top: 0;
-  z-index: $z-index-sticky;
-  height: $nav-height;
-}
-
-.admin-main {
-  display: flex;
-  flex: 1;
-}
-
-.admin-sidebar {
-  width: $sidebar-width;
-  background: $admin-surface;
-  border-right: 1px solid $admin-border;
-  transition: width $transition-base;
-  
-  &.collapsed {
-    width: $sidebar-collapsed-width;
-  }
-  
-  @include respond-below('lg') {
-    position: fixed;
-    top: $nav-height;
-    left: 0;
-    bottom: 0;
-    z-index: $z-index-fixed;
-    transform: translateX(-100%);
-    
-    &.open {
-      transform: translateX(0);
-    }
-  }
-}
-
-.admin-content {
-  flex: 1;
-  padding: 0; // Remove default padding - let components handle their own spacing
-  overflow-x: auto;
-  
-  @include respond-below('md') {
-    padding: 0; // Remove default padding on mobile too
-  }
-}
-
-// Admin Components
-// -----------------------------------------------------------------------------
-
-.admin-page-header {
-  @include flex-between;
-  margin-bottom: $spacing-8;
-  padding-bottom: $spacing-4;
-  border-bottom: 1px solid $border-primary;
-  
-  .page-title {
-    @include heading(2);
-    margin: 0;
-  }
-  
-  .page-subtitle {
-    color: $text-secondary;
-    margin-top: $spacing-1;
-  }
-  
-  .page-actions {
-    @include flex-start;
-    gap: $spacing-3;
-  }
-  
-  @include respond-below('md') {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: $spacing-4;
-    
-    .page-actions {
-      width: 100%;
-      justify-content: flex-end;
-    }
-  }
-}
-
-.admin-stats-grid {
-  @include grid-responsive(1, $spacing-6);
-  margin-bottom: $spacing-8;
-  
-  @include respond-to('sm') {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  @include respond-to('lg') {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.admin-content-grid {
-  @include grid-responsive(1, $spacing-6);
-  
-  @include respond-to('lg') {
-    grid-template-columns: 2fr 1fr;
-  }
+// Prevent horizontal overflow
+html, body {
+  overflow-x: hidden;
+  width: 100%;
 }
 
 // Status Indicators

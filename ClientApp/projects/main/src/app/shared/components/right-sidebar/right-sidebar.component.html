@@ -14,10 +14,11 @@
 
 <!-- Right Sidebar - Microsoft Fluent Design Style -->
 <!-- On xl screens: always visible. On smaller screens: controlled by isMobileOpen() -->
-<aside
-  class="fixed top-14 end-0 h-[calc(100vh-56px)] w-72 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-s border-gray-200/50 dark:border-gray-700/50 overflow-hidden z-40 transition-transform duration-300 xl:!translate-x-0"
-  [class.ltr:translate-x-full]="!isMobileOpen()" [class.rtl:-translate-x-full]="!isMobileOpen()"
-  [class.translate-x-0]="isMobileOpen()">
+<aside 
+  class="fixed top-14 end-0 h-[calc(100vh-56px)] w-72 max-w-[85vw] xl:max-w-none bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-s border-gray-200/50 dark:border-gray-700/50 overflow-hidden transition-transform duration-300 shadow-xl xl:shadow-none"
+  [style.transform]="sidebarTransform()"
+  [style.z-index]="isMobileOpen() ? '45' : (isXlScreen() ? '40' : '30')"
+  [attr.aria-hidden]="!isXlScreen() && !isMobileOpen()">
 
   <!-- Scrollbar Wrapper (Forces scrollbar to left) -->
   <div class="h-full overflow-y-auto scrollbar-left">

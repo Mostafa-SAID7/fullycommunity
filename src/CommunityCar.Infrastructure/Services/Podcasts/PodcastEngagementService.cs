@@ -1,4 +1,3 @@
-using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.Common.Interfaces.Data;
 using CommunityCar.Application.Common.Interfaces.Podcasts;
 using CommunityCar.Application.Common.Pagination;
@@ -11,11 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CommunityCar.Infrastructure.Services.Podcasts;
 
-public class PodcastEngagementService : IPodcastEngagementService
+public class PodcastEngagementService(IAppDbContext context) : IPodcastEngagementService
 {
-    private readonly IAppDbContext _context;
-
-    public PodcastEngagementService(IAppDbContext context) => _context = context;
+    private readonly IAppDbContext _context = context;
 
     // Subscriptions
     public async Task<bool> IsSubscribedAsync(Guid userId, Guid podcastId, CancellationToken ct = default)
@@ -25,32 +22,72 @@ public class PodcastEngagementService : IPodcastEngagementService
 
     public async Task<PagedResult<PodcastShowListItemDto>> GetUserSubscriptionsAsync(Guid userId, int page, int pageSize, CancellationToken ct = default)
     {
-        var query = _context.Set<PodcastSubscription>().Include(s => s.PodcastShow).ThenInclude(p => p.Owner)
-            .Where(s => s.UserId == userId).OrderByDescending(s => s.SubscribedAt);
+        var query = _context.Set<PodcastSubscription>()
+            .Include(s => s.PodcastShow)
+            .ThenInclude(p => p.Owner)
+            .Where(s => s.UserId == userId)
+            .OrderByDescending(s => s.SubscribedAt);
+            
         var total = await query.CountAsync(ct);
-        var items = await query.Skip((page - 1) * pageSize).Take(pageSize)
-            .Select(s => new PodcastShowListItemDto(s.PodcastShow.Id, s.PodcastShow.Title, s.PodcastShow.Description, s.PodcastShow.Slug,
-                s.PodcastShow.CoverImageUrl, s.PodcastShow.Owner.UserName ?? "", s.PodcastShow.Owner.AvatarUrl, s.PodcastShow.Category, s.PodcastShow.EpisodeCount, s.PodcastShow.SubscriberCount,
-                s.PodcastShow.AverageRating, s.PodcastShow.ExplicitContent == ExplicitContent.Explicit, s.PodcastShow.PublishedAt)).ToListAsync(ct);
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(s => new PodcastShowListItemDto(
+                s.PodcastShow.Id, 
+                s.PodcastShow.Title, 
+                s.PodcastShow.Description, 
+                s.PodcastShow.Slug ?? "",
+                s.PodcastShow.CoverImageUrl, 
+                s.PodcastShow.Owner.UserName ?? "", 
+                s.PodcastShow.Owner.AvatarUrl, 
+                s.PodcastShow.Category, 
+                s.PodcastShow.EpisodeCount, 
+                s.PodcastShow.SubscriberCount,
+                s.PodcastShow.AverageRating, 
+                s.PodcastShow.ExplicitContent == ExplicitContent.Explicit, 
+                s.PodcastShow.PublishedAt.HasValue ? s.PodcastShow.PublishedAt.Value : DateTime.UtcNow))
+            .ToListAsync(ct);
+            
         return new PagedResult<PodcastShowListItemDto>(items, total, page, pageSize);
     }
 
     public async Task SubscribeAsync(Guid userId, Guid podcastId, CancellationToken ct = default)
     {
-        if (await IsSubscribedAsync(userId, podcastId, ct)) return;
-        _context.Set<PodcastSubscription>().Add(new PodcastSubscription { UserId = userId, PodcastShowId = podcastId });
+        if (await IsSubscribedAsync(userId, podcastId, ct)) 
+            return;
+            
+        var subscription = new PodcastSubscription 
+        { 
+            UserId = userId, 
+            PodcastShowId = podcastId,
+            SubscribedAt = DateTime.UtcNow,
+            NotifyNewEpisodes = true,
+            NotifyLiveRecordings = false
+        };
+        
+        _context.Set<PodcastSubscription>().Add(subscription);
+        
         var podcast = await _context.Set<PodcastShow>().FindAsync([podcastId], ct);
-        if (podcast is not null) podcast.SubscriberCount++;
+        if (podcast is not null) 
+            podcast.SubscriberCount++;
+            
         await _context.SaveChangesAsync(ct);
     }
 
     public async Task UnsubscribeAsync(Guid userId, Guid podcastId, CancellationToken ct = default)
     {
-        var sub = await _context.Set<PodcastSubscription>().FirstOrDefaultAsync(s => s.UserId == userId && s.PodcastShowId == podcastId, ct);
-        if (sub is null) return;
-        _context.Set<PodcastSubscription>().Remove(sub);
+        var subscription = await _context.Set<PodcastSubscription>()
+            .FirstOrDefaultAsync(s => s.UserId == userId && s.PodcastShowId == podcastId, ct);
+            
+        if (subscription is null) 
+            return;
+            
+        _context.Set<PodcastSubscription>().Remove(subscription);
+        
         var podcast = await _context.Set<PodcastShow>().FindAsync([podcastId], ct);
-        if (podcast is not null && podcast.SubscriberCount > 0) podcast.SubscriberCount--;
+        if (podcast is not null && podcast.SubscriberCount > 0) 
+            podcast.SubscriberCount--;
+            
         await _context.SaveChangesAsync(ct);
     }
 
@@ -69,15 +106,34 @@ public class PodcastEngagementService : IPodcastEngagementService
 
     public async Task ReactAsync(Guid userId, Guid episodeId, string reactionType, CancellationToken ct = default)
     {
-        var existing = await _context.Set<EpisodeReaction>().FirstOrDefaultAsync(r => r.UserId == userId && r.EpisodeId == episodeId, ct);
-        var type = Enum.Parse<PodcastReactionType>(reactionType, true);
-        if (existing is not null) { existing.ReactionType = type; }
+        if (!Enum.TryParse<PodcastReactionType>(reactionType, true, out var type))
+            throw new ArgumentException($"Invalid reaction type: {reactionType}", nameof(reactionType));
+            
+        var existing = await _context.Set<EpisodeReaction>()
+            .FirstOrDefaultAsync(r => r.UserId == userId && r.EpisodeId == episodeId, ct);
+            
+        if (existing is not null) 
+        {
+            existing.ReactionType = type;
+            existing.ReactedAt = DateTime.UtcNow;
+        }
         else
         {
-            _context.Set<EpisodeReaction>().Add(new EpisodeReaction { UserId = userId, EpisodeId = episodeId, ReactionType = type });
+            var reaction = new EpisodeReaction 
+            { 
+                UserId = userId, 
+                EpisodeId = episodeId, 
+                ReactionType = type,
+                ReactedAt = DateTime.UtcNow
+            };
+            
+            _context.Set<EpisodeReaction>().Add(reaction);
+            
             var episode = await _context.Set<PodcastEpisode>().FindAsync([episodeId], ct);
-            if (episode is not null) episode.LikeCount++;
+            if (episode is not null) 
+                episode.LikeCount++;
         }
+        
         await _context.SaveChangesAsync(ct);
     }
 
@@ -106,14 +162,55 @@ public class PodcastEngagementService : IPodcastEngagementService
 
     public async Task<EpisodeCommentDto> AddCommentAsync(Guid userId, Guid episodeId, CreateCommentRequest request, CancellationToken ct = default)
     {
-        var comment = new EpisodeComment { UserId = userId, EpisodeId = episodeId, Content = request.Content, Timestamp = request.Timestamp, ParentCommentId = request.ParentCommentId };
+        var comment = new EpisodeComment 
+        { 
+            UserId = userId, 
+            EpisodeId = episodeId, 
+            Content = request.Content, 
+            Timestamp = request.Timestamp, 
+            ParentCommentId = request.ParentCommentId,
+            CreatedAt = DateTime.UtcNow,
+            IsEdited = false,
+            IsPinned = false,
+            LikeCount = 0,
+            ReplyCount = 0
+        };
+        
         _context.Set<EpisodeComment>().Add(comment);
+        
+        // Update parent comment reply count if this is a reply
+        if (request.ParentCommentId.HasValue)
+        {
+            var parentComment = await _context.Set<EpisodeComment>()
+                .FindAsync([request.ParentCommentId.Value], ct);
+            if (parentComment is not null)
+                parentComment.ReplyCount++;
+        }
+        
         var episode = await _context.Set<PodcastEpisode>().FindAsync([episodeId], ct);
-        if (episode is not null) episode.CommentCount++;
+        if (episode is not null) 
+            episode.CommentCount++;
+            
         await _context.SaveChangesAsync(ct);
-        var saved = await _context.Set<EpisodeComment>().Include(c => c.User).FirstAsync(c => c.Id == comment.Id, ct);
-        return new EpisodeCommentDto(saved.Id, saved.UserId, saved.User.UserName ?? "", saved.User.AvatarUrl, saved.Content,
-            saved.Timestamp, saved.ParentCommentId, saved.LikeCount, saved.ReplyCount, saved.IsPinned, saved.IsEdited, saved.CreatedAt, null);
+        
+        var saved = await _context.Set<EpisodeComment>()
+            .Include(c => c.User)
+            .FirstAsync(c => c.Id == comment.Id, ct);
+            
+        return new EpisodeCommentDto(
+            saved.Id, 
+            saved.UserId, 
+            saved.User.UserName ?? "", 
+            saved.User.AvatarUrl, 
+            saved.Content,
+            saved.Timestamp, 
+            saved.ParentCommentId, 
+            saved.LikeCount, 
+            saved.ReplyCount, 
+            saved.IsPinned, 
+            saved.IsEdited, 
+            saved.CreatedAt, 
+            null);
     }
 
     public async Task DeleteCommentAsync(Guid commentId, CancellationToken ct = default)
@@ -140,25 +237,80 @@ public class PodcastEngagementService : IPodcastEngagementService
 
     public async Task<PodcastRatingDto> RateAsync(Guid userId, Guid podcastId, CreateRatingRequest request, CancellationToken ct = default)
     {
-        var existing = await _context.Set<PodcastRating>().Include(r => r.User).FirstOrDefaultAsync(r => r.UserId == userId && r.PodcastShowId == podcastId, ct);
-        if (existing is not null) { existing.Rating = request.Rating; existing.Review = request.Review; }
+        // Validate rating range
+        if (request.Rating < 1 || request.Rating > 5)
+            throw new ArgumentException("Rating must be between 1 and 5", nameof(request.Rating));
+            
+        var existing = await _context.Set<PodcastRating>()
+            .Include(r => r.User)
+            .FirstOrDefaultAsync(r => r.UserId == userId && r.PodcastShowId == podcastId, ct);
+            
+        if (existing is not null) 
+        { 
+            existing.Rating = request.Rating; 
+            existing.Review = request.Review;
+            existing.Title = request.Title;
+            existing.RatedAt = DateTime.UtcNow;
+        }
         else
         {
-            existing = new PodcastRating { UserId = userId, PodcastShowId = podcastId, Rating = request.Rating, Title = request.Title, Review = request.Review };
+            existing = new PodcastRating 
+            { 
+                UserId = userId, 
+                PodcastShowId = podcastId, 
+                Rating = request.Rating, 
+                Title = request.Title, 
+                Review = request.Review,
+                RatedAt = DateTime.UtcNow,
+                HelpfulCount = 0,
+                IsVerifiedListener = false
+            };
             _context.Set<PodcastRating>().Add(existing);
         }
+        
         await _context.SaveChangesAsync(ct);
         await UpdatePodcastRatingAsync(podcastId, ct);
-        var saved = await _context.Set<PodcastRating>().Include(r => r.User).FirstAsync(r => r.Id == existing.Id, ct);
-        return new PodcastRatingDto(saved.Id, saved.UserId, saved.User.UserName ?? "", saved.User.AvatarUrl, saved.Rating, saved.Title, saved.Review, saved.HelpfulCount, saved.IsVerifiedListener, saved.RatedAt);
+        
+        var saved = await _context.Set<PodcastRating>()
+            .Include(r => r.User)
+            .FirstAsync(r => r.Id == existing.Id, ct);
+            
+        return new PodcastRatingDto(
+            saved.Id, 
+            saved.UserId, 
+            saved.User.UserName ?? "", 
+            saved.User.AvatarUrl, 
+            saved.Rating, 
+            saved.Title, 
+            saved.Review, 
+            saved.HelpfulCount, 
+            saved.IsVerifiedListener, 
+            saved.RatedAt);
     }
 
     private async Task UpdatePodcastRatingAsync(Guid podcastId, CancellationToken ct)
     {
-        var stats = await _context.Set<PodcastRating>().Where(r => r.PodcastShowId == podcastId)
-            .GroupBy(r => r.PodcastShowId).Select(g => new { Avg = g.Average(r => r.Rating), Count = g.Count() }).FirstOrDefaultAsync(ct);
+        var stats = await _context.Set<PodcastRating>()
+            .Where(r => r.PodcastShowId == podcastId)
+            .GroupBy(r => r.PodcastShowId)
+            .Select(g => new { Avg = g.Average(r => r.Rating), Count = g.Count() })
+            .FirstOrDefaultAsync(ct);
+            
         var podcast = await _context.Set<PodcastShow>().FindAsync([podcastId], ct);
-        if (podcast is not null && stats is not null) { podcast.AverageRating = stats.Avg; podcast.RatingCount = stats.Count; await _context.SaveChangesAsync(ct); }
+        
+        if (podcast is not null && stats is not null) 
+        { 
+            podcast.AverageRating = stats.Avg; 
+            podcast.RatingCount = stats.Count; 
+            await _context.SaveChangesAsync(ct); 
+        }
+        else if (podcast is not null)
+        {
+            // No ratings exist, reset to defaults
+            podcast.AverageRating = 0;
+            podcast.RatingCount = 0;
+            await _context.SaveChangesAsync(ct);
+        }
     }
 
     public async Task UpdateSubscriptionSettingsAsync(Guid userId, Guid podcastId, UpdateSubscriptionRequest request, CancellationToken ct = default)
