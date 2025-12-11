@@ -24,7 +24,7 @@
     rgba($indigo-50, 0.3) 100%
   );
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   
   @include respond-to('sm') {
     padding: $spacing-6;
@@ -76,80 +76,57 @@
   width: 100%;
   max-width: 28rem;
   position: relative;
+  padding: 4px;
   
   @include respond-to('lg') {
     max-width: 32rem;
-  }
-  
-  // Outer glow effect
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -20px;
-    background: radial-gradient(
-      circle,
-      rgba($color-primary, 0.15) 0%,
-      rgba($indigo-500, 0.1) 30%,
-      transparent 70%
-    );
-    border-radius: $border-radius-3xl;
-    animation: pulseGlow 4s ease-in-out infinite;
-    z-index: -2;
   }
 }
 
 .login-card {
   position: relative;
-  background: rgba($bg-primary, 0.8);
-  backdrop-filter: blur(16px);
+  background: #ffffff;
   border-radius: $border-radius-3xl;
   box-shadow: $shadow-2xl;
   padding: $spacing-6;
-  border: 1px solid rgba($border-primary, 0.2);
+  border: 4px solid transparent;
+  background-clip: padding-box;
   overflow: hidden;
   
-  // Rotating animated border effect
+  // Rotating animated red border around form
   &::before {
     content: '';
     position: absolute;
-    inset: -3px;
+    inset: -4px;
     background: conic-gradient(
       from 0deg,
-      transparent,
-      $color-primary,
-      $indigo-500,
-      $purple-500,
-      $color-primary-hover,
-      transparent,
-      $indigo-600,
-      $purple-600,
-      $color-primary,
-      transparent
+      #ff0000 0deg,
+      #ff3333 60deg,
+      #ff6666 120deg,
+      #ff3333 180deg,
+      #ff0000 240deg,
+      #cc0000 300deg,
+      #ff0000 360deg
     );
     border-radius: $border-radius-3xl;
+    padding: 4px;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
     animation: rotateBorder 3s linear infinite;
-    z-index: -1;
+    z-index: 0;
   }
   
-  // Secondary rotating border for depth
   &::after {
     content: '';
     position: absolute;
-    inset: -1px;
-    background: conic-gradient(
-      from 180deg,
-      rgba($color-primary, 0.4),
-      rgba($indigo-500, 0.4),
-      rgba($purple-500, 0.4),
-      rgba($color-primary-hover, 0.4),
-      rgba($color-primary, 0.4)
-    );
-    border-radius: $border-radius-3xl;
-    animation: rotateBorder 5s linear infinite reverse;
-    z-index: -1;
+    inset: 0;
+    background: #ffffff;
+    border-radius: calc($border-radius-3xl - 4px);
+    z-index: 0;
   }
   
-  // Content background (above the rotating borders)
   > * {
     position: relative;
     z-index: 1;
@@ -232,6 +209,8 @@
 // -----------------------------------------------------------------------------
 
 .auth-form {
+  background: #ffffff;
+  
   .form-field {
     margin-bottom: $spacing-5;
     
@@ -267,7 +246,7 @@
         font-size: $font-size-base;
         border: 2px solid $border-primary;
         border-radius: $border-radius-lg;
-        background: $bg-primary;
+        background: #ffffff !important; // Ensure inputs are always white
         color: $text-primary;
         transition: all $transition-fast;
         
@@ -285,9 +264,10 @@
         }
         
         &:disabled {
-          background: $bg-secondary;
+          background: #ffffff !important;
           color: $text-muted;
           cursor: not-allowed;
+          opacity: 0.6;
         }
       }
       
@@ -429,23 +409,8 @@
 }
 
 @keyframes rotateBorder {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.05);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes inputGlow {
@@ -529,8 +494,15 @@
   }
   
   .login-card {
-    background: rgba($dark-bg-secondary, 0.8);
-    border-color: rgba($dark-border-primary, 0.3);
+    background: #ffffff !important;
+  }
+  
+  .auth-form {
+    background: #ffffff !important;
+    
+    .form-input {
+      background: #ffffff !important;
+    }
   }
   
   .security-notice {
@@ -565,6 +537,13 @@
 @include reduced-motion {
   .background-elements .bg-element {
     animation: none;
+  }
+  
+  .login-card {
+    &::before,
+    &::after {
+      animation: none;
+    }
   }
   
   .submit-button {
@@ -603,5 +582,3 @@
     color: #fff;
   }
 }
-
-// Animation keyframes are now in forms/_base.scss to avoid duplication
