@@ -138,6 +138,13 @@ public record CreateApplicationRequest(
     string? PortfolioUrl
 );
 
+public record FeedbackRequest(
+    string Type,
+    string Message,
+    string? Email,
+    bool? IsHelpful
+);
+
 // Contact Request DTOs
 public record CreateContactRequest(
     string Name,

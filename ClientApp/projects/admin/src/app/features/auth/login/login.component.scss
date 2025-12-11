@@ -2,7 +2,8 @@
 // Login Component Styles
 // =============================================================================
 
-@import '../../../shared/styles/component-mixins';
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
 
 :host {
   display: block;
@@ -74,9 +75,26 @@
 .login-card-wrapper {
   width: 100%;
   max-width: 28rem;
+  position: relative;
   
   @include respond-to('lg') {
     max-width: 32rem;
+  }
+  
+  // Outer glow effect
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(
+      circle,
+      rgba($color-primary, 0.15) 0%,
+      rgba($indigo-500, 0.1) 30%,
+      transparent 70%
+    );
+    border-radius: $border-radius-3xl;
+    animation: pulseGlow 4s ease-in-out infinite;
+    z-index: -2;
   }
 }
 
@@ -88,6 +106,54 @@
   box-shadow: $shadow-2xl;
   padding: $spacing-6;
   border: 1px solid rgba($border-primary, 0.2);
+  overflow: hidden;
+  
+  // Rotating animated border effect
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    background: conic-gradient(
+      from 0deg,
+      transparent,
+      $color-primary,
+      $indigo-500,
+      $purple-500,
+      $color-primary-hover,
+      transparent,
+      $indigo-600,
+      $purple-600,
+      $color-primary,
+      transparent
+    );
+    border-radius: $border-radius-3xl;
+    animation: rotateBorder 3s linear infinite;
+    z-index: -1;
+  }
+  
+  // Secondary rotating border for depth
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: conic-gradient(
+      from 180deg,
+      rgba($color-primary, 0.4),
+      rgba($indigo-500, 0.4),
+      rgba($purple-500, 0.4),
+      rgba($color-primary-hover, 0.4),
+      rgba($color-primary, 0.4)
+    );
+    border-radius: $border-radius-3xl;
+    animation: rotateBorder 5s linear infinite reverse;
+    z-index: -1;
+  }
+  
+  // Content background (above the rotating borders)
+  > * {
+    position: relative;
+    z-index: 1;
+  }
   
   @include respond-to('sm') {
     padding: $spacing-8;
@@ -147,17 +213,253 @@
 }
 
 .login-help {
-  margin-top: $spacing-2;
+  margin-top: $spacing-4;
+  text-align: center;
   color: $text-tertiary;
   font-size: $font-size-xs;
   a {
     color: $color-primary;
     font-weight: $font-weight-semibold;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
-// Login-specific form styles are now inherited from auth-form class in forms/_base.scss
-// This eliminates duplication and ensures consistency across auth forms
+// Form Styles
+// -----------------------------------------------------------------------------
+
+.auth-form {
+  .form-field {
+    margin-bottom: $spacing-5;
+    
+    .field-label {
+      display: block;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      color: $text-primary;
+      margin-bottom: $spacing-2;
+    }
+    
+    .input-wrapper {
+      position: relative;
+      
+      .input-icon {
+        position: absolute;
+        left: $spacing-3;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $text-muted;
+        z-index: 1;
+        
+        svg {
+          width: $spacing-5;
+          height: $spacing-5;
+        }
+      }
+      
+      .form-input {
+        width: 100%;
+        padding: $spacing-3 $spacing-4;
+        padding-left: $spacing-10; // Space for icon
+        font-size: $font-size-base;
+        border: 2px solid $border-primary;
+        border-radius: $border-radius-lg;
+        background: $bg-primary;
+        color: $text-primary;
+        transition: all $transition-fast;
+        
+        &:focus {
+          outline: none;
+          border-color: $color-primary;
+          box-shadow: 
+            0 0 0 3px rgba($color-primary, 0.1),
+            0 0 20px rgba($color-primary, 0.2);
+          animation: inputGlow 2s ease-in-out infinite;
+        }
+        
+        &::placeholder {
+          color: $text-muted;
+        }
+        
+        &:disabled {
+          background: $bg-secondary;
+          color: $text-muted;
+          cursor: not-allowed;
+        }
+      }
+      
+      // Password field specific styles
+      &:has(input[type="password"]), &:has(input[type="text"]) {
+        .form-input {
+          padding-right: $spacing-12; // Space for toggle button
+        }
+      }
+    }
+  }
+  
+  .password-toggle {
+    position: absolute;
+    right: $spacing-3;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: $text-muted;
+    cursor: pointer;
+    padding: $spacing-2;
+    border-radius: $border-radius-base;
+    transition: all $transition-fast;
+    z-index: 2;
+    
+    svg {
+      width: $spacing-5;
+      height: $spacing-5;
+    }
+    
+    &:hover {
+      color: $text-secondary;
+      background: rgba($color-primary, 0.05);
+    }
+    
+    &:focus {
+      outline: none;
+      color: $color-primary;
+      background: rgba($color-primary, 0.1);
+    }
+    
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+  
+  .form-options {
+    @include flex-between;
+    margin-bottom: $spacing-6;
+    
+    .remember-me {
+      @include flex-start;
+      gap: $spacing-2;
+      cursor: pointer;
+      
+      .remember-checkbox {
+        width: $spacing-4;
+        height: $spacing-4;
+        accent-color: $color-primary;
+      }
+      
+      .remember-text {
+        font-size: $font-size-sm;
+        color: $text-secondary;
+      }
+    }
+    
+    .forgot-password {
+      font-size: $font-size-sm;
+      color: $color-primary;
+      text-decoration: none;
+      font-weight: $font-weight-medium;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .submit-button {
+    width: 100%;
+    @include flex-center;
+    gap: $spacing-2;
+    padding: $spacing-4;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $text-inverse;
+    background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+    border: none;
+    border-radius: $border-radius-lg;
+    cursor: pointer;
+    transition: all $transition-base;
+    box-shadow: $shadow-md;
+    
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, $color-primary-hover, $color-primary-dark);
+      box-shadow: $shadow-lg;
+      transform: translateY(-1px);
+    }
+    
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: $shadow-base;
+    }
+    
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+      transform: none;
+    }
+    
+    .loading-spinner {
+      width: $spacing-5;
+      height: $spacing-5;
+      border: 2px solid rgba($text-inverse, 0.3);
+      border-top-color: $text-inverse;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+  
+  .error-message {
+    background: rgba($color-error, 0.1);
+    color: $color-error;
+    padding: $spacing-3 $spacing-4;
+    border-radius: $border-radius-md;
+    font-size: $font-size-sm;
+    margin-bottom: $spacing-4;
+    border-left: 4px solid $color-error;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateBorder {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes inputGlow {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 3px rgba($color-primary, 0.1),
+      0 0 20px rgba($color-primary, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 3px rgba($color-primary, 0.2),
+      0 0 30px rgba($color-primary, 0.3);
+  }
+}
 
 // Footer Section
 // -----------------------------------------------------------------------------

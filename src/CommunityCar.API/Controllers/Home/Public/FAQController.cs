@@ -59,7 +59,7 @@ public class FAQController : ControllerBase
     [HttpPost("{id:guid}/feedback")]
     public async Task<IActionResult> RecordFeedback(Guid id, [FromBody] FeedbackRequest request, CancellationToken ct)
     {
-        await _faqService.RecordFeedbackAsync(id, request.IsHelpful, ct);
+        await _faqService.RecordFeedbackAsync(id, request.IsHelpful ?? false, ct);
         return NoContent();
     }
 }

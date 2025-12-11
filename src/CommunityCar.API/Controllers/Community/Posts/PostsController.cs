@@ -1,6 +1,7 @@
 using CommunityCar.Application.Common.Interfaces.Community;
 using CommunityCar.Application.DTOs.Response.Community.Posts;
 using CommunityCar.Application.DTOs.Requests.Community.Posts;
+using PostCommentRequest = CommunityCar.Application.DTOs.Requests.Community.Posts.CreateCommentRequest;
 using CommunityCar.Infrastructure.Services.Community.Posts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -101,7 +102,7 @@ public class PostsController : ControllerBase
 
     [HttpPost("{id:guid}/comments")]
     [Authorize]
-    public async Task<IActionResult> AddComment(Guid id, CreateCommentRequest request)
+    public async Task<IActionResult> AddComment(Guid id, PostCommentRequest request)
         => Ok(await _postService.AddCommentAsync(id, GetUserId()!.Value, request));
 
     [HttpDelete("comments/{commentId:guid}")]

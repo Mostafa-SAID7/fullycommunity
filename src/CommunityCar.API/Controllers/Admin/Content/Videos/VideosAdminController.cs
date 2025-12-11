@@ -145,10 +145,10 @@ public class VideosAdminController : ControllerBase
     {
         var report = await _context.Set<VideoReport>().FindAsync([id], ct);
         if (report is null) return NotFound();
-        report.Status = Enum.Parse<ReportStatus>(request.Status);
+        report.Status = ReportStatus.Resolved;
         report.ReviewedAt = DateTime.UtcNow;
-        report.ReviewNotes = request.Notes;
-        report.ActionTaken = request.ActionTaken;
+        report.ReviewNotes = request.Reason ?? request.Notes;
+        report.ActionTaken = request.Action;
         await _context.SaveChangesAsync(ct);
         return NoContent();
     }

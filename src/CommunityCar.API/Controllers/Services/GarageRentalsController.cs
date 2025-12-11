@@ -55,7 +55,7 @@ public class GarageRentalsController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> GetAvailability([FromRoute] Guid garageId, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate, CancellationToken ct)
     {
-        var request = new GarageAvailabilityRequest(garageId, startDate, endDate);
+        var request = new GarageAvailabilityRequest(null, startDate, null, null);
         var availability = await _garageService.GetAvailabilityAsync(request, ct);
         return Ok(availability);
     }

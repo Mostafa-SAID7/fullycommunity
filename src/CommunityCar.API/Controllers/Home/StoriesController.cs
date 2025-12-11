@@ -5,6 +5,7 @@ using CommunityCar.Application.DTOs.Requests.Home;
 using CommunityCar.Domain.Entities.Home;
 using CommunityCar.Domain.Entities.Community.Pages;
 
+#if false
 namespace CommunityCar.API.Controllers;
 
 [ApiController]
@@ -295,3 +296,4 @@ public class StoriesController : ControllerBase
         };
     }
 }
+#endif

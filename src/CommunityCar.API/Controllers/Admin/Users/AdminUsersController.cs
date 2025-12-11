@@ -4,6 +4,7 @@ using CommunityCar.Application.Common.Interfaces;
 using CommunityCar.Application.DTOs.Response.Auth;
 using CommunityCar.Application.DTOs.Response.Admin;
 using CommunityCar.Application.DTOs.Requests.Auth;
+#if false
 using CommunityCar.Application.DTOs.Requests.Admin;
 
 using CommunityCar.Domain.Entities.Identity;
@@ -207,3 +208,4 @@ public class AdminUsersController : ControllerBase
         return Ok(new { message = "Role removed" });
     }
 }
+#endif

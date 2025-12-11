@@ -109,3 +109,17 @@ public record VideoFeedRequest(
     int PageSize = 20
 );
 
+public record CompleteUploadRequest(
+    string VideoUrl,
+    string? ThumbnailUrl
+);
+
+public record RecordViewRequest(
+    string? SessionId
+);
+
+public record WatchProgressRequest(
+    TimeSpan WatchDuration,
+    double WatchPercent
+);
+

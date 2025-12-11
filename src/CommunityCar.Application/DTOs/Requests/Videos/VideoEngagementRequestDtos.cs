@@ -12,6 +12,7 @@ public record CreateShareRequest(
 );
 
 public record CommentSearchRequest(
+    Guid VideoId,
     Guid? ParentId,
     string? SortBy,
     int Page = 1,
@@ -24,6 +25,10 @@ public record CreateCommentRequest(
     Guid? ParentId
 );
 
+public record UpdateCommentRequest(
+    string Content
+);
+
 public record AddToCollectionRequest(
     Guid VideoId,
     Guid? CollectionId
@@ -33,5 +38,14 @@ public record CreateCollectionRequest(
     string Name,
     string? Description,
     bool IsPrivate
+);
+
+public record ReactRequest(
+    string Type
+);
+
+public record ShareRequest(
+    string Platform,
+    string? Message
 );
 

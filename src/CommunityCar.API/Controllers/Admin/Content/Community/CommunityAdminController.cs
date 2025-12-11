@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+#if false
 namespace CommunityCar.API.Controllers.Admin.Dashboard.Community;
 
 [ApiController]
@@ -447,3 +448,4 @@ public class CommunityAdminController : ControllerBase
         }
     }
 }
+#endif

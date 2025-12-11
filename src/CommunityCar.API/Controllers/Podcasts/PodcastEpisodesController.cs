@@ -86,7 +86,7 @@ public class PodcastEpisodesController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> RecordPlay(Guid podcastId, Guid id, [FromBody] RecordPlayRequest? request, CancellationToken ct)
     {
-        await _episodeService.RecordPlayAsync(id, GetUserId(), request ?? new RecordPlayRequest(null, null, null, null), ct);
+        await _episodeService.RecordPlayAsync(id, GetUserId(), request ?? new RecordPlayRequest(null, null, null), ct);
         return NoContent();
     }
 

@@ -49,7 +49,7 @@ public class ServicesAdminController : ControllerBase
     {
         var provider = await _context.Set<GarageOwnerProfile>().FindAsync([id], ct);
         if (provider is null) return NotFound();
-        provider.IsVerified = request.IsVerified;
+        provider.IsVerified = request.Verified;
         // provider.VerifiedAt = request.IsVerified ? DateTime.UtcNow : null; // Property missing
         await _context.SaveChangesAsync(ct);
         return NoContent();

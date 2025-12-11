@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces.Podcasts;
 using CommunityCar.Application.DTOs.Response.Podcasts;
 using System.Security.Claims;
+using PodcastCommentRequest = CommunityCar.Application.DTOs.Requests.Podcasts.CreateCommentRequest;
+using PodcastShareRequest = CommunityCar.Application.DTOs.Requests.Podcasts.CreateShareRequest;
 
 namespace CommunityCar.API.Controllers.Podcasts;
 
@@ -100,7 +102,7 @@ public class PodcastEngagementController : ControllerBase
     }
 
     [HttpPost("episodes/{episodeId:guid}/comments")]
-    public async Task<IActionResult> AddComment(Guid episodeId, [FromBody] CreateCommentRequest request, CancellationToken ct)
+    public async Task<IActionResult> AddComment(Guid episodeId, [FromBody] PodcastCommentRequest request, CancellationToken ct)
     {
         var comment = await _engagementService.AddCommentAsync(GetUserId(), episodeId, request, ct);
         return Ok(comment);
@@ -116,7 +118,7 @@ public class PodcastEngagementController : ControllerBase
     // Shares
     [HttpPost("episodes/{episodeId:guid}/share")]
     [AllowAnonymous]
-    public async Task<IActionResult> Share(Guid episodeId, [FromBody] CreateShareRequest request, CancellationToken ct)
+    public async Task<IActionResult> Share(Guid episodeId, [FromBody] PodcastShareRequest request, CancellationToken ct)
     {
         var share = await _engagementService.ShareAsync(GetOptionalUserId(), episodeId, request, ct);
         return Ok(share);

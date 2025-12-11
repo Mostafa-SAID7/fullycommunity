@@ -67,7 +67,7 @@ public class PagesController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<ActionResult<PageDto>> CreatePage([FromBody] CreatePageRequest request)
+    public async Task<ActionResult<PageDto>> CreatePage([FromBody] CommunityCar.Application.DTOs.Requests.Community.Pages.CreatePageRequest request)
     {
         // Mock creation - replace with actual service
         var page = new PageDto
@@ -111,7 +111,7 @@ public class PagesController : ControllerBase
 
     [HttpPut("{id}")]
     [Authorize]
-    public async Task<ActionResult<PageDto>> UpdatePage(string id, [FromBody] UpdatePageRequest request)
+    public async Task<ActionResult<PageDto>> UpdatePage(string id, [FromBody] CommunityCar.Application.DTOs.Requests.Community.Pages.UpdatePageRequest request)
     {
         var page = GetMockPageDetails().FirstOrDefault(p => p.Id == id);
         if (page == null)

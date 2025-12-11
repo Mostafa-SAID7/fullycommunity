@@ -4,6 +4,8 @@ using CommunityCar.Application.DTOs.Requests.Community.QA;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using QACreateCommentRequest = CommunityCar.Application.DTOs.Requests.Community.QA.CreateCommentRequest;
+using QAUpdateCommentRequest = CommunityCar.Application.DTOs.Requests.Community.QA.UpdateCommentRequest;
 
 namespace CommunityCar.API.Controllers.Community.QA;
 
@@ -81,7 +83,7 @@ public class AnswerCommentsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AddComment(
         Guid answerId,
-        [FromBody] CreateCommentRequest request,
+        [FromBody] QACreateCommentRequest request,
         CancellationToken ct = default)
     {
         try
@@ -166,7 +168,7 @@ public class AnswerCommentsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateComment(
         Guid commentId,
-        [FromBody] UpdateCommentRequest request,
+        [FromBody] QAUpdateCommentRequest request,
         CancellationToken ct = default)
     {
         try

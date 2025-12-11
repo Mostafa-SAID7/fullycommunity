@@ -178,3 +178,12 @@ public record SendTipRequest(
     string Currency,
     string? Message
 );
+
+public record CompleteEpisodeUploadRequest(
+    string? AudioUrl,
+    string? VideoUrl
+);
+
+public record ScheduleRequest(
+    DateTime PublishAt
+);

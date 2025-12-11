@@ -140,7 +140,7 @@ public class ReportsAdminController : ControllerBase
         }
     }
 
-    private record TopContentItem(string Id, string Title, string Type, int Views, decimal Engagement);
+    public record TopContentItem(string Id, string Title, string Type, int Views, decimal Engagement);
 
     [HttpGet("top-content")]
     public async Task<ActionResult<IEnumerable<TopContentItem>>> GetTopContent(

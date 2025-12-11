@@ -2,8 +2,8 @@
 // Logo Button Component Styles
 // =============================================================================
 
-@use '../../../../styles/abstracts/variables' as *;
-@use '../../../../styles/abstracts/mixins' as *;
+@import '../../../../styles/abstracts/variables';
+@import '../../../../styles/abstracts/mixins';
 
 :host {
   display: inline-block;
@@ -21,15 +21,15 @@
   transform-origin: center;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
   
-  // Keep hover/active calm—no glow/shadow pulse
+  // Keep hover/active calm—no shadow effects
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+    box-shadow: none;
   }
   
   &:active {
     transform: translateY(0px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+    box-shadow: none;
   }
 }
 
@@ -89,18 +89,10 @@
   line-height: 1;
 }
 
-// Bottom Shadow for 3D Depth
+// Bottom Shadow for 3D Depth - Removed for cleaner hover effect
 // -----------------------------------------------------------------------------
 .depth-shadow {
-  position: absolute;
-  bottom: -0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 75%;
-  height: 1rem;
-  background: rgba($color-primary, 0.2);
-  filter: blur(0.75rem);
-  border-radius: $border-radius-full;
+  display: none;
 }
 
 // Animations
@@ -119,24 +111,12 @@
 @include dark-mode {
   .logo-container {
     &:hover {
-      box-shadow: 
-        0 0 50px rgba($color-primary, 0.9),
-        0 0 70px rgba($color-primary, 0.6),
-        0 0 100px rgba($color-primary, 0.4),
-        0 15px 35px -5px rgba($color-primary, 0.5);
+      box-shadow: none;
     }
     
     &:active {
-      box-shadow: 
-        0 0 30px rgba($color-primary, 0.7),
-        0 0 50px rgba($color-primary, 0.5),
-        0 0 70px rgba($color-primary, 0.3),
-        0 5px 15px -5px rgba($color-primary, 0.4);
+      box-shadow: none;
     }
-  }
-  
-  .depth-shadow {
-    background: rgba($color-primary, 0.3);
   }
 }
 

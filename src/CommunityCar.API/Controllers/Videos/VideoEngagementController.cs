@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CommunityCar.Application.Common.Interfaces.Videos;
-
-
 using CommunityCar.Domain.Entities.Videos.Common;
 using System.Security.Claims;
+using VideoCommentRequest = CommunityCar.Application.DTOs.Requests.Videos.CreateCommentRequest;
+using VideoUpdateCommentRequest = CommunityCar.Application.DTOs.Requests.Videos.UpdateCommentRequest;
+using VideoShareRequest = CommunityCar.Application.DTOs.Requests.Videos.ShareRequest;
+using ReactRequest = CommunityCar.Application.DTOs.Requests.Videos.ReactRequest;
 
 namespace CommunityCar.API.Controllers.Videos;
 
@@ -27,7 +29,12 @@ public class VideoEngagementController : ControllerBase
     [HttpPost("{videoId:guid}/react")]
     public async Task<IActionResult> React(Guid videoId, [FromBody] ReactRequest request, CancellationToken ct)
     {
-        var reaction = await _engagementService.ReactAsync(videoId, GetUserId(), request.Type, ct);
+        if (!Enum.TryParse<ReactionType>(request.Type, true, out var reactionType))
+        {
+            return BadRequest("Invalid reaction type");
+        }
+
+        var reaction = await _engagementService.ReactAsync(videoId, GetUserId(), reactionType, ct);
         return Ok(reaction);
     }
 
@@ -49,14 +56,14 @@ public class VideoEngagementController : ControllerBase
     }
 
     [HttpPost("comments")]
-    public async Task<IActionResult> CreateComment([FromBody] CreateCommentRequest request, CancellationToken ct)
+    public async Task<IActionResult> CreateComment([FromBody] VideoCommentRequest request, CancellationToken ct)
     {
         var comment = await _engagementService.CreateCommentAsync(GetUserId(), request, ct);
         return Ok(comment);
     }
 
     [HttpPut("comments/{id:guid}")]
-    public async Task<IActionResult> UpdateComment(Guid id, [FromBody] UpdateCommentRequest request, CancellationToken ct)
+    public async Task<IActionResult> UpdateComment(Guid id, [FromBody] VideoUpdateCommentRequest request, CancellationToken ct)
     {
         var comment = await _engagementService.UpdateCommentAsync(id, request.Content, ct);
         return Ok(comment);
@@ -144,7 +151,7 @@ public class VideoEngagementController : ControllerBase
     // Shares
     [HttpPost("{videoId:guid}/share")]
     [AllowAnonymous]
-    public async Task<IActionResult> RecordShare(Guid videoId, [FromBody] ShareRequest request, CancellationToken ct)
+    public async Task<IActionResult> RecordShare(Guid videoId, [FromBody] VideoShareRequest request, CancellationToken ct)
     {
         Guid? userId = User.Identity?.IsAuthenticated == true ? GetUserId() : null;
         var share = await _engagementService.RecordShareAsync(videoId, userId, request.Platform, ct);
