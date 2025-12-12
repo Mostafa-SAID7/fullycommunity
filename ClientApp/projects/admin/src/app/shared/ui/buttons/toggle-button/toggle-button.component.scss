@@ -1,0 +1,180 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.toggle-container {
+  @include flex-start;
+  gap: $spacing-3;
+  
+  &.toggle-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.toggle-switch {
+  position: relative;
+  border: none;
+  border-radius: $border-radius-full;
+  cursor: pointer;
+  transition: $transition-base;
+  outline: none;
+  
+  &:focus-visible {
+    @include focus-visible;
+  }
+  
+  &.toggle-disabled {
+    cursor: not-allowed;
+  }
+}
+
+// Size variants
+.toggle-sm {
+  width: 32px;
+  height: 18px;
+  
+  .toggle-thumb {
+    width: 14px;
+    height: 14px;
+    top: 2px;
+    left: 2px;
+  }
+  
+  &.toggle-active .toggle-thumb {
+    transform: translateX(14px);
+  }
+}
+
+.toggle-md {
+  width: 44px;
+  height: 24px;
+  
+  .toggle-thumb {
+    width: 20px;
+    height: 20px;
+    top: 2px;
+    left: 2px;
+  }
+  
+  &.toggle-active .toggle-thumb {
+    transform: translateX(20px);
+  }
+}
+
+.toggle-lg {
+  width: 56px;
+  height: 32px;
+  
+  .toggle-thumb {
+    width: 28px;
+    height: 28px;
+    top: 2px;
+    left: 2px;
+  }
+  
+  &.toggle-active .toggle-thumb {
+    transform: translateX(24px);
+  }
+}
+
+// Color variants
+.toggle-primary {
+  background: $bg-secondary;
+  
+  &.toggle-active {
+    background: $color-primary;
+  }
+}
+
+.toggle-success {
+  background: $bg-secondary;
+  
+  &.toggle-active {
+    background: $color-success;
+  }
+}
+
+.toggle-warning {
+  background: $bg-secondary;
+  
+  &.toggle-active {
+    background: $color-warning;
+  }
+}
+
+.toggle-danger {
+  background: $bg-secondary;
+  
+  &.toggle-active {
+    background: $color-error;
+  }
+}
+
+.toggle-thumb {
+  position: absolute;
+  background: white;
+  border-radius: $border-radius-full;
+  transition: $transition-base;
+  box-shadow: $shadow-sm;
+}
+
+.toggle-label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  cursor: pointer;
+  user-select: none;
+  
+  .toggle-disabled & {
+    cursor: not-allowed;
+  }
+}
+
+.toggle-label-left {
+  order: -1;
+}
+
+.toggle-label-right {
+  order: 1;
+}
+
+// Dark mode support
+@include dark-mode {
+  .toggle-switch {
+    background: $dark-bg-tertiary;
+    
+    &.toggle-active {
+      &.toggle-primary {
+        background: $color-primary;
+      }
+      
+      &.toggle-success {
+        background: $color-success;
+      }
+      
+      &.toggle-warning {
+        background: $color-warning;
+      }
+      
+      &.toggle-danger {
+       
+} }ne;
+  noion:sit    tran-thumb {
+ .togglee-switch,
+  .toggl
+ {otion duced-mnclude re
+@i supportced motiondu
+// Re  }
+}
+
+mary;rk-text-pri  color: $daabel {
+   .toggle-l  }
+  
+ rimary;
+text-pund: $dark-ackgroumb {
+    bggle-th .to 
+    }
+  }
+ 
+ ;
+      }$color-errord:  backgroun

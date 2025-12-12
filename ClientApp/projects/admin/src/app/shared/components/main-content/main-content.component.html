@@ -1,0 +1,63 @@
+<div class="main-content">
+  <!-- Header Section -->
+  <div class="content-header" *ngIf="title || showBreadcrumb">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" *ngIf="showBreadcrumb && breadcrumbItems.length > 0">
+      <ol class="breadcrumb-list">
+        <li *ngFor="let item of breadcrumbItems; let last = last" class="breadcrumb-item">
+          <a *ngIf="!last && item.route" [routerLink]="item.route" class="breadcrumb-link">
+            {{ item.label }}
+          </a>
+          <span *ngIf="!last && !item.route" class="breadcrumb-text">{{ item.label }}</span>
+          <span *ngIf="last" class="breadcrumb-current">{{ item.label }}</span>
+          <svg *ngIf="!last" class="breadcrumb-separator" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Title and Actions -->
+    <div class="title-section" *ngIf="title">
+      <div class="title-content">
+        <h1 class="page-title">{{ title }}</h1>
+        <p class="page-subtitle" *ngIf="subtitle">{{ subtitle }}</p>
+      </div>
+      
+      <div class="title-actions" *ngIf="actions && actions.length > 0">
+        <ng-container *ngFor="let action of actions">
+          <button 
+            [class]="'btn ' + (action.class || 'btn-primary')"
+            [disabled]="action.disabled || loading"
+            (click)="action.handler && action.handler()">
+            <svg *ngIf="action.icon" class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="action.icon"/>
+            </svg>
+            {{ action.label }}
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Loading...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-state" *ngIf="error && !loading">
+    <div class="error-icon">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+    </div>
+    <p class="error-message">{{ error }}</p>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content-body" *ngIf="!loading && !error">
+    <ng-content></ng-content>
+  </div>
+</div>

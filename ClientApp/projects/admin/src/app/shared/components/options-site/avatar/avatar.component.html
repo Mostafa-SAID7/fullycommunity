@@ -1,0 +1,36 @@
+<div [class]="getContainerClasses()" (click)="onClick()">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="avatar-loading-spinner"></div>
+  
+  <!-- Image Avatar -->
+  <img 
+    *ngIf="src && !imageError && !loading"
+    [src]="src" 
+    [alt]="alt"
+    class="avatar-image"
+    (error)="onImageError()"
+    (load)="onImageLoad()">
+  
+  <!-- Initials Avatar -->
+  <div 
+    *ngIf="(!src || imageError) && name && !loading" 
+    class="avatar-initials">
+    {{ getInitials() }}
+  </div>
+  
+  <!-- Fallback Icon Avatar -->
+  <div 
+    *ngIf="(!src || imageError) && !name && !loading" 
+    class="avatar-fallback">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="getFallbackIcon()"/>
+    </svg>
+  </div>
+  
+  <!-- Status Indicator -->
+  <div 
+    *ngIf="showStatus && status && !loading" 
+    [class]="getStatusClasses()"
+    [attr.aria-label]="status">
+  </div>
+</div>

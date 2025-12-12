@@ -1,0 +1,354 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.verification-form {
+  background: $bg-primary;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-lg;
+  border: 1px solid $border-primary;
+  padding: $spacing-8;
+  max-width: 28rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.form-header {
+  margin-bottom: $spacing-6;
+}
+
+.icon-container {
+  @include flex-center;
+  width: 4rem;
+  height: 4rem;
+  background: rgba($color-primary, 0.1);
+  border-radius: $border-radius-full;
+  margin: 0 auto $spacing-4;
+  
+  .verification-icon {
+    width: 2rem;
+    height: 2rem;
+    color: $color-primary;
+  }
+}
+
+.form-title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  margin-bottom: $spacing-2;
+}
+
+.form-subtitle {
+  font-size: $font-size-base;
+  color: $text-secondary;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.success-message,
+.error-message {
+  @include flex-start;
+  gap: $spacing-2;
+  padding: $spacing-3 $spacing-4;
+  border-radius: $border-radius-md;
+  font-size: $font-size-sm;
+  margin-bottom: $spacing-4;
+  text-align: left;
+  
+  svg {
+    width: $spacing-5;
+    height: $spacing-5;
+    flex-shrink: 0;
+  }
+}
+
+.success-message {
+  background: rgba($color-success, 0.1);
+  color: $color-success;
+  border-left: 4px solid $color-success;
+}
+
+.error-message {
+  background: rgba($color-error, 0.1);
+  color: $color-error;
+  border-left: 4px solid $color-error;
+}
+
+// Code Input Styles
+.code-input-container {
+  margin-bottom: $spacing-6;
+}
+
+.code-label {
+  display: block;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  margin-bottom: $spacing-3;
+}
+
+.digit-inputs {
+  display: flex;
+  justify-content: center;
+  gap: $spacing-2;
+  margin-bottom: $spacing-2;
+}
+
+.digit-input {
+  width: 3rem;
+  height: 3rem;
+  text-align: center;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  border: 2px solid $border-primary;
+  border-radius: $border-radius-lg;
+  background: $bg-primary;
+  color: $text-primary;
+  transition: all $transition-fast;
+  
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+    transform: scale(1.05);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  // Animation when filled
+  &:not(:placeholder-shown) {
+    border-color: $color-success;
+    background: rgba($color-success, 0.05);
+  }
+}
+
+.code-help {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  margin: 0;
+}
+
+// Loading State
+.loading-state {
+  @include flex-center;
+  gap: $spacing-3;
+  padding: $spacing-4;
+  margin-bottom: $spacing-4;
+  
+  span {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+}
+
+.loading-spinner {
+  width: $spacing-5;
+  height: $spacing-5;
+  border: 2px solid rgba($color-primary, 0.2);
+  border-top-color: $color-primary;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  
+  &.small {
+    width: $spacing-4;
+    height: $spacing-4;
+  }
+}
+
+// Resend Section
+.resend-section {
+  margin-bottom: $spacing-6;
+  padding: $spacing-4;
+  background: $bg-secondary;
+  border-radius: $border-radius-lg;
+  border: 1px solid $border-primary;
+}
+
+.resend-text {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  margin: 0 0 $spacing-2 0;
+}
+
+.resend-button {
+  @include flex-center;
+  gap: $spacing-2;
+  background: transparent;
+  border: none;
+  color: $color-primary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-fast;
+  
+  &:hover:not(:disabled) {
+    color: $color-primary-hover;
+    text-decoration: underline;
+  }
+  
+  &:disabled {
+    color: $text-muted;
+    cursor: not-allowed;
+  }
+}
+
+// Form Actions
+.form-actions {
+  display: flex;
+  gap: $spacing-3;
+  margin-bottom: $spacing-4;
+  
+  @include respond-below('sm') {
+    flex-direction: column;
+  }
+}
+
+.btn {
+  flex: 1;
+  padding: $spacing-3 $spacing-4;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-fast;
+  @include flex-center;
+  gap: $spacing-2;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: $color-primary;
+  color: white;
+  border: 1px solid $color-primary;
+  
+  &:hover:not(:disabled) {
+    background: $color-primary-hover;
+    border-color: $color-primary-hover;
+  }
+}
+
+.btn-secondary {
+  background: transparent;
+  color: $text-secondary;
+  border: 1px solid $border-primary;
+  
+  &:hover:not(:disabled) {
+    background: $bg-secondary;
+    border-color: $border-secondary;
+  }
+}
+
+// Security Notice
+.security-notice {
+  @include flex-center;
+  gap: $spacing-2;
+  font-size: $font-size-xs;
+  color: $text-muted;
+  padding-top: $spacing-4;
+  border-top: 1px solid $border-primary;
+  
+  svg {
+    width: $spacing-4;
+    height: $spacing-4;
+  }
+}
+
+// Animations
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Dark Mode Support
+@include dark-mode {
+  .verification-form {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+  
+  .form-title {
+    color: $dark-text-primary;
+  }
+  
+  .form-subtitle {
+    color: $dark-text-secondary;
+  }
+  
+  .code-label {
+    color: $dark-text-primary;
+  }
+  
+  .digit-input {
+    background: $dark-bg-tertiary;
+    border-color: $dark-border-primary;
+    color: $dark-text-primary;
+    
+    &:focus {
+      border-color: $color-primary;
+    }
+  }
+  
+  .resend-section {
+    background: $dark-bg-tertiary;
+    border-color: $dark-border-primary;
+  }
+  
+  .resend-text {
+    color: $dark-text-secondary;
+  }
+  
+  .btn-secondary {
+    color: $dark-text-secondary;
+    border-color: $dark-border-primary;
+    
+    &:hover:not(:disabled) {
+      background: $dark-bg-primary;
+      border-color: $dark-border-secondary;
+    }
+  }
+  
+  .security-notice {
+    color: $dark-text-secondary;
+    border-color: $dark-border-primary;
+  }
+}
+
+// Responsive Design
+@include respond-below('sm') {
+  .verification-form {
+    padding: $spacing-6;
+  }
+  
+  .digit-inputs {
+    gap: $spacing-1;
+  }
+  
+  .digit-input {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: $font-size-lg;
+  }
+}
+
+// Reduced Motion
+@include reduced-motion {
+  .digit-input {
+    transition: none;
+    
+    &:focus {
+      transform: none;
+    }
+  }
+  
+  .loading-spinner {
+    animation: none;
+  }
+}

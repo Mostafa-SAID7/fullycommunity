@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminModerationService } from '../../../core/services/admin/moderation.service';
 import { ModerationItem, ModerationStats } from '../../../core/interfaces/admin/moderation.interface';
-import { StatCardComponent, StatCardConfig } from '../../../shared/components/charts/stat-card.component';
-import { TabNavigationComponent, Tab } from '../../../shared/components/tab-navigation/tab-navigation.component';
-import { ModerationItemCardComponent } from '../../../shared/components/moderation-item-card/moderation-item-card.component';
-import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
+import { StatCardComponent, StatCardConfig } from '../../../shared/ui/charts/stat-card/stat-card.component';
+import { TabNavigationComponent, Tab } from '../../../shared/ui/navigation/tab-navigation/tab-navigation.component';
+import { ModerationItemCardComponent } from '../../../shared/ui/cards/moderation-item-card/moderation-item-card.component';
+import { RefreshButtonComponent } from '../../../shared/ui/buttons/refresh-button/refresh-button.component';
 
 @Component({
   selector: 'moderation',

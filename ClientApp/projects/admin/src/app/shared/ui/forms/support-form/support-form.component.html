@@ -1,0 +1,199 @@
+<div class="support-form">
+  <div class="form-header">
+    <h2 class="form-title">{{ title }}</h2>
+    <p class="form-subtitle">We're here to help! Describe your issue and we'll get back to you soon.</p>
+  </div>
+
+  <form [formGroup]="supportForm" (ngSubmit)="onSubmit()">
+    <!-- Success Message -->
+    <div *ngIf="successMessage()" class="success-message">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+      </svg>
+      {{ successMessage() }}
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage()" class="error-message">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      {{ errorMessage() }}
+    </div>
+
+    <!-- Contact Information -->
+    <div class="form-section">
+      <h3 class="section-title">Contact Information</h3>
+      
+      <div class="form-row">
+        <div class="form-field">
+          <label for="userName" class="field-label">Your Name</label>
+          <input
+            id="userName"
+            type="text"
+            formControlName="userName"
+            placeholder="Enter your full name"
+            class="form-input"
+            [class.error]="getFieldError('userName')"
+          />
+          <div *ngIf="getFieldError('userName')" class="field-error">
+            {{ getFieldError('userName') }}
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="userEmail" class="field-label">Email Address</label>
+          <input
+            id="userEmail"
+            type="email"
+            formControlName="userEmail"
+            placeholder="Enter your email"
+            class="form-input"
+            [class.error]="getFieldError('userEmail')"
+          />
+          <div *ngIf="getFieldError('userEmail')" class="field-error">
+            {{ getFieldError('userEmail') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticket Details -->
+    <div class="form-section">
+      <h3 class="section-title">Ticket Details</h3>
+      
+      <div class="form-field">
+        <label for="subject" class="field-label">
+          Subject
+          <span class="character-count">{{ getCharacterCount('subject') }}</span>
+        </label>
+        <input
+          id="subject"
+          type="text"
+          formControlName="subject"
+          placeholder="Brief description of your issue"
+          class="form-input"
+          [class.error]="getFieldError('subject')"
+          maxlength="100"
+        />
+        <div *ngIf="getFieldError('subject')" class="field-error">
+          {{ getFieldError('subject') }}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="category" class="field-label">Category</label>
+          <select
+            id="category"
+            formControlName="category"
+            class="form-select"
+            [class.error]="getFieldError('category')"
+          >
+            <option value="">Select a category</option>
+            <option *ngFor="let category of categories" [value]="category.value">
+              {{ category.label }}
+            </option>
+          </select>
+          <div *ngIf="getFieldError('category')" class="field-error">
+            {{ getFieldError('category') }}
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="priority" class="field-label">Priority</label>
+          <select
+            id="priority"
+            formControlName="priority"
+            class="form-select"
+            [class.error]="getFieldError('priority')"
+          >
+            <option *ngFor="let priority of priorities" [value]="priority.value">
+              {{ priority.label }}
+            </option>
+          </select>
+          <div *ngIf="getFieldError('priority')" class="field-error">
+            {{ getFieldError('priority') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="description" class="field-label">
+          Description
+          <span class="character-count">{{ getCharacterCount('description') }}</span>
+        </label>
+        <textarea
+          id="description"
+          formControlName="description"
+          placeholder="Please provide detailed information about your issue, including steps to reproduce if applicable..."
+          class="form-textarea"
+          [class.error]="getFieldError('description')"
+          rows="6"
+          maxlength="2000"
+        ></textarea>
+        <div *ngIf="getFieldError('description')" class="field-error">
+          {{ getFieldError('description') }}
+        </div>
+      </div>
+    </div>
+
+    <!-- File Attachments -->
+    <div class="form-section">
+      <h3 class="section-title">Attachments (Optional)</h3>
+      <p class="section-subtitle">Upload screenshots, logs, or other files that might help us understand your issue.</p>
+      
+      <div class="file-upload">
+        <input
+          type="file"
+          id="fileInput"
+          multiple
+          accept=".jpg,.jpeg,.png,.gif,.pdf,.txt,.log,.zip"
+          (change)="onFileSelect($event)"
+          class="file-input"
+        />
+        <label for="fileInput" class="file-upload-label">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+          </svg>
+          <span>Choose files or drag and drop</span>
+          <small>Max 5 files, 10MB each. Supported: JPG, PNG, PDF, TXT, LOG, ZIP</small>
+        </label>
+      </div>
+
+      <!-- Attachment List -->
+      <div *ngIf="attachments().length > 0" class="attachment-list">
+        <div *ngFor="let file of attachments(); let i = index" class="attachment-item">
+          <div class="attachment-info">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <div class="attachment-details">
+              <span class="attachment-name">{{ file.name }}</span>
+              <span class="attachment-size">{{ formatFileSize(file.size) }}</span>
+            </div>
+          </div>
+          <button type="button" class="remove-attachment" (click)="removeAttachment(i)">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading()">
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="loading() || supportForm.invalid">
+        <div *ngIf="loading()" class="loading-spinner"></div>
+        <span>{{ loading() ? 'Submitting...' : 'Submit Ticket' }}</span>
+      </button>
+    </div>
+  </form>
+</div>

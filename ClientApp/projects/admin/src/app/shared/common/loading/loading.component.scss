@@ -1,0 +1,345 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-3;
+  
+  &.loading-centered {
+    @include flex-center;
+  }
+  
+  &.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(2px);
+    z-index: 100;
+  }
+  
+  &.loading-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+  }
+}
+
+// Spinner Variant
+.loading-spinner {
+  border-radius: 50%;
+  border-style: solid;
+  animation: spin 1s linear infinite;
+  
+  &.spinner-xs {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+  }
+  
+  &.spinner-sm {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+  }
+  
+  &.spinner-md {
+    width: 32px;
+    height: 32px;
+    border-width: 3px;
+  }
+  
+  &.spinner-lg {
+    width: 48px;
+    height: 48px;
+    border-width: 4px;
+  }
+  
+  &.spinner-xl {
+    width: 64px;
+    height: 64px;
+    border-width: 5px;
+  }
+  
+  &.spinner-primary {
+    border-color: rgba($color-primary, 0.2);
+    border-top-color: $color-primary;
+  }
+  
+  &.spinner-secondary {
+    border-color: rgba($text-secondary, 0.2);
+    border-top-color: $text-secondary;
+  }
+  
+  &.spinner-white {
+    border-color: rgba(255, 255, 255, 0.2);
+    border-top-color: white;
+  }
+  
+  &.spinner-current {
+    border-color: rgba(currentColor, 0.2);
+    border-top-color: currentColor;
+  }
+}
+
+// Dots Variant
+.loading-dots {
+  display: flex;
+  gap: $spacing-1;
+  
+  .dot {
+    border-radius: 50%;
+    animation: bounce 1.4s ease-in-out infinite both;
+    
+    &:nth-child(1) { animation-delay: -0.32s; }
+    &:nth-child(2) { animation-delay: -0.16s; }
+    &:nth-child(3) { animation-delay: 0s; }
+  }
+  
+  &.dots-xs .dot {
+    width: 4px;
+    height: 4px;
+  }
+  
+  &.dots-sm .dot {
+    width: 6px;
+    height: 6px;
+  }
+  
+  &.dots-md .dot {
+    width: 8px;
+    height: 8px;
+  }
+  
+  &.dots-lg .dot {
+    width: 12px;
+    height: 12px;
+  }
+  
+  &.dots-xl .dot {
+    width: 16px;
+    height: 16px;
+  }
+  
+  &.dots-primary .dot {
+    background: $color-primary;
+  }
+  
+  &.dots-secondary .dot {
+    background: $text-secondary;
+  }
+  
+  &.dots-white .dot {
+    background: white;
+  }
+  
+  &.dots-current .dot {
+    background: currentColor;
+  }
+}
+
+// Pulse Variant
+.loading-pulse {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  .pulse-circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: pulse 2s ease-in-out infinite;
+    
+    &.pulse-1 { animation-delay: 0s; }
+    &.pulse-2 { animation-delay: 0.4s; }
+    &.pulse-3 { animation-delay: 0.8s; }
+  }
+  
+  &.pulse-xs .pulse-circle {
+    width: 16px;
+    height: 16px;
+  }
+  
+  &.pulse-sm .pulse-circle {
+    width: 20px;
+    height: 20px;
+  }
+  
+  &.pulse-md .pulse-circle {
+    width: 32px;
+    height: 32px;
+  }
+  
+  &.pulse-lg .pulse-circle {
+    width: 48px;
+    height: 48px;
+  }
+  
+  &.pulse-xl .pulse-circle {
+    width: 64px;
+    height: 64px;
+  }
+  
+  &.pulse-primary .pulse-circle {
+    background: $color-primary;
+  }
+  
+  &.pulse-secondary .pulse-circle {
+    background: $text-secondary;
+  }
+  
+  &.pulse-white .pulse-circle {
+    background: white;
+  }
+  
+  &.pulse-current .pulse-circle {
+    background: currentColor;
+  }
+}
+
+// Skeleton Variant
+.loading-skeleton {
+  width: 100%;
+  max-width: 300px;
+  
+  .skeleton-line {
+    height: 12px;
+    background: linear-gradient(90deg, $bg-secondary 25%, $bg-tertiary 50%, $bg-secondary 75%);
+    background-size: 200% 100%;
+    border-radius: $border-radius-sm;
+    animation: shimmer 1.5s ease-in-out infinite;
+    margin-bottom: $spacing-2;
+    
+    &.skeleton-line-1 {
+      width: 100%;
+    }
+    
+    &.skeleton-line-2 {
+      width: 80%;
+    }
+    
+    &.skeleton-line-3 {
+      width: 60%;
+    }
+  }
+  
+  .loading-sm & .skeleton-line {
+    height: 8px;
+  }
+  
+  .loading-lg & .skeleton-line {
+    height: 16px;
+  }
+  
+  .loading-xl & .skeleton-line {
+    height: 20px;
+  }
+}
+
+// Loading Text
+.loading-text {
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  margin: 0;
+  text-align: center;
+  
+  .loading-lg & {
+    font-size: $font-size-base;
+  }
+  
+  .loading-xl & {
+    font-size: $font-size-lg;
+  }
+}
+
+// Animations
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// Dark mode support
+@include dark-mode {
+  .loading-container {
+    &.loading-overlay {
+      background: rgba(0, 0, 0, 0.8);
+    }
+    
+    &.loading-fullscreen {
+      background: rgba(0, 0, 0, 0.95);
+    }
+  }
+  
+  .loading-skeleton .skeleton-line {
+    background: linear-gradient(90deg, $dark-bg-tertiary 25%, $dark-bg-secondary 50%, $dark-bg-tertiary 75%);
+    background-size: 200% 100%;
+  }
+  
+  .loading-text {
+    color: $dark-text-secondary;
+  }
+}
+
+// Reduced motion support
+@include reduced-motion {
+  .loading-spinner,
+  .loading-dots .dot,
+  .loading-pulse .pulse-circle,
+  .loading-skeleton .skeleton-line {
+    animation: none;
+  }
+  
+  .loading-spinner {
+    border-top-color: transparent;
+    border-right-color: transparent;
+  }
+  
+  .loading-dots .dot {
+    opacity: 0.6;
+  }
+  
+  .loading-pulse .pulse-circle {
+    opacity: 0.3;
+  }
+}

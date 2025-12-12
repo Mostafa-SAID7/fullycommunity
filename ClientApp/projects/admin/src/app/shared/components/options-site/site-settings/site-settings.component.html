@@ -1,0 +1,87 @@
+<div class="site-settings">
+  <div class="settings-header">
+    <h2 class="settings-title">{{ title }}</h2>
+    <p *ngIf="description" class="settings-description">{{ description }}</p>
+  </div>
+
+  <div class="settings-content" [class.loading]="loading">
+    <div *ngFor="let category of getCategories()" class="settings-category">
+      <h3 class="category-title">{{ category }}</h3>
+      
+      <div class="settings-list">
+        <div *ngFor="let setting of getSettingsByCategory()[category]" class="setting-item">
+          <div class="setting-info">
+            <label class="setting-label">{{ setting.label }}</label>
+            <p *ngIf="setting.description" class="setting-description">{{ setting.description }}</p>
+          </div>
+          
+          <div class="setting-control">
+            <!-- Toggle Control -->
+            <label *ngIf="setting.type === 'toggle'" class="toggle-switch">
+              <input 
+                type="checkbox" 
+                [checked]="setting.value"
+                [disabled]="setting.disabled || readonly"
+                (change)="onSettingChange(setting, $event.target.checked)"
+              />
+              <span class="toggle-slider"></span>
+            </label>
+            
+            <!-- Select Control -->
+            <select 
+              *ngIf="setting.type === 'select'"
+              [value]="setting.value"
+              [disabled]="setting.disabled || readonly"
+              (change)="onSettingChange(setting, $event.target.value)"
+              class="setting-select"
+            >
+              <option *ngFor="let option of setting.options" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+            
+            <!-- Text Control -->
+            <input 
+              *ngIf="setting.type === 'text'"
+              type="text"
+              [value]="setting.value"
+              [disabled]="setting.disabled || readonly"
+              (input)="onSettingChange(setting, $event.target.value)"
+              class="setting-input"
+            />
+            
+            <!-- Number Control -->
+            <input 
+              *ngIf="setting.type === 'number'"
+              type="number"
+              [value]="setting.value"
+              [disabled]="setting.disabled || readonly"
+              (input)="onSettingChange(setting, $event.target.value)"
+              class="setting-input"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!readonly" class="settings-actions">
+    <button 
+      type="button" 
+      (click)="onReset()" 
+      [disabled]="loading"
+      class="btn btn-secondary"
+    >
+      Reset
+    </button>
+    <button 
+      type="button" 
+      (click)="onSave()" 
+      [disabled]="loading"
+      class="btn btn-primary"
+    >
+      <span *ngIf="loading" class="loading-spinner"></span>
+      Save Changes
+    </button>
+  </div>
+</div>

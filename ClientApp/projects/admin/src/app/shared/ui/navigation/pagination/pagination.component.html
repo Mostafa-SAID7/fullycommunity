@@ -1,0 +1,19 @@
+<div class="pagination-container">
+  <span class="pagination-text">
+    {{ displayText() }}
+  </span>
+  <div class="pagination-controls">
+    <button 
+      (click)="previous.emit()" 
+      [disabled]="currentPage() === 1" 
+      class="pagination-button">
+      Previous
+    </button>
+    <button 
+      (click)="next.emit()" 
+      [disabled]="currentPage() >= totalPages()" 
+      class="pagination-button">
+      Next
+    </button>
+  </div>
+</div>

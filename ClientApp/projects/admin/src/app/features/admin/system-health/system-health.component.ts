@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { interval, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SystemHealthService } from '../../../core/services/system/system-health.service';
-import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
-import { StatCardComponent, StatCardConfig } from '../../../shared/components/charts/stat-card.component';
+import { RefreshButtonComponent } from '../../../shared/ui/refresh-button/refresh-button.component';
+import { StatCardComponent, StatCardConfig } from '../../../shared/ui/charts/stat-card/stat-card.component';
 
 interface SystemMetric {
   name: string;

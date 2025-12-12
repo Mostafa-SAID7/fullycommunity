@@ -1,0 +1,43 @@
+<div [class]="getContainerClasses()">
+  <!-- Label -->
+  <label *ngIf="label" class="input-label">
+    {{ label }}
+    <span *ngIf="required" class="input-required">*</span>
+  </label>
+
+  <!-- Input Wrapper -->
+  <div class="input-wrapper">
+    <!-- Left Icon -->
+    <div *ngIf="icon && iconPosition === 'left'" class="input-icon input-icon-left">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="icon"/>
+      </svg>
+    </div>
+
+    <!-- Input Field -->
+    <input
+      [type]="type"
+      [placeholder]="placeholder"
+      [value]="value"
+      [disabled]="disabled"
+      [readonly]="readonly"
+      [required]="required"
+      class="input-field"
+      (input)="onInput($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur()">
+
+    <!-- Right Icon -->
+    <div *ngIf="icon && iconPosition === 'right'" class="input-icon input-icon-right">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="icon"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Hint Text -->
+  <p *ngIf="hint && !error" class="input-hint">{{ hint }}</p>
+
+  <!-- Error Text -->
+  <p *ngIf="error" class="input-error-text">{{ error }}</p>
+</div>

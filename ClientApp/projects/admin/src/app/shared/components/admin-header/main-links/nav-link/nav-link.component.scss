@@ -1,0 +1,175 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.nav-link {
+  @include flex-start;
+  gap: $spacing-2;
+  text-decoration: none;
+  border-radius: $border-radius-md;
+  transition: $transition-base;
+  font-weight: $font-weight-medium;
+  position: relative;
+  
+  &:hover:not(.nav-link-disabled) {
+    background: rgba($color-primary, 0.1);
+    color: $color-primary;
+  }
+  
+  &.nav-link-active {
+    background: $color-primary;
+    color: white;
+    
+    .nav-link-badge {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+  }
+  
+  &.nav-link-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// Size variants
+.nav-link-sm {
+  padding: $spacing-2 $spacing-3;
+  font-size: $font-size-sm;
+  
+  .nav-link-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.nav-link-md {
+  padding: $spacing-3 $spacing-4;
+  font-size: $font-size-base;
+  
+  .nav-link-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.nav-link-lg {
+  padding: $spacing-4 $spacing-5;
+  font-size: $font-size-lg;
+  
+  .nav-link-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+// Style variants
+.nav-link-default {
+  color: $text-primary;
+  
+  &:hover:not(.nav-link-disabled) {
+    background: $bg-secondary;
+  }
+}
+
+.nav-link-primary {
+  color: $color-primary;
+  
+  &:hover:not(.nav-link-disabled) {
+    background: rgba($color-primary, 0.1);
+  }
+  
+  &.nav-link-active {
+    background: $color-primary;
+    color: white;
+  }
+}
+
+.nav-link-secondary {
+  color: $text-secondary;
+  
+  &:hover:not(.nav-link-disabled) {
+    background: $bg-tertiary;
+    color: $text-primary;
+  }
+}
+
+.nav-link-ghost {
+  color: $text-secondary;
+  background: transparent;
+  
+  &:hover:not(.nav-link-disabled) {
+    background: rgba($text-secondary, 0.1);
+    color: $text-primary;
+  }
+}
+
+.nav-link-icon {
+  @include flex-center;
+  flex-shrink: 0;
+}
+
+.nav-link-label {
+  flex: 1;
+}
+
+.nav-link-badge {
+  @include flex-center;
+  background: $color-primary;
+  color: white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  padding: $spacing-1 $spacing-2;
+  border-radius: $border-radius-full;
+  min-width: 20px;
+  height: 20px;
+}
+
+.nav-link-arrow,
+.nav-link-external {
+  @include flex-center;
+  flex-shrink: 0;
+  
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.nav-link-external {
+  opacity: 0.7;
+}
+
+// Dark mode support
+@include dark-mode {
+  .nav-link-default {
+    color: $dark-text-primary;
+    
+    &:hover:not(.nav-link-disabled) {
+      background: $dark-bg-tertiary;
+    }
+  }
+  
+  .nav-link-secondary {
+    color: $dark-text-secondary;
+    
+    &:hover:not(.nav-link-disabled) {
+      background: $dark-bg-secondary;
+      color: $dark-text-primary;
+    }
+  }
+  
+  .nav-link-ghost {
+    color: $dark-text-secondary;
+    
+    &:hover:not(.nav-link-disabled) {
+      background: rgba($dark-text-secondary, 0.1);
+      color: $dark-text-primary;
+    }
+  }
+}
+
+// Focus styles
+.nav-link:focus-visible {
+  @include focus-visible;
+}

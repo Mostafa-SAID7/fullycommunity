@@ -1,0 +1,200 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.input-label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  
+  .input-required {
+    color: $color-error;
+    margin-left: $spacing-1;
+  }
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-field {
+  width: 100%;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-md;
+  background: $bg-primary;
+  color: $text-primary;
+  font-family: $font-family-primary;
+  transition: $transition-base;
+  
+  &::placeholder {
+    color: $text-muted;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+  
+  &:disabled {
+    background: $bg-secondary;
+    color: $text-muted;
+    cursor: not-allowed;
+  }
+  
+  &:readonly {
+    background: $bg-secondary;
+    cursor: default;
+  }
+}
+
+.input-icon {
+  position: absolute;
+  @include flex-center;
+  color: $text-secondary;
+  pointer-events: none;
+  
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  &.input-icon-left {
+    left: $spacing-3;
+  }
+  
+  &.input-icon-right {
+    right: $spacing-3;
+  }
+}
+
+.input-hint {
+  font-size: $font-size-xs;
+  color: $text-secondary;
+  margin: 0;
+}
+
+.input-error-text {
+  font-size: $font-size-xs;
+  color: $color-error;
+  margin: 0;
+}
+
+// Size variants
+.input-sm {
+  .input-field {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-sm;
+  }
+  
+  &.input-with-icon .input-field {
+    padding-left: 2.5rem;
+  }
+}
+
+.input-md {
+  .input-field {
+    padding: $spacing-3 $spacing-4;
+    font-size: $font-size-base;
+  }
+  
+  &.input-with-icon .input-field {
+    padding-left: 3rem;
+  }
+}
+
+.input-lg {
+  .input-field {
+    padding: $spacing-4 $spacing-5;
+    font-size: $font-size-lg;
+  }
+  
+  &.input-with-icon .input-field {
+    padding-left: 3.5rem;
+  }
+}
+
+// Style variants
+.input-filled {
+  .input-field {
+    background: $bg-secondary;
+    border: none;
+    
+    &:focus {
+      background: $bg-primary;
+      border: 1px solid $color-primary;
+    }
+  }
+}
+
+.input-outlined {
+  .input-field {
+    background: transparent;
+    border: 2px solid $border-primary;
+    
+    &:focus {
+      border-color: $color-primary;
+    }
+  }
+}
+
+// State variants
+.input-error {
+  .input-field {
+    border-color: $color-error;
+    
+    &:focus {
+      border-color: $color-error;
+      box-shadow: 0 0 0 3px rgba($color-error, 0.1);
+    }
+  }
+}
+
+.input-focused {
+  .input-icon {
+    color: $color-primary;
+  }
+}
+
+// Dark mode support
+@include dark-mode {
+  .input-field {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+    color: $dark-text-primary;
+    
+    &::placeholder {
+      color: $dark-text-secondary;
+    }
+    
+    &:focus {
+      background: $dark-bg-primary;
+      border-color: $color-primary;
+    }
+    
+    &:disabled,
+    &:readonly {
+      background: $dark-bg-tertiary;
+      color: $dark-text-secondary;
+    }
+  }
+  
+  .input-label {
+    color: $dark-text-primary;
+  }
+  
+  .input-hint {
+    color: $dark-text-secondary;
+  }
+  
+  .input-icon {
+    color: $dark-text-secondary;
+  }
+}

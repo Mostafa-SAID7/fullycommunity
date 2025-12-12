@@ -1,0 +1,223 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.search-container {
+  @include flex-start;
+  position: relative;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-md;
+  transition: $transition-base;
+  
+  &:hover:not(.search-disabled) {
+    border-color: $border-secondary;
+  }
+  
+  &.search-focused {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+  
+  &.search-disabled {
+    background: $bg-secondary;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Size variants
+.search-sm {
+  padding: $spacing-2;
+  
+  .search-input {
+    font-size: $font-size-sm;
+    padding: $spacing-1 $spacing-2;
+  }
+  
+  .search-icon,
+  .search-clear,
+  .search-button {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.search-md {
+  padding: $spacing-3;
+  
+  .search-input {
+    font-size: $font-size-base;
+    padding: $spacing-2 $spacing-3;
+  }
+  
+  .search-icon,
+  .search-clear,
+  .search-button {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.search-lg {
+  padding: $spacing-4;
+  
+  .search-input {
+    font-size: $font-size-lg;
+    padding: $spacing-3 $spacing-4;
+  }
+  
+  .search-icon,
+  .search-clear,
+  .search-button {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+// Style variants
+.search-filled {
+  background: $bg-secondary;
+  border: none;
+  
+  &:hover:not(.search-disabled) {
+    background: $bg-tertiary;
+  }
+  
+  &.search-focused {
+    background: $bg-primary;
+    border: 1px solid $color-primary;
+  }
+}
+
+.search-outlined {
+  background: transparent;
+  border: 2px solid $border-primary;
+  
+  &.search-focused {
+    border-color: $color-primary;
+  }
+}
+
+.search-icon {
+  @include flex-center;
+  color: $text-secondary;
+  flex-shrink: 0;
+  margin-right: $spacing-2;
+  
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.search-spinner {
+  @include loading-spinner(16px, $color-primary);
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: $text-primary;
+  font-family: $font-family-primary;
+  
+  &::placeholder {
+    color: $text-muted;
+  }
+  
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.search-clear,
+.search-button {
+  @include flex-center;
+  background: transparent;
+  border: none;
+  color: $text-secondary;
+  cursor: pointer;
+  border-radius: $border-radius-sm;
+  transition: $transition-fast;
+  flex-shrink: 0;
+  
+  &:hover:not(:disabled) {
+    color: $text-primary;
+    background: rgba($text-secondary, 0.1);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.search-clear {
+  margin-left: $spacing-2;
+  margin-right: $spacing-1;
+}
+
+.search-button {
+  margin-left: $spacing-1;
+  color: $color-primary;
+  
+  &:hover:not(:disabled) {
+    background: rgba($color-primary, 0.1);
+  }
+}
+
+// Dark mode support
+@include dark-mode {
+  .search-container {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+    
+    &:hover:not(.search-disabled) {
+      border-color: $dark-border-secondary;
+    }
+    
+    &.search-focused {
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.2);
+    }
+    
+    &.search-disabled {
+      background: $dark-bg-tertiary;
+    }
+  }
+  
+  .search-filled {
+    background: $dark-bg-tertiary;
+    
+    &:hover:not(.search-disabled) {
+      background: $dark-bg-secondary;
+    }
+    
+    &.search-focused {
+      background: $dark-bg-secondary;
+    }
+  }
+  
+  .search-input {
+    color: $dark-text-primary;
+    
+    &::placeholder {
+      color: $dark-text-secondary;
+    }
+  }
+  
+  .search-icon,
+  .search-clear,
+  .search-button {
+    color: $dark-text-secondary;
+    
+    &:hover:not(:disabled) {
+      color: $dark-text-primary;
+    }
+  }
+}

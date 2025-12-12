@@ -1,0 +1,180 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.main-content {
+  padding: $spacing-6;
+  background: $bg-primary;
+  min-height: 100%;
+}
+
+.content-header {
+  margin-bottom: $spacing-6;
+}
+
+.breadcrumb {
+  margin-bottom: $spacing-4;
+}
+
+.breadcrumb-list {
+  @include flex-start;
+  gap: $spacing-2;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.breadcrumb-item {
+  @include flex-start;
+  gap: $spacing-2;
+}
+
+.breadcrumb-link {
+  color: $text-secondary;
+  text-decoration: none;
+  font-size: $font-size-sm;
+  
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.breadcrumb-text {
+  color: $text-secondary;
+  font-size: $font-size-sm;
+}
+
+.breadcrumb-current {
+  color: $text-primary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.breadcrumb-separator {
+  width: 16px;
+  height: 16px;
+  color: $text-muted;
+}
+
+.title-section {
+  @include flex-between;
+  gap: $spacing-4;
+  
+  @include respond-below('md') {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.title-content {
+  flex: 1;
+}
+
+.page-title {
+  @include heading(1);
+  color: $text-primary;
+  margin: 0 0 $spacing-2 0;
+  
+  @include respond-below('md') {
+    font-size: $font-size-2xl;
+  }
+}
+
+.page-subtitle {
+  color: $text-secondary;
+  font-size: $font-size-lg;
+  margin: 0;
+}
+
+.title-actions {
+  @include flex-start;
+  gap: $spacing-3;
+  
+  @include respond-below('md') {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+.btn {
+  @include flex-center;
+  gap: $spacing-2;
+  padding: $spacing-3 $spacing-4;
+  border-radius: $border-radius-md;
+  font-weight: $font-weight-medium;
+  font-size: $font-size-sm;
+  border: none;
+  cursor: pointer;
+  transition: $transition-base;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: $color-primary;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background: $color-primary-hover;
+  }
+}
+
+.btn-secondary {
+  background: $bg-secondary;
+  color: $text-primary;
+  border: 1px solid $border-primary;
+  
+  &:hover:not(:disabled) {
+    background: $bg-tertiary;
+  }
+}
+
+.btn-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.loading-state {
+  @include flex-center;
+  flex-direction: column;
+  gap: $spacing-4;
+  padding: $spacing-12;
+  color: $text-secondary;
+}
+
+.loading-spinner {
+  @include loading-spinner(32px, $color-primary);
+}
+
+.loading-text {
+  font-size: $font-size-lg;
+  margin: 0;
+}
+
+.error-state {
+  @include flex-center;
+  flex-direction: column;
+  gap: $spacing-4;
+  padding: $spacing-12;
+  color: $color-error;
+}
+
+.error-icon {
+  svg {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.error-message {
+  font-size: $font-size-lg;
+  text-align: center;
+  margin: 0;
+}
+
+.content-body {
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+}

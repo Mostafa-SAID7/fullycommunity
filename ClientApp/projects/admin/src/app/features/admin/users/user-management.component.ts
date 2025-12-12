@@ -4,12 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { AdminUsersService } from '../../../core/services/admin/users.service';
 import { AdminUser } from '../../../core/interfaces/admin/users.interface';
 import { AuthService } from '../../../core/services/auth/auth.service';
-import { UserTableComponent } from '../../../shared/components/user-table/user-table.component';
-import { UserCardComponent } from '../../../shared/components/user-card/user-card.component';
-import { UserFiltersComponent } from '../../../shared/components/user-filters/user-filters.component';
-import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-import { CreateUserModalComponent, NewUser } from '../../../shared/components/create-user-modal/create-user-modal.component';
-import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
+import { UserTableComponent } from '../../../shared/ui/tables/user-table/user-table.component';
+import { UserCardComponent } from '../../../shared/ui/cards/user-card/user-card.component';
+import { UserFiltersComponent } from '../../../shared/ui/forms/user-filters/user-filters.component';
+import { PaginationComponent } from '../../../shared/ui/navigation/pagination/pagination.component';
+import { CreateUserModalComponent, NewUser } from '../../../shared/ui/modals/create-user/create-user-modal.component';
+import { RefreshButtonComponent } from '../../../shared/ui/buttons/refresh-button/refresh-button.component';
 
 @Component({
   selector: 'user-management',

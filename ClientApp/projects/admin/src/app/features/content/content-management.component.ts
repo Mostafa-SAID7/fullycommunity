@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminContentService } from '../../../core/services/content/admin-content.service';
 import { ContentItem, ContentStats } from '../../../core/interfaces/content/admin-content.interface';
-import { StatCardComponent, StatCardConfig } from '../../../shared/components/charts/stat-card.component';
-import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
+import { StatCardComponent, StatCardConfig } from '../../../shared/ui/charts/stat-card/stat-card.component';
+import { RefreshButtonComponent } from '../../../shared/ui/buttons/refresh-button/refresh-button.component';
 
 @Component({
   selector: 'content-management',
@@ -72,8 +72,8 @@ export class ContentManagementComponent implements OnInit {
 
   loadStats() {
     this.contentService.getContentStats().subscribe({
-      next: (data) => this.stats.set(data),
-      error: (err) => console.error('Error loading stats:', err)
+      next: (data: ContentStats) => this.stats.set(data),
+      error: (err: any) => console.error('Error loading stats:', err)
     });
   }
 
@@ -83,12 +83,12 @@ export class ContentManagementComponent implements OnInit {
 
     this.contentService.getPosts(this.currentPage, this.pageSize, this.selectedStatus)
       .subscribe({
-        next: (response) => {
+        next: (response: any) => {
           this.content.set(response.items || []);
           this.totalCount = response.totalCount || 0;
           this.loading.set(false);
         },
-        error: (err) => {
+        error: (err: any) => {
           this.error.set('Failed to load content. Please try again.');
           this.loading.set(false);
         }
@@ -124,7 +124,7 @@ export class ContentManagementComponent implements OnInit {
   approveContent(item: ContentItem) {
     this.contentService.approveContent(item.type, item.id).subscribe({
       next: () => this.loadContent(),
-      error: (err) => console.error('Error approving content:', err)
+      error: (err: any) => console.error('Error approving content:', err)
     });
   }
 
@@ -133,7 +133,7 @@ export class ContentManagementComponent implements OnInit {
     if (reason) {
       this.contentService.rejectContent(item.type, item.id, reason).subscribe({
         next: () => this.loadContent(),
-        error: (err) => console.error('Error rejecting content:', err)
+        error: (err: any) => console.error('Error rejecting content:', err)
       });
     }
   }
@@ -142,7 +142,7 @@ export class ContentManagementComponent implements OnInit {
     if (confirm(`Are you sure you want to delete "${item.title}"?`)) {
       this.contentService.deleteContent(item.type, item.id).subscribe({
         next: () => this.loadContent(),
-        error: (err) => console.error('Error deleting content:', err)
+        error: (err: any) => console.error('Error deleting content:', err)
       });
     }
   }

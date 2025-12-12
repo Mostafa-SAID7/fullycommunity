@@ -41,18 +41,9 @@
             System Status: {{ systemHealth() | titlecase }}
           </span>
         </div>
-        <app-refresh-button
-          (refresh)="refreshDashboard()"
-          [loading]="loading()"
-          [variant]="'secondary'"
-          [size]="'md'"
-          [showText]="true"
-          [refreshText]="'Refresh Dashboard'"
-          [loadingText]="'Refreshing...'"
-          [showStatusIndicator]="true"
-          [status]="refreshStatus()"
-          [lastRefresh]="lastRefreshTime()">
-        </app-refresh-button>
+        <button (click)="refreshDashboard()" [disabled]="loading()" class="refresh-btn">
+          {{ loading() ? 'Refreshing...' : 'Refresh Dashboard' }}
+        </button>
       </div>
     </div>
 
@@ -60,10 +51,11 @@
     <div *ngIf="overview() && !loading()">
       <!-- Stats Grid -->
       <div class="stats-grid">
-        <app-stat-card 
-          *ngFor="let card of statCards" 
-          [config]="card">
-        </app-stat-card>
+        <div *ngFor="let card of statCards" class="stat-card">
+          <h3>{{ card.title }}</h3>
+          <p>{{ card.value }}</p>
+          <small>{{ card.subtitle }}</small>
+        </div>
       </div>
 
       <!-- Quick Actions -->

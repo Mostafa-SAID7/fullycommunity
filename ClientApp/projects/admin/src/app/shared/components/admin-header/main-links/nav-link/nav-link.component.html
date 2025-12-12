@@ -1,0 +1,77 @@
+<!-- Router Link -->
+<a *ngIf="routerLink && !disabled" 
+   [routerLink]="routerLink" 
+   [class]="getClasses()"
+   routerLinkActive="nav-link-active">
+  
+  <!-- Icon -->
+  <span *ngIf="icon" class="nav-link-icon">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="icon"/>
+    </svg>
+  </span>
+  
+  <!-- Label -->
+  <span class="nav-link-label">{{ label }}</span>
+  
+  <!-- Badge -->
+  <span *ngIf="badge" class="nav-link-badge">{{ badge }}</span>
+  
+  <!-- Arrow -->
+  <span *ngIf="showArrow" class="nav-link-arrow">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+    </svg>
+  </span>
+</a>
+
+<!-- External Link -->
+<a *ngIf="href && !disabled" 
+   [href]="href" 
+   [target]="target || (isExternalLink() ? '_blank' : '_self')"
+   [class]="getClasses()"
+   [rel]="isExternalLink() ? 'noopener noreferrer' : null">
+  
+  <!-- Icon -->
+  <span *ngIf="icon" class="nav-link-icon">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="icon"/>
+    </svg>
+  </span>
+  
+  <!-- Label -->
+  <span class="nav-link-label">{{ label }}</span>
+  
+  <!-- Badge -->
+  <span *ngIf="badge" class="nav-link-badge">{{ badge }}</span>
+  
+  <!-- External Icon -->
+  <span *ngIf="isExternalLink()" class="nav-link-external">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+    </svg>
+  </span>
+  
+  <!-- Arrow -->
+  <span *ngIf="showArrow && !isExternalLink()" class="nav-link-arrow">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+    </svg>
+  </span>
+</a>
+
+<!-- Disabled State -->
+<span *ngIf="disabled" [class]="getClasses()">
+  <!-- Icon -->
+  <span *ngIf="icon" class="nav-link-icon">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="icon"/>
+    </svg>
+  </span>
+  
+  <!-- Label -->
+  <span class="nav-link-label">{{ label }}</span>
+  
+  <!-- Badge -->
+  <span *ngIf="badge" class="nav-link-badge">{{ badge }}</span>
+</span>

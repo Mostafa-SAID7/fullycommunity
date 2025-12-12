@@ -16,12 +16,11 @@ import {
   DetailedContentEngagement,
   ReportPeriod
 } from '../../../core/interfaces/admin/reports.interface';
-import { BarChartComponent, BarChartConfig } from '../../../shared/components/charts/bar-chart.component';
-import { LineChartComponent, LineChartConfig } from '../../../shared/components/charts/line-chart.component';
-import { PieChartComponent, PieChartConfig } from '../../../shared/components/charts/pie-chart.component';
-import { StatCardComponent, StatCardConfig } from '../../../shared/components/charts/stat-card.component';
-import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
-import { TabNavigationComponent } from '../../../shared/components/tab-navigation/tab-navigation.component';
+import { BarChartComponent, BarChartConfig } from '../../../shared/ui/charts/bar-chart/bar-chart.component';
+import { LineChartComponent, LineChartConfig } from '../../../shared/ui/charts/line-chart/line-chart.component';
+import { PieChartComponent, PieChartConfig } from '../../../shared/ui/charts/pie-chart/pie-chart.component';
+import { StatCardComponent, StatCardConfig } from '../../../shared/ui/charts/stat-card/stat-card.component';
+import { RefreshButtonComponent } from '../../../shared/ui/buttons/refresh-button/refresh-button.component';
 
 @Component({
   selector: 'reports',
@@ -34,9 +33,7 @@ import { TabNavigationComponent } from '../../../shared/components/tab-navigatio
     LineChartComponent,
     PieChartComponent,
     StatCardComponent,
-    RefreshButtonComponent,
-    TabNavigationComponent
-  ],
+    RefreshButtonComponent],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.scss'
 })

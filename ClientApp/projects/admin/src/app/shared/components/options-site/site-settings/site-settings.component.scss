@@ -1,0 +1,343 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.site-settings {
+  background: $bg-primary;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-sm;
+  border: 1px solid $border-primary;
+  overflow: hidden;
+}
+
+// Settings Header
+// -----------------------------------------------------------------------------
+.settings-header {
+  padding: $spacing-6;
+  border-bottom: 1px solid $border-primary;
+  background: $bg-secondary;
+}
+
+.settings-title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  margin: 0 0 $spacing-2 0;
+}
+
+.settings-description {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  margin: 0;
+}
+
+// Settings Content
+// -----------------------------------------------------------------------------
+.settings-content {
+  padding: $spacing-6;
+  
+  &.loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+.settings-category {
+  &:not(:last-child) {
+    margin-bottom: $spacing-8;
+  }
+}
+
+.category-title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  margin: 0 0 $spacing-4 0;
+  padding-bottom: $spacing-2;
+  border-bottom: 1px solid $border-primary;
+}
+
+// Settings List
+// -----------------------------------------------------------------------------
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.setting-item {
+  @include flex-between;
+  gap: $spacing-4;
+  padding: $spacing-4;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-lg;
+  background: $bg-primary;
+  
+  @include respond-below('md') {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-3;
+  }
+}
+
+.setting-info {
+  flex: 1;
+}
+
+.setting-label {
+  display: block;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  margin-bottom: $spacing-1;
+}
+
+.setting-description {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  margin: 0;
+}
+
+// Setting Controls
+// -----------------------------------------------------------------------------
+.setting-control {
+  flex-shrink: 0;
+  
+  @include respond-below('md') {
+    width: 100%;
+  }
+}
+
+.setting-input,
+.setting-select {
+  width: 200px;
+  padding: $spacing-2 $spacing-3;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-md;
+  font-size: $font-size-sm;
+  background: $bg-primary;
+  color: $text-primary;
+  transition: all $transition-fast;
+  
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  @include respond-below('md') {
+    width: 100%;
+  }
+}
+
+// Toggle Switch
+// -----------------------------------------------------------------------------
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+  cursor: pointer;
+  
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    
+    &:checked + .toggle-slider {
+      background-color: $color-primary;
+      
+      &:before {
+        transform: translateX(26px);
+      }
+    }
+    
+    &:disabled + .toggle-slider {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $bg-tertiary;
+  border: 1px solid $border-primary;
+  border-radius: 24px;
+  transition: all $transition-fast;
+  
+  &:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: all $transition-fast;
+    box-shadow: $shadow-sm;
+  }
+}
+
+// Settings Actions
+// -----------------------------------------------------------------------------
+.settings-actions {
+  padding: $spacing-4 $spacing-6;
+  border-top: 1px solid $border-primary;
+  background: $bg-secondary;
+  @include flex-end;
+  gap: $spacing-3;
+  
+  @include respond-below('sm') {
+    flex-direction: column;
+    
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+.btn {
+  padding: $spacing-2 $spacing-4;
+  border-radius: $border-radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-fast;
+  @include flex-center;
+  gap: $spacing-2;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: $color-primary;
+  color: white;
+  border: 1px solid $color-primary;
+  
+  &:hover:not(:disabled) {
+    background: darken($color-primary, 10%);
+    border-color: darken($color-primary, 10%);
+  }
+}
+
+.btn-secondary {
+  background: transparent;
+  color: $text-secondary;
+  border: 1px solid $border-primary;
+  
+  &:hover:not(:disabled) {
+    background: $bg-tertiary;
+    border-color: $border-secondary;
+  }
+}
+
+// Loading Spinner
+// -----------------------------------------------------------------------------
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .site-settings {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+  
+  .settings-header,
+  .settings-actions {
+    background: $dark-bg-tertiary;
+    border-color: $dark-border-primary;
+  }
+  
+  .settings-title {
+    color: $dark-text-primary;
+  }
+  
+  .settings-description {
+    color: $dark-text-secondary;
+  }
+  
+  .category-title {
+    color: $dark-text-primary;
+    border-color: $dark-border-primary;
+  }
+  
+  .setting-item {
+    background: $dark-bg-primary;
+    border-color: $dark-border-primary;
+  }
+  
+  .setting-label {
+    color: $dark-text-primary;
+  }
+  
+  .setting-description {
+    color: $dark-text-secondary;
+  }
+  
+  .setting-input,
+  .setting-select {
+    background: $dark-bg-tertiary;
+    border-color: $dark-border-primary;
+    color: $dark-text-primary;
+    
+    &:focus {
+      border-color: $color-primary;
+    }
+  }
+  
+  .toggle-slider {
+    background-color: $dark-bg-tertiary;
+    border-color: $dark-border-primary;
+  }
+  
+  .btn-secondary {
+    color: $dark-text-secondary;
+    border-color: $dark-border-primary;
+    
+    &:hover:not(:disabled) {
+      background: $dark-bg-secondary;
+      border-color: $dark-border-secondary;
+    }
+  }
+}
+
+// Reduced Motion
+// -----------------------------------------------------------------------------
+@include reduced-motion {
+  .setting-input,
+  .setting-select,
+  .toggle-slider,
+  .btn {
+    transition: none;
+  }
+  
+  .loading-spinner {
+    animation: none;
+  }
+}

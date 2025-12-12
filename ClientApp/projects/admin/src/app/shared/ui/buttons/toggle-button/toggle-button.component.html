@@ -1,0 +1,24 @@
+<div [class]="getContainerClasses()">
+  <!-- Label on left -->
+  <label *ngIf="label && labelPosition === 'left'" class="toggle-label toggle-label-left">
+    {{ label }}
+  </label>
+
+  <!-- Toggle Switch -->
+  <button
+    type="button"
+    [class]="getToggleClasses()"
+    [disabled]="disabled"
+    (click)="toggle()"
+    [attr.aria-checked]="value"
+    [attr.aria-label]="label || 'Toggle'"
+    role="switch">
+    
+    <span class="toggle-thumb"></span>
+  </button>
+
+  <!-- Label on right -->
+  <label *ngIf="label && labelPosition === 'right'" class="toggle-label toggle-label-right">
+    {{ label }}
+  </label>
+</div>

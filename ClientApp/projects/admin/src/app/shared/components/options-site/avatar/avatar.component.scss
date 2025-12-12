@@ -1,0 +1,208 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.avatar-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $bg-secondary;
+  color: $text-primary;
+  font-weight: $font-weight-medium;
+  overflow: hidden;
+  flex-shrink: 0;
+  
+  &.avatar-clickable {
+    cursor: pointer;
+    transition: $transition-base;
+    
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: $shadow-sm;
+    }
+  }
+  
+  &.avatar-loading {
+    background: $bg-tertiary;
+  }
+}
+
+// Size variants
+.avatar-xs {
+  width: 24px;
+  height: 24px;
+  font-size: $font-size-xs;
+}
+
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+  font-size: $font-size-sm;
+}
+
+.avatar-md {
+  width: 40px;
+  height: 40px;
+  font-size: $font-size-base;
+}
+
+.avatar-lg {
+  width: 48px;
+  height: 48px;
+  font-size: $font-size-lg;
+}
+
+.avatar-xl {
+  width: 64px;
+  height: 64px;
+  font-size: $font-size-xl;
+}
+
+.avatar-2xl {
+  width: 80px;
+  height: 80px;
+  font-size: $font-size-2xl;
+}
+
+// Shape variants
+.avatar-circle {
+  border-radius: $border-radius-full;
+}
+
+.avatar-square {
+  border-radius: 0;
+}
+
+.avatar-rounded {
+  border-radius: $border-radius-md;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-initials {
+  @include flex-center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+  color: white;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+}
+
+.avatar-fallback {
+  @include flex-center;
+  width: 100%;
+  height: 100%;
+  color: $text-secondary;
+  
+  svg {
+    width: 60%;
+    height: 60%;
+  }
+}
+
+.avatar-loading-spinner {
+  @include loading-spinner(50%, $color-primary);
+}
+
+// Status indicator
+.avatar-status {
+  position: absolute;
+  border: 2px solid $bg-primary;
+  border-radius: $border-radius-full;
+  
+  // Position based on avatar size
+  .avatar-xs & {
+    width: 8px;
+    height: 8px;
+    bottom: -1px;
+    right: -1px;
+  }
+  
+  .avatar-sm & {
+    width: 10px;
+    height: 10px;
+    bottom: 0;
+    right: 0;
+  }
+  
+  .avatar-md & {
+    width: 12px;
+    height: 12px;
+    bottom: 0;
+    right: 0;
+  }
+  
+  .avatar-lg & {
+    width: 14px;
+    height: 14px;
+    bottom: 1px;
+    right: 1px;
+  }
+  
+  .avatar-xl & {
+    width: 16px;
+    height: 16px;
+    bottom: 2px;
+    right: 2px;
+  }
+  
+  .avatar-2xl & {
+    width: 20px;
+    height: 20px;
+    bottom: 3px;
+    right: 3px;
+  }
+  
+  &.status-online {
+    background: $color-success;
+  }
+  
+  &.status-offline {
+    background: #6b7280;
+  }
+  
+  &.status-away {
+    background: $color-warning;
+  }
+  
+  &.status-busy {
+    background: $color-error;
+  }
+}
+
+// Dark mode support
+@include dark-mode {
+  .avatar-container {
+    background: $dark-bg-tertiary;
+    color: $dark-text-primary;
+    
+    &.avatar-loading {
+      background: $dark-bg-secondary;
+    }
+  }
+  
+  .avatar-fallback {
+    color: $dark-text-secondary;
+  }
+  
+  .avatar-status {
+    border-color: $dark-bg-primary;
+  }
+}
+
+// High contrast mode
+@include high-contrast {
+  .avatar-container {
+    border: 2px solid currentColor;
+  }
+  
+  .avatar-initials {
+    background: currentColor;
+    color: white;
+  }
+}

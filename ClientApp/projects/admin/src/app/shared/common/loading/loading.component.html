@@ -1,0 +1,28 @@
+<div [class]="getContainerClasses()">
+  <!-- Spinner Variant -->
+  <div *ngIf="variant === 'spinner'" [class]="getSpinnerClasses()"></div>
+  
+  <!-- Dots Variant -->
+  <div *ngIf="variant === 'dots'" [class]="getDotsClasses()">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+  
+  <!-- Pulse Variant -->
+  <div *ngIf="variant === 'pulse'" [class]="getPulseClasses()">
+    <div class="pulse-circle pulse-1"></div>
+    <div class="pulse-circle pulse-2"></div>
+    <div class="pulse-circle pulse-3"></div>
+  </div>
+  
+  <!-- Skeleton Variant -->
+  <div *ngIf="variant === 'skeleton'" class="loading-skeleton">
+    <div class="skeleton-line skeleton-line-1"></div>
+    <div class="skeleton-line skeleton-line-2"></div>
+    <div class="skeleton-line skeleton-line-3"></div>
+  </div>
+  
+  <!-- Loading Text -->
+  <p *ngIf="text" class="loading-text">{{ text }}</p>
+</div>

@@ -4,7 +4,7 @@ import { roleGuard } from '../../core/guards/role.guard';
 export const adminRoutes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./admin-layout/admin-layout.component').then(m => m.AdminLayoutComponent),
+    loadComponent: () => import('../../layout/admin-layout/admin-layout.component').then(m => m.AdminLayoutComponent),
     children: [
       // Default redirect
       { 
@@ -140,7 +140,7 @@ export const adminRoutes: Routes = [
       // Admin Profile
       { 
         path: 'profile', 
-        loadComponent: () => import('../profile/admin-profile.component').then(m => m.AdminProfileComponent),
+        loadComponent: () => import('../../shared/common/profile/admin-profile.component').then(m => m.AdminProfileComponent),
         title: 'Admin Profile - Community Car Admin',
         data: {
           breadcrumb: 'Profile',
@@ -207,7 +207,7 @@ export const adminRoutes: Routes = [
       // Localization Management
       { 
         path: 'localization', 
-        loadComponent: () => import('./localization/localization-management.component').then(m => m.LocalizationManagementComponent),
+        loadComponent: () => import('../cms/localization/localization-management.component').then(m => m.LocalizationManagementComponent),
         canActivate: [roleGuard],
         title: 'Localization Management - Community Car Admin',
         data: {
