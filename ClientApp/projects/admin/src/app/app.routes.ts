@@ -22,6 +22,15 @@ export const routes: Routes = [
           description: 'Admin login page for Community Car platform'
         }
       },
+      { 
+        path: 'forgot-password', 
+        loadComponent: () => import('./shared/ui/forms/forgot-password-form/forgot-password-form.component').then(m => m.ForgotPasswordFormComponent),
+        title: 'Forgot Password - Community Car Admin',
+        data: { 
+          hideNavigation: true,
+          description: 'Reset your admin password'
+        }
+      },
 
       { path: '', redirectTo: 'login', pathMatch: 'full' }
     ]

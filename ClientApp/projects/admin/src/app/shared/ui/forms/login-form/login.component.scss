@@ -147,14 +147,34 @@
   margin-top: $spacing-4;
   text-align: center;
   color: $text-muted;
-  font-size: $font-size-xs;
+  font-size: $font-size-sm;
+  
   a {
     color: $color-primary;
     font-weight: $font-weight-semibold;
     text-decoration: none;
+    padding: $spacing-2 $spacing-3;
+    border-radius: $border-radius-base;
+    transition: all $transition-fast;
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-1;
     
     &:hover {
-      text-decoration: underline;
+      background: rgba($color-primary, 0.1);
+      text-decoration: none;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba($color-primary, 0.15);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+    
+    // Add support icon
+    &::before {
+      content: '📞';
+      font-size: $font-size-xs;
     }
   }
 }
@@ -355,10 +375,24 @@
       font-size: $font-size-sm;
       color: $color-primary;
       text-decoration: none;
-      font-weight: $font-weight-medium;
+      font-weight: $font-weight-semibold;
+      padding: $spacing-2 $spacing-3;
+      border-radius: $border-radius-base;
+      transition: all $transition-fast;
+      background: transparent;
+      border: 1px solid transparent;
       
       &:hover {
-        text-decoration: underline;
+        background: rgba($color-primary, 0.1);
+        border-color: rgba($color-primary, 0.2);
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba($color-primary, 0.2);
+      }
+      
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 4px rgba($color-primary, 0.2);
       }
     }
   }
@@ -471,16 +505,27 @@
   gap: $spacing-2;
   font-size: $font-size-xs;
   color: $text-muted;
+  padding: $spacing-2;
+  background: rgba($success-500, 0.05);
+  border-radius: $border-radius-base;
+  border: 1px solid rgba($success-500, 0.1);
   
   svg {
     width: $spacing-4;
     height: $spacing-4;
+    color: $success-600;
+  }
+  
+  span {
+    color: $success-700;
+    font-weight: $font-weight-medium;
   }
 }
 
 .copyright {
   font-size: $font-size-xs;
-  color: $text-muted;
+  color: $black; // Changed to black as requested
+  font-weight: $font-weight-medium;
 }
 
 // Responsive Design
