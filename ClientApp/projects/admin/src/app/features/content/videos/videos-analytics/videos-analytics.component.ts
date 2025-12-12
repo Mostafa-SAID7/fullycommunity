@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../../../environments/environment';
+import { environment } from '../../../../../environments/environment';
 import { DateUtils } from '../../../../core/utils/date.utils';
 
 interface VideoStats {

@@ -15,7 +15,7 @@ export const routes: Routes = [
     children: [
       { 
         path: 'login', 
-        loadComponent: () => import('./shared/ui/forms/login-form/login.component').then(m => m.LoginComponent),
+        loadComponent: () => import('./shared/ui/forms/login-form/login.component').then(m => m.LoginFormComponent),
         title: 'Admin Login - Community Car',
         data: { 
           hideNavigation: true,

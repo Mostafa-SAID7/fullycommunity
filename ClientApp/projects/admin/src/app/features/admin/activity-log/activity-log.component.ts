@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivityLogService, ActivityLogEntry } from '../../../core/services/activity/activity-log.service';
-import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
+import { RefreshButtonComponent } from '../../../shared/ui/buttons/refresh-button/refresh-button.component';
 import { PaginationComponent } from '../../../shared/ui/navigation/pagination/pagination.component';
 
 @Component({

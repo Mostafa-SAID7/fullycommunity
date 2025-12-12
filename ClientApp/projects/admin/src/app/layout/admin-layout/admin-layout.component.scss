@@ -1,4 +1,7 @@
 
+@import '../../shared/styles/variables';
+@import '../../shared/styles/mixins';
+
 .admin-layout {
   min-height: 100vh;
   background: linear-gradient(135deg, $bg-secondary 0%, rgba($primary-100, 0.3) 50%, rgba($indigo-100, 0.3) 100%);
