@@ -74,6 +74,10 @@ export class AuthService {
       );
   }
 
+  forgotPassword(email: string) {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/forgot-password`, { email });
+  }
+
   logout() {
     const token = this.getToken();
     const refreshToken = localStorage.getItem('admin_refresh_token');

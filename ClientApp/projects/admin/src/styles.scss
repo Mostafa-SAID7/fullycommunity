@@ -3,7 +3,7 @@
 // =============================================================================
 
 // Import comprehensive styles system (optimized order for proper cascading)
-@import 'app/shared/styles/index';
+@use 'app/shared/styles/index' as *;
 
 // Global Reset & Base Styles
 // -----------------------------------------------------------------------------
