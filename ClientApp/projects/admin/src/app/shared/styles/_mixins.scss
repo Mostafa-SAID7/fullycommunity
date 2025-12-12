@@ -1,0 +1,143 @@
+// Component Mixins
+// =============================================================================
+
+// Flexbox Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Responsive Mixins
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'sm' {
+    @media (min-width: 576px) { @content; }
+  }
+  @if $breakpoint == 'md' {
+    @media (min-width: 768px) { @content; }
+  }
+  @if $breakpoint == 'lg' {
+    @media (min-width: 992px) { @content; }
+  }
+  @if $breakpoint == 'xl' {
+    @media (min-width: 1200px) { @content; }
+  }
+}
+
+@mixin respond-below($breakpoint) {
+  @if $breakpoint == 'sm' {
+    @media (max-width: 575.98px) { @content; }
+  }
+  @if $breakpoint == 'md' {
+    @media (max-width: 767.98px) { @content; }
+  }
+  @if $breakpoint == 'lg' {
+    @media (max-width: 991.98px) { @content; }
+  }
+  @if $breakpoint == 'xl' {
+    @media (max-width: 1199.98px) { @content; }
+  }
+}
+
+// Accessibility Mixins
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+@mixin dark-mode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
+@mixin high-contrast {
+  @media (prefers-contrast: high) {
+    @content;
+  }
+}
+
+@mixin focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+// Typography Mixins
+@mixin heading($level) {
+  @if $level == 1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
+  @if $level == 2 {
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  @if $level == 3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+  @if $level == 4 {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  @if $level == 5 {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  @if $level == 6 {
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+}
+
+// Status Indicator
+@mixin status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+// Loading Spinner
+@mixin loading-spinner($size: 24px, $color: #0066cc) {
+  width: $size;
+  height: $size;
+  border: 2px solid rgba($color, 0.2);
+  border-top: 2px solid $color;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Admin Content Mixin
+@mixin admin-content {
+  padding: $spacing-6;
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+// Card Base Mixin
+@mixin card-base {
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+  padding: $spacing-4;
+}

@@ -9,6 +9,7 @@ export interface Story {
   // Content
   mediaUrl: string;
   mediaType: StoryMediaType;
+  type: string; // For template compatibility
   thumbnailUrl: string | null;
   caption: string | null;
   duration: number;
@@ -17,6 +18,19 @@ export interface Story {
   authorName: string;
   authorAvatarUrl: string | null;
   authorVerified: boolean;
+  
+  // User and Page (for component compatibility)
+  user?: {
+    firstName: string;
+    lastName: string;
+    avatarUrl: string | null;
+    isVerified: boolean;
+  };
+  page?: {
+    name: string;
+    profileImageUrl: string | null;
+    isVerified: boolean;
+  };
   
   // Stats
   viewCount: number;
@@ -39,6 +53,16 @@ export enum StoryMediaType {
   Image = 0,
   Video = 1,
   Text = 2
+}
+
+/**
+ * Story Visibility
+ */
+export enum StoryVisibility {
+  Public = 0,
+  Friends = 1,
+  CloseFriends = 2,
+  Private = 3
 }
 
 /**
@@ -86,6 +110,12 @@ export interface StoryReply {
 export interface CreateStoryRequest {
   mediaUrl: string;
   mediaType: StoryMediaType;
+  thumbnailUrl?: string;
+  type?: StoryMediaType;
   caption: string | null;
   duration: number;
+  backgroundColor?: string;
+  textColor?: string;
+  visibility?: StoryVisibility;
+  viewerIds?: string[];
 }

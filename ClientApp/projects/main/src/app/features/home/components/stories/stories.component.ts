@@ -1,7 +1,8 @@
 import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth/auth.service';
-import { StoriesService, Story, StoryType } from '../../../../core/services/home/stories.service';
+import { StoriesService } from '../../../../core/services/home/stories.service';
+import { Story, StoryMediaType } from '../../../../core/interfaces/home/stories.interface';
 import { StoryViewerComponent } from '../../../../shared/components/story-viewer/story-viewer.component';
 import { CreateStoryModalComponent } from '../../../../shared/components/create-story-modal/create-story-modal.component';
 
@@ -47,12 +48,12 @@ export class StoriesComponent implements OnInit, OnDestroy {
   loadStories(): void {
     this.loadingState.set({ isLoading: true, error: null });
 
-    this.storiesService.getStories().subscribe({
-      next: (stories) => {
+    this.storiesService.getMyStories().subscribe({
+      next: (stories: Story[]) => {
         this.stories.set(stories);
         this.loadingState.set({ isLoading: false, error: null });
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading stories:', error);
         this.stories.set([]);
         this.loadingState.set({ 
@@ -104,7 +105,7 @@ export class StoriesComponent implements OnInit, OnDestroy {
 
     action.subscribe({
       next: () => {
-        console.log(`Story ${isLiked ? 'unliked' : 'liked'}:`, story.user.firstName);
+        console.log(`Story ${isLiked ? 'unliked' : 'liked'}:`, story.user?.firstName || story.authorName);
       },
       error: (error) => {
         console.error('Error toggling like:', error);
@@ -166,31 +167,41 @@ export class StoriesComponent implements OnInit, OnDestroy {
     if (story.page) {
       return story.page.name;
     }
-    return `${story.user.firstName} ${story.user.lastName}`;
+    if (story.user) {
+      return `${story.user.firstName} ${story.user.lastName}`;
+    }
+    return story.authorName;
   }
 
   getDisplayAvatar(story: Story): string | undefined {
     if (story.page) {
-      return story.page.profileImageUrl;
+      return story.page.profileImageUrl || undefined;
     }
-    return story.user.avatarUrl;
+    if (story.user) {
+      return story.user.avatarUrl || undefined;
+    }
+    return story.authorAvatarUrl || undefined;
   }
 
   isVerified(story: Story): boolean {
     if (story.page) {
       return story.page.isVerified;
     }
-    return story.user.isVerified;
+    if (story.user) {
+      return story.user.isVerified;
+    }
+    return story.authorVerified;
   }
 
-  getStoryTypeIcon(type: StoryType): string {
-    switch (type) {
-      case StoryType.Video:
+  getStoryTypeIcon(type: StoryMediaType | string): string {
+    const mediaType = typeof type === 'string' ? type : type.toString();
+    switch (mediaType) {
+      case 'Video':
+      case StoryMediaType.Video.toString():
         return 'M8 5v14l11-7z';
-      case StoryType.Live:
+      case 'Text':
+      case StoryMediaType.Text.toString():
         return 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z';
-      case StoryType.Boomerang:
-        return 'M12 2l3.09 6.26L22 9l-5.91 3.74L18 19l-6-3.27L6 19l1.91-6.26L2 9l6.91-.74L12 2z';
       default:
         return '';
     }

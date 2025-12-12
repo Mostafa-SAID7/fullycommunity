@@ -92,6 +92,12 @@
             "styles": [
               "projects/admin/src/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/admin/src/app/shared/styles",
+                "projects/admin/src"
+              ]
+            },
             "scripts": []
           },
           "configurations": {

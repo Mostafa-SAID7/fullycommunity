@@ -16,7 +16,7 @@ export const adminRoutes: Routes = [
       // Dashboard
       { 
         path: 'dashboard', 
-        loadComponent: () => import('./dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
+        loadComponent: () => import('../dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
         title: 'Admin Dashboard - Community Car',
         data: {
           breadcrumb: 'Dashboard',
@@ -56,7 +56,7 @@ export const adminRoutes: Routes = [
       // Content Management
       { 
         path: 'content', 
-        loadChildren: () => import('./content/content.routes').then(m => m.contentRoutes),
+        loadChildren: () => import('../content/content.routes').then(m => m.contentRoutes),
         canActivate: [roleGuard],
         data: {
           breadcrumb: 'Content',
@@ -65,19 +65,7 @@ export const adminRoutes: Routes = [
         }
       },
       
-      // Video Management (Direct Access)
-      { 
-        path: 'videos', 
-        loadComponent: () => import('./videos/videos-admin.component').then(m => m.VideosAdminComponent),
-        canActivate: [roleGuard],
-        title: 'Video Management - Community Car Admin',
-        data: {
-          breadcrumb: 'Videos',
-          description: 'Comprehensive video content management and moderation',
-          roles: ['admin', 'super-admin', 'content-admin'],
-          requiredPermissions: ['videos.read', 'videos.moderate']
-        }
-      },
+
       
       // Reports & Analytics
       { 
@@ -152,7 +140,7 @@ export const adminRoutes: Routes = [
       // Admin Profile
       { 
         path: 'profile', 
-        loadComponent: () => import('./profile/admin-profile.component').then(m => m.AdminProfileComponent),
+        loadComponent: () => import('../profile/admin-profile.component').then(m => m.AdminProfileComponent),
         title: 'Admin Profile - Community Car Admin',
         data: {
           breadcrumb: 'Profile',

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, signal, computed, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Story, StoriesService } from '../../../core/services/home/stories.service';
+import { StoriesService } from '../../../core/services/home/stories.service';
+import { Story } from '../../../core/interfaces/home/stories.interface';
 
 @Component({
   selector: 'app-story-viewer',
@@ -199,20 +200,29 @@ export class StoryViewerComponent implements OnInit, OnDestroy {
     if (story.page) {
       return story.page.name;
     }
-    return `${story.user.firstName} ${story.user.lastName}`;
+    if (story.user) {
+      return `${story.user.firstName} ${story.user.lastName}`;
+    }
+    return story.authorName;
   }
 
   getDisplayAvatar(story: Story): string | undefined {
     if (story.page) {
-      return story.page.profileImageUrl;
+      return story.page.profileImageUrl || undefined;
     }
-    return story.user.avatarUrl;
+    if (story.user) {
+      return story.user.avatarUrl || undefined;
+    }
+    return story.authorAvatarUrl || undefined;
   }
 
   isVerified(story: Story): boolean {
     if (story.page) {
       return story.page.isVerified;
     }
-    return story.user.isVerified;
+    if (story.user) {
+      return story.user.isVerified;
+    }
+    return story.authorVerified;
   }
 }

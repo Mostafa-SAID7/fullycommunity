@@ -1,7 +1,8 @@
 import { Component, inject, signal, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { StoriesService, CreateStoryRequest, StoryType, StoryVisibility } from '../../../core/services/home/stories.service';
+import { StoriesService } from '../../../core/services/home/stories.service';
+import { CreateStoryRequest, StoryMediaType, StoryVisibility } from '../../../core/interfaces/home/stories.interface';
 import { AuthService } from '../../../core/services/auth/auth.service';
 
 @Component({
@@ -87,9 +88,9 @@ import { AuthService } from '../../../core/services/auth/auth.service';
               [(ngModel)]="storyType"
               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
             >
-              <option [value]="StoryType.Image">Image</option>
-              <option [value]="StoryType.Video">Video</option>
-              <option [value]="StoryType.Text">Text</option>
+              <option [value]="StoryMediaType.Image">Image</option>
+              <option [value]="StoryMediaType.Video">Video</option>
+              <option [value]="StoryMediaType.Text">Text</option>
             </select>
           </div>
 
@@ -108,7 +109,7 @@ import { AuthService } from '../../../core/services/auth/auth.service';
           </div>
 
           <!-- Text Story Options (if text type) -->
-          <div *ngIf="storyType === StoryType.Text" class="space-y-4">
+          <div *ngIf="storyType === StoryMediaType.Text" class="space-y-4">
             <div class="space-y-2">
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Background Color</label>
               <div class="flex space-x-2">
@@ -168,7 +169,7 @@ export class CreateStoryModalComponent {
   selectedFile = signal<File | null>(null);
   mediaPreview = signal<string | null>(null);
   caption = '';
-  storyType = StoryType.Image;
+  storyType = StoryMediaType.Image;
   visibility = StoryVisibility.Public;
   backgroundColor = '#6366f1';
   textColor = '#ffffff';
@@ -177,7 +178,7 @@ export class CreateStoryModalComponent {
   creating = signal(false);
 
   // Constants
-  StoryType = StoryType;
+  StoryMediaType = StoryMediaType;
   StoryVisibility = StoryVisibility;
   
   backgroundColors = [
@@ -235,9 +236,9 @@ export class CreateStoryModalComponent {
 
     // Set story type based on file type
     if (file.type.startsWith('video/')) {
-      this.storyType = StoryType.Video;
+      this.storyType = StoryMediaType.Video;
     } else {
-      this.storyType = StoryType.Image;
+      this.storyType = StoryMediaType.Image;
     }
   }
 
@@ -248,7 +249,7 @@ export class CreateStoryModalComponent {
   }
 
   canCreate(): boolean {
-    if (this.storyType === StoryType.Text) {
+    if (this.storyType === StoryMediaType.Text) {
       return this.caption.trim().length > 0;
     }
     return this.selectedFile() !== null;
@@ -273,11 +274,13 @@ export class CreateStoryModalComponent {
 
       const request: CreateStoryRequest = {
         mediaUrl,
+        mediaType: this.storyType,
         thumbnailUrl,
         type: this.storyType,
-        caption: this.caption.trim() || undefined,
-        backgroundColor: this.storyType === StoryType.Text ? this.backgroundColor : undefined,
-        textColor: this.storyType === StoryType.Text ? this.textColor : undefined,
+        caption: this.caption.trim() || null,
+        duration: 0, // Default duration
+        backgroundColor: this.storyType === StoryMediaType.Text ? this.backgroundColor : undefined,
+        textColor: this.storyType === StoryMediaType.Text ? this.textColor : undefined,
         visibility: this.visibility,
         viewerIds: []
       };

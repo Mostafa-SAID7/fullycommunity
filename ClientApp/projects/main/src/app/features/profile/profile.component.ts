@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/services/auth/auth.service';
-import { CommunityService, Post } from '../../core/services/community/community.service';
+import { CommunityService } from '../../core/services/community/community.service';
+import { Post } from '../../core/interfaces/community/posts';
 
 @Component({
   selector: 'app-profile',
@@ -51,7 +52,7 @@ export class ProfileComponent implements OnInit {
       this.editForm = {
         firstName: u.firstName || '',
         lastName: u.lastName || '',
-        phone: u.phoneNumber || '',
+        phone: '',
         bio: '',
         location: ''
       };
@@ -81,8 +82,8 @@ export class ProfileComponent implements OnInit {
   saveProfile() {
     this.authService.updateProfile({
       firstName: this.editForm.firstName,
-      lastName: this.editForm.lastName,
-      phoneNumber: this.editForm.phone
+      lastName: this.editForm.lastName
+      // Note: phoneNumber not included as it's not part of the User interface
     }).subscribe({
       next: () => this.isEditing.set(false)
     });

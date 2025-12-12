@@ -4,7 +4,7 @@ export const videosRoutes: Routes = [
   { path: '', redirectTo: 'manage', pathMatch: 'full' },
   { 
     path: 'manage', 
-    loadComponent: () => import('../../videos/videos-admin.component').then(m => m.VideosAdminComponent) 
+    loadComponent: () => import('../content-management.component').then(m => m.ContentManagementComponent) 
   },
   { 
     path: 'pending', 
