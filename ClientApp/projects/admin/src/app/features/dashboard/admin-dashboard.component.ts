@@ -4,20 +4,10 @@ import { RouterLink } from '@angular/router';
 import { interval, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 // import { RefreshButtonComponent } from '../../../shared/ui/buttons/refresh-button/refresh-button.component';
-// import { StatCardComponent, StatCardConfig } from '../../../shared/ui/charts/stat-card/stat-card.component';
+import { StatCardComponent } from '../../shared/ui/cards/stat-card/stat-card.component';
+import { StatCardConfig } from '../../shared/ui/cards/stat-card/stat-card.interface';
 
-// Temporary interface for StatCardConfig
-interface StatCardConfig {
-  title: string;
-  value: number;
-  icon: string;
-  color: string;
-  subtitle?: string;
-  trend?: {
-    value: number;
-    direction: 'up' | 'down';
-  };
-}
+
 
 // Temporary interfaces until services are implemented
 interface AdminDashboardOverview {

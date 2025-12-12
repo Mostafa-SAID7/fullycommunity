@@ -2,9 +2,9 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { QaAdminService } from '../../../../../core/services/content/community/qa/qa-admin.service';
-import { QAStats, QuestionListItem, Category } from '../../../../../core/interfaces/content/community/qa/qa-admin.interface';
-import { DateUtils } from '../../../../../core/utils/date.utils';
+import { QaAdminService } from '../../../../core/services/content/community/qa/qa-admin.service';
+import { QAStats, QuestionListItem, Category } from '../../../../core/interfaces/content/community/qa/qa-admin.interface';
+import { DateUtils } from '../../../../core/utils/date.utils';
 
 @Component({
   selector: 'app-qa-questions',

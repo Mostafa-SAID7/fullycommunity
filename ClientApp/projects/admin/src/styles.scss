@@ -1,8 +1,15 @@
 
-// Import variables and mixins
+// Enhanced Admin Styles System - Final Optimized & Duplicate-Free Version
+// =============================================================================
+
+// Import comprehensive styles system (optimized order for proper cascading)
 @import 'app/shared/styles/index';
 
-* {
+// Global Reset & Base Styles
+// -----------------------------------------------------------------------------
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -27,241 +34,42 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-}
-
-// Typography
-// -----------------------------------------------------------------------------
-
-h1, h2, h3, h4, h5, h6 {
-  margin: 0 0 $spacing-4 0;
-  font-family: $font-family-display;
-  font-weight: $font-weight-bold;
-  line-height: $line-height-tight;
-  color: $text-primary;
-}
-
-h1 { @include heading(1); }
-h2 { @include heading(2); }
-h3 { @include heading(3); }
-h4 { @include heading(4); }
-h5 { @include heading(5); }
-h6 { @include heading(6); }
-
-p {
-  margin: 0 0 $spacing-4 0;
-  line-height: $line-height-relaxed;
-  
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-a {
-  color: $color-primary;
-  text-decoration: none;
-  transition: color $transition-fast;
-  
-  &:hover {
-    color: $color-primary-hover;
-    text-decoration: underline;
-  }
-  
-  &:focus-visible {
-    @include focus-visible;
-  }
-}
-
-// Lists
-// -----------------------------------------------------------------------------
-
-ul, ol {
-  margin: 0 0 $spacing-4 0;
-  padding-left: $spacing-6;
-  
-  li {
-    margin-bottom: $spacing-1;
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-}
-
-// Code
-// -----------------------------------------------------------------------------
-
-code {
-  font-family: $font-family-secondary;
-  font-size: 0.875em;
-  background: rgba($color-primary, 0.1);
-  padding: 0.125rem 0.25rem;
-  border-radius: $border-radius-sm;
-  color: $color-primary;
-}
-
-pre {
-  font-family: $font-family-secondary;
-  background: $bg-secondary;
-  padding: $spacing-4;
-  border-radius: $border-radius-md;
-  overflow-x: auto;
-  margin: 0 0 $spacing-4 0;
-  
-  code {
-    background: none;
-    padding: 0;
-    color: inherit;
-  }
-}
-
-// Tables
-// -----------------------------------------------------------------------------
-
-table {
+  overflow-x: hidden;
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: $spacing-6;
-  
-  th,
-  td {
-    padding: $spacing-3 $spacing-4;
-    text-align: left;
-    border-bottom: 1px solid $border-primary;
-  }
-  
-  th {
-    font-weight: $font-weight-semibold;
-    color: $text-primary;
-    background: $bg-secondary;
-  }
-  
-  tbody tr:hover {
-    background: rgba($color-primary, 0.05);
-  }
+  min-height: 100vh;
 }
 
-// Images
+// Global Element Enhancements
 // -----------------------------------------------------------------------------
 
+// Enhanced Image Handling
 img {
   max-width: 100%;
   height: auto;
   border-radius: $border-radius-base;
-}
-
-// Responsive Utilities
-// -----------------------------------------------------------------------------
-
-// Ensure content never overflows horizontally
-* {
-  box-sizing: border-box;
-}
-
-// Prevent horizontal overflow
-html, body {
-  overflow-x: hidden;
-  width: 100%;
-}
-
-// Status Indicators
-// -----------------------------------------------------------------------------
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: $spacing-1;
-  padding: 0.25rem 0.5rem;
-  font-size: $font-size-xs;
-  font-weight: $font-weight-medium;
-  border-radius: $border-radius-full;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   
-  &.status-success {
-    background: rgba($color-success, 0.1);
-    color: $color-success;
+  &.img-crisp {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
   }
   
-  &.status-warning {
-    background: rgba($color-warning, 0.1);
-    color: $color-warning;
-  }
-  
-  &.status-error {
-    background: rgba($color-error, 0.1);
-    color: $color-error;
-  }
-  
-  &.status-info {
-    background: rgba($color-primary, 0.1);
-    color: $color-primary;
-  }
-  
-  .status-dot {
-    @include status-indicator;
+  &.img-pixelated {
+    image-rendering: pixelated;
   }
 }
 
-// Loading States
-// -----------------------------------------------------------------------------
-
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
-  @include flex-center;
-  z-index: $z-index-modal;
-  
-  .loading-content {
-    text-align: center;
-    
-    .loading-spinner {
-      @include loading-spinner($icon-2xl, $color-primary);
-      margin: 0 auto $spacing-4;
-    }
-    
-    .loading-text {
-      color: $text-secondary;
-      font-weight: $font-weight-medium;
-    }
-  }
-}
-
-// Scrollbars
-// -----------------------------------------------------------------------------
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: $bg-secondary;
-}
-
-::-webkit-scrollbar-thumb {
-  background: $border-secondary;
-  border-radius: $border-radius-full;
-  
-  &:hover {
-    background: $text-muted;
-  }
-}
-
-// Selection
-// -----------------------------------------------------------------------------
-
+// Enhanced Selection
 ::selection {
   background: rgba($color-primary, 0.2);
   color: $text-primary;
 }
 
-// Focus Management
-// -----------------------------------------------------------------------------
+::-moz-selection {
+  background: rgba($color-primary, 0.2);
+  color: $text-primary;
+}
 
+// Enhanced Focus Management
 :focus {
   outline: none;
 }
@@ -270,101 +78,75 @@ html, body {
   @include focus-visible;
 }
 
-// Print Styles
+// Enhanced Form Elements
+input, textarea, select {
+  font-family: inherit;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+// Enhanced Links
+a {
+  color: inherit;
+  text-decoration: none;
+  
+  &:focus-visible {
+    @include focus-visible;
+  }
+}
+
+// Print Optimization
 // -----------------------------------------------------------------------------
 
 @media print {
+  // Hide interactive elements
   .admin-sidebar,
   .admin-header,
   .btn,
-  .no-print {
+  .no-print,
+  .modal,
+  .dropdown,
+  .tooltip {
     display: none !important;
   }
   
+  // Optimize layout for print
   .admin-content {
     padding: 0;
+    margin: 0;
   }
   
-  .card {
-    box-shadow: none;
-    border: 1px solid #000;
-  }
-}
-
-// Dark Mode
-// -----------------------------------------------------------------------------
-
-@include dark-mode {
-  body {
-    background-color: $dark-bg-primary;
-    color: $dark-text-primary;
-  }
-  
-  .admin-header,
-  .admin-sidebar {
-    background: $dark-bg-secondary;
-    border-color: $dark-border-primary;
-  }
-  
-  table {
-    th {
-      background: $dark-bg-tertiary;
-      color: $dark-text-primary;
-    }
-    
-    th,
-    td {
-      border-color: $dark-border-primary;
-    }
-    
-    tbody tr:hover {
-      background: rgba($color-primary, 0.1);
-    }
-  }
-  
-  code {
-    background: rgba($color-primary, 0.2);
-  }
-  
-  pre {
-    background: $dark-bg-tertiary;
-  }
-  
-  .loading-overlay {
-    background: rgba(0, 0, 0, 0.8);
-  }
-  
-  ::-webkit-scrollbar-track {
-    background: $dark-bg-tertiary;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: $dark-border-secondary;
-    
-    &:hover {
-      background: rgba($dark-text-secondary, 0.8);
-    }
-  }
-}
-
-// High Contrast Mode
-// -----------------------------------------------------------------------------
-
-@include high-contrast {
-  * {
-    border-color: currentColor !important;
-  }
-  
+  // Ensure proper borders for print
   .card,
-  .btn,
-  .form-control {
-    border: 2px solid !important;
+  .table,
+  .border {
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+  }
+  
+  // Optimize colors for print
+  * {
+    background: white !important;
+    color: black !important;
+  }
+  
+  // Ensure page breaks
+  .page-break {
+    page-break-before: always;
+  }
+  
+  .no-page-break {
+    page-break-inside: avoid;
   }
 }
 
-// Reduced Motion
+// Accessibility & Performance Enhancements
 // -----------------------------------------------------------------------------
 
+// Reduced Motion Support
 @include reduced-motion {
   *,
   *::before,
@@ -372,9 +154,84 @@ html, body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// High Contrast Support
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
   }
   
-  html {
-    scroll-behavior: auto;
+  .btn,
+  .card,
+  .form-control,
+  .border {
+    border-width: 2px !important;
   }
+}
+
+// Forced Colors Support (Windows High Contrast)
+@media (forced-colors: active) {
+  .card {
+    border: 1px solid ButtonText;
+  }
+  
+  .btn {
+    border: 1px solid ButtonText;
+    background: ButtonFace;
+    color: ButtonText;
+  }
+}
+
+// Performance Optimizations
+// -----------------------------------------------------------------------------
+
+// GPU Acceleration for animations
+.animate-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+// Optimize rendering for large lists
+.optimize-rendering {
+  contain: layout style paint;
+}
+
+// Optimize scrolling performance
+.optimize-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+// Admin-Specific Global Styles
+// -----------------------------------------------------------------------------
+
+// Admin container optimization
+.admin-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// Content area optimization
+.admin-main {
+  flex: 1;
+  display: flex;
+  min-height: 0; // Important for flex children
+}
+
+// Ensure proper stacking context
+.admin-header {
+  z-index: $z-index-sticky;
+}
+
+.admin-sidebar {
+  z-index: calc(#{$z-index-sticky} - 1);
+}
+
+.admin-content {
+  z-index: 1;
 }

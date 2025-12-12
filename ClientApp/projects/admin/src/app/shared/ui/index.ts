@@ -8,7 +8,8 @@ export * from './modals/create-user/create-user-modal.component';
 export * from './charts/bar-chart/bar-chart.component';
 export * from './charts/line-chart/line-chart.component';
 export * from './charts/pie-chart/pie-chart.component';
-export * from './charts/stat-card/stat-card.component';
+export * from './cards/stat-card/stat-card.component';
+export * from './cards/stat-card/stat-card.interface';
 
 // Card Components
 export * from './cards/user-card/user-card.component';

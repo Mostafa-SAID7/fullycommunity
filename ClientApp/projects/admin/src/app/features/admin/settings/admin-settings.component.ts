@@ -10,7 +10,7 @@ import {
   SecuritySettings
 } from '../../../core/interfaces/admin/settings.interface';
 import { TabNavigationComponent, Tab } from '../../../shared/ui/navigation/tab-navigation/tab-navigation.component';
-import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
+import { RefreshButtonComponent } from '../../../shared/ui/buttons/refresh-button/refresh-button.component';
 
 @Component({
   selector: 'admin-settings',

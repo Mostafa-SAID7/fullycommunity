@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PieChartComponent, PieChartConfig } from './pie-chart.component';
 import { LineChartComponent, LineChartConfig } from './line-chart.component';
-import { StatCardComponent, StatCardConfig } from './stat-card.component';
+import { StatCardComponent } from '../../cards/stat-card/stat-card.component';
+import { StatCardConfig } from '../../cards/stat-card/stat-card.interface';
 
 // Bar Chart interfaces (since bar-chart.component.ts exists)
 export interface BarChartData {

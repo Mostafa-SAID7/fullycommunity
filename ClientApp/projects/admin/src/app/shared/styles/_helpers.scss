@@ -1,0 +1,438 @@
+// Helpers - Utility Classes and Helper Functions
+// =============================================================================
+
+// Clearfix
+// -----------------------------------------------------------------------------
+.clearfix {
+  &::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+// Float Utilities
+// -----------------------------------------------------------------------------
+.float-left { float: left; }
+.float-right { float: right; }
+.float-none { float: none; }
+
+// Clear Utilities
+// -----------------------------------------------------------------------------
+.clear-left { clear: left; }
+.clear-right { clear: right; }
+.clear-both { clear: both; }
+.clear-none { clear: none; }
+
+// Aspect Ratio Utilities
+// -----------------------------------------------------------------------------
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-photo {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-portrait {
+  aspect-ratio: 3 / 4;
+}
+
+.aspect-auto {
+  aspect-ratio: auto;
+}
+
+// Image Utilities
+// -----------------------------------------------------------------------------
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.img-thumbnail {
+  padding: $spacing-1;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: $border-radius-base;
+  max-width: 100%;
+  height: auto;
+}
+
+.img-circle {
+  border-radius: 50%;
+}
+
+.img-rounded {
+  border-radius: $border-radius-lg;
+}
+
+// Video Utilities
+// -----------------------------------------------------------------------------
+.video-responsive {
+  position: relative;
+  padding-bottom: 56.25%; // 16:9 aspect ratio
+  height: 0;
+  overflow: hidden;
+  
+  iframe,
+  object,
+  embed,
+  video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Loading States (Note: Main loading components are in _components.scss)
+// -----------------------------------------------------------------------------
+// Removed duplicate loading and skeleton styles - they are properly defined in _components.scss
+
+// Status Indicators
+// -----------------------------------------------------------------------------
+.status-online {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    background: var(--color-success);
+    border: 2px solid var(--bg-primary);
+    border-radius: 50%;
+  }
+}
+
+.status-offline {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    background: var(--color-error);
+    border: 2px solid var(--bg-primary);
+    border-radius: 50%;
+  }
+}
+
+.status-away {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    background: var(--color-warning);
+    border: 2px solid var(--bg-primary);
+    border-radius: 50%;
+  }
+}
+
+// Notification Badges
+// -----------------------------------------------------------------------------
+.notification-badge {
+  position: relative;
+  
+  &::after {
+    content: attr(data-count);
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    min-width: 18px;
+    height: 18px;
+    background: var(--color-error);
+    color: var(--text-inverse);
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    border-radius: 9px;
+    @include flex-center;
+    padding: 0 4px;
+    box-shadow: 0 2px 4px rgba(var(--color-error), 0.3);
+  }
+  
+  &[data-count="0"]::after {
+    display: none;
+  }
+}
+
+// Tooltips (CSS-only)
+// -----------------------------------------------------------------------------
+.tooltip {
+  position: relative;
+  cursor: help;
+  
+  &::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: $spacing-2 $spacing-3;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    font-size: $font-size-xs;
+    border-radius: $border-radius-base;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all $transition-fast;
+    z-index: 1000;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    visibility: hidden;
+    transition: all $transition-fast;
+  }
+  
+  &:hover::before,
+  &:hover::after {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// Progress Bars
+// -----------------------------------------------------------------------------
+.progress {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+  
+  .progress-bar {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    
+    &.progress-success {
+      background: var(--color-success);
+    }
+    
+    &.progress-warning {
+      background: var(--color-warning);
+    }
+    
+    &.progress-error {
+      background: var(--color-error);
+    }
+    
+    &.progress-striped {
+      background-image: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 75%,
+        transparent
+      );
+      background-size: 1rem 1rem;
+    }
+    
+    &.progress-animated {
+      animation: progress-bar-stripes 1s linear infinite;
+    }
+  }
+}
+
+@keyframes progress-bar-stripes {
+  0% {
+    background-position: 1rem 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+// Dividers
+// -----------------------------------------------------------------------------
+.divider {
+  height: 1px;
+  background: var(--border-primary);
+  margin: $spacing-4 0;
+  
+  &.divider-vertical {
+    width: 1px;
+    height: auto;
+    margin: 0 $spacing-4;
+  }
+  
+  &.divider-thick {
+    height: 2px;
+  }
+  
+  &.divider-dashed {
+    background: none;
+    border-top: 1px dashed var(--border-primary);
+  }
+  
+  &.divider-dotted {
+    background: none;
+    border-top: 1px dotted var(--border-primary);
+  }
+}
+
+// Spacers
+// -----------------------------------------------------------------------------
+.spacer {
+  flex: 1;
+}
+
+.spacer-x {
+  width: 100%;
+}
+
+.spacer-y {
+  height: 100%;
+}
+
+// Glass Effect
+// -----------------------------------------------------------------------------
+.glass {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(var(--bg-primary), 0.8);
+  border: 1px solid rgba(var(--border-primary), 0.2);
+}
+
+.glass-dark {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+// Note: Gradient utilities are in _colors.scss
+// Note: Scrollbar utilities are in _themes.scss for theme-aware styling
+// Note: Loading/skeleton utilities are in _components.scss
+
+// Focus Utilities
+// -----------------------------------------------------------------------------
+.focus-ring {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.2);
+  }
+}
+
+.focus-ring-error {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--color-error), 0.2);
+  }
+}
+
+.focus-ring-success {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--color-success), 0.2);
+  }
+}
+
+// Interactive States
+// -----------------------------------------------------------------------------
+.interactive {
+  cursor: pointer;
+  transition: all $transition-fast;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.clickable {
+  cursor: pointer;
+  user-select: none;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+  
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+// Debug Utilities (Development only)
+// -----------------------------------------------------------------------------
+.debug {
+  outline: 2px solid red !important;
+}
+
+.debug-grid {
+  background-image: 
+    linear-gradient(rgba(255, 0, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+// Performance Utilities
+// -----------------------------------------------------------------------------
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-scroll {
+  will-change: scroll-position;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+// Content Utilities
+// -----------------------------------------------------------------------------
+.content-center {
+  @include flex-center;
+  min-height: 200px;
+}
+
+.content-start {
+  @include flex-start;
+  min-height: 200px;
+}
+
+.content-end {
+  @include flex-start;
+  justify-content: flex-end;
+  min-height: 200px;
+}

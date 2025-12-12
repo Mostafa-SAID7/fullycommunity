@@ -1,8 +1,9 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
 // =============================================================================
 // Admin Header Component Styles
 // =============================================================================
-
-// Mixins and variables are now globally available
 
 :host {
   display: block;
@@ -16,12 +17,12 @@
   @include flex-between;
   height: $nav-height;
   padding: 0 $spacing-6;
-  background: rgba($admin-surface, 0.95);
+  background: rgba($bg-primary, 0.95);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba($admin-border, 0.5);
+  border-bottom: 1px solid rgba($border-primary, 0.5);
   position: sticky;
   top: 0;
-  z-index: $z-index-sticky;
+  z-index: 1020;
   
   @include respond-below('md') {
     padding: 0 $spacing-4;

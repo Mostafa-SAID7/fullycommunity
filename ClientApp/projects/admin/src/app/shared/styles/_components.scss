@@ -1,0 +1,750 @@
+// Components - Reusable Component Styles
+// =============================================================================
+
+// Button Components
+// -----------------------------------------------------------------------------
+.btn {
+  @include button-base;
+  
+  &.btn-sm {
+    padding: $spacing-1 $spacing-3;
+    font-size: $font-size-sm;
+  }
+  
+  &.btn-lg {
+    padding: $spacing-3 $spacing-6;
+    font-size: $font-size-lg;
+  }
+  
+  &.btn-primary {
+    background: linear-gradient(135deg, $primary-500 0%, $primary-600 100%);
+    color: $white;
+    border-color: $primary-500;
+    
+    &:hover {
+      background: linear-gradient(135deg, $primary-600 0%, $primary-700 100%);
+      border-color: $primary-600;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba($primary-500, 0.4);
+    }
+    
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba($primary-500, 0.4);
+    }
+    
+    &:disabled {
+      background: $gray-300;
+      border-color: $gray-300;
+      color: $gray-500;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+  
+  &.btn-secondary {
+    background: $white;
+    color: $gray-700;
+    border-color: $gray-300;
+    
+    &:hover {
+      background: $gray-50;
+      border-color: $gray-400;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba($gray-500, 0.2);
+    }
+  }
+  
+  &.btn-success {
+    background: linear-gradient(135deg, $success-500 0%, $success-600 100%);
+    color: $white;
+    border-color: $success-500;
+    
+    &:hover {
+      background: linear-gradient(135deg, $success-600 0%, $success-700 100%);
+      border-color: $success-600;
+    }
+  }
+  
+  &.btn-warning {
+    background: linear-gradient(135deg, $warning-500 0%, $warning-600 100%);
+    color: $white;
+    border-color: $warning-500;
+    
+    &:hover {
+      background: linear-gradient(135deg, $warning-600 0%, $warning-700 100%);
+      border-color: $warning-600;
+    }
+  }
+  
+  &.btn-error {
+    background: linear-gradient(135deg, $error-500 0%, $error-600 100%);
+    color: $white;
+    border-color: $error-500;
+    
+    &:hover {
+      background: linear-gradient(135deg, $error-600 0%, $error-700 100%);
+      border-color: $error-600;
+    }
+  }
+  
+  &.btn-ghost {
+    background: transparent;
+    color: $gray-600;
+    border-color: transparent;
+    
+    &:hover {
+      background: $gray-100;
+      color: $gray-800;
+    }
+  }
+  
+  &.btn-outline {
+    background: transparent;
+    color: $primary-600;
+    border-color: $primary-500;
+    
+    &:hover {
+      background: $primary-500;
+      color: $white;
+    }
+  }
+}
+
+// Card Components
+// -----------------------------------------------------------------------------
+.card {
+  @include card-base;
+  transition: all $transition-base;
+  
+  &.card-hover {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  &.card-interactive {
+    cursor: pointer;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  .card-header {
+    padding: $spacing-4 $spacing-4 0;
+    margin-bottom: $spacing-4;
+    
+    .card-title {
+      margin: 0;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+    }
+    
+    .card-subtitle {
+      margin: $spacing-1 0 0;
+      font-size: $font-size-sm;
+      color: $text-secondary;
+    }
+  }
+  
+  .card-body {
+    padding: 0 $spacing-4;
+  }
+  
+  .card-footer {
+    padding: $spacing-4 $spacing-4 0;
+    margin-top: $spacing-4;
+    border-top: 1px solid $border-primary;
+  }
+}
+
+// Input Components
+// -----------------------------------------------------------------------------
+.form-group {
+  margin-bottom: $spacing-4;
+  
+  .form-label {
+    display: block;
+    margin-bottom: $spacing-2;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $text-primary;
+  }
+  
+  .form-control {
+    @include input-base;
+    
+    &.form-control-sm {
+      padding: $spacing-2;
+      font-size: $font-size-sm;
+    }
+    
+    &.form-control-lg {
+      padding: $spacing-4;
+      font-size: $font-size-lg;
+    }
+    
+    &.is-invalid {
+      border-color: $error-500;
+      
+      &:focus {
+        border-color: $error-500;
+        box-shadow: 0 0 0 3px rgba($error-500, 0.1);
+      }
+    }
+    
+    &.is-valid {
+      border-color: $success-500;
+      
+      &:focus {
+        border-color: $success-500;
+        box-shadow: 0 0 0 3px rgba($success-500, 0.1);
+      }
+    }
+  }
+  
+  .form-text {
+    margin-top: $spacing-1;
+    font-size: $font-size-xs;
+    color: $text-muted;
+  }
+  
+  .invalid-feedback {
+    margin-top: $spacing-1;
+    font-size: $font-size-xs;
+    color: $error-600;
+  }
+  
+  .valid-feedback {
+    margin-top: $spacing-1;
+    font-size: $font-size-xs;
+    color: $success-600;
+  }
+}
+
+// Badge Components
+// -----------------------------------------------------------------------------
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  border-radius: $border-radius-full;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  
+  &.badge-sm {
+    padding: 0.125rem 0.375rem;
+    font-size: 0.625rem;
+  }
+  
+  &.badge-lg {
+    padding: 0.375rem 0.75rem;
+    font-size: $font-size-sm;
+  }
+  
+  &.badge-primary {
+    background: rgba($primary-500, 0.1);
+    color: $primary-700;
+  }
+  
+  &.badge-secondary {
+    background: rgba($gray-500, 0.1);
+    color: $gray-700;
+  }
+  
+  &.badge-success {
+    background: rgba($success-500, 0.1);
+    color: $success-700;
+  }
+  
+  &.badge-warning {
+    background: rgba($warning-500, 0.1);
+    color: $warning-700;
+  }
+  
+  &.badge-error {
+    background: rgba($error-500, 0.1);
+    color: $error-700;
+  }
+  
+  &.badge-info {
+    background: rgba($info-500, 0.1);
+    color: $info-700;
+  }
+}
+
+// Alert Components
+// -----------------------------------------------------------------------------
+.alert {
+  padding: $spacing-4;
+  border-radius: $border-radius-lg;
+  border: 1px solid transparent;
+  margin-bottom: $spacing-4;
+  
+  .alert-title {
+    margin: 0 0 $spacing-2 0;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+  }
+  
+  .alert-message {
+    margin: 0;
+    font-size: $font-size-sm;
+    line-height: $line-height-relaxed;
+  }
+  
+  &.alert-primary {
+    background: rgba($primary-500, 0.1);
+    border-color: rgba($primary-500, 0.2);
+    color: $primary-700;
+  }
+  
+  &.alert-success {
+    background: rgba($success-500, 0.1);
+    border-color: rgba($success-500, 0.2);
+    color: $success-700;
+  }
+  
+  &.alert-warning {
+    background: rgba($warning-500, 0.1);
+    border-color: rgba($warning-500, 0.2);
+    color: $warning-700;
+  }
+  
+  &.alert-error {
+    background: rgba($error-500, 0.1);
+    border-color: rgba($error-500, 0.2);
+    color: $error-700;
+  }
+  
+  &.alert-info {
+    background: rgba($info-500, 0.1);
+    border-color: rgba($info-500, 0.2);
+    color: $info-700;
+  }
+}
+
+// Modal Components
+// -----------------------------------------------------------------------------
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: $z-index-modal;
+  @include flex-center;
+  padding: $spacing-4;
+}
+
+.modal {
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 32rem;
+  width: 100%;
+  max-height: calc(100vh - 2rem);
+  overflow: hidden;
+  
+  &.modal-sm {
+    max-width: 20rem;
+  }
+  
+  &.modal-lg {
+    max-width: 48rem;
+  }
+  
+  &.modal-xl {
+    max-width: 64rem;
+  }
+  
+  .modal-header {
+    padding: $spacing-6;
+    border-bottom: 1px solid $border-primary;
+    @include flex-between;
+    
+    .modal-title {
+      margin: 0;
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+    }
+    
+    .modal-close {
+      @include flex-center;
+      width: 2rem;
+      height: 2rem;
+      background: none;
+      border: none;
+      color: $text-muted;
+      cursor: pointer;
+      border-radius: $border-radius-base;
+      transition: all $transition-fast;
+      
+      &:hover {
+        background: $gray-100;
+        color: $text-primary;
+      }
+    }
+  }
+  
+  .modal-body {
+    padding: $spacing-6;
+    overflow-y: auto;
+  }
+  
+  .modal-footer {
+    padding: $spacing-6;
+    border-top: 1px solid $border-primary;
+    @include flex-start;
+    justify-content: flex-end;
+    gap: $spacing-3;
+  }
+}
+
+// Dropdown Components
+// -----------------------------------------------------------------------------
+.dropdown {
+  position: relative;
+  display: inline-block;
+  
+  .dropdown-toggle {
+    @include flex-center;
+    gap: $spacing-2;
+    cursor: pointer;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    min-width: 12rem;
+    background: $bg-primary;
+    border: 1px solid $border-primary;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-lg;
+    z-index: $z-index-dropdown;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.5rem);
+    transition: all $transition-fast;
+    
+    &.dropdown-menu-right {
+      left: auto;
+      right: 0;
+    }
+    
+    &.dropdown-menu-up {
+      top: auto;
+      bottom: calc(100% + 0.5rem);
+      transform: translateY(0.5rem);
+    }
+    
+    &.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+  
+  .dropdown-item {
+    display: block;
+    width: 100%;
+    padding: $spacing-3 $spacing-4;
+    color: $text-primary;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+    text-align: left;
+    
+    &:hover {
+      background: $gray-50;
+    }
+    
+    &:active {
+      background: $gray-100;
+    }
+    
+    &.active {
+      background: rgba($primary-500, 0.1);
+      color: $primary-700;
+    }
+    
+    &:disabled {
+      color: $text-muted;
+      cursor: not-allowed;
+      
+      &:hover {
+        background: none;
+      }
+    }
+  }
+  
+  .dropdown-divider {
+    height: 1px;
+    background: $border-primary;
+    margin: $spacing-2 0;
+  }
+  
+  .dropdown-header {
+    padding: $spacing-2 $spacing-4;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+// Tooltip Components
+// -----------------------------------------------------------------------------
+.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+  
+  .tooltip-content {
+    position: absolute;
+    bottom: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: $spacing-2 $spacing-3;
+    background: rgba(0, 0, 0, 0.9);
+    color: $white;
+    font-size: $font-size-xs;
+    border-radius: $border-radius-base;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all $transition-fast;
+    z-index: 1000;
+    pointer-events: none;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 4px solid transparent;
+      border-top-color: rgba(0, 0, 0, 0.9);
+    }
+  }
+  
+  &:hover .tooltip-content {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// Table Components
+// -----------------------------------------------------------------------------
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: $border-radius-lg;
+  border: 1px solid $border-primary;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  th,
+  td {
+    padding: $spacing-3 $spacing-4;
+    text-align: left;
+    border-bottom: 1px solid $border-primary;
+  }
+  
+  th {
+    background: $gray-50;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+    font-size: $font-size-sm;
+  }
+  
+  tbody tr {
+    transition: background-color $transition-fast;
+    
+    &:hover {
+      background: rgba($primary-500, 0.02);
+    }
+    
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+  
+  &.table-striped {
+    tbody tr:nth-child(even) {
+      background: rgba($gray-500, 0.02);
+    }
+  }
+  
+  &.table-sm {
+    th,
+    td {
+      padding: $spacing-2 $spacing-3;
+    }
+  }
+}
+
+// Pagination Components
+// -----------------------------------------------------------------------------
+.pagination {
+  @include flex-center;
+  gap: $spacing-1;
+  
+  .page-item {
+    .page-link {
+      @include flex-center;
+      width: 2.5rem;
+      height: 2.5rem;
+      color: $text-secondary;
+      text-decoration: none;
+      border-radius: $border-radius-base;
+      transition: all $transition-fast;
+      
+      &:hover {
+        background: $gray-100;
+        color: $text-primary;
+      }
+    }
+    
+    &.active .page-link {
+      background: $primary-500;
+      color: $white;
+      
+      &:hover {
+        background: $primary-600;
+      }
+    }
+    
+    &.disabled .page-link {
+      color: $text-muted;
+      cursor: not-allowed;
+      
+      &:hover {
+        background: none;
+        color: $text-muted;
+      }
+    }
+  }
+}
+
+// Tab Components
+// -----------------------------------------------------------------------------
+.tabs {
+  .tab-list {
+    display: flex;
+    border-bottom: 1px solid $border-primary;
+    margin-bottom: $spacing-6;
+    
+    .tab-item {
+      .tab-link {
+        display: block;
+        padding: $spacing-3 $spacing-4;
+        color: $text-secondary;
+        text-decoration: none;
+        border-bottom: 2px solid transparent;
+        transition: all $transition-fast;
+        
+        &:hover {
+          color: $text-primary;
+          border-bottom-color: $gray-300;
+        }
+        
+        &.active {
+          color: $primary-600;
+          border-bottom-color: $primary-500;
+        }
+      }
+    }
+  }
+  
+  .tab-content {
+    .tab-pane {
+      display: none;
+      
+      &.active {
+        display: block;
+      }
+    }
+  }
+}
+
+// Status Badge Components
+// -----------------------------------------------------------------------------
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding: 0.25rem 0.5rem;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  border-radius: $border-radius-full;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  
+  &.status-success {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+  
+  &.status-warning {
+    background: rgba($color-warning, 0.1);
+    color: $color-warning;
+  }
+  
+  &.status-error {
+    background: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+  
+  &.status-info {
+    background: rgba($color-primary, 0.1);
+    color: $color-primary;
+  }
+  
+  .status-dot {
+    @include status-indicator;
+  }
+}
+
+// Loading Overlay Components
+// -----------------------------------------------------------------------------
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  @include flex-center;
+  z-index: $z-index-modal;
+  
+  .loading-content {
+    text-align: center;
+    
+    .loading-spinner {
+      @include loading-spinner($icon-2xl, $color-primary);
+      margin: 0 auto $spacing-4;
+    }
+    
+    .loading-text {
+      color: $text-secondary;
+      font-weight: $font-weight-medium;
+    }
+  }
+}

@@ -1,5 +1,5 @@
-@import '../../styles/variables';
-@import '../../styles/mixins';
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 :host {
   display: block;
@@ -23,11 +23,7 @@
 // Empty State
 // -----------------------------------------------------------------------------
 .empty-state {
-  position: absolute;
-  inset: 0;
-  @include flex-center;
-  background: $bg-secondary;
-  border-radius: $border-radius-lg;
+  @extend .absolute, .inset-0, .flex, .items-center, .justify-center, .bg-secondary, .rounded-lg;
   
   .empty-content {
     text-align: center;

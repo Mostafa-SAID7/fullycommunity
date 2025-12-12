@@ -1,0 +1,542 @@
+// Themes - Dark Mode and Theme System
+// =============================================================================
+
+// CSS Custom Properties for Theme System
+// -----------------------------------------------------------------------------
+:root {
+  // Light Theme (Default)
+  --color-primary: #{$primary-500};
+  --color-primary-hover: #{$primary-600};
+  --color-secondary: #{$secondary-500};
+  --color-accent: #{$accent-500};
+  
+  --text-primary: #{$text-primary};
+  --text-secondary: #{$text-secondary};
+  --text-muted: #{$text-muted};
+  --text-inverse: #{$text-inverse};
+  
+  --bg-primary: #{$bg-primary};
+  --bg-secondary: #{$bg-secondary};
+  --bg-tertiary: #{$bg-tertiary};
+  --bg-surface: #{$bg-surface};
+  --bg-card: #{$bg-card};
+  
+  --border-primary: #{$border-primary};
+  --border-secondary: #{$border-secondary};
+  
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+  
+  // Status Colors
+  --color-success: #{$success-500};
+  --color-warning: #{$warning-500};
+  --color-error: #{$error-500};
+  --color-info: #{$info-500};
+  
+  // Success Variants
+  --success-50: #{$success-50};
+  --success-100: #{$success-100};
+  --success-500: #{$success-500};
+  --success-600: #{$success-600};
+  --success-700: #{$success-700};
+  --success-800: #{$success-800};
+  
+  // Warning Variants
+  --warning-50: #{$warning-50};
+  --warning-100: #{$warning-100};
+  --warning-500: #{$warning-500};
+  --warning-600: #{$warning-600};
+  --warning-700: #{$warning-700};
+  --warning-800: #{$warning-800};
+  
+  // Error Variants
+  --error-50: #{$error-50};
+  --error-100: #{$error-100};
+  --error-500: #{$error-500};
+  --error-600: #{$error-600};
+  --error-700: #{$error-700};
+  --error-800: #{$error-800};
+  
+  // Info Variants
+  --info-50: #{$info-50};
+  --info-100: #{$info-100};
+  --info-500: #{$info-500};
+  --info-600: #{$info-600};
+  --info-700: #{$info-700};
+  --info-800: #{$info-800};
+}
+
+// Dark Theme
+// -----------------------------------------------------------------------------
+[data-theme="dark"],
+.dark-theme {
+  --color-primary: #{$primary-400};
+  --color-primary-hover: #{$primary-300};
+  --color-secondary: #{$secondary-400};
+  --color-accent: #{$accent-400};
+  
+  --text-primary: #{$dark-text-primary};
+  --text-secondary: #{$dark-text-secondary};
+  --text-muted: #{$gray-400};
+  --text-inverse: #{$text-primary};
+  
+  --bg-primary: #{$dark-bg-primary};
+  --bg-secondary: #{$dark-bg-secondary};
+  --bg-tertiary: #{$dark-bg-tertiary};
+  --bg-surface: #{$dark-bg-surface};
+  --bg-card: #{$dark-bg-card};
+  
+  --border-primary: #{$dark-border-primary};
+  --border-secondary: #{$dark-border-secondary};
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
+// Auto Dark Mode (System Preference)
+// -----------------------------------------------------------------------------
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-primary: #{$primary-400};
+    --color-primary-hover: #{$primary-300};
+    --color-secondary: #{$secondary-400};
+    --color-accent: #{$accent-400};
+    
+    --text-primary: #{$dark-text-primary};
+    --text-secondary: #{$dark-text-secondary};
+    --text-muted: #{$gray-400};
+    --text-inverse: #{$text-primary};
+    
+    --bg-primary: #{$dark-bg-primary};
+    --bg-secondary: #{$dark-bg-secondary};
+    --bg-tertiary: #{$dark-bg-tertiary};
+    --bg-surface: #{$dark-bg-surface};
+    --bg-card: #{$dark-bg-card};
+    
+    --border-primary: #{$dark-border-primary};
+    --border-secondary: #{$dark-border-secondary};
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Theme Utilities
+// -----------------------------------------------------------------------------
+.theme-light {
+  --color-primary: #{$primary-500};
+  --color-primary-hover: #{$primary-600};
+  --text-primary: #{$text-primary};
+  --text-secondary: #{$text-secondary};
+  --bg-primary: #{$bg-primary};
+  --bg-secondary: #{$bg-secondary};
+  --border-primary: #{$border-primary};
+}
+
+.theme-dark {
+  --color-primary: #{$primary-400};
+  --color-primary-hover: #{$primary-300};
+  --text-primary: #{$dark-text-primary};
+  --text-secondary: #{$dark-text-secondary};
+  --bg-primary: #{$dark-bg-primary};
+  --bg-secondary: #{$dark-bg-secondary};
+  --border-primary: #{$dark-border-primary};
+}
+
+// Automotive Theme Variants
+// -----------------------------------------------------------------------------
+.theme-automotive {
+  --color-primary: #{$primary-500};
+  --color-accent: #{$automotive-chrome};
+  --bg-primary: #{$white};
+  --bg-secondary: #{$gray-50};
+}
+
+.theme-performance {
+  --color-primary: #{$performance-racing};
+  --color-accent: #{$performance-turbo};
+  --bg-primary: #{$black};
+  --bg-secondary: #{$gray-900};
+  --text-primary: #{$white};
+  --text-secondary: #{$gray-300};
+}
+
+.theme-electric {
+  --color-primary: #{$performance-electric};
+  --color-accent: #{$performance-hybrid};
+  --bg-primary: #{$white};
+  --bg-secondary: #{$success-50};
+}
+
+// High Contrast Theme
+// -----------------------------------------------------------------------------
+.theme-high-contrast {
+  --color-primary: #{$black};
+  --color-primary-hover: #{$gray-800};
+  --text-primary: #{$black};
+  --text-secondary: #{$gray-800};
+  --bg-primary: #{$white};
+  --bg-secondary: #{$gray-100};
+  --border-primary: #{$black};
+  --border-secondary: #{$gray-800};
+  
+  * {
+    border-color: currentColor !important;
+  }
+  
+  .btn,
+  .card,
+  .form-control {
+    border: 2px solid !important;
+  }
+}
+
+// Theme-aware Component Styles
+// -----------------------------------------------------------------------------
+
+// Buttons with theme support
+.btn-theme-primary {
+  background: var(--color-primary);
+  color: var(--text-inverse);
+  border-color: var(--color-primary);
+  
+  &:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+  }
+}
+
+.btn-theme-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-primary);
+  
+  &:hover {
+    background: var(--bg-tertiary);
+  }
+}
+
+// Cards with theme support
+.card-theme {
+  background: var(--bg-card);
+  border-color: var(--border-primary);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+  
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+// Inputs with theme support
+.input-theme {
+  background: var(--bg-primary);
+  border-color: var(--border-primary);
+  color: var(--text-primary);
+  
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.1);
+  }
+  
+  &::placeholder {
+    color: var(--text-muted);
+  }
+}
+
+// Navigation with theme support
+.nav-theme {
+  background: var(--bg-primary);
+  border-color: var(--border-primary);
+  
+  .nav-link {
+    color: var(--text-secondary);
+    
+    &:hover {
+      color: var(--color-primary);
+    }
+    
+    &.active {
+      color: var(--color-primary);
+      background: rgba(var(--color-primary), 0.1);
+    }
+  }
+}
+
+// Sidebar with theme support
+.sidebar-theme {
+  background: var(--bg-secondary);
+  border-color: var(--border-primary);
+  
+  .sidebar-item {
+    color: var(--text-secondary);
+    
+    &:hover {
+      background: rgba(var(--color-primary), 0.1);
+      color: var(--color-primary);
+    }
+    
+    &.active {
+      background: var(--color-primary);
+      color: var(--text-inverse);
+    }
+  }
+}
+
+// Theme Toggle Component
+// -----------------------------------------------------------------------------
+.theme-toggle {
+  @include flex-center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: $border-radius-full;
+  cursor: pointer;
+  transition: all $transition-fast;
+  
+  &:hover {
+    background: var(--bg-tertiary);
+    transform: scale(1.05);
+  }
+  
+  .theme-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--text-secondary);
+    transition: all $transition-fast;
+  }
+  
+  &[data-theme="dark"] .theme-icon-sun {
+    display: none;
+  }
+  
+  &[data-theme="light"] .theme-icon-moon {
+    display: none;
+  }
+}
+
+// Theme Transition
+// -----------------------------------------------------------------------------
+.theme-transition {
+  transition: 
+    background-color $transition-base,
+    border-color $transition-base,
+    color $transition-base,
+    box-shadow $transition-base;
+}
+
+// Apply theme transition to common elements
+* {
+  @extend .theme-transition;
+}
+
+// Reduced Motion Support
+// -----------------------------------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
+  .theme-transition,
+  * {
+    transition: none !important;
+  }
+}
+
+// Global Scrollbar Styling (Theme-aware)
+// -----------------------------------------------------------------------------
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-secondary);
+  border-radius: var(--border-radius-full);
+  
+  &:hover {
+    background: var(--text-muted);
+  }
+}
+
+// Scrollbar Utility Classes
+// -----------------------------------------------------------------------------
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-secondary) transparent;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-secondary);
+    border-radius: 3px;
+    
+    &:hover {
+      background: var(--text-muted);
+    }
+  }
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.scrollbar-theme {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-secondary) transparent;
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-secondary);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--text-muted);
+    }
+  }
+}
+
+// Theme-aware Selection
+// -----------------------------------------------------------------------------
+::selection {
+  background: rgba(var(--color-primary), 0.2);
+  color: var(--text-primary);
+}
+
+// Theme-aware Focus Styles
+// -----------------------------------------------------------------------------
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+// Print Styles (Theme-aware)
+// -----------------------------------------------------------------------------
+@media print {
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+  
+  .theme-toggle,
+  .sidebar,
+  .nav,
+  .btn:not(.btn-print) {
+    display: none !important;
+  }
+}
+
+// Dark Mode Global Overrides
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  body {
+    background-color: $dark-bg-primary;
+    color: $dark-text-primary;
+  }
+  
+  .admin-header,
+  .admin-sidebar {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+  
+  table {
+    th {
+      background: $dark-bg-tertiary;
+      color: $dark-text-primary;
+    }
+    
+    th,
+    td {
+      border-color: $dark-border-primary;
+    }
+    
+    tbody tr:hover {
+      background: rgba($color-primary, 0.1);
+    }
+  }
+  
+  code {
+    background: rgba($color-primary, 0.2);
+  }
+  
+  pre {
+    background: $dark-bg-tertiary;
+  }
+  
+  .loading-overlay {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: $dark-bg-tertiary;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: $dark-border-secondary;
+    
+    &:hover {
+      background: rgba($dark-text-secondary, 0.8);
+    }
+  }
+}
+
+// High Contrast Mode Global Overrides
+// -----------------------------------------------------------------------------
+@include high-contrast {
+  * {
+    border-color: currentColor !important;
+  }
+  
+  .card,
+  .btn,
+  .form-control {
+    border: 2px solid !important;
+  }
+}
+
+// Theme Debugging (Development only)
+// -----------------------------------------------------------------------------
+.debug-theme {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: $spacing-2;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: $border-radius-base;
+  font-size: $font-size-xs;
+  font-family: $font-family-secondary;
+  z-index: 9999;
+  
+  &::before {
+    content: "Theme: " attr(data-current-theme);
+    display: block;
+    color: var(--text-muted);
+  }
+}

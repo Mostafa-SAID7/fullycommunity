@@ -1,37 +1,166 @@
-// Variables
+// Variables - Comprehensive Tailwind Integration
 // =============================================================================
 
-// Colors
-$color-primary: #0066cc;
-$color-primary-hover: #0052a3;
-$color-success: #28a745;
-$color-warning: #ffc107;
-$color-error: #dc3545;
+// Primary Brand Colors (from Tailwind config)
+$color-primary: rgb(141, 7, 7); // Deep automotive red
+$color-primary-hover: rgb(187, 6, 6);
+$color-secondary: #2E2E2E; // Rich charcoal
+$color-accent: #FF6B35; // Vibrant orange accent
+
+// Extended Color Palette (Tailwind Integration)
+// -----------------------------------------------------------------------------
+
+// Primary Colors
+$primary-50: #FEF2F2;
+$primary-100: #FEE2E2;
+$primary-200: #FECACA;
+$primary-300: #FCA5A5;
+$primary-400: #F87171;
+$primary-500: rgb(141, 7, 7);
+$primary-600: rgb(187, 6, 6);
+$primary-700: #B91C1C;
+$primary-800: #991B1B;
+$primary-900: #7F1D1D;
+
+// Secondary Colors
+$secondary-50: #F8F8F8;
+$secondary-100: #F0F0F0;
+$secondary-200: #E0E0E0;
+$secondary-300: #C7C7C7;
+$secondary-400: #A0A0A0;
+$secondary-500: #737373;
+$secondary-600: #525252;
+$secondary-700: #404040;
+$secondary-800: #262626;
+$secondary-900: #2E2E2E;
+
+// Accent Colors
+$accent-50: #FFF4F0;
+$accent-100: #FFE8E0;
+$accent-200: #FFD1C2;
+$accent-300: #FFB8A3;
+$accent-400: #FF7F66;
+$accent-500: #FF6B35;
+$accent-600: #E63E00;
+$accent-700: #CC3700;
+$accent-800: #B33000;
+$accent-900: #992900;
+
+// Success Colors
+$success-50: #ECFDF5;
+$success-100: #D1FAE5;
+$success-200: #A7F3D0;
+$success-300: #6EE7B7;
+$success-400: #34D399;
+$success-500: #00C853;
+$success-600: #059669;
+$success-700: #047857;
+$success-800: #065F46;
+$success-900: #064E3B;
+
+// Error Colors
+$error-50: #FEF2F2;
+$error-100: #FEE2E2;
+$error-200: #FECACA;
+$error-300: #FCA5A5;
+$error-400: #F87171;
+$error-500: rgb(255, 10, 5);
+$error-600: #DC2626;
+$error-700: #B91C1C;
+$error-800: #991B1B;
+$error-900: #7F1D1D;
+
+// Warning Colors
+$warning-50: #FFFBEB;
+$warning-100: #FEF3C7;
+$warning-200: #FDE68A;
+$warning-300: #FCD34D;
+$warning-400: #FBBF24;
+$warning-500: #FFC107;
+$warning-600: #D97706;
+$warning-700: #B45309;
+$warning-800: #92400E;
+$warning-900: #78350F;
+
+// Info Colors
+$info-50: #EFF6FF;
+$info-100: #DBEAFE;
+$info-200: #BFDBFE;
+$info-300: #93C5FD;
+$info-400: #60A5FA;
+$info-500: #1E88E5;
+$info-600: #2563EB;
+$info-700: #1D4ED8;
+$info-800: #1E40AF;
+$info-900: #1E3A8A;
+
+// Gray Scale
+$gray-50: #F9FAFB;
+$gray-100: #F3F4F6;
+$gray-200: #E5E7EB;
+$gray-300: #D1D5DB;
+$gray-400: #9CA3AF;
+$gray-500: #6B7280;
+$gray-600: #4B5563;
+$gray-700: #374151;
+$gray-800: #1F2937;
+$gray-900: #111827;
+
+// Neutral Colors
+$white: #FFFFFF;
+$black: #000000;
+
+// Automotive Theme Colors
+$automotive-chrome: #C0C0C0;
+$automotive-steel: #71797E;
+$automotive-carbon: #2C2C2C;
+$automotive-gold: #FFD700;
+$automotive-copper: #B87333;
+$automotive-titanium: #878681;
+
+// Performance Colors
+$performance-turbo: #00FFFF;
+$performance-nitro: #FF1493;
+$performance-racing: #FF4500;
+$performance-electric: #00FF00;
+$performance-hybrid: #32CD32;
+
+// Legacy Color Mappings (for backward compatibility)
+$color-success: $success-500;
+$color-warning: $warning-500;
+$color-error: $error-500;
 
 // Text Colors
-$text-primary: #212529;
-$text-secondary: #6c757d;
-$text-muted: #adb5bd;
-$text-inverse: #ffffff;
+$text-primary: #1A1A1A;
+$text-secondary: #6B7280;
+$text-muted: #9CA3AF;
+$text-inverse: #FFFFFF;
+$text-dark: #FFFFFF;
+$text-dark-secondary: #D1D5DB;
 
 // Background Colors
-$admin-background: #f8f9fa;
-$bg-primary: #ffffff;
-$bg-secondary: #e9ecef;
-$bg-tertiary: #dee2e6;
+$admin-background: #F8F9FA;
+$bg-primary: #FFFFFF;
+$bg-secondary: #F8F9FA;
+$bg-tertiary: #E5E7EB;
+$bg-surface: #F8F9FA;
+$bg-card: #FFFFFF;
 
 // Dark Mode Colors
-$dark-bg-primary: #1a1a1a;
-$dark-bg-secondary: #2d2d2d;
-$dark-bg-tertiary: #404040;
-$dark-text-primary: #ffffff;
-$dark-text-secondary: #cccccc;
-$dark-border-primary: #404040;
-$dark-border-secondary: #555555;
+$dark-bg-primary: #121212;
+$dark-bg-secondary: #1A1A1A;
+$dark-bg-tertiary: #2D2D2D;
+$dark-bg-surface: #1A1A1A;
+$dark-bg-card: #1A1A1A;
+$dark-text-primary: #FFFFFF;
+$dark-text-secondary: #D1D5DB;
+$dark-border-primary: #374151;
+$dark-border-secondary: #4B5563;
 
 // Border Colors
-$border-primary: #dee2e6;
-$border-secondary: #adb5bd;
+$border-primary: #E5E7EB;
+$border-secondary: #D1D5DB;
+$border-dark: #374151;
 
 // Spacing
 $spacing-1: 0.25rem;
@@ -47,10 +176,7 @@ $spacing-12: 3rem;
 // Layout
 $nav-height: 4rem;
 
-// Additional Colors
-$primary-100: #dbeafe;
-$indigo-100: #e0e7ff;
-$error-50: #fef2f2;
+
 
 // Shadows
 $shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -91,17 +217,21 @@ $line-height-tight: 1.25;
 $line-height-normal: 1.5;
 $line-height-relaxed: 1.75;
 
-// Z-Index
-$z-index-modal: 1050;
+// Z-Index Scale
 $z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-modal: 1050;
 $z-index-toast: 1060;
 
-// Icon Sizes
+// Icon Sizes (Enhanced Scale)
+$icon-xs: 12px;
 $icon-sm: 16px;
 $icon-base: 20px;
-$icon-lg: 24px;
+$icon-md: 24px;
+$icon-lg: 28px;
 $icon-xl: 32px;
 $icon-2xl: 48px;
+$icon-3xl: 64px;
 
 // Transitions
 $transition-fast: 0.15s ease-in-out;

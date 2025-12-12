@@ -1,4 +1,7 @@
 
+@import '../../shared/styles/variables';
+@import '../../shared/styles/mixins';
+
 // Component Root
 // -----------------------------------------------------------------------------
 :host {
@@ -102,12 +105,17 @@
   flex-wrap: wrap;
 
   .export-btn {
-    @include button-base;
-    @include button-size('sm');
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-2 $spacing-3;
     font-size: $font-size-xs;
     font-weight: $font-weight-semibold;
     text-transform: uppercase;
     letter-spacing: 0.025em;
+    border: 1px solid transparent;
+    border-radius: $border-radius-base;
+    cursor: pointer;
     transition: all $transition-fast;
 
     &.users-btn {

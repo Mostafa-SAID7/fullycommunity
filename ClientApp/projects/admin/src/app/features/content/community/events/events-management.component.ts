@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
-import { DateUtils } from '../../../../../core/utils/date.utils';
+import { DateUtils } from '../../../../core/utils/date.utils';
 
 interface Event {
   id: string;

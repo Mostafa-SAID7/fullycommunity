@@ -2,8 +2,8 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { PodcastService } from '../../../../../core/services/content/podcasts/podcast.service';
-import { PodcastShow } from '../../../../../core/interfaces/content/podcasts/podcast.interface';
+import { PodcastService } from '../../../../core/services/content/podcasts/podcast.service';
+import { PodcastShow, PodcastShowsResponse } from '../../../../core/interfaces/content/podcasts/podcast.interface';
 
 @Component({
   selector: 'app-podcasts-shows',
@@ -12,7 +12,7 @@ import { PodcastShow } from '../../../../../core/interfaces/content/podcasts/pod
   templateUrl: './podcasts-shows.component.html'
 })
 export class PodcastsShowsComponent implements OnInit {
-  private podcastService = inject(PodcastService);
+  private podcastService: PodcastService = inject(PodcastService);
   
   shows = signal<PodcastShow[]>([]);
   loading = signal(true);
@@ -36,13 +36,13 @@ export class PodcastsShowsComponent implements OnInit {
       this.selectedStatus || undefined,
       this.searchQuery || undefined
     ).subscribe({
-      next: (response) => {
+      next: (response: PodcastShowsResponse) => {
         this.shows.set(response.items);
         this.totalCount.set(response.totalCount);
         this.totalPages.set(response.totalPages);
         this.loading.set(false);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading shows:', error);
         this.loading.set(false);
       }
@@ -71,7 +71,7 @@ export class PodcastsShowsComponent implements OnInit {
 
     this.podcastService.deleteShow(show.id).subscribe({
       next: () => this.loadShows(),
-      error: (error) => console.error('Error deleting show:', error)
+      error: (error: any) => console.error('Error deleting show:', error)
     });
   }
 

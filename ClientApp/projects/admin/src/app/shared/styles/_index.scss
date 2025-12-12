@@ -1,3 +1,33 @@
-// Main SCSS imports for admin components
+// Main SCSS imports for admin components - Optimized Order
+// =============================================================================
+
+// 1. Core System (Variables must come first)
 @import 'variables';
 @import 'mixins';
+
+// 2. Color System (Depends on variables)
+@import 'colors';
+
+// 3. Layout & Structure (Depends on variables and mixins)
+@import 'layout';
+
+// 4. Typography (Depends on variables)
+@import 'typography';
+
+// 5. Components (Depends on all above)
+@import 'components';
+
+// 6. Animations (Can be standalone)
+@import 'animations';
+
+// 7. Utilities (Depends on variables and colors)
+@import 'utilities';
+
+// 8. Responsive (Depends on mixins and utilities)
+@import 'responsive';
+
+// 9. Themes (Must come after utilities for proper overrides)
+@import 'themes';
+
+// 10. Helpers (Last - for final utility overrides)
+@import 'helpers';

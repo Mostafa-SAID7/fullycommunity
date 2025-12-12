@@ -1,10 +1,11 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminContentService } from '../../../core/services/content/admin-content.service';
-import { ContentItem, ContentStats } from '../../../core/interfaces/content/admin-content.interface';
-import { StatCardComponent, StatCardConfig } from '../../../shared/ui/charts/stat-card/stat-card.component';
-import { RefreshButtonComponent } from '../../../shared/ui/buttons/refresh-button/refresh-button.component';
+import { AdminContentService } from '../../core/services/content/admin-content.service';
+import { ContentItem, ContentStats } from '../../core/interfaces/content/admin-content.interface';
+import { StatCardComponent } from '../../shared/ui/cards/stat-card/stat-card.component';
+import { StatCardConfig } from '../../shared/ui/cards/stat-card/stat-card.interface';
+import { RefreshButtonComponent } from '../../shared/ui/buttons/refresh-button/refresh-button.component';
 
 @Component({
   selector: 'content-management',
@@ -14,7 +15,7 @@ import { RefreshButtonComponent } from '../../../shared/ui/buttons/refresh-butto
   styleUrl: './content-management.component.scss'
 })
 export class ContentManagementComponent implements OnInit {
-  private contentService = inject(AdminContentService);
+  private contentService: AdminContentService = inject(AdminContentService);
   
   stats = signal<ContentStats | null>(null);
   content = signal<ContentItem[]>([]);

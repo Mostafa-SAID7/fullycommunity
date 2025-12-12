@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { Subject, forkJoin, of } from 'rxjs';
 import { takeUntil, catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AdminReportsService } from '../../../core/services/admin/reports.service';
-import { RefreshButtonComponent } from '../../../shared/components/refresh-button/refresh-button.component';
+import { RefreshButtonComponent } from '../../../shared/ui/buttons/refresh-button/refresh-button.component';
 import {
   LocalizationData,
   SupportedLanguage,

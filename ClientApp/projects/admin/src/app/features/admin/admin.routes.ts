@@ -207,7 +207,7 @@ export const adminRoutes: Routes = [
       // Localization Management
       { 
         path: 'localization', 
-        loadComponent: () => import('../cms/localization/localization-management.component').then(m => m.LocalizationManagementComponent),
+        loadComponent: () => import('../admin-cms/localization/localization-management.component').then(m => m.LocalizationManagementComponent),
         canActivate: [roleGuard],
         title: 'Localization Management - Community Car Admin',
         data: {

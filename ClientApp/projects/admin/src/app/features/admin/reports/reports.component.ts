@@ -19,8 +19,10 @@ import {
 import { BarChartComponent, BarChartConfig } from '../../../shared/ui/charts/bar-chart/bar-chart.component';
 import { LineChartComponent, LineChartConfig } from '../../../shared/ui/charts/line-chart/line-chart.component';
 import { PieChartComponent, PieChartConfig } from '../../../shared/ui/charts/pie-chart/pie-chart.component';
-import { StatCardComponent, StatCardConfig } from '../../../shared/ui/charts/stat-card/stat-card.component';
+import { StatCardComponent } from '../../../shared/ui/cards/stat-card/stat-card.component';
+import { StatCardConfig } from '../../../shared/ui/cards/stat-card/stat-card.interface';
 import { RefreshButtonComponent } from '../../../shared/ui/buttons/refresh-button/refresh-button.component';
+import { TabNavigationComponent, Tab } from '../../../shared/ui/navigation/tab-navigation/tab-navigation.component';
 
 @Component({
   selector: 'reports',
@@ -33,7 +35,8 @@ import { RefreshButtonComponent } from '../../../shared/ui/buttons/refresh-butto
     LineChartComponent,
     PieChartComponent,
     StatCardComponent,
-    RefreshButtonComponent],
+    RefreshButtonComponent,
+    TabNavigationComponent],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.scss'
 })
@@ -98,12 +101,12 @@ export class ReportsComponent implements OnInit, OnDestroy {
     ];
   }
 
-  get analyticsTabItems() {
+  get analyticsTabItems(): Tab[] {
     return [
-      { id: 'overview', label: 'Overview', active: this.activeAnalyticsTab === 'overview' },
-      { id: 'user-growth', label: 'User Growth Trends', active: this.activeAnalyticsTab === 'user-growth' },
-      { id: 'content-engagement', label: 'Content Engagement Analytics', active: this.activeAnalyticsTab === 'content-engagement' },
-      { id: 'localization', label: 'Localization Stats', active: this.activeAnalyticsTab === 'localization' }
+      { id: 'overview', label: 'Overview' },
+      { id: 'user-growth', label: 'User Growth Trends' },
+      { id: 'content-engagement', label: 'Content Engagement Analytics' },
+      { id: 'localization', label: 'Localization Stats' }
     ];
   }
 

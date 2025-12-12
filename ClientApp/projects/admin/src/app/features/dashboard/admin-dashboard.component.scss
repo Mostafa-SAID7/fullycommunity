@@ -1,4 +1,7 @@
 
+@import '../../shared/styles/variables';
+@import '../../shared/styles/mixins';
+
 :host {
   display: block;
   width: 100%;
@@ -73,8 +76,8 @@
 
 .error-banner {
   background: rgba($error-50, 0.8);
-  border: 1px solid $error-200;
-  color: $error-700;
+  border: 1px solid rgba($color-error, 0.3);
+  color: $color-error;
   padding: $spacing-4;
   border-radius: $border-radius-lg;
   margin-bottom: $spacing-6;
@@ -106,7 +109,7 @@
   
   &.critical {
     background: rgba($error-50, 0.8);
-    border-color: $error-200;
+    border-color: rgba($color-error, 0.3);
   }
   
   .health-content {
