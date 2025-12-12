@@ -1,6 +1,5 @@
 
-@import '../../../styles/variables';
-@import '../../../styles/mixins';
+@import '../../../styles/index';
 
 :host {
   display: block;
@@ -16,9 +15,9 @@
   @include flex-center;
   padding: $spacing-4;
   background: linear-gradient(135deg, 
-    rgba($neutral-50, 1) 0%, 
+    rgba($gray-50, 1) 0%, 
     rgba($primary-50, 0.3) 30%, 
-    rgba($indigo-50, 0.3) 100%
+    rgba($info-50, 0.3) 100%
   );
   position: relative;
   overflow: visible;
@@ -60,7 +59,7 @@
       right: 2.5rem;
       width: 24rem;
       height: 24rem;
-      background-color: rgba($indigo-500, 0.05);
+      background-color: rgba($info-500, 0.05);
       animation-delay: 1s;
     }
   }
@@ -83,8 +82,8 @@
 .login-card {
   position: relative;
   background: #ffffff;
-  border-radius: $border-radius-3xl;
-  box-shadow: $shadow-2xl;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-lg;
   padding: $spacing-6;
   
   @include respond-to('sm') {
@@ -147,7 +146,7 @@
 .login-help {
   margin-top: $spacing-4;
   text-align: center;
-  color: $text-tertiary;
+  color: $text-muted;
   font-size: $font-size-xs;
   a {
     color: $color-primary;
@@ -380,14 +379,14 @@
     box-shadow: $shadow-md;
     
     &:hover:not(:disabled) {
-      background: linear-gradient(135deg, $color-primary-hover, $color-primary-dark);
+      background: linear-gradient(135deg, $color-primary-hover, $primary-700);
       box-shadow: $shadow-lg;
       transform: translateY(-1px);
     }
     
     &:active:not(:disabled) {
       transform: translateY(0);
-      box-shadow: $shadow-base;
+      box-shadow: $shadow-sm;
     }
     
     &:disabled {
@@ -481,7 +480,7 @@
 
 .copyright {
   font-size: $font-size-xs;
-  color: $text-tertiary;
+  color: $text-muted;
 }
 
 // Responsive Design
@@ -519,7 +518,7 @@
     background: linear-gradient(135deg, 
       rgba($dark-bg-primary, 1) 0%, 
       rgba($color-primary, 0.1) 30%, 
-      rgba($indigo-900, 0.2) 100%
+      rgba($info-900, 0.2) 100%
     );
   }
   

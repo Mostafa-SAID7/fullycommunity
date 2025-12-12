@@ -141,7 +141,15 @@
     }
 
     &.primary-btn {
-      @include button-variant('primary');
+      @include button-base;
+      background: linear-gradient(135deg, $primary-500 0%, $primary-600 100%);
+      color: $white;
+      border-color: $primary-500;
+      
+      &:hover {
+        background: linear-gradient(135deg, $primary-600 0%, $primary-700 100%);
+        border-color: $primary-600;
+      }
       
       .export-icon {
         width: $icon-sm;
@@ -222,7 +230,7 @@
 
           &.blue { background: linear-gradient(135deg, $primary-500, $primary-600); }
           &.green { background: linear-gradient(135deg, $success-500, $success-600); }
-          &.purple { background: linear-gradient(135deg, $purple-500, $purple-600); }
+          &.purple { background: linear-gradient(135deg, $info-500, $info-600); }
           &.pink { background: linear-gradient(135deg, rgb(236, 72, 153), rgb(219, 39, 119)); }
         }
 

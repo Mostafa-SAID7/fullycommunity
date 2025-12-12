@@ -1,6 +1,5 @@
 
-@import '../../../shared/styles/variables';
-@import '../../../shared/styles/mixins';
+@import '../../../shared/styles/index';
 
 // Component Root
 // -----------------------------------------------------------------------------
@@ -200,8 +199,8 @@
       }
 
       &.dot-primary {
-        background: $purple-500;
-        box-shadow: 0 0 8px rgba($purple-500, 0.4);
+        background: $info-500;
+        box-shadow: 0 0 8px rgba($info-500, 0.4);
       }
 
       &.dot-secondary {
@@ -320,8 +319,8 @@
           }
 
           &.badge-primary {
-            background: $purple-100;
-            color: $purple-800;
+            background: $info-100;
+            color: $info-800;
           }
 
           &.badge-secondary {

@@ -56,7 +56,7 @@ export const adminRoutes: Routes = [
       // Content Management
       { 
         path: 'content', 
-        loadChildren: () => import('../content/content.routes').then(m => m.contentRoutes),
+        loadChildren: () => import('../admin-content/content.routes').then(m => m.contentRoutes),
         canActivate: [roleGuard],
         data: {
           breadcrumb: 'Content',
@@ -109,19 +109,19 @@ export const adminRoutes: Routes = [
         }
       },
       
-      // System Health Monitor
-      { 
-        path: 'system-health', 
-        loadComponent: () => import('./system-health/system-health.component').then(m => m.SystemHealthComponent),
-        canActivate: [roleGuard],
-        title: 'System Health - Community Car Admin',
-        data: {
-          breadcrumb: 'System Health',
-          description: 'Real-time system monitoring and health status',
-          roles: ['super-admin'],
-          requiredPermissions: ['system.monitor']
-        }
-      },
+      // System Health Monitor - TODO: Create component
+      // { 
+      //   path: 'system-health', 
+      //   loadComponent: () => import('../admin-dev/system-health/system-health.component').then(m => m.SystemHealthComponent),
+      //   canActivate: [roleGuard],
+      //   title: 'System Health - Community Car Admin',
+      //   data: {
+      //     breadcrumb: 'System Health',
+      //     description: 'Real-time system monitoring and health status',
+      //     roles: ['super-admin'],
+      //     requiredPermissions: ['system.monitor']
+      //   }
+      // },
 
       // Activity Log
       { 
@@ -148,38 +148,38 @@ export const adminRoutes: Routes = [
         }
       },
 
-      // Notifications Management
-      { 
-        path: 'notifications', 
-        loadComponent: () => import('./notifications/notifications-management.component').then(m => m.NotificationsManagementComponent),
-        canActivate: [roleGuard],
-        title: 'Notifications - Community Car Admin',
-        data: {
-          breadcrumb: 'Notifications',
-          description: 'Manage system notifications and alerts',
-          roles: ['admin', 'super-admin'],
-          requiredPermissions: ['notifications.manage']
-        }
-      },
+      // Notifications Management - TODO: Create component
+      // { 
+      //   path: 'notifications', 
+      //   loadComponent: () => import('./notifications/notifications-management.component').then(m => m.NotificationsManagementComponent),
+      //   canActivate: [roleGuard],
+      //   title: 'Notifications - Community Car Admin',
+      //   data: {
+      //     breadcrumb: 'Notifications',
+      //     description: 'Manage system notifications and alerts',
+      //     roles: ['admin', 'super-admin'],
+      //     requiredPermissions: ['notifications.manage']
+      //   }
+      // },
 
-      // Backup & Maintenance
-      { 
-        path: 'maintenance', 
-        loadComponent: () => import('./maintenance/maintenance-management.component').then(m => m.MaintenanceManagementComponent),
-        canActivate: [roleGuard],
-        title: 'Maintenance - Community Car Admin',
-        data: {
-          breadcrumb: 'Maintenance',
-          description: 'System maintenance, backups, and updates',
-          roles: ['super-admin'],
-          requiredPermissions: ['system.maintenance']
-        }
-      },
+      // Backup & Maintenance - TODO: Create component
+      // { 
+      //   path: 'maintenance', 
+      //   loadComponent: () => import('../admin-dev/maintenance/maintenance-management.component').then(m => m.MaintenanceManagementComponent),
+      //   canActivate: [roleGuard],
+      //   title: 'Maintenance - Community Car Admin',
+      //   data: {
+      //     breadcrumb: 'Maintenance',
+      //     description: 'System maintenance, backups, and updates',
+      //     roles: ['super-admin'],
+      //     requiredPermissions: ['system.maintenance']
+      //   }
+      // },
 
       // API Management
       { 
         path: 'api', 
-        loadComponent: () => import('./api/api-management.component').then(m => m.ApiManagementComponent),
+        loadComponent: () => import('../admin-dev/api/api-management.component').then(m => m.ApiManagementComponent),
         canActivate: [roleGuard],
         title: 'API Management - Community Car Admin',
         data: {
