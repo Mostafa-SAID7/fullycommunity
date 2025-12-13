@@ -49,6 +49,7 @@ public class ServicesSeeder : BaseSeeder
         // Seed Experts
         var experts = CreateExperts(userIds);
         await Context.Set<Expert>().AddRangeAsync(experts);
+        await Context.SaveChangesAsync();
     }
 
     private static List<ServiceProvider> CreateServiceProviders(List<Guid> userIds)

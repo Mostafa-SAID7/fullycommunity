@@ -24,7 +24,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(c =>
 {
     // Use fully qualified type names to avoid schema ID conflicts
-    c.CustomSchemaIds(type => type.FullName?.Replace("+", "."));
+    c.CustomSchemaIds(type => type.FullName?.Replace("+", ".") ?? type.Name);
     
     // API Groups by Section
     c.SwaggerDoc("auth", new OpenApiInfo 
