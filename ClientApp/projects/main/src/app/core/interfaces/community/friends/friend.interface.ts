@@ -8,4 +8,5 @@ export interface Friend {
   bio: string | null;
   friendsSince: string;
   isOnline: boolean;
+  mutualFriends?: number;
 }

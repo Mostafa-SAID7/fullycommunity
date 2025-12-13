@@ -1,34 +1,32 @@
-
 @import '../../../styles/index';
 
 :host {
   display: block;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 // Main Container
 // -----------------------------------------------------------------------------
 
 .login-container {
-  height: 100vh;
+  min-height: 100vh;
   @include flex-center;
   padding: $spacing-2;
   // Microsoft-style dark background
-  background: linear-gradient(135deg, 
-    #0f1419 0%, 
-    #1a1f2e 25%, 
-    #2d3748 50%, 
-    #1a202c 75%, 
-    #0f1419 100%
-  );
+  background: linear-gradient(135deg,
+      #0f1419 0%,
+      #1a1f2e 25%,
+      #2d3748 50%,
+      #1a202c 75%,
+      #0f1419 100%);
   position: relative;
-  overflow: hidden;
-  
+  // overflow: hidden; // Removed to allow scrolling
+
   @include respond-to('sm') {
     padding: $spacing-3;
   }
-  
+
   @include respond-to('lg') {
     padding: $spacing-4;
   }
@@ -42,13 +40,13 @@
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  
+
   .bg-element {
     position: absolute;
     border-radius: $border-radius-full;
     filter: blur(3rem);
     animation: pulse 4s ease-in-out infinite;
-    
+
     &.element-1 {
       top: 5rem;
       left: 2.5rem;
@@ -56,7 +54,7 @@
       height: 18rem;
       background-color: rgba($color-primary, 0.08);
     }
-    
+
     &.element-2 {
       bottom: 5rem;
       right: 2.5rem;
@@ -76,7 +74,7 @@
   max-width: 28rem;
   position: relative;
   padding: 4px;
-  
+
   @include respond-to('lg') {
     max-width: 32rem;
   }
@@ -89,11 +87,11 @@
   box-shadow: $shadow-lg;
   padding: $spacing-3;
   width: 100%;
-  
+
   @include respond-to('sm') {
     padding: $spacing-4;
   }
-  
+
   @include respond-to('lg') {
     padding: $spacing-6;
   }
@@ -105,7 +103,7 @@
 .login-header {
   text-align: center;
   margin-bottom: $spacing-3;
-  
+
   @include respond-to('sm') {
     margin-bottom: $spacing-4;
   }
@@ -114,7 +112,7 @@
 .logo-container {
   @include flex-center;
   margin-bottom: $spacing-3;
-  
+
   @include respond-to('sm') {
     margin-bottom: $spacing-4;
   }
@@ -125,11 +123,11 @@
   font-weight: $font-weight-bold;
   color: #000000 !important; // Force black text
   margin-bottom: $spacing-2;
-  
+
   @include respond-to('sm') {
     font-size: $font-size-3xl;
   }
-  
+
   @include respond-to('lg') {
     font-size: $font-size-4xl;
   }
@@ -138,7 +136,7 @@
 .login-subtitle {
   font-size: $font-size-sm;
   color: #333333 !important; // Force dark gray text
-  
+
   @include respond-to('sm') {
     font-size: $font-size-base;
   }
@@ -149,7 +147,7 @@
   text-align: center;
   color: $text-muted;
   font-size: $font-size-sm;
-  
+
   a {
     color: $color-primary;
     font-weight: $font-weight-semibold;
@@ -160,18 +158,18 @@
     display: inline-flex;
     align-items: center;
     gap: $spacing-1;
-    
+
     &:hover {
       background: rgba($color-primary, 0.1);
       text-decoration: none;
       transform: translateY(-1px);
       box-shadow: 0 2px 8px rgba($color-primary, 0.15);
     }
-    
+
     &:active {
       transform: translateY(0);
     }
-    
+
     // Add support icon
     &::before {
       content: '📞';
@@ -192,22 +190,20 @@
   background-clip: padding-box;
   overflow: hidden;
   contain: layout style paint; // Isolate rendering
-  
+
   // Rotating animated red border around form
   &::before {
     content: '';
     position: absolute;
     inset: -4px;
-    background: conic-gradient(
-      from 0deg,
-      #ff0000 0deg,
-      #ff3333 60deg,
-      #ff6666 120deg,
-      #ff3333 180deg,
-      #ff0000 240deg,
-      #cc0000 300deg,
-      #ff0000 360deg
-    );
+    background: conic-gradient(from 0deg,
+        #ff0000 0deg,
+        #ff3333 60deg,
+        #ff6666 120deg,
+        #ff3333 180deg,
+        #ff0000 240deg,
+        #cc0000 300deg,
+        #ff0000 360deg);
     border-radius: $border-radius-xl;
     padding: 4px;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -220,7 +216,7 @@
     backface-visibility: hidden;
     z-index: 0;
   }
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -229,15 +225,15 @@
     border-radius: calc($border-radius-xl - 4px);
     z-index: 0;
   }
-  
-  > * {
+
+  >* {
     position: relative;
     z-index: 1;
   }
-  
+
   .form-field {
     margin-bottom: $spacing-5;
-    
+
     .field-label {
       display: block;
       font-size: $font-size-sm;
@@ -245,10 +241,10 @@
       color: #000000 !important; // Force black text
       margin-bottom: $spacing-2;
     }
-    
+
     .input-wrapper {
       position: relative;
-      
+
       .input-icon {
         position: absolute;
         left: $spacing-3;
@@ -256,13 +252,13 @@
         transform: translateY(-50%);
         color: $text-muted;
         z-index: 1;
-        
+
         svg {
           width: $spacing-5;
           height: $spacing-5;
         }
       }
-      
+
       .form-input {
         width: 100%;
         padding: $spacing-3 $spacing-4;
@@ -273,31 +269,31 @@
         background: #ffffff !important; // Ensure inputs are always white
         color: #000000 !important; // Force black text in inputs
         transition: all $transition-fast;
-        
+
         &:focus {
           outline: none;
           border-color: $color-primary;
-          box-shadow: 
+          box-shadow:
             0 0 0 3px rgba($color-primary, 0.1),
             0 0 20px rgba($color-primary, 0.2);
           animation: inputGlow 2s ease-in-out infinite;
         }
-        
+
         &.error {
           border-color: $color-error;
-          
+
           &:focus {
             border-color: $color-error;
-            box-shadow: 
+            box-shadow:
               0 0 0 3px rgba($color-error, 0.1),
               0 0 20px rgba($color-error, 0.2);
           }
         }
-        
+
         &::placeholder {
           color: $text-muted;
         }
-        
+
         &:disabled {
           background: #ffffff !important;
           color: $text-muted;
@@ -305,16 +301,17 @@
           opacity: 0.6;
         }
       }
-      
+
       // Password field specific styles
-      &:has(input[type="password"]), &:has(input[type="text"]) {
+      &:has(input[type="password"]),
+      &:has(input[type="text"]) {
         .form-input {
           padding-right: $spacing-12; // Space for toggle button
         }
       }
     }
   }
-  
+
   .password-toggle {
     position: absolute;
     right: $spacing-3;
@@ -328,50 +325,50 @@
     border-radius: $border-radius-base;
     transition: all $transition-fast;
     z-index: 2;
-    
+
     svg {
       width: $spacing-5;
       height: $spacing-5;
     }
-    
+
     &:hover {
       color: $text-secondary;
       background: rgba($color-primary, 0.05);
     }
-    
+
     &:focus {
       outline: none;
       color: $color-primary;
       background: rgba($color-primary, 0.1);
     }
-    
+
     &:disabled {
       cursor: not-allowed;
       opacity: 0.5;
     }
   }
-  
+
   .form-options {
     @include flex-between;
     margin-bottom: $spacing-6;
-    
+
     .remember-me {
       @include flex-start;
       gap: $spacing-2;
       cursor: pointer;
-      
+
       .remember-checkbox {
         width: $spacing-4;
         height: $spacing-4;
         accent-color: $color-primary;
       }
-      
+
       .remember-text {
         font-size: $font-size-sm;
         color: #000000 !important; // Force black text
       }
     }
-    
+
     .forgot-password {
       font-size: $font-size-sm;
       color: $color-primary;
@@ -382,7 +379,7 @@
       transition: all $transition-fast;
       background: transparent;
       border: 1px solid transparent;
-      
+
       &:hover {
         background: rgba($color-primary, 0.1);
         border-color: rgba($color-primary, 0.2);
@@ -390,14 +387,14 @@
         transform: translateY(-1px);
         box-shadow: 0 2px 8px rgba($color-primary, 0.2);
       }
-      
+
       &:active {
         transform: translateY(0);
         box-shadow: 0 1px 4px rgba($color-primary, 0.2);
       }
     }
   }
-  
+
   .submit-button {
     width: 100%;
     @include flex-center;
@@ -412,24 +409,24 @@
     cursor: pointer;
     transition: all $transition-base;
     box-shadow: $shadow-md;
-    
+
     &:hover:not(:disabled) {
       background: linear-gradient(135deg, $color-primary-hover, $primary-700);
       box-shadow: $shadow-lg;
       transform: translateY(-1px);
     }
-    
+
     &:active:not(:disabled) {
       transform: translateY(0);
       box-shadow: $shadow-sm;
     }
-    
+
     &:disabled {
       cursor: not-allowed;
       opacity: 0.7;
       transform: none;
     }
-    
+
     .loading-spinner {
       width: $spacing-5;
       height: $spacing-5;
@@ -439,7 +436,7 @@
       animation: spin 1s linear infinite;
     }
   }
-  
+
   .error-message {
     background: rgba($color-error, 0.1);
     color: $color-error;
@@ -452,10 +449,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.7;
     transform: scale(1.05);
@@ -469,22 +469,26 @@
 }
 
 @keyframes rotateBorder {
-  0% { 
-    transform: translateZ(0) rotate(0deg); 
+  0% {
+    transform: translateZ(0) rotate(0deg);
   }
-  100% { 
-    transform: translateZ(0) rotate(360deg); 
+
+  100% {
+    transform: translateZ(0) rotate(360deg);
   }
 }
 
 @keyframes inputGlow {
-  0%, 100% {
-    box-shadow: 
+
+  0%,
+  100% {
+    box-shadow:
       0 0 0 3px rgba($color-primary, 0.1),
       0 0 20px rgba($color-primary, 0.2);
   }
+
   50% {
-    box-shadow: 
+    box-shadow:
       0 0 0 3px rgba($color-primary, 0.2),
       0 0 30px rgba($color-primary, 0.3);
   }
@@ -510,13 +514,13 @@
   background: rgba($success-500, 0.05);
   border-radius: $border-radius-base;
   border: 1px solid rgba($success-500, 0.1);
-  
+
   svg {
     width: $spacing-4;
     height: $spacing-4;
     color: $success-600;
   }
-  
+
   span {
     color: $success-700;
     font-weight: $font-weight-medium;
@@ -536,19 +540,19 @@
   .login-container {
     padding: $spacing-4;
   }
-  
+
   .login-card {
     padding: $spacing-4;
   }
-  
+
   .login-header {
     margin-bottom: $spacing-4;
   }
-  
+
   .login-title {
     font-size: $font-size-xl;
   }
-  
+
   .form-options {
     flex-direction: column;
     gap: $spacing-3;
@@ -561,29 +565,28 @@
 
 @include dark-mode {
   .login-container {
-    background: linear-gradient(135deg, 
-      rgba($dark-bg-primary, 1) 0%, 
-      rgba($color-primary, 0.1) 30%, 
-      rgba($info-900, 0.2) 100%
-    );
+    background: linear-gradient(135deg,
+        rgba($dark-bg-primary, 1) 0%,
+        rgba($color-primary, 0.1) 30%,
+        rgba($info-900, 0.2) 100%);
   }
-  
+
   .login-card {
     background: #ffffff !important;
   }
-  
+
   .auth-form {
     background: #ffffff !important;
-    
+
     .form-input {
       background: #ffffff !important;
     }
   }
-  
+
   .security-notice {
     color: $dark-text-secondary;
   }
-  
+
   .copyright {
     color: $dark-text-secondary;
   }
@@ -596,11 +599,11 @@
   .login-card {
     border: 2px solid currentColor;
   }
-  
+
   .form-input {
     border: 2px solid currentColor;
   }
-  
+
   .submit-button {
     border: 2px solid currentColor;
   }
@@ -613,21 +616,21 @@
   .background-elements .bg-element {
     animation: none;
   }
-  
+
   .auth-form {
     &::before {
       animation: none;
     }
   }
-  
+
   .submit-button {
     transition: none;
-    
+
     &:hover {
       transform: none;
     }
   }
-  
+
   .loading-spinner {
     animation: none;
   }
@@ -648,16 +651,16 @@
     background: white;
     padding: 0;
   }
-  
+
   .background-elements {
     display: none;
   }
-  
+
   .login-card {
     box-shadow: none;
     border: 1px solid #000;
   }
-  
+
   .submit-button {
     background: #000;
     color: #fff;
@@ -675,10 +678,10 @@
 
 .form-input.error {
   border-color: $color-error;
-  
+
   &:focus {
     border-color: $color-error;
-    box-shadow: 
+    box-shadow:
       0 0 0 3px rgba($color-error, 0.1),
       0 0 20px rgba($color-error, 0.2);
   }

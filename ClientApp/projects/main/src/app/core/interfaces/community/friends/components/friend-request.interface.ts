@@ -10,4 +10,5 @@ export interface FriendRequest {
   requesterAvatarUrl: string | null;
   status: FriendshipStatus;
   createdAt: string;
+  mutualFriends?: number;
 }

@@ -24,7 +24,13 @@
 // Empty State
 // -----------------------------------------------------------------------------
 .empty-state {
-  @extend .absolute, .inset-0, .flex, .items-center, .justify-center, .bg-secondary, .rounded-lg;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-secondary;
+  border-radius: $border-radius-lg;
   
   .empty-content {
     text-align: center;

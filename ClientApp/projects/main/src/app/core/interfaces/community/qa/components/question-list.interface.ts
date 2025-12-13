@@ -3,7 +3,7 @@ import { QuestionStatus } from '../enums';
 /**
  * Question List DTO - matches QuestionListDto.cs from backend
  */
-export interface QuestionList {
+export interface QuestionListDto {
   id: string;
   title: string;
   authorId: string;
@@ -17,3 +17,5 @@ export interface QuestionList {
   tags: string[];
   createdAt: string;
 }
+
+export type QuestionList = QuestionListDto;

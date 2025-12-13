@@ -183,10 +183,10 @@ export class QAService {
    */
   getStatusColor(status: QuestionStatus): string {
     switch (status) {
-      case 'Open': return 'blue';
-      case 'Answered': return 'green';
-      case 'Closed': return 'gray';
-      case 'Duplicate': return 'yellow';
+      case QuestionStatus.Open: return 'blue';
+      case QuestionStatus.Answered: return 'green';
+      case QuestionStatus.Closed: return 'gray';
+      case QuestionStatus.Duplicate: return 'yellow';
       default: return 'gray';
     }
   }

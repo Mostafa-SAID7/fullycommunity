@@ -2,7 +2,8 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CommunityService, Post, PostComment } from '../../../../core/services/community/community.service';
+import { CommunityService } from '../../../../core/services/community/community.service';
+import { Post, PostComment } from '../../../../core/interfaces/community/posts';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
@@ -37,7 +38,7 @@ export class PostDetailComponent implements OnInit {
       next: (post) => {
         this.post.set(post);
         this.isLiked.set(post.isLiked || false);
-        this.likeCount.set(post.likeCount);
+        this.likeCount.set((post as any).likeCount);
         this.loading.set(false);
         this.loadComments(id);
       },

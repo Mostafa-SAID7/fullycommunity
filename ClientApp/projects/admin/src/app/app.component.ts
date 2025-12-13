@@ -10,4 +10,5 @@ import { RouterOutlet } from '@angular/router';
     class: 'block min-h-screen bg-background'
   }
 })
-export class AppComponent {}
+export class AppComponent {
+}

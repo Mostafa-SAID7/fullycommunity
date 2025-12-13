@@ -5,8 +5,8 @@ import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layou
 import { type SidebarMenuItem, type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
 import { PostsService } from '../../../core/services/community/posts/posts.service';
-import { PostList } from '../../../core/interfaces/community/posts';
-import { PagedResult } from '../../../core/interfaces/common/paged-result.interface';
+import { PostList } from '../../../core/interfaces/community/posts/components/post-list.interface';
+import { PagedResult } from '../../../core/types';
 
 @Component({
   selector: 'app-posts',
@@ -16,7 +16,7 @@ import { PagedResult } from '../../../core/interfaces/common/paged-result.interf
 })
 export class PostsComponent implements OnInit {
   private postsService = inject(PostsService);
-  
+
   posts: PostList[] = [];
   loading = false;
   error: string | null = null;

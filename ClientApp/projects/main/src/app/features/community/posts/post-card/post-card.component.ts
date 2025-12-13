@@ -2,7 +2,8 @@ import { Component, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CommunityService, Post, PostComment } from '../../../../core/services/community/community.service';
+import { CommunityService } from '../../../../core/services/community/community.service';
+import { Post, PostComment } from '../../../../core/interfaces/community/posts';
 import { AuthService } from '../../../../core/services/auth/auth.service';
 
 @Component({
@@ -30,7 +31,7 @@ export class PostCardComponent {
 
   ngOnInit() {
     this.isLiked.set(this.post().isLiked || false);
-    this.likeCount.set(this.post().likeCount);
+    this.likeCount.set((this.post() as any).likeCount);
   }
 
   toggleLike() {
@@ -58,7 +59,7 @@ export class PostCardComponent {
   loadComments() {
     this.loadingComments.set(true);
     this.communityService.getComments(this.post().id).subscribe({
-      next: (result) => {
+      next: (result: any) => {
         this.comments.set(result.items);
         this.loadingComments.set(false);
       },

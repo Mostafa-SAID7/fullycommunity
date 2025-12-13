@@ -65,7 +65,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.localization.init();
-    
+
     // Sync animation service with localization
     this.animationService.setRtl(this.localization.isRtl());
   }

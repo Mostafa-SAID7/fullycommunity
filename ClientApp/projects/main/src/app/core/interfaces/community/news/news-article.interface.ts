@@ -25,4 +25,17 @@ export interface NewsArticle {
   sourceName: string | null;
   sourceUrl: string | null;
   createdAt: string;
+
+  // Extended properties for UI
+  isLiked: boolean;
+  author: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    avatarUrl: string | null;
+  };
+  category: {
+    id: string;
+    name: string;
+  } | null;
 }

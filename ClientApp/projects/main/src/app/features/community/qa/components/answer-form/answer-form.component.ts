@@ -2,7 +2,7 @@ import { Component, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { QAService } from '../../../../../core/services/community/qa.service';
+import { QAService } from '../../../../../core/services/community/qa';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
 
 @Component({
@@ -52,10 +52,10 @@ export class AnswerFormComponent {
         this.submitError.set(null);
         this.answerSubmitted.emit();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to submit answer:', err);
         this.submitting.set(false);
-        
+
         if (err.status === 401) {
           this.router.navigate(['/login'], {
             queryParams: { returnUrl: this.router.url }

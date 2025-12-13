@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MapsService } from '../../../core/services/community/maps';
-import { MapLocationList } from '../../../core/interfaces/community/maps/map-location.interface';
-import { LocationType } from '../../../core/interfaces/community/maps/map.enums';
+import { MapLocationList, LocationType } from '../../../core/interfaces/community/maps';
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
@@ -144,7 +143,7 @@ export class MapsComponent implements OnInit {
 
   locations = signal<MapLocationList[]>([]);
   loading = signal(false);
-  
+
   selectedType = '';
   searchTerm = '';
   city = '';

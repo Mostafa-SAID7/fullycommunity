@@ -7,16 +7,9 @@ import { Friend, FriendRequest } from '../../../core/interfaces/community/friend
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarMenuItem, type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
+import { PagedResult } from '../../../core/types';
 
-export interface FriendSuggestion {
-  id: string;
-  firstName: string;
-  lastName: string;
-  avatarUrl?: string;
-  userType: string;
-  mutualFriends: number;
-  reason: string;
-}
+
 
 export interface LoadingState {
   isLoading: boolean;
@@ -52,11 +45,11 @@ export class FriendsComponent implements OnInit {
     { id: '1', name: 'John Doe', initials: 'JD', online: true },
     { id: '2', name: 'Alice Smith', initials: 'AS', online: true }
   ];
-  
+
   friends = signal<Friend[]>([]);
   friendRequests = signal<FriendRequest[]>([]);
-  friendSuggestions = signal<FriendSuggestion[]>([]);
-  
+  friendSuggestions = signal<Friend[]>([]);
+
   loadingState = signal<LoadingState>({ isLoading: true, error: null });
   searchTerm = signal('');
 
@@ -66,10 +59,10 @@ export class FriendsComponent implements OnInit {
 
   loadAllData(): void {
     this.loadingState.set({ isLoading: true, error: null });
-    
+
     // Load friends
     this.friendsService.getFriends(undefined, 1, 50).subscribe({
-      next: (result: any) => {
+      next: (result: PagedResult<Friend>) => {
         this.friends.set(result.items || []);
       },
       error: (error: any) => {
@@ -80,7 +73,7 @@ export class FriendsComponent implements OnInit {
 
     // Load friend requests
     this.friendsService.getFriendRequests().subscribe({
-      next: (result: any) => {
+      next: (result: PagedResult<FriendRequest>) => {
         this.friendRequests.set(result.items || []);
       },
       error: (error: any) => {
@@ -92,15 +85,7 @@ export class FriendsComponent implements OnInit {
     // Load friend suggestions
     this.friendsService.getSuggestions(10).subscribe({
       next: (suggestions: Friend[]) => {
-        this.friendSuggestions.set(suggestions.map(s => ({
-          id: s.id,
-          firstName: s.firstName,
-          lastName: s.lastName,
-          avatarUrl: s.avatarUrl,
-          userType: s.userType,
-          mutualFriends: s.mutualFriends,
-          reason: 'Suggested for you'
-        })));
+        this.friendSuggestions.set(suggestions);
         this.loadingState.set({ isLoading: false, error: null });
       },
       error: (error: any) => {
@@ -126,21 +111,21 @@ export class FriendsComponent implements OnInit {
     this.friendsService.acceptFriendRequest(request.id).subscribe({
       next: () => {
         // Move from requests to friends
-        this.friendRequests.update(requests => 
+        this.friendRequests.update(requests =>
           requests.filter(r => r.id !== request.id)
         );
-        
+
         // Add to friends list
         const newFriend: Friend = {
-          id: request.userId,
-          firstName: request.firstName,
-          lastName: request.lastName,
-          avatarUrl: request.avatarUrl,
-          userType: request.userType,
+          userId: request.requesterId,
+          userName: request.requesterName,
+          avatarUrl: request.requesterAvatarUrl,
+          bio: null,
           friendsSince: new Date().toISOString(),
+          isOnline: false,
           mutualFriends: request.mutualFriends
         };
-        
+
         this.friends.update(friends => [...friends, newFriend]);
       },
       error: (error: any) => console.error('Error accepting friend request:', error)
@@ -150,7 +135,7 @@ export class FriendsComponent implements OnInit {
   declineRequest(request: FriendRequest): void {
     this.friendsService.declineFriendRequest(request.id).subscribe({
       next: () => {
-        this.friendRequests.update(requests => 
+        this.friendRequests.update(requests =>
           requests.filter(r => r.id !== request.id)
         );
       },
@@ -158,30 +143,30 @@ export class FriendsComponent implements OnInit {
     });
   }
 
-  sendRequest(suggestion: FriendSuggestion): void {
-    this.friendsService.sendFriendRequest(suggestion.id).subscribe({
+  sendRequest(suggestion: Friend): void {
+    this.friendsService.sendFriendRequest(suggestion.userId).subscribe({
       next: () => {
         // Remove from suggestions
-        this.friendSuggestions.update(suggestions => 
-          suggestions.filter(s => s.id !== suggestion.id)
+        this.friendSuggestions.update(suggestions =>
+          suggestions.filter(s => s.userId !== suggestion.userId)
         );
       },
       error: (error: any) => console.error('Error sending friend request:', error)
     });
   }
 
-  removeSuggestion(suggestion: FriendSuggestion): void {
-    this.friendSuggestions.update(suggestions => 
-      suggestions.filter(s => s.id !== suggestion.id)
+  removeSuggestion(suggestion: Friend): void {
+    this.friendSuggestions.update(suggestions =>
+      suggestions.filter(s => s.userId !== suggestion.userId)
     );
   }
 
   unfriend(friend: Friend): void {
-    if (confirm(`Remove ${friend.firstName} ${friend.lastName} from friends?`)) {
-      this.friendsService.removeFriend(friend.id).subscribe({
+    if (confirm(`Remove ${friend.userName} from friends?`)) {
+      this.friendsService.removeFriend(friend.userId).subscribe({
         next: () => {
-          this.friends.update(friends => 
-            friends.filter(f => f.id !== friend.id)
+          this.friends.update(friends =>
+            friends.filter(f => f.userId !== friend.userId)
           );
         },
         error: (error: any) => console.error('Error removing friend:', error)
@@ -194,9 +179,9 @@ export class FriendsComponent implements OnInit {
       this.friendsService.blockUser(userId).subscribe({
         next: () => {
           // Remove from all lists
-          this.friends.update(friends => friends.filter(f => f.id !== userId));
-          this.friendRequests.update(requests => requests.filter(r => r.userId !== userId));
-          this.friendSuggestions.update(suggestions => suggestions.filter(s => s.id !== userId));
+          this.friends.update(friends => friends.filter(f => f.userId !== userId));
+          this.friendRequests.update(requests => requests.filter(r => r.requesterId !== userId));
+          this.friendSuggestions.update(suggestions => suggestions.filter(s => s.userId !== userId));
         },
         error: (error: any) => console.error('Error blocking user:', error)
       });
@@ -207,7 +192,7 @@ export class FriendsComponent implements OnInit {
     const search = this.searchTerm();
     if (this.activeTab() === 'all') {
       this.friendsService.searchFriends(search).subscribe({
-        next: (result: any) => this.friends.set(result.items || []),
+        next: (result: PagedResult<Friend>) => this.friends.set(result.items || []),
         error: (error: any) => console.error('Error searching friends:', error)
       });
     }
@@ -222,7 +207,7 @@ export class FriendsComponent implements OnInit {
     const date = new Date(dateString);
     const diff = now.getTime() - date.getTime();
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    
+
     if (days === 0) return 'Today';
     if (days === 1) return 'Yesterday';
     if (days < 30) return `${days} days ago`;
