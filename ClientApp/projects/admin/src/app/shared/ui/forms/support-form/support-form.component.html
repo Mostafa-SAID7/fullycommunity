@@ -1,5 +1,8 @@
 <div class="support-form">
   <div class="form-header">
+    <div class="logo-container">
+      <app-logo-button [routerLink]="null" [showText]="true"></app-logo-button>
+    </div>
     <h2 class="form-title">{{ title }}</h2>
     <p class="form-subtitle">We're here to help! Describe your issue and we'll get back to you soon.</p>
   </div>
@@ -150,7 +153,7 @@
           id="fileInput"
           multiple
           accept=".jpg,.jpeg,.png,.gif,.pdf,.txt,.log,.zip"
-          (change)="onFileSelect($event)"
+          (change)="onFileSelected($event)"
           class="file-input"
         />
         <label for="fileInput" class="file-upload-label">
@@ -196,4 +199,8 @@
       </button>
     </div>
   </form>
+  
+  <div class="form-footer">
+    <app-copyright></app-copyright>
+  </div>
 </div>

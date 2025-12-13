@@ -2,14 +2,14 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PagedResult } from '../../../types/common.types';
 import {
-  QuestionDto,
-  QuestionListDto,
+  Question,
+  QuestionList,
   QuestionFilter,
   QuestionStatus,
   QuestionAuthor,
   QuestionCategory,
-  TrendingQuestionDto,
-  AnswerDto,
+  TrendingQuestion,
+  Answer,
   AnswerComment,
   CreateQuestionRequest,
   UpdateQuestionRequest,
@@ -33,38 +33,38 @@ export class QAService {
   private trendingService = inject(TrendingService);
 
   // Signals for state management
-  questions = signal<QuestionListDto[]>([]);
+  questions = signal<QuestionList[]>([]);
   loading = signal(false);
 
   // ============================================================================
   // QUESTION OPERATIONS
   // ============================================================================
 
-  getQuestions(filter: QuestionFilter = {}, page = 1, pageSize = 20): Observable<PagedResult<QuestionListDto>> {
+  getQuestions(filter: QuestionFilter = {}, page = 1, pageSize = 20): Observable<PagedResult<QuestionList>> {
     return this.questionService.getQuestions(filter, page, pageSize);
   }
 
-  getQuestion(id: string): Observable<QuestionDto> {
+  getQuestion(id: string): Observable<Question> {
     return this.questionService.getQuestion(id);
   }
 
-  getQuestionBySlug(slug: string): Observable<QuestionDto> {
+  getQuestionBySlug(slug: string): Observable<Question> {
     return this.questionService.getQuestionBySlug(slug);
   }
 
-  getUserQuestions(userId: string, page = 1, pageSize = 20): Observable<PagedResult<QuestionListDto>> {
+  getUserQuestions(userId: string, page = 1, pageSize = 20): Observable<PagedResult<QuestionList>> {
     return this.questionService.getUserQuestions(userId, page, pageSize);
   }
 
-  getRelatedQuestions(questionId: string, count = 5): Observable<QuestionListDto[]> {
+  getRelatedQuestions(questionId: string, count = 5): Observable<QuestionList[]> {
     return this.questionService.getRelatedQuestions(questionId, count);
   }
 
-  createQuestion(request: CreateQuestionRequest): Observable<QuestionDto> {
+  createQuestion(request: CreateQuestionRequest): Observable<Question> {
     return this.questionService.createQuestion(request);
   }
 
-  updateQuestion(id: string, request: UpdateQuestionRequest): Observable<QuestionDto> {
+  updateQuestion(id: string, request: UpdateQuestionRequest): Observable<Question> {
     return this.questionService.updateQuestion(id, request);
   }
 
@@ -88,7 +88,7 @@ export class QAService {
     return this.questionService.unbookmarkQuestion(id);
   }
 
-  getBookmarks(page = 1, pageSize = 20): Observable<PagedResult<QuestionListDto>> {
+  getBookmarks(page = 1, pageSize = 20): Observable<PagedResult<QuestionList>> {
     return this.questionService.getBookmarks(page, pageSize);
   }
 
@@ -100,15 +100,15 @@ export class QAService {
   // ANSWER OPERATIONS
   // ============================================================================
 
-  getAnswers(questionId: string): Observable<AnswerDto[]> {
+  getAnswers(questionId: string): Observable<Answer[]> {
     return this.answerService.getAnswers(questionId);
   }
 
-  createAnswer(questionId: string, request: CreateAnswerRequest): Observable<AnswerDto> {
+  createAnswer(questionId: string, request: CreateAnswerRequest): Observable<Answer> {
     return this.answerService.createAnswer(questionId, request);
   }
 
-  updateAnswer(id: string, request: UpdateAnswerRequest): Observable<AnswerDto> {
+  updateAnswer(id: string, request: UpdateAnswerRequest): Observable<Answer> {
     return this.answerService.updateAnswer(id, request);
   }
 
@@ -148,7 +148,7 @@ export class QAService {
   // TRENDING OPERATIONS
   // ============================================================================
 
-  getTrendingQuestions(count = 5): Observable<TrendingQuestionDto[]> {
+  getTrendingQuestions(count = 5): Observable<TrendingQuestion[]> {
     return this.trendingService.getTrendingQuestions(count);
   }
 
@@ -166,14 +166,14 @@ export class QAService {
   /**
    * Check if question has bounty
    */
-  hasBounty(question: QuestionDto): boolean {
+  hasBounty(question: Question): boolean {
     return !!question.bountyPoints && question.bountyPoints > 0;
   }
 
   /**
    * Check if bounty is expired
    */
-  isBountyExpired(question: QuestionDto): boolean {
+  isBountyExpired(question: Question): boolean {
     if (!question.bountyExpiresAt) return false;
     return new Date(question.bountyExpiresAt) < new Date();
   }

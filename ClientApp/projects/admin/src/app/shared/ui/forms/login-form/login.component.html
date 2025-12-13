@@ -11,9 +11,15 @@
       <!-- Header -->
       <div class="login-header">
         <div class="logo-container">
-          <!-- Logo can be added here -->
+          <app-logo-button 
+            [routerLink]="null" 
+            brandName="Community Car" 
+            subtitle="Admin Portal"
+            [showText]="true"
+            size="lg">
+          </app-logo-button>
         </div>
-        <h1 class="login-title">Community Car Admin</h1>
+        <h1 class="login-title">Welcome Back</h1>
         <p class="login-subtitle">Sign in to access the admin dashboard</p>
       </div>
 
@@ -112,7 +118,7 @@
       <!-- Footer -->
       <div class="login-footer">
         <div class="login-help">
-          Need help? <a href="/admin/support" target="_blank" rel="noopener noreferrer">Contact Support</a>
+          Need help? <a routerLink="/admin/support">Contact Support</a>
         </div>
         
         <div class="security-notice">
@@ -123,9 +129,7 @@
           <span>Your connection is secure and encrypted</span>
         </div>
         
-        <div class="copyright">
-          © 2024 Community Car. All rights reserved.
-        </div>
+        <app-copyright></app-copyright>
       </div>
     </div>
   </div>

@@ -4,7 +4,7 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { PagedResult } from '../../../types/common.types';
 import {
-  QuestionDto,
+  Question,
   QuestionListDto,
   QuestionFilter,
   CreateQuestionRequest,
@@ -47,16 +47,16 @@ export class QuestionService {
   /**
    * Get question by ID
    */
-  getQuestion(id: string): Observable<QuestionDto> {
-    return this.http.get<ApiResponse<QuestionDto>>(`${this.apiUrl}/${id}`)
+  getQuestion(id: string): Observable<Question> {
+    return this.http.get<ApiResponse<Question>>(`${this.apiUrl}/${id}`)
       .pipe(map(response => response.data));
   }
 
   /**
    * Get question by slug
    */
-  getQuestionBySlug(slug: string): Observable<QuestionDto> {
-    return this.http.get<ApiResponse<QuestionDto>>(`${this.apiUrl}/slug/${slug}`)
+  getQuestionBySlug(slug: string): Observable<Question> {
+    return this.http.get<ApiResponse<Question>>(`${this.apiUrl}/slug/${slug}`)
       .pipe(map(response => response.data));
   }
 
@@ -83,16 +83,16 @@ export class QuestionService {
   /**
    * Create new question (auth required)
    */
-  createQuestion(request: CreateQuestionRequest): Observable<QuestionDto> {
-    return this.http.post<ApiResponse<QuestionDto>>(this.apiUrl, request)
+  createQuestion(request: CreateQuestionRequest): Observable<Question> {
+    return this.http.post<ApiResponse<Question>>(this.apiUrl, request)
       .pipe(map(response => response.data));
   }
 
   /**
    * Update question (auth required, owner only)
    */
-  updateQuestion(id: string, request: UpdateQuestionRequest): Observable<QuestionDto> {
-    return this.http.put<ApiResponse<QuestionDto>>(`${this.apiUrl}/${id}`, request)
+  updateQuestion(id: string, request: UpdateQuestionRequest): Observable<Question> {
+    return this.http.put<ApiResponse<Question>>(`${this.apiUrl}/${id}`, request)
       .pipe(map(response => response.data));
   }
 

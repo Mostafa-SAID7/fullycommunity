@@ -1,8 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth/auth.service';
+import { LogoButtonComponent } from '../../../components/logo-button/logo-button.component';
+import { CopyrightComponent } from '../../components/copyright/copyright.component';
 
 export interface LoginCredentials {
   email: string;
@@ -13,7 +15,7 @@ export interface LoginCredentials {
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, LogoButtonComponent, CopyrightComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })

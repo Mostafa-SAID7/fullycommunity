@@ -1,7 +1,8 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { QAService, QuestionListDto } from '../../../../../core/services/community/qa.service';
+import { QAService } from '../../../../../core/services/community/qa';
+import { QuestionList } from '../../../../../core/interfaces/community/qa';
 
 @Component({
   selector: 'app-related-questions',
@@ -17,7 +18,7 @@ export class RelatedQuestionsComponent implements OnInit {
   count = input<number>(5);
 
   // State
-  relatedQuestions = signal<QuestionListDto[]>([]);
+  relatedQuestions = signal<QuestionList[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
 

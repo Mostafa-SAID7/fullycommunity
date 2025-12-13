@@ -1,14 +1,62 @@
 @import '../../../styles/variables';
 @import '../../../styles/mixins';
 
+:host {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  // Microsoft-style dark background
+  background: linear-gradient(135deg, 
+    #0f1419 0%, 
+    #1a1f2e 25%, 
+    #2d3748 50%, 
+    #1a202c 75%, 
+    #0f1419 100%
+  );
+  padding: $spacing-2;
+  overflow-y: auto;
+  
+  @include respond-to('sm') {
+    padding: $spacing-4;
+  }
+}
+
 .support-form {
-  background: $bg-primary;
+  background: #ffffff !important; // Force white background for form
   border-radius: $border-radius-xl;
-  box-shadow: $shadow-sm;
-  border: 1px solid $border-primary;
-  padding: $spacing-6;
+  box-shadow: $shadow-lg;
+  border: 4px solid transparent;
+  background-clip: padding-box;
+  padding: $spacing-4;
   max-width: 48rem;
   margin: 0 auto;
+  position: relative;
+  max-height: 95vh;
+  overflow-y: auto;
+  
+  @include respond-to('sm') {
+    padding: $spacing-6;
+  }
+  
+  // Rotating animated red border around form
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: conic-gradient(
+      from 0deg,
+      #ff0000 0deg,
+      #ff3333 60deg,
+      #ff6666 120deg,
+      #ff3333 180deg,
+      #ff0000 240deg,
+      #cc0000 300deg,
+      #ff0000 360deg
+    );
+    border-radius: $border-radius-xl;
+    animation: rotateBorder 3s linear infinite;
+    z-index: -1;
+  }
 }
 
 .form-header {
@@ -19,13 +67,13 @@
 .form-title {
   font-size: $font-size-2xl;
   font-weight: $font-weight-bold;
-  color: $text-primary;
+  color: #000000 !important; // Force black text
   margin-bottom: $spacing-2;
 }
 
 .form-subtitle {
   font-size: $font-size-base;
-  color: $text-secondary;
+  color: #333333 !important; // Force dark gray text
   margin: 0;
 }
 
@@ -40,7 +88,7 @@
 .section-title {
   font-size: $font-size-lg;
   font-weight: $font-weight-semibold;
-  color: $text-primary;
+  color: #000000 !important; // Force black text
   margin-bottom: $spacing-1;
 }
 
@@ -70,7 +118,7 @@
   align-items: center;
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
-  color: $text-primary;
+  color: #000000 !important; // Force black text
   margin-bottom: $spacing-2;
 }
 
@@ -88,8 +136,8 @@
   font-size: $font-size-base;
   border: 2px solid $border-primary;
   border-radius: $border-radius-lg;
-  background: $bg-primary;
-  color: $text-primary;
+  background: #ffffff !important; // Force white background
+  color: #000000 !important; // Force black text
   transition: all $transition-fast;
   
   &:focus {
@@ -433,4 +481,28 @@
   .form-section {
     margin-bottom: $spacing-4;
   }
+}
+
+// Animations
+@keyframes rotateBorder {
+  0% { 
+    transform: translateZ(0) rotate(0deg); 
+  }
+  100% { 
+    transform: translateZ(0) rotate(360deg); 
+  }
+}
+
+// Logo button integration
+.logo-container {
+  @include flex-center;
+  margin-bottom: $spacing-4;
+}
+
+// Form Footer
+.form-footer {
+  margin-top: $spacing-6;
+  padding-top: $spacing-4;
+  border-top: 1px solid $border-primary;
+  text-align: center;
 }

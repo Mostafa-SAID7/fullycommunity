@@ -1,6 +1,9 @@
-import { Component, inject, signal, Input, Output, EventEmitter } from '@angular/core';
+import { Component, inject, signal, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { LogoButtonComponent } from '../../../components/logo-button/logo-button.component';
+import { CopyrightComponent } from '../../components/copyright/copyright.component';
 
 export interface SupportTicket {
   subject: string;
@@ -15,168 +18,177 @@ export interface SupportTicket {
 @Component({
   selector: 'app-support-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, LogoButtonComponent, CopyrightComponent],
   templateUrl: './support-form.component.html',
   styleUrl: './support-form.component.scss'
 })
-export class SupportFormComponent {
+export class SupportFormComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   @Input() title = 'Contact Support';
   @Input() userEmail = '';
   @Input() userName = '';
-  @Output() ticketSubmitted = new EventEmitter<  }
-}
-[i];+ sizes2)) + ' ' Fixed(i)).topow(k, th./ Mabytes oat((rseFlturn pa);
-    reg(k)ath.lotes) / Mth.log(byth.floor(MaManst i = '];
-    coGB 'B', 'MB',s', 'K = ['Byteonst sizes   c
- = 1024; k st   con0 Bytes';
- n ' 0) retur ===bytes   if (ng {
- : strites: number)Size(byFile
+  @Output() ticketSubmitted = new EventEmitter<SupportTicket>();
+  @Output() cancelled = new EventEmitter<void>();
 
-  format
-  }xLength}`;/${malength}lue.return `${va 2000;
-    t' ? 100 :bjecme === 'sudNaelgth = fiaxLennst m
-    coue || '';alol?.vcontrue =  val
-    constdName);et(fielpportForm.gl = this.sunst contro  cotring {
-   sing):dName: strnt(fielaracterCou
+  loading = signal(false);
+  errorMessage = signal('');
+  successMessage = signal('');
+  attachments = signal<File[]>([]);
 
-  getChame;
-  }fieldN| dName] |ames[fielsplayNeturn di;
-    r    }
-me: 'Name'     userNamail',
- mail: 'E userE,
-     tion'ripscription: 'Deesc',
-      dtyy: 'Prioriiorit  pr   ory',
- egy: 'Catategor    c  bject',
-ject: 'Suub     s } = {
-  string]:tring: ses: { [keyisplayNamst don    c {
-g): stringine: strldNamiee(fldDisplayNam getFie
-  privaten '';
-  }
-   retur;
-    }
- characters`dLength} th'].requireors['maxleng{control.erred $exce} cannot ame)dNielame(fplayNieldDisis.getF `${threturn]) ength'errors['maxlol.f (contr
-      iers`;charactength} '].requiredLs['minlengthl.errorrontast ${cole at e)} must befieldNamDisplayName(tFieldge${this.return `) inlength']rs['merrof (control.
-      il address';lid emaivar a se ente'Pleareturn ]) ors['email'control.err   if (   
-quired`;e)} is reamdN(fielDisplayNameetField{this.gn `$ returequired'])rs['rrol.erro (cont   if {
-   hed)control.touc&& errors trol?.
-    if (conieldName);.get(frtForm= this.supporol st contg {
-    conring): strin stme:or(fieldNatFieldErr  ge
+  categories = [
+    { value: 'technical', label: 'Technical Issue' },
+    { value: 'account', label: 'Account Problem' },
+    { value: 'billing', label: 'Billing Question' },
+    { value: 'feature', label: 'Feature Request' },
+    { value: 'other', label: 'Other' }
+  ];
 
-;
+  priorities = [
+    { value: 'low', label: 'Low' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'high', label: 'High' },
+    { value: 'urgent', label: 'Urgent' }
+  ];
+
+  supportForm: FormGroup = this.fb.group({
+    subject: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+    category: ['', Validators.required],
+    priority: ['medium', Validators.required],
+    description: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(2000)]],
+    userEmail: [this.userEmail, [Validators.required, Validators.email]],
+    userName: [this.userName]
   });
-    })d(ouchemarkAsT   control?.ey);
-   orm.get(khis.supportF= t control const      
-ch(key => {trols).forEaorm.conpportFys(this.suObject.ke{
-    ) hed(GroupToucte markForm
-  priva  }
-);
-t(emincelled. this.ca  
- e.set('');ccessMessaghis.su
-    t'');et(orMessage.sis.err;
-    thet([])ents.shm  this.attact();
-  rtForm.resehis.suppo  tel() {
-  
-  onCanc;
+
+  ngOnInit() {
+    if (this.userEmail) {
+      this.supportForm.patchValue({ userEmail: this.userEmail });
+    }
+    if (this.userName) {
+      this.supportForm.patchValue({ userName: this.userName });
+    }
   }
-  }, 1500) 2000);
-        },cket);
-it(tied.emmitticketSub    this.t {
-    ) =>Timeout((set    
-   ;
-     urs.')within 24 hock to you \'ll get ba! Weessfullybmitted succrt ticket su.set('SupposagesMescces    this.su  e);
-lsset(fas.loading.hi     t => {
- etTimeout(()   sall
- ulate API c
-    // Sim;
-ge.set('')rrorMessa   this.e(true);
- ding.set this.loa   };
 
-   ()
- achmentstthis.aachments: t      attorm.value,
-is.supportF  ...th = {
-    tTicket: Supporticket   const    }
+  get subjectControl() { return this.supportForm.get('subject'); }
+  get categoryControl() { return this.supportForm.get('category'); }
+  get priorityControl() { return this.supportForm.get('priority'); }
+  get descriptionControl() { return this.supportForm.get('description'); }
+  get userEmailControl() { return this.supportForm.get('userEmail'); }
+  get userNameControl() { return this.supportForm.get('userName'); }
 
-   return;
-   );
-  oupTouched(FormGr  this.mark{
-    nvalid) tForm.ippor.suif (thisit() {
-    nSubm}
-
-  oents]);
-  tachm.currentAtts.set([...attachmenhis 1);
-    tx,lice(indements.spentAttach
-    currachments(); this.attts =menttachentAcurr    const  number) {
-(index:achmenttt removeA
-
- 
-    }
-  }lowed.`);es} files al${maxFil(`Maximum Message.set.error    thisles) {
-  gth >= maxFits.lennewAttachmen   if ();
+  onFileSelected(event: any) {
+    const files: FileList = event.target.files;
+    const maxFiles = 5;
+    const maxSizeBytes = 10 * 1024 * 1024; // 10MB
     
- tachmentsts.set(newAtattachmen
-    this.iles);ice(0, maxFFiles].sllidts, ...vatAttachmenren.cur..ents = [Attachmonst new   c   });
+    const currentAttachments = this.attachments();
+    
+    const validFiles = Array.from(files).filter(file => {
+      if (file.size > maxSizeBytes) {
+        this.errorMessage.set(`File "${file.name}" is too large. Maximum size is 10MB.`);
+        return false;
+      }
+      return true;
+    });
 
- ;
- return true
+    const newAttachments = [...currentAttachments, ...validFiles];
+    
+    if (newAttachments.length > maxFiles) {
+      this.errorMessage.set(`Maximum ${maxFiles} files allowed.`);
+      return;
+    }
+    
+    this.attachments.set(newAttachments);
+    this.errorMessage.set('');
+  }
+
+  removeAttachment(index: number) {
+    const currentAttachments = this.attachments();
+    const newAttachments = currentAttachments.filter((_, i) => i !== index);
+    this.attachments.set(newAttachments);
+  }
+
+  onSubmit() {
+    if (this.supportForm.invalid) {
+      this.markFormGroupTouched();
+      return;
+    }
+
+    const formValue = this.supportForm.value;
+    const ticket: SupportTicket = {
+      subject: formValue.subject,
+      category: formValue.category,
+      priority: formValue.priority,
+      description: formValue.description,
+      userEmail: formValue.userEmail,
+      userName: formValue.userName,
+      attachments: this.attachments()
+    };
+
+    this.loading.set(true);
+    this.errorMessage.set('');
+
+    // Simulate API call
+    setTimeout(() => {
+      this.loading.set(false);
+      this.successMessage.set('Support ticket submitted successfully!');
+      this.ticketSubmitted.emit(ticket);
       
-      }lse; return fa   B.`);
-    ize is 10Maximum se. Mlarge}" is too ${file.nam"e.set(`File rorMessaghis.er  t
-      Size) {ze > maxf (file.si  ie => {
-    .filter(fililes = filesalidF
-    const v
-    r filepe/ 10MB 024; / * 1024 * 1xSize = 10 ma   constles = 5;
- onst maxFi cts();
-   is.attachmens = thtAttachmenturren c constle[];
-   Fifiles) as t.target.veny.from(eles = Arra const fi {
-   t: any)evenileSelect(
+      setTimeout(() => {
+        this.successMessage.set('');
+      }, 5000);
+    }, 1500);
+  }
+  onCancel() {
+    this.supportForm.reset();
+    this.attachments.set([]);
+    this.errorMessage.set('');
+    this.successMessage.set('');
+    this.cancelled.emit();
+  }
 
-  onF; }ame')'userNrm.get(rtFo.suppo thisl() { returnroserNameCont get umail'); }
- et('userEortForm.g.suppisrn throl() { retuontmailC get userE
- tion'); }et('descriporm.gis.supportFn th{ returntrol() ionCoget descript  
-ity'); }('priorrm.gettFosupporreturn this.rol() { yContet priorit
-  g}tegory'); carm.get('portFothis.suprn () { returolryCont  get catego }
-('subject');.getsupportFormurn this.retontrol() { ctCubje}
+  private markFormGroupTouched() {
+    Object.keys(this.supportForm.controls).forEach(key => {
+      const control = this.supportForm.get(key);
+      control?.markAsTouched();
+    });
+  }
 
-  get s;
+  getFieldError(fieldName: string): string {
+    const control = this.supportForm.get(fieldName);
+    if (control?.errors && control.touched) {
+      if (control.errors['required']) return `${this.getFieldDisplayName(fieldName)} is required`;
+      if (control.errors['email']) return 'Please enter a valid email address';
+      if (control.errors['minlength']) return `${this.getFieldDisplayName(fieldName)} must be at least ${control.errors['minlength'].requiredLength} characters`;
+      if (control.errors['maxlength']) return `${this.getFieldDisplayName(fieldName)} cannot exceed ${control.errors['maxlength'].requiredLength} characters`;
     }
-  erName })his.us userName: thValue({tcpaForm.ports.suphi
-      terName) {(this.us  if 
-    }
-  il });erEmathis.us: ailrEm{ usealue(hVtForm.patcuppor     this.sl) {
- his.userEmai   if (t{
- gOnInit() 
-  n
- });
- d]]equires.rorlidat[VaName, s.usererName: [thius
-    s.email]], Validatorequired,ators.rail, [ValiderEml: [this.usEmai
-    user],h(2000)]maxLengttors.20), Validangth(dators.minLeed, Valiators.requir [Validon: ['', descripti
-   required]],idators.almedium', [Vity: ['rior]],
-    prs.required[Validato', category: [')]],
-    ength(100s.maxLalidator, VminLength(5)s.ator, Validuiredrs.reqlidatot: ['', [Va subjecroup({
-    = this.fb.g FormGroupupportForm:
-  s
-  ];
-' }n/criticalystem dowgent - Sbel: 'Ur'urgent', lae:     { valu
-nt work' }, importaocks- Bl: 'High belh', la value: 'hig},
-    {nality' functio - Affects Medium, label: ' 'medium'alue:},
-    { v' ral inquiryneGeLow - , label: 'e: 'low'  { valu = [
-  es  prioriti
-  ];
+    return '';
+  }
 
-r' }heOt, label: 'lue: 'other'{ va    },
- ug Report'', label: 'Bbuglue: '
-    { vat' }, Reques'Featureabel: ture', leavalue: 'f    { },
- Question' Billingel: ', lablling'e: 'bi { valu
-   ' }, Problemccountabel: 'Aunt', lcco{ value: 'a   ,
- l Issue' }Technicalabel: ', 'technical'lue: va    { ies = [
-gor
-  catee[]>([]);
-ilgnal<Fsints = 
-  attachmesignal('');ssMessage = cce
-  su'');signal(sage = rMes erro);
- (falseing = signal
-  load<void>();
-tEmitter = new Even cancelledutput()
-  @O>();TicketSupport
+  private getFieldDisplayName(fieldName: string): string {
+    const displayNames: { [key: string]: string } = {
+      subject: 'Subject',
+      category: 'Category',
+      priority: 'Priority',
+      description: 'Description',
+      userEmail: 'Email',
+      userName: 'Name'
+    };
+    return displayNames[fieldName] || fieldName;
+  }
+
+  getCharacterCount(fieldName: string): string {
+    const control = this.supportForm.get(fieldName);
+    const value = control?.value || '';
+    const maxLength = control?.hasError('maxlength') ? control.errors?.['maxlength']?.requiredLength : 2000;
+    return `${value.length}/${maxLength}`;
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+}

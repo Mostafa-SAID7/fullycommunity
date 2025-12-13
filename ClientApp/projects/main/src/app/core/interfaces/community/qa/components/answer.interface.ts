@@ -16,5 +16,6 @@ export interface Answer {
   currentUserVote: number;
   isEdited: boolean;
   createdAt: string;
+  updatedAt?: string | null;
   comments: AnswerComment[];
 }

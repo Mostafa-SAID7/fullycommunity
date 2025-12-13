@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth/auth.service';
+import { LogoButtonComponent } from '../../../components/logo-button/logo-button.component';
+import { CopyrightComponent } from '../../components/copyright/copyright.component';
 
 @Component({
   selector: 'app-forgot-password-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, LogoButtonComponent, CopyrightComponent],
   templateUrl: './forgot-password-form.component.html',
   styleUrl: './forgot-password-form.component.scss'
 })

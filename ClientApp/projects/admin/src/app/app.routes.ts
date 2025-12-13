@@ -43,6 +43,28 @@ export const routes: Routes = [
     pathMatch: 'full' 
   },
   
+  // Public support route (no authentication required)
+  {
+    path: 'support',
+    loadComponent: () => import('./shared/ui/forms/support-form/support-form.component').then(m => m.SupportFormComponent),
+    title: 'Support - Community Car Admin',
+    data: { 
+      hideNavigation: true,
+      description: 'Get help and support for Community Car admin platform'
+    }
+  },
+  
+  // Admin support route (also accessible without auth)
+  {
+    path: 'admin/support',
+    loadComponent: () => import('./shared/ui/forms/support-form/support-form.component').then(m => m.SupportFormComponent),
+    title: 'Support - Community Car Admin',
+    data: { 
+      hideNavigation: true,
+      description: 'Get help and support for Community Car admin platform'
+    }
+  },
+  
   // Admin routes with authentication
   {
     path: 'admin',

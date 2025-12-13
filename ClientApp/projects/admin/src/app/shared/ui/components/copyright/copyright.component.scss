@@ -1,0 +1,36 @@
+@import '../../../styles/index';
+
+.copyright-container {
+  text-align: center;
+  
+  .copyright-text {
+    font-size: $font-size-xs;
+    color: #000000 !important; // Force black text as requested
+    margin: 0;
+    font-weight: $font-weight-medium;
+    opacity: 1; // Full opacity for better visibility
+    
+    @include respond-below('sm') {
+      font-size: 0.625rem;
+    }
+  }
+}
+
+// Dark mode support - keep black text even in dark mode
+@include dark-mode {
+  .copyright-container {
+    .copyright-text {
+      color: #000 !important; // Keep black text in dark mode as requested
+    }
+  }
+}
+
+// High contrast mode
+@include high-contrast {
+  .copyright-container {
+    .copyright-text {
+      opacity: 1;
+      font-weight: $font-weight-medium;
+    }
+  }
+}

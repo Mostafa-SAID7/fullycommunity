@@ -2,10 +2,9 @@ import { Component, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AnswerDto } from '../../../../../core/services/community/qa.service';
+import { Answer, AnswerComment } from '../../../../../core/interfaces/community/qa';
 import { CommentService } from '../../../../../core/services/community/qa/comment.service';
 import { AuthService } from '../../../../../core/services/auth/auth.service';
-import { AnswerComment } from '../../../../../core/interfaces/community/qa/comment.interface';
 import { EmptyStateComponent } from '../../../../../shared/components/empty-state/empty-state.component';
 
 @Component({
@@ -20,12 +19,12 @@ export class AnswerListComponent {
   private authService = inject(AuthService);
 
   // Inputs
-  answers = input.required<AnswerDto[]>();
+  answers = input.required<Answer[]>();
 
   // Outputs
   voteAnswer = output<{ answerId: string; voteType: 1 | -1 }>();
   scrollToForm = output<void>();
-  answersUpdated = output<AnswerDto[]>();
+  answersUpdated = output<Answer[]>();
 
   // Answer collapse state
   answersExpanded = signal(false);
@@ -57,7 +56,7 @@ export class AnswerListComponent {
   toggleCommentForm(answerId: string) {
     const current = this.showCommentForm();
     this.showCommentForm.set(current === answerId ? null : answerId);
-    
+
     if (!this.newComment()[answerId]) {
       this.newComment.set({ ...this.newComment(), [answerId]: '' });
     }
@@ -81,7 +80,7 @@ export class AnswerListComponent {
     this.commentSubmitting.set(answerId);
 
     this.commentService.addComment(answerId, { content }).subscribe({
-      next: (comment) => {
+      next: (comment: AnswerComment) => {
         const currentAnswers = this.answers();
         const updatedAnswers = currentAnswers.map(a => {
           if (a.id === answerId) {
@@ -98,10 +97,10 @@ export class AnswerListComponent {
         this.showCommentForm.set(null);
         this.commentSubmitting.set(null);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to add comment:', err);
         this.commentSubmitting.set(null);
-        
+
         if (err.status === 401) {
           this.router.navigate(['/login'], {
             queryParams: { returnUrl: this.router.url }
@@ -128,13 +127,13 @@ export class AnswerListComponent {
     if (!content) return;
 
     this.commentService.updateComment(commentId, { content }).subscribe({
-      next: (updatedComment) => {
+      next: (updatedComment: AnswerComment) => {
         const currentAnswers = this.answers();
         const updatedAnswers = currentAnswers.map(a => {
           if (a.id === answerId) {
             return {
               ...a,
-              comments: a.comments?.map(c => c.id === commentId ? updatedComment : c) || []
+              comments: a.comments?.map((c: AnswerComment) => c.id === commentId ? updatedComment : c) || []
             };
           }
           return a;
@@ -144,7 +143,7 @@ export class AnswerListComponent {
         this.editingComment.set(null);
         this.editCommentContent.set('');
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to update comment:', err);
         this.submitError.set('Failed to update comment. Please try again.');
       }
@@ -161,14 +160,14 @@ export class AnswerListComponent {
           if (a.id === answerId) {
             return {
               ...a,
-              comments: a.comments?.filter(c => c.id !== commentId) || []
+              comments: a.comments?.filter((c: AnswerComment) => c.id !== commentId) || []
             };
           }
           return a;
         });
         this.answersUpdated.emit(updatedAnswers);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to delete comment:', err);
         this.submitError.set('Failed to delete comment. Please try again.');
       }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { QAService } from '../../../core/services/community/qa';
-import { QuestionListDto, QuestionCategory, QuestionStatus } from '../../../core/interfaces/community/qa';
+import { QuestionList, QuestionCategory, QuestionStatus } from '../../../core/interfaces/community/qa';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { StatsCardComponent } from '../../../shared/components';
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
@@ -39,7 +39,7 @@ export class QAComponent implements OnInit {
   private router = inject(Router);
 
   // Core data
-  questions = signal<QuestionListDto[]>([]);
+  questions = signal<QuestionList[]>([]);
   categories = signal<QuestionCategory[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
@@ -158,7 +158,7 @@ export class QAComponent implements OnInit {
     };
 
     if (this.selectedStatus) {
-      filter.status = this.selectedStatus as QuestionStatus;
+      filter.status = (this.selectedStatus as unknown) as QuestionStatus;
     }
     if (this.selectedCategory) {
       filter.categoryId = this.selectedCategory;
@@ -192,10 +192,10 @@ export class QAComponent implements OnInit {
     });
   }
 
-  updateStats(questions: QuestionListDto[]) {
+  updateStats(questions: QuestionList[]) {
     this.answeredCount.set(questions.filter(q => q.hasAcceptedAnswer).length);
     this.unansweredCount.set(questions.filter(q => q.answerCount === 0).length);
-    // Note: bountyPoints is not available in QuestionListDto, only in full QuestionDto
+    // Note: bountyPoints is not available in QuestionList, only in full QuestionDto
     // To get accurate bounty count, we would need to fetch full details or add it to the list DTO
     this.bountyCount.set(0);
   }

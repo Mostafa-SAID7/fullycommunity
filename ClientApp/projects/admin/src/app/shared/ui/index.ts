@@ -45,3 +45,7 @@ export * from './forms/two-factor-form/two-factor-form.component';
 export * from './forms/support-form/support-form.component';
 export * from './forms/verification-form/verification-form.component';
 // export * from './forms/form-field/form-field.component';
+
+// Component Utilities
+export * from './components/logo-button/logo-button.component';
+export * from './components/copyright/copyright.component';

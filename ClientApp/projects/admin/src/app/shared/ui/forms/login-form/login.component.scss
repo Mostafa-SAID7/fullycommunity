@@ -11,23 +11,26 @@
 // -----------------------------------------------------------------------------
 
 .login-container {
-  min-height: 100vh;
+  height: 100vh;
   @include flex-center;
-  padding: $spacing-4;
+  padding: $spacing-2;
+  // Microsoft-style dark background
   background: linear-gradient(135deg, 
-    rgba($gray-50, 1) 0%, 
-    rgba($primary-50, 0.3) 30%, 
-    rgba($info-50, 0.3) 100%
+    #0f1419 0%, 
+    #1a1f2e 25%, 
+    #2d3748 50%, 
+    #1a202c 75%, 
+    #0f1419 100%
   );
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   
   @include respond-to('sm') {
-    padding: $spacing-6;
+    padding: $spacing-3;
   }
   
   @include respond-to('lg') {
-    padding: $spacing-8;
+    padding: $spacing-4;
   }
 }
 
@@ -51,7 +54,7 @@
       left: 2.5rem;
       width: 18rem;
       height: 18rem;
-      background-color: rgba($color-primary, 0.05);
+      background-color: rgba($color-primary, 0.08);
     }
     
     &.element-2 {
@@ -59,7 +62,7 @@
       right: 2.5rem;
       width: 24rem;
       height: 24rem;
-      background-color: rgba($info-500, 0.05);
+      background-color: rgba($info-500, 0.08);
       animation-delay: 1s;
     }
   }
@@ -84,14 +87,15 @@
   background: #ffffff;
   border-radius: $border-radius-xl;
   box-shadow: $shadow-lg;
-  padding: $spacing-6;
+  padding: $spacing-3;
+  width: 100%;
   
   @include respond-to('sm') {
-    padding: $spacing-8;
+    padding: $spacing-4;
   }
   
   @include respond-to('lg') {
-    padding: $spacing-10;
+    padding: $spacing-6;
   }
 }
 
@@ -100,10 +104,10 @@
 
 .login-header {
   text-align: center;
-  margin-bottom: $spacing-6;
+  margin-bottom: $spacing-3;
   
   @include respond-to('sm') {
-    margin-bottom: $spacing-8;
+    margin-bottom: $spacing-4;
   }
 }
 
@@ -119,10 +123,7 @@
 .login-title {
   font-size: $font-size-2xl;
   font-weight: $font-weight-bold;
-  background: linear-gradient(135deg, $color-primary 0%, $color-primary-hover 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #000000 !important; // Force black text
   margin-bottom: $spacing-2;
   
   @include respond-to('sm') {
@@ -136,7 +137,7 @@
 
 .login-subtitle {
   font-size: $font-size-sm;
-  color: $text-secondary;
+  color: #333333 !important; // Force dark gray text
   
   @include respond-to('sm') {
     font-size: $font-size-base;
@@ -241,7 +242,7 @@
       display: block;
       font-size: $font-size-sm;
       font-weight: $font-weight-medium;
-      color: $text-primary;
+      color: #000000 !important; // Force black text
       margin-bottom: $spacing-2;
     }
     
@@ -270,7 +271,7 @@
         border: 2px solid $border-primary;
         border-radius: $border-radius-lg;
         background: #ffffff !important; // Ensure inputs are always white
-        color: $text-primary;
+        color: #000000 !important; // Force black text in inputs
         transition: all $transition-fast;
         
         &:focus {
@@ -367,7 +368,7 @@
       
       .remember-text {
         font-size: $font-size-sm;
-        color: $text-secondary;
+        color: #000000 !important; // Force black text
       }
     }
     

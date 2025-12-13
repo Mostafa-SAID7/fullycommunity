@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QAService } from '../../../../core/services/community/qa';
-import { QuestionDto, AnswerDto } from '../../../../core/interfaces/community/qa';
+import { Question, Answer } from '../../../../core/interfaces/community/qa';
 import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
 import { QuestionHeaderComponent } from '../components/question-header/question-header.component';
 import { AnswerListComponent } from '../components/answer-list/answer-list.component';
@@ -27,8 +27,8 @@ export class QuestionDetailComponent implements OnInit {
   private router = inject(Router);
   private qaService = inject(QAService);
 
-  question = signal<QuestionDto | null>(null);
-  answers = signal<AnswerDto[]>([]);
+  question = signal<Question | null>(null);
+  answers = signal<Answer[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
   submitError = signal<string | null>(null);
@@ -77,7 +77,7 @@ export class QuestionDetailComponent implements OnInit {
     }
   }
 
-  onAnswersUpdated(updatedAnswers: AnswerDto[]) {
+  onAnswersUpdated(updatedAnswers: Answer[]) {
     this.answers.set(updatedAnswers);
   }
 

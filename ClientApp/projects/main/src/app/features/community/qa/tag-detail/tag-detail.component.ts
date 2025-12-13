@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QAService } from '../../../../core/services/community/qa';
-import { QuestionListDto } from '../../../../core/interfaces/community/qa';
+import { QuestionList } from '../../../../core/interfaces/community/qa';
 import { QuestionListComponent } from '../components/question-list/question-list.component';
 import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
 
@@ -19,11 +19,11 @@ export class TagDetailComponent implements OnInit {
 
   // State
   tag = signal<string>('');
-  questions = signal<QuestionListDto[]>([]);
+  questions = signal<QuestionList[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
   totalCount = signal(0);
-  
+
   // Sorting
   sortBy = signal('newest');
   viewMode: 'card' | 'compact' = 'card';
@@ -107,8 +107,8 @@ export class TagDetailComponent implements OnInit {
   }
 
   askQuestion() {
-    this.router.navigate(['/community/qa'], { 
-      queryParams: { tag: this.tag() } 
+    this.router.navigate(['/community/qa'], {
+      queryParams: { tag: this.tag() }
     });
   }
 }

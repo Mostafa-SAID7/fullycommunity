@@ -4,11 +4,12 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { QAService } from '../../../core/services/community/qa/qa.service';
 import { LoadingStateComponent } from '../../../shared/components/loading-state/loading-state.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
+import { QuestionList } from '../../../core/interfaces/community/qa';
 
 interface UserProfile {
   userId: string;
   userName: string;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
   questionsCount: number;
   answersCount: number;
 }
@@ -25,7 +26,7 @@ export class UserProfileComponent implements OnInit {
 
   userId = signal<string>('');
   profile = signal<UserProfile | null>(null);
-  questions = signal<any[]>([]);
+  questions = signal<QuestionList[]>([]);
   answers = signal<any[]>([]);
   activeTab = signal<'questions' | 'answers'>('questions');
   loading = signal(false);
@@ -47,7 +48,7 @@ export class UserProfileComponent implements OnInit {
     this.qaService.getUserQuestions(userId, 1, 100).subscribe({
       next: (result) => {
         this.questions.set(result.items);
-        
+
         // Create profile from first question's author data
         if (result.items.length > 0) {
           const firstQuestion = result.items[0];
@@ -59,7 +60,7 @@ export class UserProfileComponent implements OnInit {
             answersCount: 0 // Will be updated when we load answers
           });
         }
-        
+
         this.loading.set(false);
       },
       error: (err: any) => {
