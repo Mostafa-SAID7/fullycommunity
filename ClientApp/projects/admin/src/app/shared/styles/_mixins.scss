@@ -85,9 +85,30 @@
   }
 }
 
+// Dark Mode Mixin - For use inside selectors only
+// Usage: Apply this mixin inside a CSS selector to add dark mode styles
+// Example:
+//   .my-component {
+//     background: white;
+//     @include dark-mode {
+//       background: black;
+//     }
+//   }
 @mixin dark-mode {
-  @media (prefers-color-scheme: dark) {
-    @content;
+  @if & {
+
+    // Used inside a selector (e.g., .class { @include dark-mode { ... } })
+    @at-root :root[data-theme="dark"] & {
+      @content;
+    }
+  }
+
+  @else {
+
+    // Used at root level (e.g., in a component SCSS file)
+    :host-context([data-theme="dark"]) {
+      @content;
+    }
   }
 }
 

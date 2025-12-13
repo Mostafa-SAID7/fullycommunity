@@ -2,7 +2,7 @@ import { Component, inject, signal, Input, Output, EventEmitter, OnInit } from '
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { LogoButtonComponent } from '../../../components/logo-button/logo-button.component';
+import { LogoButtonComponent } from '../../../components/admin-header/logo-button/logo-button.component';
 import { CopyrightComponent } from '../../components/copyright/copyright.component';
 
 export interface SupportTicket {

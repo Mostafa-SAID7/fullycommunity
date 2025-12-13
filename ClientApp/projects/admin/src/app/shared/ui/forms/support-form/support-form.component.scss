@@ -14,10 +14,10 @@
     #0f1419 100%
   );
   padding: $spacing-2;
-  overflow-y: auto;
+  overflow: hidden;
   
   @include respond-to('sm') {
-    padding: $spacing-4;
+    padding: $spacing-3;
   }
 }
 
@@ -27,15 +27,18 @@
   box-shadow: $shadow-lg;
   border: 4px solid transparent;
   background-clip: padding-box;
-  padding: $spacing-4;
+  padding: $spacing-3;
   max-width: 48rem;
   margin: 0 auto;
   position: relative;
-  max-height: 95vh;
-  overflow-y: auto;
+  height: calc(100vh - #{$spacing-4});
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   
   @include respond-to('sm') {
-    padding: $spacing-6;
+    padding: $spacing-4;
+    height: calc(100vh - #{$spacing-6});
   }
   
   // Rotating animated red border around form
@@ -502,6 +505,44 @@
 // Form Footer
 .form-footer {
   margin-top: $spacing-6;
+  padding-top: $spacing-4;
+  border-top: 1px solid $border-primary;
+  text-align: center;
+}
+// Form content scrollable area
+.form-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: $spacing-2;
+  
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba($border-primary, 0.1);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba($color-primary, 0.3);
+    border-radius: 3px;
+    
+    &:hover {
+      background: rgba($color-primary, 0.5);
+    }
+  }
+}
+
+.form-header {
+  flex-shrink: 0;
+  margin-bottom: $spacing-4;
+}
+
+.form-footer {
+  flex-shrink: 0;
+  margin-top: $spacing-4;
   padding-top: $spacing-4;
   border-top: 1px solid $border-primary;
   text-align: center;

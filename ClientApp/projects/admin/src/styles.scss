@@ -1,9 +1,8 @@
-
 // Enhanced Admin Styles System - Final Optimized & Duplicate-Free Version
 // =============================================================================
 
 // Import comprehensive styles system (optimized order for proper cascading)
-@use 'app/shared/styles/index' as *;
+@import 'app/shared/styles/index';
 
 // Global Reset & Base Styles
 // -----------------------------------------------------------------------------
@@ -16,7 +15,7 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
-  
+
   @include reduced-motion {
     scroll-behavior: auto;
   }
@@ -37,16 +36,15 @@ body {
   overflow-x: hidden;
   width: 100%;
   min-height: 100vh;
-  
+
   // Microsoft-style dark background for forms
   &.form-page {
-    background: linear-gradient(135deg, 
-      #0f1419 0%, 
-      #1a1f2e 25%, 
-      #2d3748 50%, 
-      #1a202c 75%, 
-      #0f1419 100%
-    );
+    background: linear-gradient(135deg,
+        #0f1419 0%,
+        #1a1f2e 25%,
+        #2d3748 50%,
+        #1a202c 75%,
+        #0f1419 100%);
   }
 }
 
@@ -58,12 +56,12 @@ img {
   max-width: 100%;
   height: auto;
   border-radius: $border-radius-base;
-  
+
   &.img-crisp {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
-  
+
   &.img-pixelated {
     image-rendering: pixelated;
   }
@@ -90,7 +88,9 @@ img {
 }
 
 // Enhanced Form Elements
-input, textarea, select {
+input,
+textarea,
+select {
   font-family: inherit;
 }
 
@@ -103,7 +103,7 @@ button {
 a {
   color: inherit;
   text-decoration: none;
-  
+
   &:focus-visible {
     @include focus-visible;
   }
@@ -113,6 +113,7 @@ a {
 // -----------------------------------------------------------------------------
 
 @media print {
+
   // Hide interactive elements
   .admin-sidebar,
   .admin-header,
@@ -123,13 +124,13 @@ a {
   .tooltip {
     display: none !important;
   }
-  
+
   // Optimize layout for print
   .admin-content {
     padding: 0;
     margin: 0;
   }
-  
+
   // Ensure proper borders for print
   .card,
   .table,
@@ -137,18 +138,18 @@ a {
     box-shadow: none !important;
     border: 1px solid #000 !important;
   }
-  
+
   // Optimize colors for print
   * {
     background: white !important;
     color: black !important;
   }
-  
+
   // Ensure page breaks
   .page-break {
     page-break-before: always;
   }
-  
+
   .no-page-break {
     page-break-inside: avoid;
   }
@@ -159,6 +160,7 @@ a {
 
 // Reduced Motion Support
 @include reduced-motion {
+
   *,
   *::before,
   *::after {
@@ -174,7 +176,7 @@ a {
   * {
     border-color: currentColor !important;
   }
-  
+
   .btn,
   .card,
   .form-control,
@@ -188,7 +190,7 @@ a {
   .card {
     border: 1px solid ButtonText;
   }
-  
+
   .btn {
     border: 1px solid ButtonText;
     background: ButtonFace;

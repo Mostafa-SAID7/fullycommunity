@@ -1,8 +1,8 @@
-import { Component, OnInit, signal, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, signal, OnDestroy, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { Subject, forkJoin, of, interval } from 'rxjs';
+import { Subject, forkJoin, of } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { AdminReportsService } from '../../../core/services/admin/reports.service';
 import {
@@ -36,117 +36,292 @@ import { TabNavigationComponent, Tab } from '../../../shared/ui/navigation/tab-n
     PieChartComponent,
     StatCardComponent,
     RefreshButtonComponent,
-    TabNavigationComponent],
+    TabNavigationComponent
+  ],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.scss'
 })
 export class ReportsComponent implements OnInit, OnDestroy {
   private reportsService = inject(AdminReportsService);
 
+  // Data signals
   overview = signal<AnalyticsOverview | null>(null);
   userGrowth = signal<UserGrowthData[]>([]);
   contentEngagement = signal<ContentEngagementData[]>([]);
   topContent = signal<TopContent[]>([]);
   realtimeStats = signal<RealtimeStats | null>(null);
   summary = signal<PlatformSummary | null>(null);
-
-  // Enhanced Analytics
   detailedUserGrowth = signal<DetailedUserGrowthTrends | null>(null);
   detailedContentEngagement = signal<DetailedContentEngagement | null>(null);
 
+  // UI state signals
   loading = signal(false);
   error = signal<string | null>(null);
+  activeAnalyticsTab = signal<'overview' | 'user-growth' | 'content-engagement' | 'localization'>('overview');
 
   private destroy$ = new Subject<void>();
   private cache = new Map<string, any>();
+  private realtimeInterval: ReturnType<typeof setInterval> | null = null;
 
   selectedPeriod: ReportPeriod = 'month';
   contentType = '';
-  activeAnalyticsTab: 'overview' | 'user-growth' | 'content-engagement' | 'localization' = 'overview';
 
-  // Computed properties for UI components
-  get overviewStatCards(): StatCardConfig[] {
-    const overview = this.overview();
-    if (!overview) return [];
+  // Computed chart configs - prevents infinite change detection loops
+  userGrowthChartConfig = computed<BarChartConfig>(() => {
+    const data = this.userGrowth();
+    if (!data.length) {
+      return { labels: [], datasets: [], height: 300 };
+    }
+    return {
+      labels: data.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+      datasets: [{
+        label: 'New Users',
+        data: data.map(d => d.newUsers),
+        backgroundColor: 'rgba(59, 130, 246, 0.8)',
+        borderColor: 'rgba(59, 130, 246, 1)',
+        borderWidth: 1
+      }],
+      height: 300
+    };
+  });
+
+  contentDistributionConfig = computed<PieChartConfig>(() => {
+    const sum = this.summary();
+    if (!sum) {
+      return { labels: [], data: [], height: 300 };
+    }
+    return {
+      labels: ['Posts', 'Reviews', 'Guides', 'Questions'],
+      data: [sum.content.posts, sum.content.reviews, sum.content.guides, sum.content.questions],
+      backgroundColor: [
+        'rgba(59, 130, 246, 0.8)',
+        'rgba(236, 72, 153, 0.8)',
+        'rgba(34, 197, 94, 0.8)',
+        'rgba(251, 191, 36, 0.8)'
+      ],
+      height: 300,
+      doughnut: true
+    };
+  });
+
+  engagementChartConfig = computed<LineChartConfig>(() => {
+    const data = this.contentEngagement();
+    if (!data.length) {
+      return { labels: [], datasets: [], height: 300 };
+    }
+    return {
+      labels: data.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+      datasets: [
+        { label: 'Views', data: data.map(d => d.views), borderColor: 'rgba(147, 51, 234, 1)', backgroundColor: 'rgba(147, 51, 234, 0.1)', tension: 0.4 },
+        { label: 'Likes', data: data.map(d => d.likes), borderColor: 'rgba(236, 72, 153, 1)', backgroundColor: 'rgba(236, 72, 153, 0.1)', tension: 0.4 },
+        { label: 'Comments', data: data.map(d => d.comments), borderColor: 'rgba(59, 130, 246, 1)', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.4 }
+      ],
+      height: 300
+    };
+  });
+
+  detailedUserGrowthConfig = computed<LineChartConfig>(() => {
+    const trends = this.detailedUserGrowth();
+    if (!trends?.data.length) {
+      return { labels: [], datasets: [], height: 400 };
+    }
+    return {
+      labels: trends.data.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+      datasets: [
+        { label: 'New Users', data: trends.data.map(d => d.newUsers), borderColor: 'rgba(59, 130, 246, 1)', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.4 },
+        { label: 'Active Users', data: trends.data.map(d => d.activeUsers), borderColor: 'rgba(34, 197, 94, 1)', backgroundColor: 'rgba(34, 197, 94, 0.1)', tension: 0.4 },
+        { label: 'Retention Rate (%)', data: trends.data.map(d => d.retentionRate), borderColor: 'rgba(251, 191, 36, 1)', backgroundColor: 'rgba(251, 191, 36, 0.1)', tension: 0.4 }
+      ],
+      height: 400
+    };
+  });
+
+  acquisitionChannelsConfig = computed<PieChartConfig>(() => {
+    const trends = this.detailedUserGrowth();
+    if (!trends?.acquisitionChannels.length) {
+      return { labels: [], data: [], height: 300 };
+    }
+
+    return {
+      labels: trends.acquisitionChannels.map(c => c.channel),
+      data: trends.acquisitionChannels.map(c => c.users),
+      backgroundColor: [
+        'rgba(59, 130, 246, 0.8)',
+        'rgba(236, 72, 153, 0.8)',
+        'rgba(34, 197, 94, 0.8)',
+        'rgba(251, 191, 36, 0.8)',
+        'rgba(147, 51, 234, 0.8)',
+        'rgba(239, 68, 68, 0.8)'
+      ],
+      height: 300,
+      doughnut: true
+    };
+  });
+
+  contentTypePerformanceConfig = computed<BarChartConfig>(() => {
+    const contentEngagement = this.detailedContentEngagement();
+    if (!contentEngagement?.contentTypeBreakdown.length) {
+      return { labels: [], datasets: [], height: 300 };
+    }
+
+    return {
+      labels: contentEngagement.contentTypeBreakdown.map(c => c.type),
+      datasets: [
+        {
+          label: 'Total Views',
+          data: contentEngagement.contentTypeBreakdown.map(c => c.totalViews),
+          backgroundColor: 'rgba(59, 130, 246, 0.8)',
+          borderColor: 'rgba(59, 130, 246, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Engagement Rate (%)',
+          data: contentEngagement.contentTypeBreakdown.map(c => c.avgEngagementRate),
+          backgroundColor: 'rgba(34, 197, 94, 0.8)',
+          borderColor: 'rgba(34, 197, 94, 1)',
+          borderWidth: 1
+        }
+      ],
+      height: 300
+    };
+  });
+
+  enhancedEngagementConfig = computed<LineChartConfig>(() => {
+    const engagement = this.contentEngagement();
+    if (!engagement.length) {
+      return { labels: [], datasets: [], height: 400 };
+    }
+
+    return {
+      labels: engagement.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+      datasets: [
+        {
+          label: 'Views',
+          data: engagement.map(d => d.views),
+          borderColor: 'rgba(147, 51, 234, 1)',
+          backgroundColor: 'rgba(147, 51, 234, 0.1)',
+          tension: 0.4
+        },
+        {
+          label: 'Likes',
+          data: engagement.map(d => d.likes),
+          borderColor: 'rgba(236, 72, 153, 1)',
+          backgroundColor: 'rgba(236, 72, 153, 0.1)',
+          tension: 0.4
+        },
+        {
+          label: 'Comments',
+          data: engagement.map(d => d.comments),
+          borderColor: 'rgba(59, 130, 246, 1)',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          tension: 0.4
+        },
+        {
+          label: 'Shares',
+          data: engagement.map(d => d.shares),
+          borderColor: 'rgba(34, 197, 94, 1)',
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
+          tension: 0.4
+        },
+        {
+          label: 'Saves',
+          data: engagement.map(d => d.saves || 0),
+          borderColor: 'rgba(251, 191, 36, 1)',
+          backgroundColor: 'rgba(251, 191, 36, 0.1)',
+          tension: 0.4
+        }
+      ],
+      height: 400
+    };
+  });
+
+  // Overview stats cards configuration
+  overviewStatCards = computed<StatCardConfig[]>(() => {
+    const sum = this.summary();
+    const ov = this.overview();
+    if (!sum) return [];
 
     return [
       {
-        title: 'User Growth',
-        value: `${overview.userGrowthPercent > 0 ? '+' : ''}${overview.userGrowthPercent}%`,
-        icon: '📈',
-        color: overview.userGrowthPercent > 0 ? 'success' : 'danger',
-        subtitle: 'User growth rate'
-      },
-      {
-        title: 'Content Engagement',
-        value: `${overview.contentEngagementPercent > 0 ? '+' : ''}${overview.contentEngagementPercent}%`,
-        icon: '💬',
-        color: overview.contentEngagementPercent > 0 ? 'success' : 'danger',
-        subtitle: 'Engagement rate'
+        title: 'Total Users',
+        value: this.formatNumber(sum.users.total),
+        change: ov?.userGrowthPercent ?? 0,
+        icon: 'fas fa-users',
+        color: 'info'
       },
       {
         title: 'Active Users',
-        value: `${overview.activeUsersPercent}%`,
-        icon: '👥',
-        color: 'info',
-        subtitle: 'Active user percentage'
+        value: this.formatNumber(sum.users.activeThisMonth),
+        change: ov?.activeUsersPercent ?? 0,
+        icon: 'fas fa-user-check',
+        color: 'success'
       },
       {
-        title: 'Revenue Growth',
-        value: `${overview.revenueGrowthPercent > 0 ? '+' : ''}${overview.revenueGrowthPercent}%`,
-        icon: '💰',
-        color: overview.revenueGrowthPercent > 0 ? 'success' : 'danger',
-        subtitle: 'Revenue growth rate'
+        title: 'Total Content',
+        value: this.formatNumber(sum.content.posts + sum.content.reviews + sum.content.guides + sum.content.questions),
+        change: ov?.revenueGrowthPercent ?? 0, // Fallback as content growth not showing
+        icon: 'fas fa-file-alt',
+        color: 'primary'
+      },
+      {
+        title: 'Engagement Views',
+        value: this.formatNumber(sum.engagement.totalViews),
+        change: ov?.contentEngagementPercent ?? 0,
+        icon: 'fas fa-chart-line',
+        color: 'warning'
       }
     ];
+  });
+
+  // Analytics tab items
+  analyticsTabItems: Tab[] = [
+    { id: 'overview', label: 'Overview', icon: 'fas fa-chart-pie' },
+    { id: 'user-growth', label: 'User Growth', icon: 'fas fa-user-plus' },
+    { id: 'content-engagement', label: 'Content Engagement', icon: 'fas fa-heart' },
+    { id: 'localization', label: 'Localization', icon: 'fas fa-globe' }
+  ];
+
+  /*
+   * Helper Methods
+   * -------------------------------------------------------------------------
+   */
+
+  ngOnInit(): void {
+    this.refreshReports();
+
+    // Setup realtime updates
+    this.realtimeInterval = setInterval(() => {
+      this.loadRealtimeStats();
+    }, 30000); // Update every 30 seconds
   }
 
-  get analyticsTabItems(): Tab[] {
-    return [
-      { id: 'overview', label: 'Overview' },
-      { id: 'user-growth', label: 'User Growth Trends' },
-      { id: 'content-engagement', label: 'Content Engagement Analytics' },
-      { id: 'localization', label: 'Localization Stats' }
-    ];
-  }
-
-  private maxNewUsers = 100;
-  private realtimeInterval: any;
-
-  ngOnInit() {
-    this.loadData();
-    this.loadRealtimeStats();
-    this.loadSummary();
-    this.loadDetailedAnalytics();
-
-    // Refresh realtime stats every 30 seconds
-    this.realtimeInterval = setInterval(() => this.loadRealtimeStats(), 30000);
-  }
-
-  ngOnDestroy() {
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     if (this.realtimeInterval) {
       clearInterval(this.realtimeInterval);
     }
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   loadData() {
     this.loading.set(true);
     this.error.set(null);
 
-    const cacheKey = `period:${this.selectedPeriod}`;
+    const cacheKey = `${this.selectedPeriod}`;
+
     if (this.cache.has(cacheKey)) {
       const cached = this.cache.get(cacheKey);
-      this.overview.set(cached.overview ?? null);
-      this.userGrowth.set(cached.userGrowth ?? []);
-      this.contentEngagement.set(cached.contentEngagement ?? []);
-      this.maxNewUsers = Math.max(100, ...(cached.userGrowth ?? []).map((d: UserGrowthData) => d.newUsers));
-      this.loading.set(false);
-      // still refresh top content separately
-      this.loadTopContent();
-      this.loadDetailedAnalytics();
-      return;
+      // check if cache is fresh (e.g. < 5 mins)
+      if (Date.now() - cached.cachedAt < 300000) {
+        this.overview.set(cached.overview);
+        this.userGrowth.set(cached.userGrowth ?? []);
+        this.contentEngagement.set(cached.contentEngagement ?? []);
+        this.loading.set(false);
+        // still refresh top content separately
+        this.loadTopContent();
+        this.loadDetailedAnalytics();
+        return;
+      }
     }
 
     const endDate = new Date().toISOString().split('T')[0];
@@ -161,7 +336,6 @@ export class ReportsComponent implements OnInit, OnDestroy {
         this.overview.set(ov as AnalyticsOverview | null);
         this.userGrowth.set(ug as UserGrowthData[]);
         this.contentEngagement.set(ce as ContentEngagementData[]);
-        this.maxNewUsers = Math.max(100, ...(ug as UserGrowthData[]).map(d => d.newUsers));
         // cache lightweight snapshot
         this.cache.set(cacheKey, { overview: ov, userGrowth: ug, contentEngagement: ce, cachedAt: Date.now() });
         this.loadTopContent();
@@ -250,7 +424,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }
 
   onAnalyticsTabChange(tab: string) {
-    this.activeAnalyticsTab = tab as 'overview' | 'user-growth' | 'content-engagement' | 'localization';
+    this.activeAnalyticsTab.set(tab as 'overview' | 'user-growth' | 'content-engagement' | 'localization');
   }
 
   refreshReports() {
@@ -311,242 +485,13 @@ export class ReportsComponent implements OnInit, OnDestroy {
       });
   }
 
-  getUserGrowthChartConfig(): BarChartConfig {
-    const userGrowth = this.userGrowth();
-    if (!userGrowth.length) {
-      return {
-        labels: [],
-        datasets: [],
-        height: 300
-      };
-    }
 
-    return {
-      labels: userGrowth.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
-      datasets: [
-        {
-          label: 'New Users',
-          data: userGrowth.map(d => d.newUsers),
-          backgroundColor: 'rgba(59, 130, 246, 0.8)',
-          borderColor: 'rgba(59, 130, 246, 1)',
-          borderWidth: 1
-        }
-      ],
-      height: 300
-    };
-  }
-
-  getContentDistributionConfig(): PieChartConfig {
-    const summary = this.summary();
-    if (!summary) {
-      return {
-        labels: [],
-        data: [],
-        height: 300
-      };
-    }
-
-    return {
-      labels: ['Posts', 'Reviews', 'Guides', 'Questions'],
-      data: [
-        summary.content.posts,
-        summary.content.reviews,
-        summary.content.guides,
-        summary.content.questions
-      ],
-      backgroundColor: [
-        'rgba(59, 130, 246, 0.8)', // blue
-        'rgba(236, 72, 153, 0.8)', // pink
-        'rgba(34, 197, 94, 0.8)',  // green
-        'rgba(251, 191, 36, 0.8)'  // yellow
-      ],
-      height: 300,
-      doughnut: true
-    };
-  }
-
-  getEngagementChartConfig(): LineChartConfig {
-    const engagement = this.contentEngagement();
-    if (!engagement.length) {
-      return {
-        labels: [],
-        datasets: [],
-        height: 300
-      };
-    }
-
-    return {
-      labels: engagement.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
-      datasets: [
-        {
-          label: 'Views',
-          data: engagement.map(d => d.views),
-          borderColor: 'rgba(147, 51, 234, 1)',
-          backgroundColor: 'rgba(147, 51, 234, 0.1)',
-          tension: 0.4
-        },
-        {
-          label: 'Likes',
-          data: engagement.map(d => d.likes),
-          borderColor: 'rgba(236, 72, 153, 1)',
-          backgroundColor: 'rgba(236, 72, 153, 0.1)',
-          tension: 0.4
-        },
-        {
-          label: 'Comments',
-          data: engagement.map(d => d.comments),
-          borderColor: 'rgba(59, 130, 246, 1)',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          tension: 0.4
-        }
-      ],
-      height: 300
-    };
-  }
-
-  // Enhanced User Growth Chart with Retention
-  getDetailedUserGrowthConfig(): LineChartConfig {
-    const userGrowthTrends = this.detailedUserGrowth();
-    if (!userGrowthTrends?.data.length) {
-      return { labels: [], datasets: [], height: 400 };
-    }
-
-    return {
-      labels: userGrowthTrends.data.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
-      datasets: [
-        {
-          label: 'New Users',
-          data: userGrowthTrends.data.map(d => d.newUsers),
-          borderColor: 'rgba(59, 130, 246, 1)',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          tension: 0.4
-        },
-        {
-          label: 'Active Users',
-          data: userGrowthTrends.data.map(d => d.activeUsers),
-          borderColor: 'rgba(34, 197, 94, 1)',
-          backgroundColor: 'rgba(34, 197, 94, 0.1)',
-          tension: 0.4
-        },
-        {
-          label: 'Retention Rate (%)',
-          data: userGrowthTrends.data.map(d => d.retentionRate),
-          borderColor: 'rgba(251, 191, 36, 1)',
-          backgroundColor: 'rgba(251, 191, 36, 0.1)',
-          tension: 0.4
-        }
-      ],
-      height: 400
-    };
-  }
-
-  // Acquisition Channels Chart
-  getAcquisitionChannelsConfig(): PieChartConfig {
-    const userGrowthTrends = this.detailedUserGrowth();
-    if (!userGrowthTrends?.acquisitionChannels.length) {
-      return { labels: [], data: [], height: 300 };
-    }
-
-    return {
-      labels: userGrowthTrends.acquisitionChannels.map(c => c.channel),
-      data: userGrowthTrends.acquisitionChannels.map(c => c.users),
-      backgroundColor: [
-        'rgba(59, 130, 246, 0.8)',
-        'rgba(236, 72, 153, 0.8)',
-        'rgba(34, 197, 94, 0.8)',
-        'rgba(251, 191, 36, 0.8)',
-        'rgba(147, 51, 234, 0.8)',
-        'rgba(239, 68, 68, 0.8)'
-      ],
-      height: 300,
-      doughnut: true
-    };
-  }
-
-  // Content Type Performance Chart
-  getContentTypePerformanceConfig(): BarChartConfig {
-    const contentEngagement = this.detailedContentEngagement();
-    if (!contentEngagement?.contentTypeBreakdown.length) {
-      return { labels: [], datasets: [], height: 300 };
-    }
-
-    return {
-      labels: contentEngagement.contentTypeBreakdown.map(c => c.type),
-      datasets: [
-        {
-          label: 'Total Views',
-          data: contentEngagement.contentTypeBreakdown.map(c => c.totalViews),
-          backgroundColor: 'rgba(59, 130, 246, 0.8)',
-          borderColor: 'rgba(59, 130, 246, 1)',
-          borderWidth: 1
-        },
-        {
-          label: 'Engagement Rate (%)',
-          data: contentEngagement.contentTypeBreakdown.map(c => c.avgEngagementRate),
-          backgroundColor: 'rgba(34, 197, 94, 0.8)',
-          borderColor: 'rgba(34, 197, 94, 1)',
-          borderWidth: 1
-        }
-      ],
-      height: 300
-    };
-  }
-
-  // Enhanced Engagement Metrics Chart
-  getEnhancedEngagementConfig(): LineChartConfig {
-    const engagement = this.contentEngagement();
-    if (!engagement.length) {
-      return { labels: [], datasets: [], height: 400 };
-    }
-
-    return {
-      labels: engagement.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
-      datasets: [
-        {
-          label: 'Views',
-          data: engagement.map(d => d.views),
-          borderColor: 'rgba(147, 51, 234, 1)',
-          backgroundColor: 'rgba(147, 51, 234, 0.1)',
-          tension: 0.4
-        },
-        {
-          label: 'Likes',
-          data: engagement.map(d => d.likes),
-          borderColor: 'rgba(236, 72, 153, 1)',
-          backgroundColor: 'rgba(236, 72, 153, 0.1)',
-          tension: 0.4
-        },
-        {
-          label: 'Comments',
-          data: engagement.map(d => d.comments),
-          borderColor: 'rgba(59, 130, 246, 1)',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          tension: 0.4
-        },
-        {
-          label: 'Shares',
-          data: engagement.map(d => d.shares),
-          borderColor: 'rgba(34, 197, 94, 1)',
-          backgroundColor: 'rgba(34, 197, 94, 0.1)',
-          tension: 0.4
-        },
-        {
-          label: 'Saves',
-          data: engagement.map(d => d.saves || 0),
-          borderColor: 'rgba(251, 191, 36, 1)',
-          backgroundColor: 'rgba(251, 191, 36, 0.1)',
-          tension: 0.4
-        }
-      ],
-      height: 400
-    };
-  }
 
   // Utility methods for enhanced analytics
   getRetentionColor(rate: number): string {
-    if (rate >= 80) return 'text-green-600';
-    if (rate >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+    if (rate >= 80) return 'success';
+    if (rate >= 60) return 'warning';
+    return 'danger';
   }
 
   getGrowthTrendIcon(trend: 'up' | 'down' | 'stable'): string {

@@ -101,7 +101,7 @@
 
 // Dark Mode
 // -----------------------------------------------------------------------------
-@include dark-mode {
+:root[data-theme="dark"] {
   .admin-layout {
     background: $dark-bg-primary;
   }

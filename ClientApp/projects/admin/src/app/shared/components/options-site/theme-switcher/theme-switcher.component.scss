@@ -1,93 +1,142 @@
-
-@import '../../../styles/variables';
-@import '../../../styles/mixins';
+@import 'app/shared/styles/index';
 
 :host {
   display: inline-block;
+  vertical-align: middle;
 }
 
-// Theme Switcher Button
+// Premium Theme Switcher
 // -----------------------------------------------------------------------------
 
 .theme-switcher-btn {
   @include flex-center;
-  padding: $spacing-2;
-  min-width: 40px;
-  height: 40px;
-  background: rgba($bg-primary, 0.8);
-  border: 1px solid rgba($border-primary, 0.5);
-  border-radius: $border-radius-lg;
-  color: $text-secondary;
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
   cursor: pointer;
-  transition: all $transition-fast;
-  backdrop-filter: blur(8px);
-  
-  &:hover {
-    background: rgba($color-primary, 0.1);
-    border-color: rgba($color-primary, 0.3);
-    color: $color-primary;
-    transform: translateY(-1px);
-    box-shadow: $shadow-md;
-  }
-  
-  &:active {
-    transform: translateY(0);
-    box-shadow: $shadow-sm;
-  }
-  
+  transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+  overflow: hidden;
+
+  // Default (Light Mode) Appearance
+  background: linear-gradient(135deg, $primary-400, $primary-500); // Soft Blue Gradient
+  box-shadow:
+    0 4px 6px -1px rgba($primary-500, 0.3),
+    0 2px 4px -1px rgba($primary-500, 0.15),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3); // Inner highlight
+
+  // Focus Styles
   &:focus-visible {
-    @include focus-visible;
+    outline: none;
+    box-shadow:
+      0 0 0 3px rgba($primary-500, 0.4),
+      0 4px 6px -1px rgba($primary-500, 0.3);
   }
-  
+
+  // Hover State
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 12px -3px rgba($primary-500, 0.4),
+      0 4px 6px -2px rgba($primary-500, 0.2),
+      inset 0 2px 4px rgba(255, 255, 255, 0.4);
+
+    .theme-icon {
+      transform: scale(1.1) rotate(15deg);
+    }
+  }
+
+  // Active/Click State
+  &:active {
+    transform: translateY(0) scale(0.95);
+    box-shadow:
+      0 2px 4px -1px rgba($primary-500, 0.3),
+      inset 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  // Icon Styles
   .theme-icon {
-    font-size: $font-size-xl;
-    line-height: 1;
-    display: inline-block;
-    transition: transform $transition-fast;
-  }
-  
-  &:hover .theme-icon {
-    transform: scale(1.1) rotate(15deg);
+    font-size: 1.25rem;
+    color: $white; // White icon for better contrast against blue
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
+    transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+    z-index: 1;
   }
 }
 
-
-// Dark Mode Support
+// Dark Mode Overrides
 // -----------------------------------------------------------------------------
 
-@include dark-mode {
+// Use the robust dark-mode mixin or native selector
+:host-context([data-theme="dark"]) {
   .theme-switcher-btn {
-    background: rgba($dark-bg-secondary, 0.8);
-    border-color: rgba($dark-border-primary, 0.5);
-    color: $dark-text-secondary;
-    
+    // Dark Mode Appearance
+    background: linear-gradient(135deg, $dark-bg-tertiary, $dark-bg-secondary); // Deep Slate Gradient
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.4),
+      0 2px 4px -1px rgba(0, 0, 0, 0.2),
+      inset 0 1px 2px rgba(255, 255, 255, 0.1); // Subtle rim light
+
+    // Focus Styles (Dark)
+    &:focus-visible {
+      box-shadow:
+        0 0 0 3px rgba($gray-400, 0.3),
+        0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    }
+
+    // Hover State (Dark)
     &:hover {
-      background: rgba($color-primary, 0.15);
-      border-color: rgba($color-primary, 0.4);
-      color: $color-primary;
+      box-shadow:
+        0 8px 12px -3px rgba(0, 0, 0, 0.5),
+        0 4px 6px -2px rgba(0, 0, 0, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.15);
+
+      .theme-icon {
+        transform: rotate(-15deg); // Swing opposite way for moon
+        color: $gray-50; // Bright silver
+        filter: drop-shadow(0 0 8px rgba(248, 250, 252, 0.5)); // Moon glow
+      }
+    }
+
+    .theme-icon {
+      color: $gray-200; // Soft silver
     }
   }
 }
 
-// High Contrast Mode
+// High Contrast Mode Support
 // -----------------------------------------------------------------------------
-
-@include high-contrast {
+@media (prefers-contrast: more) {
   .theme-switcher-btn {
-    border: 2px solid;
+    background: transparent;
+    border: 2px solid currentColor;
+    box-shadow: none;
+
+    &:hover,
+    &:focus-visible {
+      background: CanvasText;
+      color: Canvas;
+
+      .theme-icon {
+        color: Canvas;
+      }
+    }
+
+    .theme-icon {
+      color: CanvasText;
+    }
   }
 }
 
-// Reduced Motion
+// Reduced Motion Support
 // -----------------------------------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
 
-@include reduced-motion {
   .theme-switcher-btn,
   .theme-icon {
-    transition: none;
-  }
-  
-  .theme-switcher-btn:hover .theme-icon {
-    transform: none;
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
   }
 }

@@ -4,27 +4,44 @@
   display: inline-block;
 }
 
+// Logo Button Wrapper
+// -----------------------------------------------------------------------------
+.logo-button-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  &.with-text {
+    .logo-container {
+      flex-shrink: 0;
+    }
+  }
+}
+
 // Logo Container
 // -----------------------------------------------------------------------------
 .logo-container {
   position: relative;
   @include flex-center;
   background: linear-gradient(135deg, $color-primary, $color-primary-hover);
-  border-radius: 1.5rem;
-  cursor: pointer;
+  border-radius: .25rem;
   transition: all 0.3s ease;
   transform-origin: center;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
 
-  // Keep hover/active calm—no shadow effects
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: none;
-  }
+  &.clickable {
+    cursor: pointer;
+    
+    // Keep hover/active calm—no shadow effects
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: none;
+    }
 
-  &:active {
-    transform: translateY(0px);
-    box-shadow: none;
+    &:active {
+      transform: translateY(0px);
+      box-shadow: none;
+    }
   }
 }
 
@@ -84,6 +101,30 @@
   user-select: none;
   line-height: 1;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); // Soft shadow for depth
+}
+
+// Brand Text
+// -----------------------------------------------------------------------------
+.brand-text {
+  display: flex;
+  flexctionn;
+  gap: 0.125rem;
+
+  .brand-name {
+    font-size: 1.125rem;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-subtitle {
+    font-size: 0.875rem;
+    font-weight: $font-weight-medium;
+    color: $text-secondary;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+  }
 }
 
 // Bottom Shadow for 3D Depth - Removed for cleaner hover effect

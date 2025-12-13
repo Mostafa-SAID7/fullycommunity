@@ -636,28 +636,30 @@
 
 // Dark Mode Support
 // -----------------------------------------------------------------------------
-@include dark-mode {
-  .system-health-banner {
-    &.healthy {
-      background: linear-gradient(135deg, rgba($success-900, 0.3), rgba($success-800, 0.2));
-      border-color: $success-700;
+:host {
+  @include dark-mode {
+    .system-health-banner {
+      &.healthy {
+        background: linear-gradient(135deg, rgba($success-900, 0.3), rgba($success-800, 0.2));
+        border-color: $success-700;
+      }
+
+      &.warning {
+        background: linear-gradient(135deg, rgba($warning-900, 0.3), rgba($warning-800, 0.2));
+        border-color: $warning-700;
+      }
+
+      &.critical {
+        background: linear-gradient(135deg, rgba($error-900, 0.3), rgba($error-800, 0.2));
+        border-color: $error-700;
+      }
     }
 
-    &.warning {
-      background: linear-gradient(135deg, rgba($warning-900, 0.3), rgba($warning-800, 0.2));
-      border-color: $warning-700;
+    .activity-card,
+    .system-status-card,
+    .content-overview-card {
+      background: $dark-bg-secondary;
+      border-color: $dark-border-primary;
     }
-
-    &.critical {
-      background: linear-gradient(135deg, rgba($error-900, 0.3), rgba($error-800, 0.2));
-      border-color: $error-700;
-    }
-  }
-
-  .activity-card,
-  .system-status-card,
-  .content-overview-card {
-    background: $dark-bg-secondary;
-    border-color: $dark-border-primary;
   }
 }

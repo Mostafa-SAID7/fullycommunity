@@ -92,8 +92,8 @@
 // Column Sizes
 @for $i from 1 through 12 {
   .col-#{$i} {
-    flex: 0 0 percentage(math.div($i, 12));
-    max-width: percentage(math.div($i, 12));
+    flex: 0 0 percentage($i / 12);
+    max-width: percentage($i / 12);
     padding-left: $spacing-3;
     padding-right: $spacing-3;
   }
@@ -103,8 +103,8 @@
 @include respond-to('sm') {
   @for $i from 1 through 12 {
     .col-sm-#{$i} {
-      flex: 0 0 percentage(math.div($i, 12));
-      max-width: percentage(math.div($i, 12));
+      flex: 0 0 percentage($i / 12);
+      max-width: percentage($i / 12);
     }
   }
 }
@@ -112,8 +112,8 @@
 @include respond-to('md') {
   @for $i from 1 through 12 {
     .col-md-#{$i} {
-      flex: 0 0 percentage(math.div($i, 12));
-      max-width: percentage(math.div($i, 12));
+      flex: 0 0 percentage($i / 12);
+      max-width: percentage($i / 12);
     }
   }
 }
@@ -121,8 +121,8 @@
 @include respond-to('lg') {
   @for $i from 1 through 12 {
     .col-lg-#{$i} {
-      flex: 0 0 percentage(math.div($i, 12));
-      max-width: percentage(math.div($i, 12));
+      flex: 0 0 percentage($i / 12);
+      max-width: percentage($i / 12);
     }
   }
 }
@@ -130,8 +130,8 @@
 @include respond-to('xl') {
   @for $i from 1 through 12 {
     .col-xl-#{$i} {
-      flex: 0 0 percentage(math.div($i, 12));
-      max-width: percentage(math.div($i, 12));
+      flex: 0 0 percentage($i / 12);
+      max-width: percentage($i / 12);
     }
   }
 }

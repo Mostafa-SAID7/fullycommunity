@@ -23,941 +23,1128 @@
   animation: fadeIn 0.4s ease-out;
 }
 
-.analytics-section {
-  margin-top: $spacing-8;
-  animation: slideUp 0.5s ease-out;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-// Page Header
+// Realtime Stats Banner
 // -----------------------------------------------------------------------------
-.page-header {
-  @include flex-between;
-  margin-bottom: $spacing-8;
-
-  @include respond-below('md') {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: $spacing-4;
-  }
-
-  .header-content {
-    h1 {
-      @include heading(1);
-      background: linear-gradient(135deg, $color-primary, $color-primary-hover);
-      -webkit-background-clip: text;
-      background-clip: text;
-      margin-bottom: $spacing-2;
-
-      @include respond-below('md') {
-        font-size: $font-size-2xl;
-      }
-    }
-
-    p {
-      color: $text-secondary;
-      font-size: $font-size-lg;
-      margin: 0;
-
-      @include respond-below('md') {
-        font-size: $font-size-base;
-      }
-    }
-  }
-
-  .header-actions {
-    @include flex-start;
-    gap: $spacing-4;
-    flex-wrap: wrap;
-
-    @include respond-below('md') {
-      width: 100%;
-      justify-content: space-between;
-    }
-  }
-}
-
-// Controls & Inputs
-// -----------------------------------------------------------------------------
-.period-select,
-.filter-select {
-  @include input-base;
-  width: auto;
-  min-width: 140px;
-  padding: $spacing-2 $spacing-4;
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
-  background: $bg-primary;
-  border: 1px solid $border-primary;
-  border-radius: $border-radius-lg;
-  cursor: pointer;
-  transition: all $transition-fast;
-
-  &:hover {
-    border-color: $color-primary;
-  }
-
-  &:focus {
-    border-color: $color-primary;
-    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
-  }
-}
-
-.export-buttons {
-  @include flex-start;
-  gap: $spacing-2;
-  flex-wrap: wrap;
-
-  .export-btn {
-    @include button-base; // Using mixin if available, else standard styles
-    @include flex-center;
-    gap: $spacing-2;
-    padding: $spacing-2 $spacing-3;
-    font-size: $font-size-xs;
-    font-weight: $font-weight-bold;
-    text-transform: uppercase;
-    border-radius: $border-radius-md;
-    cursor: pointer;
-    transition: all $transition-fast;
-
-    // Button Variants
-    &.users-btn {
-      background: $bg-primary;
-      color: $text-secondary;
-      border: 1px solid $border-secondary;
-
-      &:hover {
-        background: $bg-tertiary;
-        border-color: $text-muted;
-      }
-    }
-
-    &.content-btn {
-      background: rgba($success-500, 0.1);
-      color: $success-700;
-      border: 1px solid transparent;
-
-      &:hover {
-        background: rgba($success-500, 0.2);
-      }
-    }
-
-    &.primary-btn {
-      background: linear-gradient(135deg, $primary-500, $primary-600);
-      color: $white;
-      border: none;
-      box-shadow: $shadow-sm;
-
-      &:hover {
-        box-shadow: $shadow-md;
-        transform: translateY(-1px);
-      }
-
-      .export-icon {
-        width: 16px;
-        height: 16px;
-      }
-    }
-  }
-}
-
-.view-all-btn {
-  padding: $spacing-2 $spacing-4;
-  background: $color-primary;
-  color: $white;
-  font-weight: $font-weight-medium;
-  font-size: $font-size-sm;
-  border: none;
-  border-radius: $border-radius-lg;
-  cursor: pointer;
-  transition: all $transition-fast;
-
-  &:hover {
-    background: $color-primary-hover;
-    box-shadow: $shadow-md;
-  }
-}
-
-// Card Components
-// -----------------------------------------------------------------------------
-.chart-card,
-.content-card {
-  background: $bg-primary;
+.realtime-banner {
+  background: linear-gradient(135deg, $bg-primary, $bg-secondary);
   border: 1px solid $border-primary;
   border-radius: $border-radius-xl;
+  padding: $spacing-4;
+  margin-bottom: $spacing-8;
   box-shadow: $shadow-sm;
-  padding: $spacing-6;
-  margin-bottom: $spacing-6;
-  transition: box-shadow $transition-slow;
 
-  &:hover {
-    box-shadow: $shadow-md;
-  }
-
-  .card-header {
-    @include flex-between;
-    margin-bottom: $spacing-6;
+  .realtime-grid {
+    display: flex;
     flex-wrap: wrap;
     gap: $spacing-4;
-
-    .header-text {
-      .card-title {
-        @include heading(3);
-        font-size: $font-size-xl;
-        margin-bottom: $spacing-1;
-      }
-
-      .card-subtitle {
-        color: $text-secondary;
-        font-size: $font-size-sm;
-      }
-    }
-
-    .header-filters {
-      @include flex-start;
-      gap: $spacing-3;
-    }
+    align-items: center;
+    justify-content: space-around;
   }
 
-  .card-subtitle-lg {
-    font-size: $font-size-lg;
-    font-weight: $font-weight-semibold;
-    color: $text-primary;
-    margin-bottom: $spacing-4;
-  }
-}
-
-// Top Content List
-// -----------------------------------------------------------------------------
-.top-content-list {
-  @include flex-column;
-  gap: $spacing-3;
-  max-height: 400px;
-  overflow-y: auto;
-  @extend .scrollbar-thin; // Assuming scrollbar-thin utility exists or defined in mixins
-
-  .content-item {
+  .realtime-item {
     display: flex;
     align-items: center;
-    gap: $spacing-4;
-    padding: $spacing-4;
-    background: linear-gradient(to right, $bg-primary, rgba($bg-secondary, 0.5));
-    border: 1px solid $border-primary;
-    border-radius: $border-radius-lg;
-    cursor: pointer;
-    transition: all $transition-fast;
+    gap: $spacing-3;
 
-    &:hover {
-      border-color: rgba($color-primary, 0.3);
-      box-shadow: $shadow-sm;
-      transform: translateX(2px);
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background: $success-500;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px rgba($success-500, 0.2);
     }
 
-    .item-rank {
-      flex-shrink: 0;
-
-      .rank-badge {
-        width: 3rem;
-        height: 3rem;
-        @include flex-center;
-        background: linear-gradient(135deg, $primary-500, $primary-600);
-        color: $white;
+    .realtime-content {
+      .label {
+        font-size: $font-size-xs;
+        color: $text-secondary;
+        text-transform: uppercase;
         font-weight: $font-weight-bold;
-        font-size: $font-size-lg;
-        border-radius: $border-radius-lg;
-        box-shadow: $shadow-sm;
-      }
-    }
-
-    .item-details {
-      flex: 1;
-      min-width: 0;
-
-      .item-main-info {
-        @include flex-start;
-        gap: $spacing-3;
-        margin-bottom: $spacing-2;
-
-        .item-title {
-          font-size: $font-size-lg;
-          font-weight: $font-weight-bold;
-          color: $text-primary;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .item-type-badge {
-          padding: 0.25rem 0.75rem;
-          font-size: $font-size-xs;
-          font-weight: $font-weight-bold;
-          text-transform: uppercase;
-          border-radius: $border-radius-full;
-          border: 1px solid transparent;
-
-          &.post {
-            background: $info-50;
-            color: $info-700;
-            border-color: $info-200;
-          }
-
-          &.review {
-            background: $success-50;
-            color: $success-700;
-            border-color: $success-200;
-          }
-
-          &.guide {
-            background: $purple-50;
-            color: $purple-700;
-            border-color: $purple-200;
-          }
-        }
+        margin-bottom: 2px;
       }
 
-      .item-metrics {
-        @include flex-start;
-        gap: $spacing-6;
-
-        .metric {
-          @include flex-start;
-          gap: $spacing-2;
-          font-size: $font-size-sm;
-
-          .metric-icon {
-            color: $text-muted;
-          }
-
-          .metric-value {
-            font-weight: $font-weight-semibold;
-            color: $text-primary;
-
-            &.high-engagement {
-              color: $success-600;
-            }
-          }
-
-          .metric-label {
-            color: $text-secondary;
-          }
-        }
-      }
-    }
-
-    .item-arrow {
-      color: $text-muted;
-      transition: transform $transition-fast;
-    }
-
-    &:hover .item-arrow {
-      transform: translateX(4px);
-      color: $color-primary;
-    }
-  }
-}
-
-// User Growth Tab
-// -----------------------------------------------------------------------------
-.demographics-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: $spacing-6;
-
-  @include respond-to('lg') {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.age-distribution-list {
-  @include flex-column;
-  gap: $spacing-4;
-
-  .age-item {
-    @include flex-between;
-
-    .age-range {
-      font-size: $font-size-sm;
-      font-weight: $font-weight-medium;
-      color: $text-secondary;
-      width: 60px;
-    }
-
-    .age-bar-wrapper {
-      flex: 1;
-      @include flex-start;
-      gap: $spacing-3;
-
-      .age-bar-track {
-        flex: 1;
-        height: 8px;
-        background: $bg-tertiary;
-        border-radius: $border-radius-full;
-        overflow: hidden;
-
-        .age-bar-fill {
-          height: 100%;
-          background: linear-gradient(90deg, $primary-400, $primary-600);
-          border-radius: $border-radius-full;
-        }
-      }
-
-      .age-percentage {
-        font-size: $font-size-sm;
+      .value {
+        font-size: $font-size-xl;
         font-weight: $font-weight-bold;
         color: $text-primary;
-        width: 40px;
-        text-align: right;
+        line-height: 1;
       }
     }
   }
 }
 
-// Retention Cards
-.retention-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: $spacing-6;
-
-  @include respond-to('md') {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .retention-item {
-    text-align: center;
-    padding: $spacing-4;
-    background: $bg-secondary;
-    border-radius: $border-radius-lg;
-
-    .retention-value {
-      font-size: $font-size-3xl;
-      font-weight: $font-weight-bold;
-      margin-bottom: $spacing-2;
-
-      &.text-green-600 {
-        color: $success-600;
-      }
-
-      &.text-yellow-500 {
-        color: $warning-500;
-      }
-
-      &.text-red-500 {
-        color: $error-500;
-      }
-    }
-
-    .retention-label {
-      font-size: $font-size-xs;
-      color: $text-secondary;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-  }
-}
-
-// Predictions
-.prediction-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: $spacing-4;
-
-  @include respond-to('md') {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .prediction-item {
-    text-align: center;
-    padding: $spacing-6;
-    border-radius: $border-radius-lg;
-    border: 1px solid transparent;
-
-    &.blue-theme {
-      background: $info-50;
-      color: $info-700;
-      border-color: $info-100;
-    }
-
-    &.green-theme {
-      background: $success-50;
-      color: $success-700;
-      border-color: $success-100;
-    }
-
-    &.purple-theme {
-      background: $purple-50;
-      color: $purple-700;
-      border-color: $purple-100;
-    }
-
-    .prediction-value {
-      font-size: $font-size-2xl;
-      font-weight: $font-weight-bold;
-      margin-bottom: $spacing-2;
-    }
-
-    .prediction-label {
-      font-size: $font-size-sm;
-      opacity: 0.9;
-    }
-  }
-}
-
-// Engagement Trends
+// Overview Section
 // -----------------------------------------------------------------------------
-.trends-grid {
+.overview-stats-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: $spacing-4;
+  grid-template-columns: repeat(1, 1fr);
+  gap: $spacing-6;
+  margin-bottom: $spacing-8;
 
   @include respond-to('md') {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @include respond-to('lg') {
-    grid-template-columns: repeat(3, 1fr);
+  @include respond-to('xl') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.platform-summary {
+  margin-bottom: $spacing-8;
+
+  h3 {
+    @include heading(3);
+    margin-bottom: $spacing-4;
+    color: $text-primary;
   }
 
-  .trend-item {
-    padding: $spacing-4;
-    border: 1px solid $border-primary;
-    border-radius: $border-radius-lg;
-    background: $bg-primary;
-    transition: transform $transition-fast;
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-4;
 
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: $shadow-sm;
+    @include respond-to('lg') {
+      grid-template-columns: repeat(3, 1fr);
+      gap: $spacing-6;
     }
 
-    .trend-header {
-      @include flex-between;
-      margin-bottom: $spacing-2;
+    @include respond-to('xl') {
+      grid-template-columns: repeat(6, 1fr);
+    }
 
-      .trend-metric-name {
-        font-weight: $font-weight-medium;
+    .summary-item {
+      background: $bg-primary;
+      padding: $spacing-4;
+      border-radius: $border-radius-lg;
+      border: 1px solid $border-primary;
+      text-align: center;
+      transition: transform $transition-fast;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-sm;
+      }
+
+      .icon {
+        font-size: 1.5rem;
+        margin-bottom: $spacing-2;
+      }
+
+      .value {
+        font-size: $font-size-xl;
+        font-weight: $font-weight-bold;
+        margin-bottom: $spacing-1;
         color: $text-primary;
       }
 
-      .trend-icon {
-        font-size: $font-size-xl;
+      .label {
+        font-size: $font-size-xs;
+        color: $text-secondary;
+      }
+
+      &.blue {
+        .icon {
+          color: $info-500;
+        }
+
+        background: linear-gradient(to bottom right, $bg-primary, rgba($info-500, 0.05));
+      }
+
+      &.green {
+        .icon {
+          color: $success-500;
+        }
+
+        background: linear-gradient(to bottom right, $bg-primary, rgba($success-500, 0.05));
+      }
+
+      &.yellow {
+        .icon {
+          color: $warning-500;
+        }
+
+        background: linear-gradient(to bottom right, $bg-primary, rgba($warning-500, 0.05));
+      }
+
+      &.purple {
+        .icon {
+          color: $purple-500;
+        }
+
+        background: linear-gradient(to bottom right, $bg-primary, rgba($purple-500, 0.05));
+      }
+
+      &.pink {
+        .icon {
+          color: $error-500;
+        }
+
+        background: linear-gradient(to bottom right, $bg-primary, rgba($error-500, 0.05));
+      }
+
+      &.indigo {
+        .icon {
+          color: $primary-500;
+        }
+
+        background: linear-gradient(to bottom right, $bg-primary, rgba($primary-500, 0.05));
+      }
+    }
+  }
+
+
+  .analytics-section {
+    margin-top: $spacing-8;
+    animation: slideUp 0.5s ease-out;
+  }
+
+  // Page Header
+  // -----------------------------------------------------------------------------
+  .page-header {
+    @include flex-between;
+    margin-bottom: $spacing-8;
+
+    @include respond-below('md') {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-4;
+    }
+
+    .header-content {
+      h1 {
+        @include heading(1);
+        background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+        -webkit-background-clip: text;
+        background-clip: text;
+        margin-bottom: $spacing-2;
+
+        @include respond-below('md') {
+          font-size: $font-size-2xl;
+        }
+      }
+
+      p {
+        color: $text-secondary;
+        font-size: $font-size-lg;
+        margin: 0;
+
+        @include respond-below('md') {
+          font-size: $font-size-base;
+        }
       }
     }
 
-    .trend-stats {
-      margin-bottom: $spacing-2;
+    .header-actions {
+      @include flex-start;
+      gap: $spacing-4;
+      flex-wrap: wrap;
 
-      .trend-value {
-        font-size: $font-size-2xl;
+      @include respond-below('md') {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  }
+
+  // Controls & Inputs
+  // -----------------------------------------------------------------------------
+  .period-select,
+  .filter-select {
+    @include input-base;
+    width: auto;
+    min-width: 140px;
+    padding: $spacing-2 $spacing-4;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    background: $bg-primary;
+    border: 1px solid $border-primary;
+    border-radius: $border-radius-lg;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      border-color: $color-primary;
+    }
+
+    &:focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+    }
+  }
+
+  .export-buttons {
+    @include flex-start;
+    gap: $spacing-2;
+    flex-wrap: wrap;
+
+    .export-btn {
+      @include button-base; // Using mixin if available, else standard styles
+      @include flex-center;
+      gap: $spacing-2;
+      padding: $spacing-2 $spacing-3;
+      font-size: $font-size-xs;
+      font-weight: $font-weight-bold;
+      text-transform: uppercase;
+      border-radius: $border-radius-md;
+      cursor: pointer;
+      transition: all $transition-fast;
+
+      // Button Variants
+      &.users-btn {
+        background: $bg-primary;
+        color: $text-secondary;
+        border: 1px solid $border-secondary;
+
+        &:hover {
+          background: $bg-tertiary;
+          border-color: $text-muted;
+        }
+      }
+
+      &.content-btn {
+        background: rgba($success-500, 0.1);
+        color: $success-700;
+        border: 1px solid transparent;
+
+        &:hover {
+          background: rgba($success-500, 0.2);
+        }
+      }
+
+      &.primary-btn {
+        background: linear-gradient(135deg, $primary-500, $primary-600);
+        color: $white;
+        border: none;
+        box-shadow: $shadow-sm;
+
+        &:hover {
+          box-shadow: $shadow-md;
+          transform: translateY(-1px);
+        }
+
+        .export-icon {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+
+  .view-all-btn {
+    padding: $spacing-2 $spacing-4;
+    background: $color-primary;
+    color: $white;
+    font-weight: $font-weight-medium;
+    font-size: $font-size-sm;
+    border: none;
+    border-radius: $border-radius-lg;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: $color-primary-hover;
+      box-shadow: $shadow-md;
+    }
+  }
+
+  .chart-full-width {
+    width: 100%;
+  }
+
+  // Card Components
+  // -----------------------------------------------------------------------------
+  .chart-card,
+  .content-card {
+    background: $bg-primary;
+    border: 1px solid $border-primary;
+    border-radius: $border-radius-xl;
+    box-shadow: $shadow-sm;
+    padding: $spacing-6;
+    margin-bottom: $spacing-6;
+    transition: box-shadow $transition-slow;
+
+    &:hover {
+      box-shadow: $shadow-md;
+    }
+
+    .card-header {
+      @include flex-between;
+      margin-bottom: $spacing-6;
+      flex-wrap: wrap;
+      gap: $spacing-4;
+
+      .header-text {
+        .card-title {
+          @include heading(3);
+          font-size: $font-size-xl;
+          margin-bottom: $spacing-1;
+        }
+
+        .card-subtitle {
+          color: $text-secondary;
+          font-size: $font-size-sm;
+        }
+      }
+
+      .header-filters {
+        @include flex-start;
+        gap: $spacing-3;
+      }
+    }
+
+    .card-subtitle-lg {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+      margin-bottom: $spacing-4;
+    }
+  }
+
+  // Top Content List
+  // -----------------------------------------------------------------------------
+  .top-content-list {
+    @include flex-column;
+    gap: $spacing-3;
+    max-height: 400px;
+    overflow-y: auto;
+    @extend .scrollbar-thin; // Assuming scrollbar-thin utility exists or defined in mixins
+
+    .content-item {
+      display: flex;
+      align-items: center;
+      gap: $spacing-4;
+      padding: $spacing-4;
+      background: linear-gradient(to right, $bg-primary, rgba($bg-secondary, 0.5));
+      border: 1px solid $border-primary;
+      border-radius: $border-radius-lg;
+      cursor: pointer;
+      transition: all $transition-fast;
+
+      &:hover {
+        border-color: rgba($color-primary, 0.3);
+        box-shadow: $shadow-sm;
+        transform: translateX(2px);
+      }
+
+      .item-rank {
+        flex-shrink: 0;
+
+        .rank-badge {
+          width: 3rem;
+          height: 3rem;
+          @include flex-center;
+          background: linear-gradient(135deg, $primary-500, $primary-600);
+          color: $white;
+          font-weight: $font-weight-bold;
+          font-size: $font-size-lg;
+          border-radius: $border-radius-lg;
+          box-shadow: $shadow-sm;
+        }
+      }
+
+      .item-details {
+        flex: 1;
+        min-width: 0;
+
+        .item-main-info {
+          @include flex-start;
+          gap: $spacing-3;
+          margin-bottom: $spacing-2;
+
+          .item-title {
+            font-size: $font-size-lg;
+            font-weight: $font-weight-bold;
+            color: $text-primary;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          .item-type-badge {
+            padding: 0.25rem 0.75rem;
+            font-size: $font-size-xs;
+            font-weight: $font-weight-bold;
+            text-transform: uppercase;
+            border-radius: $border-radius-full;
+            border: 1px solid transparent;
+
+            &.post {
+              background: $info-50;
+              color: $info-700;
+              border-color: $info-200;
+            }
+
+            &.review {
+              background: $success-50;
+              color: $success-700;
+              border-color: $success-200;
+            }
+
+            &.guide {
+              background: $purple-50;
+              color: $purple-700;
+              border-color: $purple-200;
+            }
+          }
+        }
+
+        .item-metrics {
+          @include flex-start;
+          gap: $spacing-6;
+
+          .metric {
+            @include flex-start;
+            gap: $spacing-2;
+            font-size: $font-size-sm;
+
+            .metric-icon {
+              color: $text-muted;
+            }
+
+            .metric-value {
+              font-weight: $font-weight-semibold;
+              color: $text-primary;
+
+              &.high-engagement {
+                color: $success-600;
+              }
+            }
+
+            .metric-label {
+              color: $text-secondary;
+            }
+          }
+        }
+      }
+
+      .item-arrow {
+        color: $text-muted;
+        transition: transform $transition-fast;
+      }
+
+      &:hover .item-arrow {
+        transform: translateX(4px);
+        color: $color-primary;
+      }
+    }
+  }
+
+  // User Growth Tab
+  // -----------------------------------------------------------------------------
+  .demographics-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-6;
+
+    @include respond-to('lg') {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .age-distribution-list {
+    @include flex-column;
+    gap: $spacing-4;
+
+    .age-item {
+      @include flex-between;
+
+      .age-range {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        color: $text-secondary;
+        width: 60px;
+      }
+
+      .age-bar-wrapper {
+        flex: 1;
+        @include flex-start;
+        gap: $spacing-3;
+
+        .age-bar-track {
+          flex: 1;
+          height: 8px;
+          background: $bg-tertiary;
+          border-radius: $border-radius-full;
+          overflow: hidden;
+
+          .age-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, $primary-400, $primary-600);
+            border-radius: $border-radius-full;
+          }
+        }
+
+        .age-percentage {
+          font-size: $font-size-sm;
+          font-weight: $font-weight-bold;
+          color: $text-primary;
+          width: 40px;
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  // Retention Cards
+  .retention-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-6;
+
+    @include respond-to('md') {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .retention-item {
+      text-align: center;
+      padding: $spacing-4;
+      background: $bg-secondary;
+      border-radius: $border-radius-lg;
+
+      .retention-value {
+        font-size: $font-size-3xl;
         font-weight: $font-weight-bold;
+        margin-bottom: $spacing-2;
 
-        &.up {
+        &.success {
           color: $success-600;
         }
 
-        &.down {
-          color: $error-600;
+        &.warning {
+          color: $warning-500;
         }
 
-        &.stable {
-          color: $text-secondary;
-        }
-      }
-    }
-
-    .trend-description {
-      font-size: $font-size-xs;
-      color: $text-muted;
-      margin: 0;
-    }
-  }
-}
-
-// Audience Insights
-// -----------------------------------------------------------------------------
-.insights-list {
-  display: grid;
-  gap: $spacing-4;
-
-  .insight-item {
-    padding: $spacing-4;
-    border: 1px solid $border-primary;
-    border-radius: $border-radius-lg;
-    background: $bg-surface;
-
-    .insight-header {
-      @include flex-between;
-      margin-bottom: $spacing-3;
-      flex-wrap: wrap;
-
-      .insight-segment {
-        font-weight: $font-weight-bold;
-        color: $text-primary;
-      }
-
-      .insight-metrics {
-        @include flex-start;
-        gap: $spacing-4;
-        font-size: $font-size-sm;
-
-        .insight-size {
-          color: $text-secondary;
-        }
-
-        .insight-rate {
-          color: $color-primary;
-          font-weight: $font-weight-medium;
+        &.danger {
+          color: $error-500;
         }
       }
-    }
 
-    .insight-details {
-      margin-bottom: $spacing-2;
-      font-size: $font-size-sm;
-    }
-
-    .insight-preferences {
-      .preference-tags {
-        @include flex-start;
-        flex-wrap: wrap;
-        gap: $spacing-2;
-        margin-top: $spacing-1;
-
-        .preference-tag {
-          padding: 2px 8px;
-          background: $info-50;
-          color: $info-700;
-          border-radius: $border-radius-full;
-          font-size: $font-size-xs;
-          font-weight: $font-weight-medium;
-        }
+      .retention-label {
+        font-size: $font-size-xs;
+        color: $text-secondary;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
       }
     }
-
-    .detail-label {
-      color: $text-secondary;
-    }
-
-    .detail-value {
-      font-weight: $font-weight-medium;
-      color: $text-primary;
-    }
-  }
-}
-
-// Localization Promo
-// -----------------------------------------------------------------------------
-.localization-promo {
-  text-center: center;
-  padding: $spacing-8 $spacing-4;
-
-  .promo-icon-wrapper {
-    width: 4rem;
-    height: 4rem;
-    background: $info-50;
-    border-radius: 50%;
-    @include flex-center;
-    margin: 0 auto $spacing-4;
-
-    .promo-icon {
-      font-size: $font-size-2xl;
-      color: $info-600;
-    }
   }
 
-  .promo-title {
-    font-size: $font-size-xl;
-    font-weight: $font-weight-bold;
-    color: $text-primary;
-    margin-bottom: $spacing-2;
-  }
-
-  .promo-description {
-    color: $text-secondary;
-    max-width: 600px;
-    margin: 0 auto $spacing-8;
-  }
-
-  .promo-features {
+  // Predictions
+  .prediction-grid {
     display: grid;
-    gap: $spacing-6;
-    max-width: 800px;
-    margin: 0 auto;
+    grid-template-columns: 1fr;
+    gap: $spacing-4;
 
     @include respond-to('md') {
       grid-template-columns: repeat(3, 1fr);
     }
 
-    .feature-item {
-      padding: $spacing-4;
-      border-radius: $border-radius-lg;
+    .prediction-item {
       text-align: center;
+      padding: $spacing-6;
+      border-radius: $border-radius-lg;
+      border: 1px solid transparent;
 
       &.blue-theme {
         background: $info-50;
-
-        .feature-icon {
-          color: $info-600;
-        }
+        color: $info-700;
+        border-color: $info-100;
       }
 
       &.green-theme {
         background: $success-50;
-
-        .feature-icon {
-          color: $success-600;
-        }
+        color: $success-700;
+        border-color: $success-100;
       }
 
       &.purple-theme {
         background: $purple-50;
-
-        .feature-icon {
-          color: $purple-600;
-        }
+        color: $purple-700;
+        border-color: $purple-100;
       }
 
-      .feature-icon {
+      .prediction-value {
         font-size: $font-size-2xl;
+        font-weight: $font-weight-bold;
         margin-bottom: $spacing-2;
       }
 
-      .feature-title {
-        font-weight: $font-weight-bold;
-        color: $text-primary;
-        margin-bottom: $spacing-1;
-      }
-
-      .feature-subtitle {
-        font-size: $font-size-xs;
-        color: $text-secondary;
+      .prediction-label {
+        font-size: $font-size-sm;
+        opacity: 0.9;
       }
     }
   }
-}
 
-// Empty State
-.empty-state {
-  text-align: center;
-  padding: $spacing-12 $spacing-4;
-  color: $text-muted;
+  // Engagement Trends
+  // -----------------------------------------------------------------------------
+  .trends-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-4;
 
-  .empty-icon-wrapper {
-    width: 4rem;
-    height: 4rem;
-    background: $bg-tertiary;
-    border-radius: 50%;
-    @include flex-center;
-    margin: 0 auto $spacing-4;
-
-    .empty-icon {
-      font-size: $font-size-xl;
-      opacity: 0.5;
-    }
-  }
-
-  .empty-title {
-    font-size: $font-size-lg;
-    font-weight: $font-weight-semibold;
-    color: $text-primary;
-    margin-bottom: $spacing-2;
-  }
-
-  .empty-description {
-    font-size: $font-size-sm;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-}
-
-// Dark Mode Support
-// -----------------------------------------------------------------------------
-@include dark-mode {
-  :host {
-    background: $dark-bg-primary;
-  }
-
-  .chart-card,
-  .content-card {
-    background: $dark-bg-secondary;
-    border-color: $dark-border-primary;
-
-    .card-title,
-    .card-subtitle-lg,
-    .promo-title,
-    .empty-title {
-      color: $dark-text-primary;
+    @include respond-to('md') {
+      grid-template-columns: repeat(2, 1fr);
     }
 
-    .card-subtitle,
-    .promo-description,
-    .empty-description {
-      color: $dark-text-secondary;
+    @include respond-to('lg') {
+      grid-template-columns: repeat(3, 1fr);
     }
-  }
 
-  .period-select,
-  .filter-select {
-    background: $dark-bg-secondary;
-    color: $dark-text-primary;
-    border-color: $dark-border-primary;
-
-    &:hover,
-    &:focus {
-      border-color: $color-primary;
-    }
-  }
-
-  .export-buttons .export-btn.users-btn {
-    background: $dark-bg-secondary;
-    color: $dark-text-secondary;
-    border-color: $dark-border-secondary;
-
-    &:hover {
-      background: $dark-bg-tertiary;
-      color: $dark-text-primary;
-    }
-  }
-
-  .top-content-list {
-    .content-item {
-      background: linear-gradient(to right, $dark-bg-secondary, rgba($dark-bg-tertiary, 0.5));
-      border-color: $dark-border-primary;
+    .trend-item {
+      padding: $spacing-4;
+      border: 1px solid $border-primary;
+      border-radius: $border-radius-lg;
+      background: $bg-primary;
+      transition: transform $transition-fast;
 
       &:hover {
-        border-color: rgba($color-primary, 0.5);
+        transform: translateY(-2px);
+        box-shadow: $shadow-sm;
+      }
+
+      .trend-header {
+        @include flex-between;
+        margin-bottom: $spacing-2;
+
+        .trend-metric-name {
+          font-weight: $font-weight-medium;
+          color: $text-primary;
+        }
+
+        .trend-icon {
+          font-size: $font-size-xl;
+        }
+      }
+
+      .trend-stats {
+        margin-bottom: $spacing-2;
+
+        .trend-value {
+          font-size: $font-size-2xl;
+          font-weight: $font-weight-bold;
+
+          &.up {
+            color: $success-600;
+          }
+
+          &.down {
+            color: $error-600;
+          }
+
+          &.stable {
+            color: $text-secondary;
+          }
+        }
+      }
+
+      .trend-description {
+        font-size: $font-size-xs;
+        color: $text-muted;
+        margin: 0;
+      }
+    }
+  }
+
+  // Audience Insights
+  // -----------------------------------------------------------------------------
+  .insights-list {
+    display: grid;
+    gap: $spacing-4;
+
+    .insight-item {
+      padding: $spacing-4;
+      border: 1px solid $border-primary;
+      border-radius: $border-radius-lg;
+      background: $bg-surface;
+
+      .insight-header {
+        @include flex-between;
+        margin-bottom: $spacing-3;
+        flex-wrap: wrap;
+
+        .insight-segment {
+          font-weight: $font-weight-bold;
+          color: $text-primary;
+        }
+
+        .insight-metrics {
+          @include flex-start;
+          gap: $spacing-4;
+          font-size: $font-size-sm;
+
+          .insight-size {
+            color: $text-secondary;
+          }
+
+          .insight-rate {
+            color: $color-primary;
+            font-weight: $font-weight-medium;
+          }
+        }
+      }
+
+      .insight-details {
+        margin-bottom: $spacing-2;
+        font-size: $font-size-sm;
+      }
+
+      .insight-preferences {
+        .preference-tags {
+          @include flex-start;
+          flex-wrap: wrap;
+          gap: $spacing-2;
+          margin-top: $spacing-1;
+
+          .preference-tag {
+            padding: 2px 8px;
+            background: $info-50;
+            color: $info-700;
+            border-radius: $border-radius-full;
+            font-size: $font-size-xs;
+            font-weight: $font-weight-medium;
+          }
+        }
+      }
+
+      .detail-label {
+        color: $text-secondary;
+      }
+
+      .detail-value {
+        font-weight: $font-weight-medium;
+        color: $text-primary;
+      }
+    }
+  }
+
+  // Localization Promo
+  // -----------------------------------------------------------------------------
+  .localization-promo {
+    text-align: center;
+    padding: $spacing-8 $spacing-4;
+
+    .promo-icon-wrapper {
+      width: 4rem;
+      height: 4rem;
+      background: $info-50;
+      border-radius: 50%;
+      @include flex-center;
+      margin: 0 auto $spacing-4;
+
+      .promo-icon {
+        font-size: $font-size-2xl;
+        color: $info-600;
+      }
+    }
+
+    .promo-title {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin-bottom: $spacing-2;
+    }
+
+    .promo-description {
+      color: $text-secondary;
+      max-width: 600px;
+      margin: 0 auto $spacing-8;
+    }
+
+    .promo-features {
+      display: grid;
+      gap: $spacing-6;
+      max-width: 800px;
+      margin: 0 auto;
+
+      @include respond-to('md') {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .feature-item {
+        padding: $spacing-4;
+        border-radius: $border-radius-lg;
+        text-align: center;
+
+        &.blue-theme {
+          background: $info-50;
+
+          .feature-icon {
+            color: $info-600;
+          }
+        }
+
+        &.green-theme {
+          background: $success-50;
+
+          .feature-icon {
+            color: $success-600;
+          }
+        }
+
+        &.purple-theme {
+          background: $purple-50;
+
+          .feature-icon {
+            color: $purple-600;
+          }
+        }
+
+        .feature-icon {
+          font-size: $font-size-2xl;
+          margin-bottom: $spacing-2;
+        }
+
+        .feature-title {
+          font-weight: $font-weight-bold;
+          color: $text-primary;
+          margin-bottom: $spacing-1;
+        }
+
+        .feature-subtitle {
+          font-size: $font-size-xs;
+          color: $text-secondary;
+        }
+      }
+    }
+  }
+
+  // Empty State
+  .empty-state {
+    text-align: center;
+    padding: $spacing-12 $spacing-4;
+    color: $text-muted;
+
+    .empty-icon-wrapper {
+      width: 4rem;
+      height: 4rem;
+      background: $bg-tertiary;
+      border-radius: 50%;
+      @include flex-center;
+      margin: 0 auto $spacing-4;
+
+      .empty-icon {
+        font-size: $font-size-xl;
+        opacity: 0.5;
+      }
+    }
+
+    .empty-title {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $text-primary;
+      margin-bottom: $spacing-2;
+    }
+
+    .empty-description {
+      font-size: $font-size-sm;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  }
+
+  // Dark Mode Support
+  // -----------------------------------------------------------------------------
+  @include dark-mode {
+    :host {
+      background: $dark-bg-primary;
+    }
+
+    .chart-card,
+    .content-card {
+      background: $dark-bg-secondary;
+      border-color: $dark-border-primary;
+
+      .card-title,
+      .card-subtitle-lg,
+      .promo-title,
+      .empty-title {
+        color: $dark-text-primary;
+      }
+
+      .card-subtitle,
+      .promo-description,
+      .empty-description {
+        color: $dark-text-secondary;
+      }
+    }
+
+    .period-select,
+    .filter-select {
+      background: $dark-bg-secondary;
+      color: $dark-text-primary;
+      border-color: $dark-border-primary;
+
+      &:hover,
+      &:focus {
+        border-color: $color-primary;
+      }
+    }
+
+    .export-buttons .export-btn.users-btn {
+      background: $dark-bg-secondary;
+      color: $dark-text-secondary;
+      border-color: $dark-border-secondary;
+
+      &:hover {
+        background: $dark-bg-tertiary;
+        color: $dark-text-primary;
+      }
+    }
+
+    .top-content-list {
+      .content-item {
+        background: linear-gradient(to right, $dark-bg-secondary, rgba($dark-bg-tertiary, 0.5));
+        border-color: $dark-border-primary;
+
+        &:hover {
+          border-color: rgba($color-primary, 0.5);
+          background: $dark-bg-tertiary;
+        }
+
+        .item-details .item-main-info {
+          .item-title {
+            color: $dark-text-primary;
+          }
+
+          .item-type-badge {
+            &.post {
+              background: rgba($info-900, 0.3);
+              color: $info-300;
+              border-color: $info-800;
+            }
+
+            &.review {
+              background: rgba($success-900, 0.3);
+              color: $success-300;
+              border-color: $success-800;
+            }
+
+            &.guide {
+              background: rgba($purple-900, 0.3);
+              color: $purple-300;
+              border-color: $purple-800;
+            }
+          }
+        }
+
+        .item-metrics .metric {
+          .metric-icon {
+            color: $text-muted;
+          }
+
+          .metric-value {
+            color: $dark-text-primary;
+          }
+
+          .metric-label {
+            color: $dark-text-secondary;
+          }
+        }
+      }
+    }
+
+    .retention-grid .retention-item {
+      background: $dark-bg-tertiary;
+
+      .retention-value {
+        color: $dark-text-primary;
+      }
+
+      // Override generic text color
+    }
+
+    .prediction-grid .prediction-item {
+      background: $dark-bg-tertiary !important; // Force overrides of light theme colors
+      color: $dark-text-primary !important;
+      border-color: $dark-border-primary !important;
+    }
+
+    .trends-grid .trend-item {
+      background: $dark-bg-secondary;
+      border-color: $dark-border-primary;
+
+      .trend-header .trend-metric-name {
+        color: $dark-text-primary;
+      }
+
+      .trend-stats .trend-value.stable {
+        color: $dark-text-secondary;
+      }
+    }
+
+    .insights-list .insight-item {
+      background: $dark-bg-tertiary;
+      border-color: $dark-border-primary;
+
+      .insight-header .insight-segment {
+        color: $dark-text-primary;
+      }
+
+      .insight-metrics .insight-size {
+        color: $dark-text-secondary;
+      }
+
+      .detail-label {
+        color: $dark-text-secondary;
+      }
+
+      .detail-value {
+        color: $dark-text-primary;
+      }
+
+      .preference-tag {
+        background: rgba($info-900, 0.3);
+        color: $info-300;
+      }
+    }
+
+    .localization-promo {
+      .promo-icon-wrapper {
         background: $dark-bg-tertiary;
       }
 
-      .item-details .item-main-info {
-        .item-title {
+      .feature-item {
+        background: $dark-bg-tertiary !important; // Override light theme classes
+
+        .feature-title {
           color: $dark-text-primary;
         }
 
-        .item-type-badge {
-          &.post {
-            background: rgba($info-900, 0.3);
-            color: $info-300;
-            border-color: $info-800;
-          }
-
-          &.review {
-            background: rgba($success-900, 0.3);
-            color: $success-300;
-            border-color: $success-800;
-          }
-
-          &.guide {
-            background: rgba($purple-900, 0.3);
-            color: $purple-300;
-            border-color: $purple-800;
-          }
-        }
-      }
-
-      .item-metrics .metric {
-        .metric-icon {
-          color: $text-muted;
-        }
-
-        .metric-value {
-          color: $dark-text-primary;
-        }
-
-        .metric-label {
+        .feature-subtitle {
           color: $dark-text-secondary;
         }
       }
     }
-  }
 
-  .retention-grid .retention-item {
-    background: $dark-bg-tertiary;
-
-    .retention-value {
-      color: $dark-text-primary;
-    }
-
-    // Override generic text color
-  }
-
-  .prediction-grid .prediction-item {
-    background: $dark-bg-tertiary !important; // Force overrides of light theme colors
-    color: $dark-text-primary !important;
-    border-color: $dark-border-primary !important;
-  }
-
-  .trends-grid .trend-item {
-    background: $dark-bg-secondary;
-    border-color: $dark-border-primary;
-
-    .trend-header .trend-metric-name {
-      color: $dark-text-primary;
-    }
-
-    .trend-stats .trend-value.stable {
-      color: $dark-text-secondary;
-    }
-  }
-
-  .insights-list .insight-item {
-    background: $dark-bg-tertiary;
-    border-color: $dark-border-primary;
-
-    .insight-header .insight-segment {
-      color: $dark-text-primary;
-    }
-
-    .insight-metrics .insight-size {
-      color: $dark-text-secondary;
-    }
-
-    .detail-label {
-      color: $dark-text-secondary;
-    }
-
-    .detail-value {
-      color: $dark-text-primary;
-    }
-
-    .preference-tag {
-      background: rgba($info-900, 0.3);
-      color: $info-300;
-    }
-  }
-
-  .localization-promo {
-    .promo-icon-wrapper {
-      background: $dark-bg-tertiary;
-    }
-
-    .feature-item {
-      background: $dark-bg-tertiary !important; // Override light theme classes
-
-      .feature-title {
-        color: $dark-text-primary;
-      }
-
-      .feature-subtitle {
-        color: $dark-text-secondary;
+    .empty-state {
+      .empty-icon-wrapper {
+        background: $dark-bg-tertiary;
       }
     }
   }
 
-  .empty-state {
-    .empty-icon-wrapper {
-      background: $dark-bg-tertiary;
+  // Animations
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
     }
-  }
-}
 
-// Animations
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }}

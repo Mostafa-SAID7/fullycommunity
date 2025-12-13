@@ -47,5 +47,6 @@ export * from './forms/verification-form/verification-form.component';
 // export * from './forms/form-field/form-field.component';
 
 // Component Utilities
-export * from './components/logo-button/logo-button.component';
+// Logo button is now in admin-header components
+// export * from './components/logo-button/logo-button.component';
 export * from './components/copyright/copyright.component';

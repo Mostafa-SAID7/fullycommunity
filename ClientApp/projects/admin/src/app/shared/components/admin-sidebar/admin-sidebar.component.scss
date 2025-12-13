@@ -461,4 +461,59 @@
   .help-divider .divider-line {
     background: $dark-border-primary;
   }
+
+  // Ensure all text is visible in dark mode
+  .dashboard-link,
+  .nav-link,
+  .icon-link,
+  .help-link,
+  .profile-link {
+    color: $dark-text-primary;
+
+    &:hover {
+      color: $color-primary;
+      background: rgba($color-primary, 0.1);
+    }
+
+    &.active {
+      color: $color-primary;
+    }
+  }
+
+  .section-header {
+    color: $dark-text-secondary;
+
+    &:hover {
+      color: $dark-text-primary;
+    }
+  }
+
+  .dashboard-text,
+  .nav-text,
+  .help-text,
+  .profile-text {
+    color: inherit;
+  }
+
+  // Icons in dark mode
+  .dashboard-icon,
+  .nav-icon,
+  .icon,
+  .help-icon,
+  .profile-icon {
+    color: $dark-text-secondary;
+  }
+
+  .dashboard-link:hover .dashboard-icon,
+  .nav-link:hover .nav-icon,
+  .icon-link:hover .icon,
+  .help-link:hover .help-icon,
+  .profile-link:hover .profile-icon,
+  .active .dashboard-icon,
+  .active .nav-icon,
+  .active .icon,
+  .active .help-icon,
+  .active .profile-icon {
+    color: $color-primary;
+  }
 }

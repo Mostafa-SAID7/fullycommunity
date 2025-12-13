@@ -1,26 +1,37 @@
-<div 
-  [class]="containerClasses"
-  class="logo-container"
-  [style.width.px]="size"
-  [style.height.px]="size">
-  
-  <!-- 3D Effect Layers -->
-  <div class="highlight-layer"></div>
-  <div class="shadow-layer"></div>
-  
-  <!-- Shine Effect -->
-  <div class="shine-container">
-    <div class="shine-effect"></div>
+<div class="logo-button-wrapper" [class.with-text]="showText && (brandName || subtitle)">
+  <!-- Logo Container -->
+  <div 
+    [class]="containerClasses"
+    class="logo-container"
+    [style.width.px]="logoSize"
+    [style.height.px]="logoSize"
+    [routerLink]="routerLink"
+    [class.clickable]="routerLink">
+    
+    <!-- 3D Effect Layers -->
+    <div class="highlight-layer"></div>
+    <div class="shadow-layer"></div>
+    
+    <!-- Shine Effect -->
+    <div class="shine-container">
+      <div class="shine-effect"></div>
+    </div>
+    
+    <!-- Logo Text -->
+    <span 
+      [class]="textClasses"
+      class="logo-text"
+      [style.fontSize.px]="logoFontSize">
+      {{ text }}
+    </span>
+    
+    <!-- Bottom Shadow for 3D depth -->
+    <div class="depth-shadow"></div>
   </div>
-  
-  <!-- Logo Text -->
-  <span 
-    [class]="textClasses"
-    class="logo-text"
-    [style.fontSize.px]="fontSize">
-    {{ text }}
-  </span>
-  
-  <!-- Bottom Shadow for 3D depth -->
-  <div class="depth-shadow"></div>
+
+  <!-- Brand Text (when showText is true) -->
+  <div *ngIf="showText && (brandName || subtitle)" class="brand-text">
+    <div *ngIf="brandName" class="brand-name">{{ brandName }}</div>
+    <div *ngIf="subtitle" class="brand-subtitle">{{ subtitle }}</div>
+  </div>
 </div>

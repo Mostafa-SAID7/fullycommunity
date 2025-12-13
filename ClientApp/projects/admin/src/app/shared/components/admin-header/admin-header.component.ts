@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ThemeSwitcherComponent } from '../options-site/theme-switcher/theme-switcher.component';
 import { RefreshButtonComponent } from '../../ui/buttons/refresh-button/refresh-button.component';
-import { LogoButtonComponent } from '../logo-button/logo-button.component';
+import { LogoButtonComponent } from './logo-button/logo-button.component';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { NotificationService } from '../../../core/services/notifications/notification.service';
 import { Notification } from '../../../core/interfaces/notifications/notification.interface';

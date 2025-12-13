@@ -2,7 +2,7 @@ import { Injectable, signal, effect, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
-export type Theme = 'light' | 'dark' | 'auto';
+export type Theme = 'light' | 'dark';
 export type ColorScheme = 'light' | 'dark';
 
 export interface ThemeConfig {
@@ -22,7 +22,7 @@ export class ThemeService {
   private isBrowser = isPlatformBrowser(this.platformId);
 
   // Signals for reactive theme management
-  private themeSignal = signal<Theme>('auto');
+  private themeSignal = signal<Theme>('light');
   private colorSchemeSignal = signal<ColorScheme>('light');
   private accentColorSignal = signal<string>('#0066FF');
   private fontSizeSignal = signal<'small' | 'medium' | 'large'>('medium');
@@ -30,7 +30,7 @@ export class ThemeService {
   private highContrastSignal = signal<boolean>(false);
 
   // Observables for compatibility
-  private themeSubject = new BehaviorSubject<Theme>('auto');
+  private themeSubject = new BehaviorSubject<Theme>('light');
   private colorSchemeSubject = new BehaviorSubject<ColorScheme>('light');
 
   // Public readonly signals
@@ -59,7 +59,7 @@ export class ThemeService {
   private initializeTheme(): void {
     // Load saved theme configuration
     const savedConfig = this.loadThemeConfig();
-    
+
     if (savedConfig) {
       this.themeSignal.set(savedConfig.theme);
       this.accentColorSignal.set(savedConfig.accentColor);
@@ -70,7 +70,7 @@ export class ThemeService {
 
     // Detect system preferences
     this.detectSystemPreferences();
-    
+
     // Apply initial theme
     this.updateColorScheme();
     this.applyTheme();
@@ -78,205 +78,192 @@ export class ThemeService {
 
   private setupMediaQueryListener(): void {
     if (!this.isBrowser) return;
-
-    this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    this.mediaQuery.addEventListener('change', () => {
-      if (this.themeSignal() === 'auto') {
-        this.updateColorScheme();
-        this.applyTheme();
-      }
-    });
-  }
+    // Auto-theme listener removed
+}
 
   private setupEffects(): void {
-    // Effect to update color scheme when theme changes
-    effect(() => {
-      this.updateColorScheme();
-      this.applyTheme();
-      this.saveThemeConfig();
-    });
+  // Effect to update color scheme when theme changes
+  effect(() => {
+  this.updateColorScheme();
+  this.applyTheme();
+  this.saveThemeConfig();
+});
 
-    // Effect to sync observables with signals
-    effect(() => {
-      this.themeSubject.next(this.themeSignal());
-      this.colorSchemeSubject.next(this.colorSchemeSignal());
-    });
+// Effect to sync observables with signals
+effect(() => {
+  this.themeSubject.next(this.themeSignal());
+  this.colorSchemeSubject.next(this.colorSchemeSignal());
+});
   }
 
   private detectSystemPreferences(): void {
-    if (!this.isBrowser) return;
+  if(!this.isBrowser) return;
 
-    // Detect reduced motion preference
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    this.reducedMotionSignal.set(prefersReducedMotion);
+  // Detect reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  this.reducedMotionSignal.set(prefersReducedMotion);
 
-    // Detect high contrast preference
-    const prefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches;
-    this.highContrastSignal.set(prefersHighContrast);
-  }
+  // Detect high contrast preference
+  const prefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches;
+  this.highContrastSignal.set(prefersHighContrast);
+}
 
   private updateColorScheme(): void {
-    const theme = this.themeSignal();
-    let colorScheme: ColorScheme;
+  const theme = this.themeSignal();
+  let colorScheme: ColorScheme;
 
-    if (theme === 'auto') {
-      colorScheme = this.getSystemColorScheme();
-    } else {
-      colorScheme = theme as ColorScheme;
-    }
+  colorScheme = theme as ColorScheme;
 
-    this.colorSchemeSignal.set(colorScheme);
-  }
+  this.colorSchemeSignal.set(colorScheme);
+}
 
   private getSystemColorScheme(): ColorScheme {
-    if (!this.isBrowser) return 'light';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
+  if (!this.isBrowser) return 'light';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
 
   private applyTheme(): void {
-    if (!this.isBrowser) return;
+  if(!this.isBrowser) return;
 
-    const colorScheme = this.colorSchemeSignal();
-    const accentColor = this.accentColorSignal();
-    const fontSize = this.fontSizeSignal();
-    const reducedMotion = this.reducedMotionSignal();
-    const highContrast = this.highContrastSignal();
+  const colorScheme = this.colorSchemeSignal();
+  const accentColor = this.accentColorSignal();
+  const fontSize = this.fontSizeSignal();
+  const reducedMotion = this.reducedMotionSignal();
+  const highContrast = this.highContrastSignal();
 
-    const html = document.documentElement;
-    const body = document.body;
+  const html = document.documentElement;
+  const body = document.body;
 
-    // Apply color scheme
-    html.classList.toggle('dark', colorScheme === 'dark');
-    html.setAttribute('data-theme', colorScheme);
+  // Apply color scheme
+  html.classList.toggle('dark', colorScheme === 'dark');
+  html.setAttribute('data-theme', colorScheme);
 
-    // Apply accent color as CSS custom property
-    html.style.setProperty('--color-primary', accentColor);
-    
-    // Apply font size
-    html.setAttribute('data-font-size', fontSize);
-    body.classList.remove('text-sm', 'text-base', 'text-lg');
-    switch (fontSize) {
+  // Apply accent color as CSS custom property
+  html.style.setProperty('--color-primary', accentColor);
+
+  // Apply font size
+  html.setAttribute('data-font-size', fontSize);
+  body.classList.remove('text-sm', 'text-base', 'text-lg');
+  switch(fontSize) {
       case 'small':
-        body.classList.add('text-sm');
-        break;
-      case 'medium':
-        body.classList.add('text-base');
-        break;
-      case 'large':
-        body.classList.add('text-lg');
-        break;
-    }
+  body.classList.add('text-sm');
+  break;
+  case 'medium':
+  body.classList.add('text-base');
+  break;
+  case 'large':
+  body.classList.add('text-lg');
+  break;
+}
 
-    // Apply accessibility preferences
-    html.classList.toggle('reduce-motion', reducedMotion);
-    html.classList.toggle('high-contrast', highContrast);
+// Apply accessibility preferences
+html.classList.toggle('reduce-motion', reducedMotion);
+html.classList.toggle('high-contrast', highContrast);
 
-    // Update meta theme-color for mobile browsers
-    this.updateMetaThemeColor(colorScheme);
+// Update meta theme-color for mobile browsers
+this.updateMetaThemeColor(colorScheme);
   }
 
   private updateMetaThemeColor(colorScheme: ColorScheme): void {
-    if (!this.isBrowser) return;
+  if(!this.isBrowser) return;
 
-    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    const color = colorScheme === 'dark' ? '#0F0F0F' : '#FFFFFF';
-    
-    if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', color);
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'theme-color';
-      meta.content = color;
-      document.head.appendChild(meta);
-    }
+  const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+  const color = colorScheme === 'dark' ? '#0F0F0F' : '#FFFFFF';
+
+  if(metaThemeColor) {
+    metaThemeColor.setAttribute('content', color);
+  } else {
+    const meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    meta.content = color;
+    document.head.appendChild(meta);
   }
+}
 
   private loadThemeConfig(): ThemeConfig | null {
-    if (!this.isBrowser) return null;
+  if (!this.isBrowser) return null;
 
-    try {
-      const saved = localStorage.getItem(this.STORAGE_KEY);
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
-    }
+  try {
+    const saved = localStorage.getItem(this.STORAGE_KEY);
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    return null;
   }
+}
 
   private saveThemeConfig(): void {
-    if (!this.isBrowser) return;
+  if(!this.isBrowser) return;
 
-    const config: ThemeConfig = {
-      theme: this.themeSignal(),
-      colorScheme: this.colorSchemeSignal(),
-      accentColor: this.accentColorSignal(),
-      fontSize: this.fontSizeSignal(),
-      reducedMotion: this.reducedMotionSignal(),
-      highContrast: this.highContrastSignal()
-    };
+  const config: ThemeConfig = {
+    theme: this.themeSignal(),
+    colorScheme: this.colorSchemeSignal(),
+    accentColor: this.accentColorSignal(),
+    fontSize: this.fontSizeSignal(),
+    reducedMotion: this.reducedMotionSignal(),
+    highContrast: this.highContrastSignal()
+  };
 
-    try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(config));
-    } catch {
-      // Handle storage errors silently
-    }
+  try {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(config));
+  } catch {
+    // Handle storage errors silently
   }
+}
 
-  // Public methods
-  setTheme(theme: Theme): void {
-    this.themeSignal.set(theme);
-  }
+// Public methods
+setTheme(theme: Theme): void {
+  this.themeSignal.set(theme);
+}
 
-  setAccentColor(color: string): void {
-    this.accentColorSignal.set(color);
-  }
+setAccentColor(color: string): void {
+  this.accentColorSignal.set(color);
+}
 
-  setFontSize(size: 'small' | 'medium' | 'large'): void {
-    this.fontSizeSignal.set(size);
-  }
+setFontSize(size: 'small' | 'medium' | 'large'): void {
+  this.fontSizeSignal.set(size);
+}
 
-  setReducedMotion(enabled: boolean): void {
-    this.reducedMotionSignal.set(enabled);
-  }
+setReducedMotion(enabled: boolean): void {
+  this.reducedMotionSignal.set(enabled);
+}
 
-  setHighContrast(enabled: boolean): void {
-    this.highContrastSignal.set(enabled);
-  }
+setHighContrast(enabled: boolean): void {
+  this.highContrastSignal.set(enabled);
+}
 
-  toggleTheme(): void {
-    const current = this.themeSignal();
-    const next = current === 'light' ? 'dark' : current === 'dark' ? 'auto' : 'light';
-    this.setTheme(next);
-  }
+toggleTheme(): void {
+  const current = this.themeSignal();
+  const next = current === 'light' ? 'dark' : 'light';
+  this.setTheme(next);
+}
 
-  resetToDefaults(): void {
-    this.themeSignal.set('auto');
-    this.accentColorSignal.set('#0066FF');
-    this.fontSizeSignal.set('medium');
-    this.reducedMotionSignal.set(false);
-    this.highContrastSignal.set(false);
-  }
+resetToDefaults(): void {
+  this.themeSignal.set('light');
+  this.accentColorSignal.set('#0066FF');
+  this.fontSizeSignal.set('medium');
+  this.reducedMotionSignal.set(false);
+  this.highContrastSignal.set(false);
+}
 
-  getThemeConfig(): ThemeConfig {
-    return {
-      theme: this.themeSignal(),
-      colorScheme: this.colorSchemeSignal(),
-      accentColor: this.accentColorSignal(),
-      fontSize: this.fontSizeSignal(),
-      reducedMotion: this.reducedMotionSignal(),
-      highContrast: this.highContrastSignal()
-    };
-  }
+getThemeConfig(): ThemeConfig {
+  return {
+    theme: this.themeSignal(),
+    colorScheme: this.colorSchemeSignal(),
+    accentColor: this.accentColorSignal(),
+    fontSize: this.fontSizeSignal(),
+    reducedMotion: this.reducedMotionSignal(),
+    highContrast: this.highContrastSignal()
+  };
+}
 
-  // Utility methods
-  isDark(): boolean {
-    return this.colorSchemeSignal() === 'dark';
-  }
+// Utility methods
+isDark(): boolean {
+  return this.colorSchemeSignal() === 'dark';
+}
 
-  isLight(): boolean {
-    return this.colorSchemeSignal() === 'light';
-  }
+isLight(): boolean {
+  return this.colorSchemeSignal() === 'light';
+}
 
-  isAuto(): boolean {
-    return this.themeSignal() === 'auto';
-  }
+  // Auto check removed
 }

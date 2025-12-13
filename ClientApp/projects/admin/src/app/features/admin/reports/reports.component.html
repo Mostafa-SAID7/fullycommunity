@@ -158,7 +158,7 @@
           </div>
         </div>
       </div>
-      <app-bar-chart [config]="getUserGrowthChartConfig()" class="w-full">
+      <app-bar-chart [config]="userGrowthChartConfig()" class="chart-full-width">
       </app-bar-chart>
     </div>
 
@@ -170,7 +170,7 @@
           <p>Content types breakdown</p>
         </div>
       </div>
-      <app-pie-chart [config]="getContentDistributionConfig()" class="w-full">
+      <app-pie-chart [config]="contentDistributionConfig()" class="chart-full-width">
       </app-pie-chart>
     </div>
   </div>
@@ -197,7 +197,7 @@
         </div>
       </div>
     </div>
-    <app-line-chart [config]="getEngagementChartConfig()" class="w-full">
+    <app-line-chart [config]="engagementChartConfig()" class="chart-full-width">
     </app-line-chart>
   </div>
 
@@ -292,7 +292,7 @@
             <p class="card-subtitle">New users, active users, and retention metrics over time</p>
           </div>
         </div>
-        <app-line-chart [config]="getDetailedUserGrowthConfig()" class="chart-full-width">
+        <app-line-chart [config]="detailedUserGrowthConfig()" class="chart-full-width">
         </app-line-chart>
       </div>
 
@@ -317,7 +317,7 @@
         <!-- Acquisition Channels -->
         <div class="content-card">
           <h4 class="card-subtitle-lg">Acquisition Channels</h4>
-          <app-pie-chart [config]="getAcquisitionChannelsConfig()" class="chart-full-width">
+          <app-pie-chart [config]="acquisitionChannelsConfig()" class="chart-full-width">
           </app-pie-chart>
         </div>
       </div>
@@ -390,14 +390,14 @@
             <p class="card-subtitle">Comprehensive engagement metrics including saves and advanced analytics</p>
           </div>
         </div>
-        <app-line-chart [config]="getEnhancedEngagementConfig()" class="chart-full-width">
+        <app-line-chart [config]="enhancedEngagementConfig()" class="chart-full-width">
         </app-line-chart>
       </div>
 
       <!-- Content Type Performance -->
       <div class="content-card">
         <h4 class="card-subtitle-lg">Content Type Performance</h4>
-        <app-bar-chart [config]="getContentTypePerformanceConfig()" class="chart-full-width">
+        <app-bar-chart [config]="contentTypePerformanceConfig()" class="chart-full-width">
         </app-bar-chart>
       </div>
 

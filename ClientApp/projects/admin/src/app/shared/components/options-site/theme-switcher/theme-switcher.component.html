@@ -1,6 +1,6 @@
-<button (click)="toggleTheme()" class="theme-switcher-btn" [title]="themeService.getThemeLabel()" type="button"
+<button (click)="toggleTheme()" class="theme-switcher-btn" [title]="themeLabel()" type="button"
   aria-label="Toggle theme">
 
   <!-- Theme Icon -->
-  <i class="fas {{ themeService.getThemeIcon() }} theme-icon"></i>
+  <i class="fas {{ themeIcon() }} theme-icon"></i>
 </button>
