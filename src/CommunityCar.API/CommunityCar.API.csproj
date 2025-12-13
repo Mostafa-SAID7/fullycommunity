@@ -34,4 +34,7 @@
     <ProjectReference Include="..\CommunityCar.Application\CommunityCar.Application.csproj" />
     <ProjectReference Include="..\CommunityCar.Infrastructure\CommunityCar.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
 </Project>

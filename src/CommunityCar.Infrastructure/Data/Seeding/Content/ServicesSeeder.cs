@@ -23,32 +23,42 @@ public class ServicesSeeder : BaseSeeder
 
     protected override async Task ExecuteSeedAsync()
     {
+        // Get existing user IDs from the database
+        var userIds = await Context.Users.Select(u => u.Id).Take(10).ToListAsync();
+        if (userIds.Count == 0)
+        {
+            Logger.LogWarning("No users found in database. Skipping Services seeding.");
+            return;
+        }
+
         // Seed Service Providers first
-        var providers = CreateServiceProviders();
+        var providers = CreateServiceProviders(userIds);
         await Context.Set<ServiceProvider>().AddRangeAsync(providers);
         await Context.SaveChangesAsync();
 
         // Seed Workshops
         var workshops = CreateWorkshops(providers);
         await Context.Set<Workshop>().AddRangeAsync(workshops);
+        await Context.SaveChangesAsync();
 
         // Seed Fuel Stations
         var fuelStations = CreateFuelStations(providers);
         await Context.Set<FuelStation>().AddRangeAsync(fuelStations);
+        await Context.SaveChangesAsync();
 
         // Seed Experts
-        var experts = CreateExperts();
+        var experts = CreateExperts(userIds);
         await Context.Set<Expert>().AddRangeAsync(experts);
     }
 
-    private static List<ServiceProvider> CreateServiceProviders()
+    private static List<ServiceProvider> CreateServiceProviders(List<Guid> userIds)
     {
         return
         [
             new ServiceProvider
             {
                 Id = Guid.NewGuid(),
-                OwnerId = Guid.NewGuid(),
+                OwnerId = userIds[0 % userIds.Count],
                 BusinessName = "Classic Car Restoration Shop",
                 Description = "Specializing in classic American muscle car restoration",
                 Phone = "+1-313-555-0101",
@@ -74,7 +84,7 @@ public class ServicesSeeder : BaseSeeder
             new ServiceProvider
             {
                 Id = Guid.NewGuid(),
-                OwnerId = Guid.NewGuid(),
+                OwnerId = userIds[1 % userIds.Count],
                 BusinessName = "Euro Performance Garage",
                 Description = "European sports car specialists - BMW, Mercedes, Porsche, Audi",
                 Phone = "+1-310-555-0202",
@@ -99,7 +109,7 @@ public class ServicesSeeder : BaseSeeder
             new ServiceProvider
             {
                 Id = Guid.NewGuid(),
-                OwnerId = Guid.NewGuid(),
+                OwnerId = userIds[2 % userIds.Count],
                 BusinessName = "JDM Import Specialists",
                 Description = "Japanese import vehicles - RHD conversions and JDM parts",
                 Phone = "+1-713-555-0303",
@@ -123,7 +133,7 @@ public class ServicesSeeder : BaseSeeder
             new ServiceProvider
             {
                 Id = Guid.NewGuid(),
-                OwnerId = Guid.NewGuid(),
+                OwnerId = userIds[3 % userIds.Count],
                 BusinessName = "EV Service Center",
                 Description = "Certified electric vehicle service - Tesla, Rivian, and all major EV brands",
                 Phone = "+1-415-555-0404",
@@ -148,7 +158,7 @@ public class ServicesSeeder : BaseSeeder
             new ServiceProvider
             {
                 Id = Guid.NewGuid(),
-                OwnerId = Guid.NewGuid(),
+                OwnerId = userIds[4 % userIds.Count],
                 BusinessName = "Quick Lube Express",
                 Description = "Fast and affordable oil changes - no appointment needed",
                 Phone = "+1-312-555-0505",
@@ -365,14 +375,14 @@ public class ServicesSeeder : BaseSeeder
         ];
     }
 
-    private static List<Expert> CreateExperts()
+    private static List<Expert> CreateExperts(List<Guid> userIds)
     {
         return
         [
             new Expert
             {
                 Id = Guid.NewGuid(),
-                UserId = Guid.NewGuid(),
+                UserId = userIds[5 % userIds.Count],
                 FullName = "Mike Thompson",
                 Title = "ASE Master Technician",
                 Bio = "30+ years experience in automotive repair. Specializing in diagnostics and engine performance.",
@@ -401,7 +411,7 @@ public class ServicesSeeder : BaseSeeder
             new Expert
             {
                 Id = Guid.NewGuid(),
-                UserId = Guid.NewGuid(),
+                UserId = userIds[6 % userIds.Count],
                 FullName = "Sarah Chen",
                 Title = "Electric Vehicle Specialist",
                 Bio = "Former Tesla engineer. Helping EV owners get the most out of their vehicles.",
@@ -430,7 +440,7 @@ public class ServicesSeeder : BaseSeeder
             new Expert
             {
                 Id = Guid.NewGuid(),
-                UserId = Guid.NewGuid(),
+                UserId = userIds[7 % userIds.Count],
                 FullName = "Carl Henderson",
                 Title = "Vintage Vehicle Restoration Expert",
                 Bio = "Passionate about preserving automotive history. Judge at major concours events.",

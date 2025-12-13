@@ -1,6 +1,7 @@
 # IDE
 .idea/
 .vscode/
+.vs/
 *.swp
 *.swo
 
@@ -60,6 +61,7 @@ htmlcov/
 
 # Build
 publish/
+publish-output/
 artifacts/
 
 # Snyk Security Extension - AI Rules (auto-generated)

@@ -1,0 +1,9 @@
+{
+  "buildCommand": "npm run build:admin -- --configuration production",
+  "outputDirectory": "dist/admin/browser",
+  "framework": null,
+  "installCommand": "npm install --legacy-peer-deps",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

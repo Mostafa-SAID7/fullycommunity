@@ -23,6 +23,9 @@ builder.Services.AddHttpContextAccessor();
 // Swagger - Multiple API versions/groups
 builder.Services.AddSwaggerGen(c =>
 {
+    // Use fully qualified type names to avoid schema ID conflicts
+    c.CustomSchemaIds(type => type.FullName?.Replace("+", "."));
+    
     // API Groups by Section
     c.SwaggerDoc("auth", new OpenApiInfo 
     { 
