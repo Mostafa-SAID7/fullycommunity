@@ -42,18 +42,18 @@ import { TabNavigationComponent, Tab } from '../../../shared/ui/navigation/tab-n
 })
 export class ReportsComponent implements OnInit, OnDestroy {
   private reportsService = inject(AdminReportsService);
-  
+
   overview = signal<AnalyticsOverview | null>(null);
   userGrowth = signal<UserGrowthData[]>([]);
   contentEngagement = signal<ContentEngagementData[]>([]);
   topContent = signal<TopContent[]>([]);
   realtimeStats = signal<RealtimeStats | null>(null);
   summary = signal<PlatformSummary | null>(null);
-  
+
   // Enhanced Analytics
   detailedUserGrowth = signal<DetailedUserGrowthTrends | null>(null);
   detailedContentEngagement = signal<DetailedContentEngagement | null>(null);
-  
+
   loading = signal(false);
   error = signal<string | null>(null);
 
@@ -68,7 +68,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
   get overviewStatCards(): StatCardConfig[] {
     const overview = this.overview();
     if (!overview) return [];
-    
+
     return [
       {
         title: 'User Growth',
@@ -118,7 +118,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     this.loadRealtimeStats();
     this.loadSummary();
     this.loadDetailedAnalytics();
-    
+
     // Refresh realtime stats every 30 seconds
     this.realtimeInterval = setInterval(() => this.loadRealtimeStats(), 30000);
   }
@@ -261,9 +261,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     this.loadSummary();
   }
 
-  getBarHeight(value: number, type: string): number {
-    return Math.max((value / this.maxNewUsers) * 100, 5);
-  }
+
 
   // trackBy helpers to avoid unnecessary re-renders
   trackByDate(index: number, item: { date: string }) {

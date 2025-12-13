@@ -1,10 +1,6 @@
-<button
-  (click)="toggleTheme()"
-  class="theme-switcher-btn"
-  [title]="themeService.getThemeLabel()"
-  type="button"
+<button (click)="toggleTheme()" class="theme-switcher-btn" [title]="themeService.getThemeLabel()" type="button"
   aria-label="Toggle theme">
-  
+
   <!-- Theme Icon -->
-  <span class="theme-icon">{{ themeService.getThemeIcon() }}</span>
+  <i class="fas {{ themeService.getThemeIcon() }} theme-icon"></i>
 </button>

@@ -71,6 +71,10 @@
   .toggle-icon {
     width: 24px;
     height: 24px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -99,6 +103,10 @@
 .search-icon {
   width: 20px;
   height: 20px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: $text-muted;
   flex-shrink: 0;
 }
@@ -126,6 +134,10 @@
   cursor: pointer;
   transition: color $transition-fast;
 
+  .clear-icon {
+    font-size: 14px;
+  }
+
   &:hover {
     color: $text-primary;
   }
@@ -136,6 +148,11 @@
 .header-actions {
   @include flex-start;
   gap: $spacing-2;
+
+  // Reduce clutter on mobile
+  @include respond-below('md') {
+    display: none;
+  }
 }
 
 .action-btn {
@@ -158,6 +175,10 @@
   .action-icon {
     width: 20px;
     height: 20px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -612,6 +633,24 @@
     border-bottom-color: $dark-border-primary;
   }
 
+  .sidebar-toggle-btn {
+    color: $dark-text-primary;
+
+    &:hover {
+      background: $dark-bg-tertiary;
+      color: $color-primary;
+    }
+  }
+
+  .action-btn {
+    color: $dark-text-primary;
+
+    &:hover {
+      background: $dark-bg-tertiary;
+      color: $color-primary;
+    }
+  }
+
   .notification-badge {
     border-color: $dark-bg-secondary;
   }
@@ -619,5 +658,110 @@
   .search-wrapper {
     background: $dark-bg-primary;
     border-color: $dark-border-primary;
+
+    &:focus-within {
+      border-color: $color-primary;
+    }
+  }
+
+  .search-input {
+    color: $dark-text-primary;
+
+    &::placeholder {
+      color: $dark-text-secondary;
+    }
+  }
+
+  .search-icon,
+  .search-clear {
+    color: $dark-text-secondary;
+  }
+
+  .profile-btn {
+    &:hover {
+      background: $dark-bg-tertiary;
+    }
+  }
+
+  .profile-name {
+    color: $dark-text-primary;
+  }
+
+  .profile-role,
+  .profile-arrow {
+    color: $dark-text-secondary;
+  }
+
+  // Dropdowns in Dark Mode
+  .role-dropdown,
+  .notification-dropdown,
+  .user-dropdown {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
+  }
+
+  .dropdown-header {
+    border-bottom-color: $dark-border-primary;
+    color: $dark-text-secondary;
+  }
+
+  .role-option {
+    &:hover {
+      background: $dark-bg-tertiary;
+    }
+
+    .role-option-name {
+      color: $dark-text-primary;
+    }
+
+    .role-option-description {
+      color: $dark-text-secondary;
+    }
+  }
+
+  .notification-header {
+    border-bottom-color: $dark-border-primary;
+
+    .header-title {
+      color: $dark-text-primary;
+    }
+  }
+
+  .notification-item {
+    &:hover {
+      background: $dark-bg-tertiary;
+    }
+
+    .notification-title {
+      color: $dark-text-primary;
+    }
+
+    .notification-message {
+      color: $dark-text-secondary;
+    }
+  }
+
+  .notification-footer {
+    border-top-color: $dark-border-primary;
+  }
+
+  .user-dropdown-header {
+    border-bottom-color: $dark-border-primary;
+
+    .dropdown-user-name {
+      color: $dark-text-primary;
+    }
+  }
+
+  .dropdown-link {
+    color: $dark-text-primary;
+
+    &:hover {
+      background: $dark-bg-tertiary;
+    }
+
+    .dropdown-link-icon {
+      color: $dark-text-secondary;
+    }
   }
 }

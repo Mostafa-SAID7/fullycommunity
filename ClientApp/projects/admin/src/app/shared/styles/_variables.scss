@@ -218,6 +218,8 @@ $nav-height: 4rem;
 $shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 $shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 
 // Border Radius
 $border-radius-sm: 0.25rem;
@@ -271,8 +273,45 @@ $icon-xl: 32px;
 $icon-2xl: 48px;
 $icon-3xl: 64px;
 
+// Animation Durations
+$animation-duration-fast: 0.15s;
+$animation-duration-normal: 0.3s;
+$animation-duration-slow: 0.5s;
+
 // Transitions
 $transition-fast: 0.15s ease-in-out;
 $transition-base: 0.2s ease-in-out;
 $transition-slow: 0.3s ease-in-out;
 $transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+// Card Variants
+$card-variants: (
+    blue: (bg: $info-50,
+        text: $info-700,
+        icon: $info-600,
+        border: $info-200 ),
+    green: (bg: $success-50,
+        text: $success-700,
+        icon: $success-600,
+        border: $success-200 ),
+    red: (bg: $error-50,
+        text: $error-700,
+        icon: $error-600,
+        border: $error-200 ),
+    orange: (bg: $warning-50,
+        text: $warning-700,
+        icon: $warning-600,
+        border: $warning-200 ),
+    purple: (bg: $purple-50,
+        text: $purple-700,
+        icon: $purple-600,
+        border: $purple-200 ),
+    indigo: (bg: $indigo-50,
+        text: $indigo-700,
+        icon: $indigo-600,
+        border: $indigo-200 ),
+    gray: (bg: $gray-50,
+        text: $gray-700,
+        icon: $gray-600,
+        border: $gray-200 )
+);

@@ -216,15 +216,15 @@ export class LocationDetailComponent implements OnInit {
     }
   }
 
-  getTypeIcon(type: string): string {
+  getTypeIcon(type: string | any): string {
     const icons: Record<string, string> = {
       'GasStation': '⛽', 'ChargingStation': '🔌', 'CarWash': '🚿', 'Garage': '🔧',
       'Dealership': '🏪', 'PartsStore': '🛒', 'ScenicRoute': '🏔️', 'MeetupSpot': '🚗'
     };
-    return icons[type] || '📍';
+    return icons[type as string] || '📍';
   }
 
-  getTypeLabel(type: string): string {
+  getTypeLabel(type: string | any): string {
     const labels: Record<string, string> = {
       'GasStation': 'Gas Station', 'ChargingStation': 'EV Charging', 'CarWash': 'Car Wash',
       'Garage': 'Garage', 'Dealership': 'Dealership', 'PartsStore': 'Parts Store'

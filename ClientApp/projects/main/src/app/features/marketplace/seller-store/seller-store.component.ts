@@ -7,9 +7,9 @@ import { ProductCardComponent } from '../shared/product-card.component';
 @Component({
   selector: 'app-seller-store',
   standalone: true,
-  imports: [CommonModule, RouterLink, ProductCardComponent],
-  template: `
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+
+  imports: [CommonModule, ProductCardComponent],
+  template: `    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       @if (loading()) {
         <div class="animate-pulse">
           <div class="h-48 bg-gray-200 dark:bg-gray-700"></div>

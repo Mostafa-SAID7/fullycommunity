@@ -26,14 +26,3 @@ export interface Group {
   createdAt: string;
 }
 
-export interface GroupList {
-  id: string;
-  name: string;
-  slug: string | null;
-  description: string | null;
-  coverImageUrl: string | null;
-  privacy: GroupPrivacy;
-  memberCount: number;
-  postCount: number;
-  isMember: boolean;
-}

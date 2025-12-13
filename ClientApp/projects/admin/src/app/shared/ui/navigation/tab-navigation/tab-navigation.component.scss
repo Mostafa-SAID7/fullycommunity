@@ -1,3 +1,4 @@
+@import '../../../styles/_index';
 
 :host {
   display: block;
@@ -16,17 +17,17 @@
   @include flex-start;
   gap: $spacing-8;
   margin-bottom: -1px;
-  
+
   @include respond-below('md') {
     gap: $spacing-6;
   }
-  
+
   @include respond-below('sm') {
     gap: $spacing-4;
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    
+
     &::-webkit-scrollbar {
       display: none;
     }
@@ -44,26 +45,26 @@
   background: none;
   cursor: pointer;
   transition: all $transition-fast;
-  
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
-  
+
   &.active {
     border-bottom-color: $color-primary;
     color: $color-primary;
   }
-  
+
   &:not(.active):not(:disabled) {
     color: $text-muted;
-    
+
     &:hover {
       color: $text-secondary;
       border-bottom-color: rgba($border-secondary, 0.5);
     }
   }
-  
+
   @include respond-below('sm') {
     padding: $spacing-2 $spacing-2;
     font-size: $font-size-xs;
@@ -75,21 +76,21 @@
 .tab-content {
   @include flex-start;
   gap: $spacing-2;
-  
+
   .tab-icon {
     font-size: $font-size-lg;
-    
+
     @include respond-below('sm') {
       font-size: $font-size-base;
     }
   }
-  
+
   .tab-label {
     @include respond-below('xs') {
       display: none;
     }
   }
-  
+
   .tab-badge {
     margin-left: $spacing-2;
     @include flex-center;
@@ -97,17 +98,17 @@
     border-radius: $border-radius-full;
     font-size: $font-size-xs;
     font-weight: $font-weight-medium;
-    
+
     &.active-badge {
       background: $color-primary;
       color: $text-inverse;
     }
-    
+
     &.inactive-badge {
       background: rgba($neutral-100, 0.8);
       color: $neutral-900;
     }
-    
+
     @include respond-below('sm') {
       margin-left: $spacing-1;
       padding: 0.0625rem 0.375rem;
@@ -122,22 +123,22 @@
   .tab-container {
     border-color: $dark-border-primary;
   }
-  
+
   .tab-button {
     &.active {
       color: $color-primary;
     }
-    
+
     &:not(.active):not(:disabled) {
       color: $dark-text-secondary;
-      
+
       &:hover {
         color: $dark-text-primary;
         border-bottom-color: rgba($dark-border-secondary, 0.5);
       }
     }
   }
-  
+
   .tab-badge {
     &.inactive-badge {
       background: rgba($dark-bg-tertiary, 0.8);
@@ -151,14 +152,14 @@
 @include high-contrast {
   .tab-button {
     border: 1px solid transparent;
-    
+
     &:focus-visible {
       border-color: currentColor;
       outline: 2px solid;
       outline-offset: 2px;
     }
   }
-  
+
   .tab-badge {
     border: 1px solid currentColor;
   }
@@ -178,11 +179,11 @@
   .tab-navigation {
     gap: $spacing-2;
   }
-  
+
   .tab-button {
     padding: $spacing-2 $spacing-1;
     min-width: 2.5rem;
-    
+
     .tab-content {
       justify-content: center;
     }

@@ -14,7 +14,7 @@ interface TagInfo {
 @Component({
   selector: 'app-tags-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, LoadingStateComponent],
+  imports: [CommonModule, FormsModule, LoadingStateComponent],
   templateUrl: './tags-list.component.html'
 })
 export class TagsListComponent implements OnInit {

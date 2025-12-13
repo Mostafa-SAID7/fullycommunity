@@ -18,7 +18,7 @@ export class LoginComponent {
   // Login form
   loginEmail = '';
   loginPassword = '';
-  
+
   // State
   loading = signal(false);
   error = signal<string | null>(null);
@@ -57,6 +57,57 @@ export class LoginComponent {
 
   togglePasswordVisibility() {
     this.showPassword.update(v => !v);
+  }
+
+  // Register form
+  isRegisterMode = signal(false);
+  registerFirstName = '';
+  registerLastName = '';
+  registerEmail = '';
+  registerPassword = '';
+  registerConfirmPassword = '';
+  showConfirmPassword = signal(false);
+
+  toggleMode() {
+    this.isRegisterMode.update(v => !v);
+    this.error.set(null);
+    this.clearForms();
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword.update(v => !v);
+  }
+
+  onRegisterSubmit() {
+    if (!this.registerFirstName || !this.registerLastName || !this.registerEmail || !this.registerPassword || !this.registerConfirmPassword) {
+      this.error.set('Please fill in all fields');
+      return;
+    }
+
+    if (this.registerPassword !== this.registerConfirmPassword) {
+      this.error.set('Passwords do not match');
+      return;
+    }
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    // TODO: Implement actual registration logic
+    // For now, simulate a delay
+    setTimeout(() => {
+      this.loading.set(false);
+      // Maybe log them in or switch to login mode?
+      this.toggleMode();
+      this.error.set('Registration successful! Please sign in.');
+    }, 1000);
+  }
+
+  loginWithGoogle() {
+    console.log('Login with Google');
+  }
+
+  loginWithFacebook() {
+    console.log('Login with Facebook');
   }
 
 

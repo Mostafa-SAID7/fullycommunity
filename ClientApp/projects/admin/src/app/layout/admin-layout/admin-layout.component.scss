@@ -29,7 +29,7 @@
     top: $nav-height;
     left: 0;
     bottom: 0;
-    z-index: $z-index-sidebar;
+    z-index: $z-index-sidebar + 20; // Ensure above mobile overlay (1030)
   }
 
   // Main content area

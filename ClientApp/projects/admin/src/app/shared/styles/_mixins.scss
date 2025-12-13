@@ -237,6 +237,81 @@
   }
 }
 
+// Button Size Mixin
+@mixin button-size($size) {
+  @if $size =='sm' {
+    padding: $spacing-1 $spacing-3;
+    font-size: $font-size-sm;
+  }
+
+  @if $size =='md' {
+    padding: $spacing-2 $spacing-4;
+    font-size: $font-size-base;
+  }
+
+  @if $size =='lg' {
+    padding: $spacing-3 $spacing-6;
+    font-size: $font-size-lg;
+  }
+}
+
+// Button Variant Mixin
+@mixin button-variant($variant) {
+  @if $variant =='primary' {
+    background: $primary-500;
+    color: $white;
+    border-color: $primary-500;
+
+    &:hover:not(:disabled) {
+      background: $primary-600;
+      border-color: $primary-600;
+    }
+  }
+
+  @if $variant =='secondary' {
+    background: $white;
+    color: $text-primary;
+    border-color: $border-primary;
+
+    &:hover:not(:disabled) {
+      background: $gray-50;
+      border-color: $border-secondary;
+    }
+  }
+
+  @if $variant =='outline' {
+    background: transparent;
+    color: $primary-500;
+    border-color: $primary-500;
+
+    &:hover:not(:disabled) {
+      background: $primary-50;
+    }
+  }
+
+  @if $variant =='ghost' {
+    background: transparent;
+    color: $text-primary;
+    border-color: transparent;
+
+    &:hover:not(:disabled) {
+      background: $gray-100;
+    }
+  }
+
+  @if $variant =='danger' {
+    background: $error-500;
+    color: $white;
+    border-color: $error-500;
+
+    &:hover:not(:disabled) {
+      background: $error-600;
+      border-color: $error-600;
+    }
+  }
+}
+
+
 // Enhanced Tailwind-style Mixins
 // -----------------------------------------------------------------------------
 
@@ -286,6 +361,12 @@
     transform: translateY(0);
     box-shadow: $shadow-sm;
   }
+}
+
+// Card Interactive Mixin
+@mixin card-interactive {
+  @include card-base;
+  @include interactive-hover;
 }
 
 // Scrollbar Styling Mixin

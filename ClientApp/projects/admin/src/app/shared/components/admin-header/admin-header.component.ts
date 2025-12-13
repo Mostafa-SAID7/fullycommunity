@@ -10,6 +10,7 @@ import { LogoButtonComponent } from '../logo-button/logo-button.component';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { NotificationService } from '../../../core/services/notifications/notification.service';
 import { Notification } from '../../../core/interfaces/notifications/notification.interface';
+import { LanguageService } from '../../../core/services/language/language.service';
 
 interface AdminRole {
   id: string;
@@ -30,12 +31,13 @@ export class AdminHeaderComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   notificationService = inject(NotificationService);
+  languageService = inject(LanguageService);
   private destroy$ = new Subject<void>();
   private refreshTimeout: number | null = null;
 
   // Outputs
   toggleSidebar = output<void>();
-  
+
   // Component state
   searchQuery = '';
   isRefreshing = false;
@@ -81,7 +83,7 @@ export class AdminHeaderComponent implements OnInit, OnDestroy {
     if (this.refreshTimeout !== null) {
       clearTimeout(this.refreshTimeout);
     }
-    
+
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -125,11 +127,11 @@ export class AdminHeaderComponent implements OnInit, OnDestroy {
       // Implement search logic
     }
   }
-  
+
   clearSearch(): void {
     this.searchQuery = '';
   }
-  
+
   refreshData(): void {
     this.isRefreshing = true;
     // Clear existing timeout
@@ -142,7 +144,7 @@ export class AdminHeaderComponent implements OnInit, OnDestroy {
       this.refreshTimeout = null;
     }, 2000);
   }
-  
+
   toggleNotifications(): void {
     this.showNotifications.update(v => !v);
     this.showRoleSwitcher.set(false);
@@ -183,7 +185,7 @@ export class AdminHeaderComponent implements OnInit, OnDestroy {
         this.loadNotifications();
       });
   }
-  
+
   toggleProfileMenu(): void {
     this.showUserMenu.update(v => !v);
     this.showRoleSwitcher.set(false);

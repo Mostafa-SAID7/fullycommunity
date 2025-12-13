@@ -8,36 +8,22 @@
   display: block;
 }
 
+// Main container styles
 .admin-sidebar {
   height: 100%;
   background: $bg-primary;
   border-right: 1px solid $border-primary;
   box-shadow: $shadow-md;
-}
+  // Optimize for performance
+  will-change: width, transform;
 
-// Sidebar Navigation
-// -----------------------------------------------------------------------------
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-  transition: width $transition-smooth, transform $transition-smooth;
-
-  // Respect user's motion preferences
-  @include reduced-motion {
-    transition: none;
-  }
-
-  // Mobile positioning - absolute to enable overlay
+  // High-performance mobile transition
   @include respond-below('md') {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    z-index: 1050; // Above overlay (1030) but below modals
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); // Snappy easing
+    will-change: transform;
   }
 
+  // Open State
   &.sidebar-open {
     width: 16rem;
 
@@ -48,17 +34,48 @@
     @include respond-below('md') {
       width: 80vw;
       max-width: 300px;
+      height: calc(100% - #{$nav-height});
       transform: translateX(0);
+      background: $bg-primary;
+      box-shadow: $shadow-xl;
+      visibility: visible;
+      position: fixed;
+      top: $nav-height;
+      left: 0;
+      bottom: 0;
+      z-index: $z-index-sidebar;
     }
   }
 
+  // Closed State
   &.sidebar-closed {
     width: 4rem;
 
     @include respond-below('md') {
+      width: 80vw;
+      max-width: 300px;
+      height: calc(100% - #{$nav-height});
       transform: translateX(-100%);
+      visibility: hidden;
+      position: fixed;
+      top: $nav-height;
+      left: 0;
+      bottom: 0;
+      border: none;
+      z-index: $z-index-sidebar;
+      transition: transform 0.2s ease-in, visibility 0s linear 0.2s; // Delay visibility hide until after slide-out
     }
   }
+}
+
+// Sidebar Navigation
+// -----------------------------------------------------------------------------
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 // Dashboard Section (Top - Fixed)
@@ -98,11 +115,20 @@
     justify-content: center;
   }
 
-  .dashboard-icon {
+  .dashboard-icon,
+  .nav-icon,
+  .icon,
+  .profile-icon,
+  .help-icon {
     width: 24px;
     height: 24px;
+    font-size: 20px; // FontAwesome size
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
     transition: all $transition-fast;
+    color: currentColor; // Inherit color from parent
   }
 
   .dashboard-text {
@@ -114,19 +140,20 @@
 
 // Larger icons when closed for better visibility
 .sidebar-closed {
-  .dashboard-icon {
+
+  .dashboard-icon,
+  .icon,
+  .profile-icon,
+  .help-icon {
     width: 32px;
     height: 32px;
-  }
+    font-size: 24px; // Larger font size
+    color: $text-secondary; // Ensure visible color
 
-  .icon {
-    width: 32px !important;
-    height: 32px !important;
-  }
-
-  .profile-icon {
-    width: 32px;
-    height: 32px;
+    &:hover,
+    .active & {
+      color: $color-primary;
+    }
   }
 }
 
@@ -138,6 +165,7 @@
   overflow-x: hidden;
   padding: $spacing-4;
   -webkit-overflow-scrolling: touch;
+  width: 100%; // Ensure width matches container
 
   // Custom scrollbar for better aesthetics
   @include custom-scrollbar(6px, transparent, rgba($border-primary, 0.3));

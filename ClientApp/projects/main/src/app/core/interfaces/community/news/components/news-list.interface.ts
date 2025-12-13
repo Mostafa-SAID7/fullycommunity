@@ -7,7 +7,8 @@ export interface NewsList {
   excerpt: string | null;
   coverImageUrl: string | null;
   authorName: string;
-  categoryName: string | null;
+  category: { id: string; name: string; } | null;
+  likeCount: number;
   publishedAt: string | null;
   viewCount: number;
   isFeatured: boolean;

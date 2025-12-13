@@ -22,8 +22,7 @@ export interface CommunityStats {
   selector: 'app-home',
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterLink, 
+    CommonModule,
     StoriesComponent,
     QuickActionsComponent,
     FeaturedPostsComponent,

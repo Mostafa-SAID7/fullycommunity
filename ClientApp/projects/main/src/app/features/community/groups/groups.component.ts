@@ -2,7 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { GroupsService } from '../../../core/services/community/groups';
-import { GroupList } from '../../../core/interfaces/community/groups/group.interface';
+import { GroupList } from '../../../core/interfaces/community/groups';
 import { SidebarLayoutComponent } from '../../../shared/components/sidebar-layout/sidebar-layout.component';
 import { type SidebarShortcut } from '../../../shared/components/left-sidebar/left-sidebar.component';
 import { type SponsoredItem, type EventReminder, type Contact } from '../../../shared/components/right-sidebar/right-sidebar.component';
@@ -178,7 +178,7 @@ import { type SponsoredItem, type EventReminder, type Contact } from '../../../s
 })
 export class GroupsComponent implements OnInit {
   private groupsService = inject(GroupsService);
-  
+
   activeTab = signal<'your' | 'discover'>('your');
   groups = signal<GroupList[]>([]);
   loading = signal(false);
@@ -221,7 +221,7 @@ export class GroupsComponent implements OnInit {
   }
 
   filteredGroups() {
-    return this.activeTab() === 'your' 
+    return this.activeTab() === 'your'
       ? this.groups().filter((g: GroupList) => g.isMember)
       : this.groups().filter((g: GroupList) => !g.isMember);
   }
@@ -230,7 +230,7 @@ export class GroupsComponent implements OnInit {
     if (group.isMember) {
       this.groupsService.leaveGroup(group.id).subscribe({
         next: () => {
-          this.groups.update(groups => 
+          this.groups.update(groups =>
             groups.map(g => g.id === group.id ? { ...g, isMember: false, memberCount: g.memberCount - 1 } : g)
           );
         },
@@ -239,7 +239,7 @@ export class GroupsComponent implements OnInit {
     } else {
       this.groupsService.joinGroup(group.id).subscribe({
         next: () => {
-          this.groups.update(groups => 
+          this.groups.update(groups =>
             groups.map(g => g.id === group.id ? { ...g, isMember: true, memberCount: g.memberCount + 1 } : g)
           );
         },

@@ -8,7 +8,7 @@ import { EmptyStateComponent } from '../../../../../shared/components/empty-stat
 @Component({
   selector: 'app-question-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, LoadingStateComponent, EmptyStateComponent],
+  imports: [CommonModule, RouterModule, EmptyStateComponent],
   templateUrl: './question-list.component.html'
 })
 export class QuestionListComponent {

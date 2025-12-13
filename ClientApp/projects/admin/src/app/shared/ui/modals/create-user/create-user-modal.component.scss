@@ -1,3 +1,4 @@
+@import '../../../styles/_index';
 
 :host {
   display: block;
@@ -12,7 +13,7 @@
   z-index: $z-index-modal;
   @include flex-center;
   padding: $spacing-4;
-  
+
   @include respond-below('sm') {
     padding: $spacing-2;
   }
@@ -28,7 +29,7 @@
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  
+
   @include respond-below('sm') {
     max-width: 100%;
     max-height: 95vh;
@@ -42,21 +43,21 @@
   @include flex-between;
   padding: $spacing-6;
   border-bottom: 1px solid $border-primary;
-  
+
   @include respond-below('sm') {
     padding: $spacing-4;
   }
-  
+
   .modal-title {
     font-size: $font-size-xl;
     font-weight: $font-weight-bold;
     color: $text-primary;
-    
+
     @include respond-below('sm') {
       font-size: $font-size-lg;
     }
   }
-  
+
   .close-button {
     color: $text-muted;
     background: none;
@@ -64,11 +65,11 @@
     cursor: pointer;
     transition: color $transition-fast;
     padding: $spacing-1;
-    
+
     &:hover {
       color: $text-secondary;
     }
-    
+
     .close-icon {
       width: $icon-md;
       height: $icon-md;
@@ -82,20 +83,20 @@
   padding: $spacing-6;
   background: rgba($success-50, 0.8);
   border-bottom: 1px solid $success-200;
-  
+
   @include respond-below('sm') {
     padding: $spacing-4;
   }
-  
+
   .success-content {
     @include flex-start;
     gap: $spacing-3;
-    
+
     .success-icon {
       font-size: $font-size-2xl;
       color: $success-600;
     }
-    
+
     .success-text {
       color: $success-800;
       font-weight: $font-weight-medium;
@@ -107,33 +108,33 @@
 // -----------------------------------------------------------------------------
 .type-selection {
   padding: $spacing-6;
-  
+
   @include respond-below('sm') {
     padding: $spacing-4;
   }
-  
+
   .selection-title {
     font-size: $font-size-lg;
     font-weight: $font-weight-medium;
     color: $text-primary;
     margin-bottom: $spacing-6;
-    
+
     @include respond-below('sm') {
       font-size: $font-size-base;
       margin-bottom: $spacing-4;
     }
   }
-  
+
   .type-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: $spacing-4;
-    
+
     @include respond-to('md') {
       grid-template-columns: repeat(2, 1fr);
     }
   }
-  
+
   .type-option {
     position: relative;
     padding: $spacing-6;
@@ -142,55 +143,55 @@
     background: none;
     cursor: pointer;
     transition: all $transition-fast;
-    
+
     &:hover {
       border-color: $color-primary;
       box-shadow: $shadow-md;
     }
-    
+
     &.selected {
       border-color: $color-primary;
       background: rgba($primary-50, 0.8);
     }
-    
+
     @include respond-below('sm') {
       padding: $spacing-4;
     }
-    
+
     .option-content {
       @include flex-center;
       flex-direction: column;
       text-align: center;
       gap: $spacing-3;
-      
+
       .option-icon {
         font-size: 2.5rem;
-        
+
         @include respond-below('sm') {
           font-size: 2rem;
         }
       }
-      
+
       .option-title {
         font-size: $font-size-lg;
         font-weight: $font-weight-semibold;
         color: $text-primary;
-        
+
         @include respond-below('sm') {
           font-size: $font-size-base;
         }
       }
-      
+
       .option-description {
         font-size: $font-size-sm;
         color: $text-muted;
-        
+
         @include respond-below('sm') {
           font-size: $font-size-xs;
         }
       }
     }
-    
+
     .check-icon {
       position: absolute;
       top: $spacing-4;
@@ -209,39 +210,39 @@
   @include flex-start;
   flex-direction: column;
   gap: $spacing-4;
-  
+
   @include respond-below('sm') {
     padding: $spacing-4;
     gap: $spacing-3;
   }
-  
+
   .error-alert {
     padding: $spacing-4;
     background: rgba($error-50, 0.8);
     border: 1px solid $error-200;
     border-radius: $border-radius-lg;
     color: $error-800;
-    
+
     @include respond-below('sm') {
       padding: $spacing-3;
     }
   }
-  
+
   .form-field {
     width: 100%;
-    
+
     .field-label {
       display: block;
       font-size: $font-size-sm;
       font-weight: $font-weight-medium;
       color: $text-secondary;
       margin-bottom: $spacing-1;
-      
+
       .required {
         color: $error-500;
       }
     }
-    
+
     .form-input,
     .form-select {
       width: 100%;
@@ -252,54 +253,54 @@
       background: $bg-primary;
       color: $text-primary;
       transition: all $transition-fast;
-      
+
       &:focus {
         outline: none;
         border-color: $color-primary;
         box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
       }
-      
+
       &::placeholder {
         color: $text-muted;
       }
-      
+
       @include respond-below('sm') {
         padding: $spacing-2 $spacing-3;
         font-size: $font-size-sm;
       }
     }
-    
+
     .field-help {
       margin-top: $spacing-1;
       font-size: $font-size-xs;
       color: $text-muted;
     }
   }
-  
+
   .name-row {
     display: grid;
     grid-template-columns: 1fr;
     gap: $spacing-4;
-    
+
     @include respond-to('md') {
       grid-template-columns: repeat(2, 1fr);
     }
-    
+
     @include respond-below('sm') {
       gap: $spacing-3;
     }
   }
-  
+
   .form-actions {
     @include flex-between;
     padding-top: $spacing-4;
     border-top: 1px solid $border-primary;
-    
+
     @include respond-below('sm') {
       flex-direction: column;
       gap: $spacing-3;
     }
-    
+
     .back-button {
       padding: $spacing-2 $spacing-4;
       border: 1px solid $border-primary;
@@ -308,22 +309,22 @@
       color: $text-secondary;
       cursor: pointer;
       transition: all $transition-fast;
-      
+
       &:hover {
         background: $bg-secondary;
       }
-      
+
       &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
       }
-      
+
       @include respond-below('sm') {
         width: 100%;
         order: 2;
       }
     }
-    
+
     .submit-button {
       padding: $spacing-2 $spacing-6;
       background: linear-gradient(135deg, $color-primary, $color-primary-hover);
@@ -333,25 +334,25 @@
       font-weight: $font-weight-medium;
       cursor: pointer;
       transition: all $transition-fast;
-      
+
       &:hover {
         box-shadow: $shadow-lg;
       }
-      
+
       &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
       }
-      
+
       @include respond-below('sm') {
         width: 100%;
         order: 1;
       }
-      
+
       .loading-content {
         @include flex-start;
         gap: $spacing-2;
-        
+
         .loading-spinner {
           width: 1rem;
           height: 1rem;
@@ -371,6 +372,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -382,95 +384,95 @@
   .modal-container {
     background: $dark-bg-secondary;
   }
-  
+
   .modal-header {
     border-color: $dark-border-primary;
-    
+
     .modal-title {
       color: $dark-text-primary;
     }
-    
+
     .close-button {
       color: $dark-text-secondary;
-      
+
       &:hover {
         color: $dark-text-primary;
       }
     }
   }
-  
+
   .success-message {
     background: rgba($success-900, 0.8);
     border-color: $success-700;
-    
+
     .success-text {
       color: $success-200;
     }
   }
-  
+
   .type-selection {
     .selection-title {
       color: $dark-text-primary;
     }
-    
+
     .type-option {
       border-color: $dark-border-primary;
-      
+
       &:hover {
         border-color: $color-primary;
       }
-      
+
       &.selected {
         background: rgba($primary-900, 0.3);
       }
-      
+
       .option-title {
         color: $dark-text-primary;
       }
-      
+
       .option-description {
         color: $dark-text-secondary;
       }
     }
   }
-  
+
   .user-form {
     .error-alert {
       background: rgba($error-900, 0.8);
       border-color: $error-700;
       color: $error-200;
     }
-    
+
     .field-label {
       color: $dark-text-secondary;
     }
-    
+
     .form-input,
     .form-select {
       background: $dark-bg-tertiary;
       border-color: $dark-border-primary;
       color: $dark-text-primary;
-      
+
       &::placeholder {
         color: $dark-text-secondary;
       }
-      
+
       &:focus {
         border-color: $color-primary;
       }
     }
-    
+
     .field-help {
       color: $dark-text-secondary;
     }
-    
+
     .form-actions {
       border-color: $dark-border-primary;
-      
+
       .back-button {
         border-color: $dark-border-primary;
         color: $dark-text-secondary;
-        
+
         &:hover {
           background: $dark-bg-tertiary;
         }
@@ -482,6 +484,7 @@
 // High Contrast Mode
 // -----------------------------------------------------------------------------
 @include high-contrast {
+
   .modal-container,
   .type-option,
   .form-input,
@@ -495,6 +498,7 @@
 // Reduced Motion
 // -----------------------------------------------------------------------------
 @include reduced-motion {
+
   .type-option,
   .close-button,
   .back-button,
@@ -503,7 +507,7 @@
   .form-select {
     transition: none;
   }
-  
+
   .loading-spinner {
     animation: none;
   }

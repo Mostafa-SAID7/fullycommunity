@@ -47,7 +47,7 @@ export class CommunityService {
     let params = new HttpParams()
       .set('page', page)
       .set('pageSize', pageSize);
-    
+
     if (filter.type) params = params.set('type', filter.type);
     if (filter.categoryId) params = params.set('categoryId', filter.categoryId);
     if (filter.searchTerm) params = params.set('searchTerm', filter.searchTerm);
@@ -124,7 +124,7 @@ export class CommunityService {
   // Load more posts
   loadPosts(filter: PostFilter = {}, reset = false) {
     if (this.loading()) return;
-    
+
     const page = reset ? 1 : this.currentPage();
     this.loading.set(true);
 
@@ -192,6 +192,14 @@ export class CommunityService {
         author: { id: '4', firstName: 'Emma', lastName: 'Davis', avatarUrl: null, userType: 'Member' }
       }
     ];
-    return { items: mockPosts, totalCount: 4, page: 1, pageSize: 20, totalPages: 1 };
+    return {
+      items: mockPosts,
+      totalCount: 4,
+      page: 1,
+      pageSize: 20,
+      totalPages: 1,
+      hasNextPage: false,
+      hasPreviousPage: false
+    };
   }
 }

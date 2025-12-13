@@ -4,6 +4,7 @@ import { LocationType } from '../enums';
 export interface MapLocationList {
   id: string;
   name: string;
+  slug: string | null;
   latitude: number;
   longitude: number;
   city: string | null;

@@ -8,9 +8,9 @@ import { PagedResult } from '../../types/common.types';
 export enum PodcastType { Audio = 0, Video = 1, Mixed = 2 }
 export enum PodcastStatus { Draft = 0, Published = 1, Archived = 2, Suspended = 3 }
 export enum PodcastVisibility { Public = 0, Private = 1, Unlisted = 2 }
-export enum PodcastCategory { 
-  Automotive = 0, Classic = 1, Electric = 2, Racing = 3, 
-  Maintenance = 4, Business = 5, News = 6, Reviews = 7, DIY = 8, Lifestyle = 9 
+export enum PodcastCategory {
+  Automotive = 0, Classic = 1, Electric = 2, Racing = 3,
+  Maintenance = 4, Business = 5, News = 6, Reviews = 7, DIY = 8, Lifestyle = 9
 }
 export enum ExplicitContent { None = 0, Clean = 1, Explicit = 2 }
 export enum EpisodeType { Full = 0, Trailer = 1, Bonus = 2, Interview = 3 }
@@ -269,12 +269,12 @@ export interface Podcast extends PodcastListItem {
 @Injectable({ providedIn: 'root' })
 export class PodcastService {
   private readonly apiUrl = `${environment.apiUrl}/api/podcasts`;
-  
+
   subscriptions = signal<PodcastListItem[]>([]);
   queue = signal<QueueItem[]>([]);
   currentEpisode = signal<Episode | null>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // ============ PODCAST SHOWS ============
 
@@ -284,7 +284,7 @@ export class PodcastService {
     if (category) params = params.set('category', category);
     if (sortBy) params = params.set('sortBy', sortBy);
     return this.http.get<PagedResult<PodcastListItem>>(this.apiUrl, { params }).pipe(
-      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0 }))
+      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0, hasNextPage: false, hasPreviousPage: false }))
     );
   }
 
@@ -357,7 +357,7 @@ export class PodcastService {
     let params = new HttpParams().set('page', page).set('pageSize', pageSize);
     if (sortBy) params = params.set('sortBy', sortBy);
     return this.http.get<PagedResult<EpisodeListItem>>(`${this.apiUrl}/${podcastId}/episodes`, { params }).pipe(
-      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0 }))
+      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0, hasNextPage: false, hasPreviousPage: false }))
     );
   }
 
@@ -366,10 +366,10 @@ export class PodcastService {
   }
 
   getLatestEpisodes(page = 1, pageSize = 20): Observable<PagedResult<EpisodeListItem>> {
-    return this.http.get<PagedResult<EpisodeListItem>>(`${this.apiUrl}/episodes/latest`, { 
-      params: { page, pageSize } 
+    return this.http.get<PagedResult<EpisodeListItem>>(`${this.apiUrl}/episodes/latest`, {
+      params: { page, pageSize }
     }).pipe(
-      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0 }))
+      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0, hasNextPage: false, hasPreviousPage: false }))
     );
   }
 
@@ -428,10 +428,10 @@ export class PodcastService {
   // ============ SUBSCRIPTIONS ============
 
   getSubscriptions(page = 1, pageSize = 20): Observable<PagedResult<PodcastListItem>> {
-    return this.http.get<PagedResult<PodcastListItem>>(`${this.apiUrl}/subscriptions`, { 
-      params: { page, pageSize } 
+    return this.http.get<PagedResult<PodcastListItem>>(`${this.apiUrl}/subscriptions`, {
+      params: { page, pageSize }
     }).pipe(
-      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0 }))
+      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0, hasNextPage: false, hasPreviousPage: false }))
     );
   }
 
@@ -479,13 +479,13 @@ export class PodcastService {
     return this.http.get<PagedResult<EpisodeComment>>(`${this.apiUrl}/episodes/${episodeId}/comments`, {
       params: { page, pageSize }
     }).pipe(
-      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0 }))
+      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0, hasNextPage: false, hasPreviousPage: false }))
     );
   }
 
   addComment(episodeId: string, content: string, timestamp?: string, parentId?: string): Observable<EpisodeComment> {
-    return this.http.post<EpisodeComment>(`${this.apiUrl}/episodes/${episodeId}/comments`, { 
-      content, timestamp, parentId 
+    return this.http.post<EpisodeComment>(`${this.apiUrl}/episodes/${episodeId}/comments`, {
+      content, timestamp, parentId
     });
   }
 
@@ -502,10 +502,10 @@ export class PodcastService {
   // ============ LIBRARY ============
 
   getSavedEpisodes(page = 1, pageSize = 20): Observable<PagedResult<EpisodeListItem>> {
-    return this.http.get<PagedResult<EpisodeListItem>>(`${this.apiUrl}/library/saved`, { 
-      params: { page, pageSize } 
+    return this.http.get<PagedResult<EpisodeListItem>>(`${this.apiUrl}/library/saved`, {
+      params: { page, pageSize }
     }).pipe(
-      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0 }))
+      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0, hasNextPage: false, hasPreviousPage: false }))
     );
   }
 
@@ -518,10 +518,10 @@ export class PodcastService {
   }
 
   getHistory(page = 1, pageSize = 20): Observable<PagedResult<ListenHistory>> {
-    return this.http.get<PagedResult<ListenHistory>>(`${this.apiUrl}/library/history`, { 
-      params: { page, pageSize } 
+    return this.http.get<PagedResult<ListenHistory>>(`${this.apiUrl}/library/history`, {
+      params: { page, pageSize }
     }).pipe(
-      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0 }))
+      catchError(() => of({ items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0, hasNextPage: false, hasPreviousPage: false }))
     );
   }
 

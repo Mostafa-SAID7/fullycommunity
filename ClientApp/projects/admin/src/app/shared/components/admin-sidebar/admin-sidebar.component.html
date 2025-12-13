@@ -1,20 +1,12 @@
-<div class="admin-sidebar">
-  <nav [class.sidebar-open]="isOpen()" 
-       [class.sidebar-closed]="!isOpen()"
-       class="sidebar-nav"
-       aria-label="Main navigation">
-    
+<div class="admin-sidebar" [class.sidebar-open]="isOpen()" [class.sidebar-closed]="!isOpen()">
+  <nav class="sidebar-nav" aria-label="Main navigation">
+
 
     <!-- Dashboard at top - Fixed -->
     <div class="dashboard-section">
-      <a routerLink="dashboard" routerLinkActive="active"
-         [title]="!isOpen() ? 'Dashboard' : ''"
-         class="dashboard-link"
-         [class.centered]="!isOpen()"
-         [class.active]="isLinkActive('dashboard')">
-        <svg class="dashboard-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-        </svg>
+      <a routerLink="dashboard" routerLinkActive="active" [title]="!isOpen() ? 'Dashboard' : ''" class="dashboard-link"
+        [class.centered]="!isOpen()" [class.active]="isLinkActive('dashboard')">
+        <i class="fas fa-tachometer-alt dashboard-icon"></i>
         <span *ngIf="isOpen()" class="dashboard-text">Dashboard</span>
       </a>
     </div>
@@ -23,209 +15,143 @@
     <div class="scrollable-content">
       <!-- Management Section -->
       <div *ngIf="isOpen()">
-        <button (click)="toggleSection('management')" 
-                class="section-header">
+        <button (click)="toggleSection('management')" class="section-header">
           <span>Management</span>
-          <svg class="section-icon" [class.collapsed]="!sections.management()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-          </svg>
+          <i class="fas fa-chevron-down section-icon" [class.collapsed]="!sections.management()"></i>
         </button>
         <ul class="nav-list section-content" [class.hidden]="!sections.management()">
           <li class="nav-item">
-            <a routerLink="users" routerLinkActive="active"
-               class="nav-link"
-               [class.active]="isLinkActive('users')">
-              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-              </svg>
+            <a routerLink="users" routerLinkActive="active" class="nav-link" [class.active]="isLinkActive('users')">
+              <i class="fas fa-users nav-icon"></i>
               <span class="nav-text">User Management</span>
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="content" routerLinkActive="active"
-               class="nav-link"
-               [class.active]="isLinkActive('content')">
-              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-              </svg>
+            <a routerLink="content" routerLinkActive="active" class="nav-link" [class.active]="isLinkActive('content')">
+              <i class="fas fa-file-alt nav-icon"></i>
               <span class="nav-text">Content Management</span>
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="moderation" routerLinkActive="active"
-               class="nav-link"
-               [class.active]="isLinkActive('moderation')">
-              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-              </svg>
+            <a routerLink="moderation" routerLinkActive="active" class="nav-link"
+              [class.active]="isLinkActive('moderation')">
+              <i class="fas fa-gavel nav-icon"></i>
               <span class="nav-text">Moderation</span>
             </a>
           </li>
         </ul>
       </div>
-      
+
       <!-- Icon-only links when closed -->
       <div *ngIf="!isOpen()" class="icon-only-section">
-        <a routerLink="users" routerLinkActive="active" title="User Management"
-           class="icon-link"
-           [class.active]="isLinkActive('users')">
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-          </svg>
+        <a routerLink="users" routerLinkActive="active" title="User Management" class="icon-link"
+          [class.active]="isLinkActive('users')">
+          <i class="fas fa-users icon"></i>
         </a>
-        <a routerLink="content" routerLinkActive="active" title="Content Management"
-           class="icon-link"
-           [class.active]="isLinkActive('content')">
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-          </svg>
+        <a routerLink="content" routerLinkActive="active" title="Content Management" class="icon-link"
+          [class.active]="isLinkActive('content')">
+          <i class="fas fa-file-alt icon"></i>
         </a>
-        <a routerLink="moderation" routerLinkActive="active" title="Moderation"
-           class="icon-link"
-           [class.active]="isLinkActive('moderation')">
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-          </svg>
+        <a routerLink="moderation" routerLinkActive="active" title="Moderation" class="icon-link"
+          [class.active]="isLinkActive('moderation')">
+          <i class="fas fa-gavel icon"></i>
         </a>
       </div>
 
       <!-- Analytics Section -->
       <div *ngIf="isOpen()">
-        <button (click)="toggleSection('analytics')" 
-                class="section-header">
+        <button (click)="toggleSection('analytics')" class="section-header">
           <span>Analytics</span>
-          <svg class="section-icon" [class.collapsed]="!sections.analytics()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-          </svg>
+          <i class="fas fa-chevron-down section-icon" [class.collapsed]="!sections.analytics()"></i>
         </button>
         <ul class="nav-list section-content" [class.hidden]="!sections.analytics()">
           <li class="nav-item">
-            <a routerLink="reports" routerLinkActive="active"
-               class="nav-link"
-               [class.active]="isLinkActive('reports')">
-              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-              </svg>
+            <a routerLink="reports" routerLinkActive="active" class="nav-link" [class.active]="isLinkActive('reports')">
+              <i class="fas fa-chart-bar nav-icon"></i>
               <span class="nav-text">Reports & Analytics</span>
             </a>
           </li>
         </ul>
       </div>
-      
+
       <!-- Icon-only Reports when closed -->
       <div *ngIf="!isOpen()" class="icon-only-section">
-        <a routerLink="reports" routerLinkActive="active" title="Reports & Analytics"
-           class="icon-link"
-           [class.active]="isLinkActive('reports')">
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-          </svg>
+        <a routerLink="reports" routerLinkActive="active" title="Reports & Analytics" class="icon-link"
+          [class.active]="isLinkActive('reports')">
+          <i class="fas fa-chart-bar icon"></i>
         </a>
       </div>
 
       <!-- System Section -->
       <div *ngIf="isOpen()">
-        <button (click)="toggleSection('system')" 
-                class="section-header">
+        <button (click)="toggleSection('system')" class="section-header">
           <span>System</span>
-          <svg class="section-icon" [class.collapsed]="!sections.system()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-          </svg>
+          <i class="fas fa-chevron-down section-icon" [class.collapsed]="!sections.system()"></i>
         </button>
         <ul class="nav-list section-content" [class.hidden]="!sections.system()">
           <li class="nav-item">
-            <a routerLink="settings" routerLinkActive="active"
-               class="nav-link"
-               [class.active]="isLinkActive('settings')">
-              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              </svg>
+            <a routerLink="settings" routerLinkActive="active" class="nav-link"
+              [class.active]="isLinkActive('settings')">
+              <i class="fas fa-cogs nav-icon"></i>
               <span class="nav-text">System Settings</span>
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="system-health" routerLinkActive="active"
-               class="nav-link"
-               [class.active]="isLinkActive('system-health')">
-              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-              </svg>
+            <a routerLink="system-health" routerLinkActive="active" class="nav-link"
+              [class.active]="isLinkActive('system-health')">
+              <i class="fas fa-heartbeat nav-icon"></i>
               <span class="nav-text">System Health</span>
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="maintenance" routerLinkActive="active"
-               class="nav-link"
-               [class.active]="isLinkActive('maintenance')">
-              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-              </svg>
+            <a routerLink="maintenance" routerLinkActive="active" class="nav-link"
+              [class.active]="isLinkActive('maintenance')">
+              <i class="fas fa-tools nav-icon"></i>
               <span class="nav-text">Maintenance</span>
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="security" routerLinkActive="active"
-               class="nav-link"
-               [class.active]="isLinkActive('security')">
-              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-              </svg>
+            <a routerLink="security" routerLinkActive="active" class="nav-link"
+              [class.active]="isLinkActive('security')">
+              <i class="fas fa-shield-alt nav-icon"></i>
               <span class="nav-text">Security Center</span>
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="api" routerLinkActive="active"
-               class="nav-link"
-               [class.active]="isLinkActive('api')">
-              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-11.83 1M9 7a2 2 0 012 2m4 0a6 6 0 01-11.83 1"/>
-              </svg>
+            <a routerLink="api" routerLinkActive="active" class="nav-link" [class.active]="isLinkActive('api')">
+              <i class="fas fa-code nav-icon"></i>
               <span class="nav-text">API Management</span>
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="notifications" routerLinkActive="active"
-               class="nav-link"
-               [class.active]="isLinkActive('notifications')">
-              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5z"/>
-              </svg>
+            <a routerLink="notifications" routerLinkActive="active" class="nav-link"
+              [class.active]="isLinkActive('notifications')">
+              <i class="fas fa-bell nav-icon"></i>
               <span class="nav-text">Notifications</span>
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="activity-log" routerLinkActive="active"
-               class="nav-link"
-               [class.active]="isLinkActive('activity-log')">
-              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-              </svg>
+            <a routerLink="activity-log" routerLinkActive="active" class="nav-link"
+              [class.active]="isLinkActive('activity-log')">
+              <i class="fas fa-history nav-icon"></i>
               <span class="nav-text">Activity Log</span>
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="localization" routerLinkActive="active"
-               class="nav-link"
-               [class.active]="isLinkActive('localization')">
-              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
-              </svg>
+            <a routerLink="localization" routerLinkActive="active" class="nav-link"
+              [class.active]="isLinkActive('localization')">
+              <i class="fas fa-globe nav-icon"></i>
               <span class="nav-text">Localization</span>
             </a>
           </li>
         </ul>
       </div>
-      
+
       <!-- Icon-only Settings when closed -->
       <div *ngIf="!isOpen()" class="icon-only-section">
-        <a routerLink="settings" routerLinkActive="active" title="System Settings"
-           class="icon-link"
-           [class.active]="isLinkActive('settings')">
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-          </svg>
+        <a routerLink="settings" routerLinkActive="active" title="System Settings" class="icon-link"
+          [class.active]="isLinkActive('settings')">
+          <i class="fas fa-cogs icon"></i>
         </a>
       </div>
 
@@ -234,38 +160,26 @@
         <div class="help-divider">
           <div class="divider-line"></div>
         </div>
-        <a routerLink="help" routerLinkActive="active"
-           class="help-link"
-           [class.active]="isLinkActive('help')">
-          <svg class="help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
+        <a routerLink="help" routerLinkActive="active" class="help-link" [class.active]="isLinkActive('help')">
+          <i class="fas fa-question-circle help-icon"></i>
           <span class="help-text">Help & Support</span>
         </a>
       </div>
 
       <!-- Icon-only Help when closed -->
       <div *ngIf="!isOpen()" class="help-section">
-        <a routerLink="help" routerLinkActive="active" title="Help & Support"
-           class="help-link centered"
-           [class.active]="isLinkActive('help')">
-          <svg class="help-icon large" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
+        <a routerLink="help" routerLinkActive="active" title="Help & Support" class="help-link centered"
+          [class.active]="isLinkActive('help')">
+          <i class="fas fa-question-circle help-icon large"></i>
         </a>
       </div>
     </div>
 
     <!-- My Profile at bottom - Fixed -->
     <div class="profile-section">
-      <a routerLink="profile" routerLinkActive="active"
-         [title]="!isOpen() ? 'My Profile' : ''"
-         class="profile-link"
-         [class.centered]="!isOpen()"
-         [class.active]="isLinkActive('profile')">
-        <svg class="profile-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-        </svg>
+      <a routerLink="profile" routerLinkActive="active" [title]="!isOpen() ? 'My Profile' : ''" class="profile-link"
+        [class.centered]="!isOpen()" [class.active]="isLinkActive('profile')">
+        <i class="fas fa-user-circle profile-icon"></i>
         <span *ngIf="isOpen()" class="profile-text">My Profile</span>
       </a>
     </div>

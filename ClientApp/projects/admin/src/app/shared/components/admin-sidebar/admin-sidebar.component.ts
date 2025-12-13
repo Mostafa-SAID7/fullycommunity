@@ -7,7 +7,11 @@ import { RouterLink, RouterLinkActive, Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './admin-sidebar.component.html',
-  styleUrl: './admin-sidebar.component.scss'
+  styleUrl: './admin-sidebar.component.scss',
+  host: {
+    '[class.sidebar-open]': 'isOpen()',
+    '[class.sidebar-closed]': '!isOpen()'
+  }
 })
 export class AdminSidebarComponent {
   sidebarClasses = input.required<string>();
