@@ -144,7 +144,7 @@ import { MarketplaceService, Seller, SellerStats, Product, Order } from '../../.
                       <tr class="border-b border-gray-200 dark:border-gray-700">
                         <td class="px-4 py-3">
                           <div class="flex items-center gap-3">
-                            <img [src]="product.images[0]?.url || 'assets/product-placeholder.png'" class="w-10 h-10 rounded object-cover">
+                            <img [src]="product.images.length > 0 ? product.images[0].url : 'assets/product-placeholder.png'" class="w-10 h-10 rounded object-cover">
                             <span class="font-medium text-gray-900 dark:text-white truncate max-w-[200px]">{{ product.title }}</span>
                           </div>
                         </td>

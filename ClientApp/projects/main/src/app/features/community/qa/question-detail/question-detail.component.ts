@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QAService } from '../../../../core/services/community/qa';
 import { Question, Answer } from '../../../../core/interfaces/community/qa';
-import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
+
 import { QuestionHeaderComponent } from '../components/question-header/question-header.component';
 import { AnswerListComponent } from '../components/answer-list/answer-list.component';
 import { AnswerFormComponent } from '../components/answer-form/answer-form.component';
@@ -14,7 +14,6 @@ import { RelatedQuestionsComponent } from '../components/related-questions/relat
   standalone: true,
   imports: [
     CommonModule,
-    LoadingStateComponent,
     QuestionHeaderComponent,
     AnswerListComponent,
     AnswerFormComponent,

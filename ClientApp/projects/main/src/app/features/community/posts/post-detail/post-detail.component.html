@@ -1,58 +1,58 @@
 @if (loading()) {
-  <div class="loading">
-    <div class="spinner"></div>
-    <span>Loading post...</span>
-  </div>
+<div class="loading">
+  <div class="spinner"></div>
+  <span>Loading post...</span>
+</div>
 } @else if (post()) {
-  <article class="post-detail">
-    <div class="post-header">
-      <a [routerLink]="['/profile', post()!.authorId]" class="author-link">
-        <div class="author-avatar">
-          {{ post()!.author.firstName?.charAt(0) }}{{ post()!.author.lastName?.charAt(0) }}
-        </div>
-        <div class="author-info">
-          <span class="author-name">{{ post()!.author.firstName }} {{ post()!.author.lastName }}</span>
-          <span class="post-time">{{ post()!.publishedAt || post()!.createdAt }}</span>
-        </div>
-      </a>
-    </div>
-
-    <div class="post-content">
-      @if (post()!.title) {
-        <h1>{{ post()!.title }}</h1>
-      }
-      <div class="content-body" [innerHTML]="post()!.content"></div>
-    </div>
-
-    @if (post()!.coverImageUrl) {
-      <div class="post-media">
-        <img [src]="post()!.coverImageUrl" [alt]="post()!.title">
+<article class="post-detail">
+  <div class="post-header">
+    <a [routerLink]="['/profile', post()!.authorId]" class="author-link">
+      <div class="author-avatar">
+        {{ post()!.author.firstName.charAt(0) }}{{ post()!.author.lastName.charAt(0) }}
       </div>
+      <div class="author-info">
+        <span class="author-name">{{ post()!.author.firstName }} {{ post()!.author.lastName }}</span>
+        <span class="post-time">{{ post()!.publishedAt || post()!.createdAt }}</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="post-content">
+    @if (post()!.title) {
+    <h1>{{ post()!.title }}</h1>
     }
+    <div class="content-body" [innerHTML]="post()!.content"></div>
+  </div>
 
-    <div class="post-stats">
-      <span>{{ likeCount() }} likes</span>
-      <span>{{ post()!.commentCount }} comments</span>
-      <span>{{ post()!.shareCount }} shares</span>
-    </div>
+  @if (post()!.coverImageUrl) {
+  <div class="post-media">
+    <img [src]="post()!.coverImageUrl" [alt]="post()!.title">
+  </div>
+  }
 
-    <div class="post-actions">
-      <button [class.liked]="isLiked()">Like</button>
-      <button>Comment</button>
-      <button>Share</button>
-    </div>
+  <div class="post-stats">
+    <span>{{ likeCount() }} likes</span>
+    <span>{{ post()!.commentCount }} comments</span>
+    <span>{{ post()!.shareCount }} shares</span>
+  </div>
 
-    <div class="comments-section">
-      <h3>Comments</h3>
-      @for (comment of comments(); track comment.id) {
-        <div class="comment">
-          <div class="comment-avatar">{{ comment.author.firstName?.charAt(0) }}</div>
-          <div class="comment-body">
-            <span class="comment-author">{{ comment.author.firstName }} {{ comment.author.lastName }}</span>
-            <p>{{ comment.content }}</p>
-          </div>
-        </div>
-      }
+  <div class="post-actions">
+    <button [class.liked]="isLiked()">Like</button>
+    <button>Comment</button>
+    <button>Share</button>
+  </div>
+
+  <div class="comments-section">
+    <h3>Comments</h3>
+    @for (comment of comments(); track comment.id) {
+    <div class="comment">
+      <div class="comment-avatar">{{ comment.author.firstName.charAt(0) }}</div>
+      <div class="comment-body">
+        <span class="comment-author">{{ comment.author.firstName }} {{ comment.author.lastName }}</span>
+        <p>{{ comment.content }}</p>
+      </div>
     </div>
-  </article>
+    }
+  </div>
+</article>
 }

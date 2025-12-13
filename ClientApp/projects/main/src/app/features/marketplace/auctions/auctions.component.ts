@@ -39,7 +39,7 @@ import { Auction } from '../../../core/services/commerce/marketplace.service';
                 <a [routerLink]="['/marketplace/auction', auction.id]" 
                   class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
                   <div class="relative">
-                    <img [src]="auction.product.images[0]?.url || 'assets/product-placeholder.png'" 
+                    <img [src]="auction.product.images.length > 0 ? auction.product.images[0].url : 'assets/product-placeholder.png'" 
                       class="w-full h-48 object-cover">
                     <div class="absolute top-2 left-2 px-2 py-1 bg-red-500 text-white text-xs font-medium rounded flex items-center gap-1">
                       <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,7 +95,7 @@ import { Auction } from '../../../core/services/commerce/marketplace.service';
                 <a [routerLink]="['/marketplace/auction', auction.id]" 
                   class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
                   <div class="relative">
-                    <img [src]="auction.product.images[0]?.url || 'assets/product-placeholder.png'" 
+                    <img [src]="auction.product.images.length > 0 ? auction.product.images[0].url : 'assets/product-placeholder.png'" 
                       class="w-full h-48 object-cover">
                     <div class="absolute top-2 left-2 px-2 py-1 text-white text-xs font-medium rounded"
                       [class]="auction.status === 'Active' ? 'bg-green-500' : auction.status === 'Scheduled' ? 'bg-blue-500' : 'bg-gray-500'">
@@ -153,7 +153,7 @@ export class AuctionsComponent implements OnInit {
   loading = signal(true);
   loadingMore = signal(false);
   hasMore = signal(true);
-  
+
   filters: AuctionSearchRequest = { page: 1, pageSize: 20 };
 
   ngOnInit() {
@@ -195,13 +195,13 @@ export class AuctionsComponent implements OnInit {
     const end = new Date(endTime).getTime();
     const now = Date.now();
     const diff = end - now;
-    
+
     if (diff <= 0) return 'Ended';
-    
+
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     if (days > 0) return `${days}d ${hours}h`;
     if (hours > 0) return `${hours}h ${minutes}m`;
     return `${minutes}m`;

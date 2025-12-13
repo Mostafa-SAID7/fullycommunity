@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { QAService } from '../../../../core/services/community/qa';
 import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';

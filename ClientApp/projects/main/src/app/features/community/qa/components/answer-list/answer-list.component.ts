@@ -10,7 +10,7 @@ import { EmptyStateComponent } from '../../../../../shared/components/empty-stat
 @Component({
   selector: 'app-answer-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, EmptyStateComponent],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './answer-list.component.html'
 })
 export class AnswerListComponent {

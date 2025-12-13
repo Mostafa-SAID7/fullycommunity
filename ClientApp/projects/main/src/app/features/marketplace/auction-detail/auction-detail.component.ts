@@ -26,7 +26,7 @@ import { Auction, Bid } from '../../../core/services/commerce/marketplace.servic
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Image -->
             <div class="aspect-square bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
-              <img [src]="auction()!.product.images[0]?.url || 'assets/product-placeholder.png'" 
+              <img [src]="auction()!.product.images.length > 0 ? auction()!.product.images[0].url : 'assets/product-placeholder.png'" 
                 class="w-full h-full object-contain">
             </div>
 
@@ -214,7 +214,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
 
   placeBid() {
     if (!this.auction() || !this.bidAmount || this.bidAmount < this.getMinBid()) return;
-    
+
     this.bidding.set(true);
     this.auctionService.placeBid(this.auction()!.id, { amount: this.bidAmount }).subscribe({
       next: (bid) => {

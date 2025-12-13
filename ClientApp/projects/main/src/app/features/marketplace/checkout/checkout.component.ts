@@ -90,7 +90,7 @@ import { MarketplaceService, Cart, OrderAddress, ShippingMethod, PaymentMethod }
                 <div class="space-y-3 mb-4">
                   @for (item of cart()!.items; track item.id) {
                     <div class="flex gap-3">
-                      <img [src]="item.product.images[0]?.url || 'assets/product-placeholder.png'" 
+                      <img [src]="item.product.images.length > 0 ? item.product.images[0].url : 'assets/product-placeholder.png'" 
                         class="w-16 h-16 rounded object-cover">
                       <div class="flex-1 min-w-0">
                         <p class="text-sm text-gray-900 dark:text-white line-clamp-2">{{ item.product.title }}</p>
@@ -181,13 +181,13 @@ export class CheckoutComponent implements OnInit {
   }
 
   isValid(): boolean {
-    return !!(this.address.fullName && this.address.addressLine1 && this.address.city && 
-              this.address.postalCode && this.address.country && this.cart()?.items.length);
+    return !!(this.address.fullName && this.address.addressLine1 && this.address.city &&
+      this.address.postalCode && this.address.country && this.cart()?.items.length);
   }
 
   placeOrder() {
     if (!this.isValid() || !this.cart()) return;
-    
+
     this.processing.set(true);
     this.marketplaceService.createOrder({
       items: this.cart()!.items.map(i => ({ productId: i.productId, quantity: i.quantity })),

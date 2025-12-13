@@ -1,12 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MarketplaceService, Order } from '../../../core/services/commerce/marketplace.service';
 
 @Component({
   selector: 'app-order-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div class="max-w-4xl mx-auto px-4 py-8">

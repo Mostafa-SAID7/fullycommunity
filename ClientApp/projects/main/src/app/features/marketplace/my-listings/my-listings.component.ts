@@ -44,7 +44,7 @@ import { MarketplaceService, Product } from '../../../core/services/commerce/mar
         <div class="listings-grid">
           @for (product of filteredListings(); track product.id) {
             <div class="listing-card">
-              <div class="listing-image" [style.background-image]="product.images?.length ? 'url(' + product.images[0].url + ')' : ''"></div>
+              <div class="listing-image" [style.background-image]="product.images.length ? 'url(' + product.images[0].url + ')' : ''"></div>
               <div class="listing-info">
                 <h3>{{ product.title }}</h3>
                 <p class="price">\${{ product.price | number:'1.2-2' }}</p>
@@ -96,7 +96,7 @@ import { MarketplaceService, Product } from '../../../core/services/commerce/mar
 })
 export class MyListingsComponent implements OnInit {
   private marketplaceService = inject(MarketplaceService);
-  
+
   listings = signal<Product[]>([]);
   activeTab = signal<'active' | 'sold' | 'draft'>('active');
   loading = signal(true);

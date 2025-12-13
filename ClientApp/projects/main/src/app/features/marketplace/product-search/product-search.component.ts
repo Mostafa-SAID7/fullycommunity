@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MarketplaceService, Product, ProductSearchRequest, ProductCondition, MarketplaceCategory } from '../../../core/services/commerce/marketplace.service';
 import { ProductCardComponent } from '../shared/product-card.component';
@@ -8,7 +8,7 @@ import { ProductCardComponent } from '../shared/product-card.component';
 @Component({
   selector: 'app-product-search',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, ProductCardComponent],
+  imports: [CommonModule, FormsModule, ProductCardComponent],
   template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div class="max-w-7xl mx-auto px-4 py-6">
@@ -190,7 +190,7 @@ export class ProductSearchComponent implements OnInit {
   };
 
   categories: MarketplaceCategory[] = [
-    'PartsServicing', 'AccessoriesAutomobilia', 'TyresWheels', 'CarCareProducts', 
+    'PartsServicing', 'AccessoriesAutomobilia', 'TyresWheels', 'CarCareProducts',
     'Tools', 'CarCovers', 'BooksDVD', 'LifestyleAttire'
   ];
 
@@ -245,10 +245,10 @@ export class ProductSearchComponent implements OnInit {
     const pages: number[] = [];
     const current = this.currentPage();
     const total = this.totalPages();
-    
+
     let start = Math.max(1, current - 2);
     let end = Math.min(total, current + 2);
-    
+
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }

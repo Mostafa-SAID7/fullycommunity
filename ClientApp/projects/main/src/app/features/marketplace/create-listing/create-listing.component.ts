@@ -33,7 +33,7 @@ import { MarketplaceService, CreateProductRequest, MarketplaceCategory, ProductC
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title *</label>
                 <input type="text" [(ngModel)]="product.title" maxlength="80"
                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-                <p class="text-xs text-gray-500 mt-1">{{ product.title?.length || 0 }}/80</p>
+                <p class="text-xs text-gray-500 mt-1">{{ product.title.length }}/80</p>
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subtitle</label>
@@ -207,7 +207,7 @@ export class CreateListingComponent implements OnInit {
   };
 
   categories: MarketplaceCategory[] = [
-    'PartsServicing', 'AccessoriesAutomobilia', 'TyresWheels', 'CarCareProducts', 
+    'PartsServicing', 'AccessoriesAutomobilia', 'TyresWheels', 'CarCareProducts',
     'Tools', 'CarCovers', 'BooksDVD', 'LifestyleAttire'
   ];
 
@@ -263,7 +263,7 @@ export class CreateListingComponent implements OnInit {
 
   private save(publish: boolean) {
     if (!this.isValid()) return;
-    
+
     this.saving.set(true);
     const request = this.isEdit
       ? this.marketplaceService.updateProduct(this.editId, this.product)

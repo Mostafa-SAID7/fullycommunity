@@ -2,13 +2,12 @@ import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { QuestionList } from '../../../../../core/interfaces/community/qa';
-import { LoadingStateComponent } from '../../../../../shared/components/loading-state/loading-state.component';
-import { EmptyStateComponent } from '../../../../../shared/components/empty-state/empty-state.component';
+
 
 @Component({
   selector: 'app-question-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, EmptyStateComponent],
+  imports: [CommonModule, RouterModule],
   templateUrl: './question-list.component.html'
 })
 export class QuestionListComponent {

@@ -38,7 +38,7 @@ import { ProductCardComponent } from '../shared/product-card.component';
             <!-- Images -->
             <div>
               <div class="aspect-square bg-white dark:bg-gray-800 rounded-xl overflow-hidden mb-4">
-                <img [src]="selectedImage() || product()!.images[0]?.url || 'assets/product-placeholder.png'" 
+                <img [src]="selectedImage() || (product()!.images.length > 0 ? product()!.images[0].url : 'assets/product-placeholder.png')" 
                   class="w-full h-full object-contain">
               </div>
               @if (product()!.images.length > 1) {
