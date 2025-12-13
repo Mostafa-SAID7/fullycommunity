@@ -37,4 +37,17 @@
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Ensure logs folder is created in publish output -->
+    <Content Include="logs\**\*">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <!-- Create logs folder if it doesn't exist -->
+    <None Include="logs\.gitkeep">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+  <Target Name="EnsureLogsFolder" AfterTargets="Publish">
+    <MakeDir Directories="$(PublishDir)logs" Condition="!Exists('$(PublishDir)logs')" />
+  </Target>
 </Project>
