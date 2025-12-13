@@ -1,6 +1,5 @@
-
 .help-container {
-  @include admin-content;
+  // Removed deprecated mixin - using index styles
   padding: $spacing-6;
   display: flex;
   flex-direction: column;
@@ -10,23 +9,23 @@
 // Header Section
 .help-header {
   @include flex-between;
-  
+
   &__content {
     flex: 1;
   }
-  
+
   &__title {
     @include heading(2);
     margin-bottom: $spacing-1;
     color: $text-primary;
   }
-  
+
   &__subtitle {
     color: $text-secondary;
     font-size: $font-size-base;
     margin: 0;
   }
-  
+
   &__actions {
     display: flex;
     align-items: center;
@@ -37,26 +36,26 @@
 // Search Section
 .search-section {
   @include card-base;
-  
+
   .search-container {
     max-width: 32rem;
     margin: 0 auto;
   }
-  
+
   .search-input-wrapper {
     position: relative;
   }
-  
+
   .search-input {
     @include input-base;
     padding-left: 3rem;
     font-size: $font-size-base;
-    
+
     &::placeholder {
       color: $text-muted;
     }
   }
-  
+
   .search-icon {
     position: absolute;
     left: $spacing-4;
@@ -73,7 +72,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: $spacing-6;
-  
+
   @include respond-below('md') {
     grid-template-columns: 1fr;
     gap: $spacing-4;
@@ -84,13 +83,13 @@
   @include card-interactive;
   text-decoration: none;
   color: inherit;
-  
+
   &__header {
     @include flex-start;
     gap: $spacing-3;
     margin-bottom: $spacing-3;
   }
-  
+
   &__icon {
     padding: $spacing-2;
     border-radius: $border-radius-lg;
@@ -98,33 +97,33 @@
     height: 2.5rem;
     @include flex-center;
     transition: all $transition-base;
-    
+
     svg {
       width: 1.25rem;
       height: 1.25rem;
     }
-    
+
     &--blue {
       background-color: map-get($card-variants, blue, bg);
       color: map-get($card-variants, blue, icon);
     }
-    
+
     &--green {
       background-color: map-get($card-variants, green, bg);
       color: map-get($card-variants, green, icon);
     }
-    
+
     &--orange {
       background-color: map-get($card-variants, orange, bg);
       color: map-get($card-variants, orange, icon);
     }
-    
+
     &--purple {
       background-color: map-get($card-variants, purple, bg);
       color: map-get($card-variants, purple, icon);
     }
   }
-  
+
   &__title {
     font-size: $font-size-lg;
     font-weight: $font-weight-semibold;
@@ -132,32 +131,32 @@
     margin: 0;
     transition: color $transition-base;
   }
-  
+
   &__description {
     font-size: $font-size-sm;
     color: $text-secondary;
     margin: 0;
     line-height: $line-height-relaxed;
   }
-  
+
   &:hover {
     .quick-link__title {
       color: $color-primary;
     }
-    
+
     .quick-link__icon {
       &--blue {
         background-color: darken(map-get($card-variants, blue, bg), 5%);
       }
-      
+
       &--green {
         background-color: darken(map-get($card-variants, green, bg), 5%);
       }
-      
+
       &--orange {
         background-color: darken(map-get($card-variants, orange, bg), 5%);
       }
-      
+
       &--purple {
         background-color: darken(map-get($card-variants, purple, bg), 5%);
       }
@@ -170,7 +169,7 @@
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: $spacing-6;
-  
+
   @include respond-below('lg') {
     grid-template-columns: 1fr;
     gap: $spacing-6;
@@ -181,20 +180,20 @@
 .documentation-section {
   @include card-base;
   padding: 0;
-  
+
   .section-header {
     padding: $spacing-4 $spacing-6;
     border-bottom: 1px solid $border-primary;
     background: $bg-secondary;
   }
-  
+
   .section-title {
     font-size: $font-size-lg;
     font-weight: $font-weight-semibold;
     color: $text-primary;
     margin: 0;
   }
-  
+
   .articles-list {
     padding: $spacing-6;
     display: flex;
@@ -206,29 +205,29 @@
 .article-item {
   padding-bottom: $spacing-6;
   border-bottom: 1px solid $border-primary;
-  
+
   &:last-child {
     border-bottom: none;
     padding-bottom: 0;
   }
-  
+
   .article-header {
     @include flex-between;
     margin-bottom: $spacing-3;
     align-items: flex-start;
   }
-  
+
   .article-info {
     flex: 1;
   }
-  
+
   .article-title {
     font-size: $font-size-lg;
     font-weight: $font-weight-semibold;
     color: $text-primary;
     margin: 0 0 $spacing-2 0;
   }
-  
+
   .article-meta {
     @include flex-start;
     gap: $spacing-4;
@@ -236,7 +235,7 @@
     color: $text-secondary;
     margin-bottom: $spacing-3;
   }
-  
+
   .article-category {
     padding: $spacing-1 $spacing-2;
     background: $bg-tertiary;
@@ -245,24 +244,24 @@
     font-size: $font-size-xs;
     font-weight: $font-weight-medium;
   }
-  
+
   .article-excerpt {
     color: $text-secondary;
     margin: 0 0 $spacing-4 0;
     line-height: $line-height-relaxed;
   }
-  
+
   .article-footer {
     @include flex-between;
     align-items: center;
   }
-  
+
   .article-tags {
     display: flex;
     flex-wrap: wrap;
     gap: $spacing-1;
   }
-  
+
   .tag {
     padding: $spacing-1 $spacing-2;
     font-size: $font-size-xs;
@@ -271,7 +270,7 @@
     border-radius: $border-radius-sm;
     font-weight: $font-weight-medium;
   }
-  
+
   .article-actions {
     @include flex-start;
     gap: $spacing-3;
@@ -286,25 +285,25 @@
   font-size: $font-size-sm;
   color: $text-secondary;
   transition: color $transition-base;
-  
+
   &__icon {
     width: 1rem;
     height: 1rem;
   }
-  
+
   &--helpful {
     @include flex-start;
     gap: $spacing-1;
-    
+
     &:hover {
       color: $color-success;
     }
   }
-  
+
   &--read {
     color: $color-primary;
     font-weight: $font-weight-medium;
-    
+
     &:hover {
       color: $color-primary-hover;
     }
@@ -315,20 +314,20 @@
 .faq-section {
   @include card-base;
   padding: 0;
-  
+
   .section-header {
     padding: $spacing-4 $spacing-6;
     border-bottom: 1px solid $border-primary;
     background: $bg-secondary;
   }
-  
+
   .section-title {
     font-size: $font-size-lg;
     font-weight: $font-weight-semibold;
     color: $text-primary;
     margin: 0;
   }
-  
+
   .faq-list {
     padding: $spacing-6;
     display: flex;
@@ -341,7 +340,7 @@
   border: 1px solid $border-primary;
   border-radius: $border-radius-lg;
   overflow: hidden;
-  
+
   .faq-question {
     @include button-base;
     width: 100%;
@@ -351,32 +350,32 @@
     background: transparent;
     border: none;
     transition: background-color $transition-base;
-    
+
     &:hover {
       background: $bg-secondary;
     }
-    
+
     &__text {
       font-weight: $font-weight-medium;
       color: $text-primary;
     }
-    
+
     &__icon {
       width: 1.25rem;
       height: 1.25rem;
       color: $text-muted;
       transition: transform $transition-base;
-      
+
       &--expanded {
         transform: rotate(180deg);
       }
     }
   }
-  
+
   .faq-answer {
     border-top: 1px solid $border-primary;
     background: $bg-secondary;
-    
+
     &__content {
       padding: $spacing-3 $spacing-4;
       font-size: $font-size-sm;
@@ -392,38 +391,38 @@
   border-radius: $border-radius-lg;
   padding: $spacing-6;
   color: $text-inverse;
-  
+
   .support-content {
     @include flex-between;
     align-items: center;
-    
+
     @include respond-below('md') {
       flex-direction: column;
       align-items: flex-start;
       gap: $spacing-4;
     }
   }
-  
+
   .support-info {
     flex: 1;
   }
-  
+
   .support-title {
     font-size: $font-size-xl;
     font-weight: $font-weight-semibold;
     margin: 0 0 $spacing-2 0;
   }
-  
+
   .support-description {
     color: rgba($text-inverse, 0.9);
     margin: 0;
     line-height: $line-height-relaxed;
   }
-  
+
   .support-actions {
     @include flex-start;
     gap: $spacing-3;
-    
+
     @include respond-below('md') {
       width: 100%;
       justify-content: flex-start;
@@ -435,32 +434,32 @@
 .btn {
   @include button-base;
   @include button-size('md');
-  
+
   &__icon {
     width: 1rem;
     height: 1rem;
   }
-  
+
   &--primary {
     @include button-variant('primary');
   }
-  
+
   &--secondary {
     background: $bg-primary;
     color: $color-primary;
     border: 2px solid transparent;
-    
+
     &:hover:not(:disabled) {
       background: rgba($bg-primary, 0.9);
       color: $color-primary-hover;
     }
   }
-  
+
   &--outline {
     background: transparent;
     color: $text-inverse;
     border: 2px solid $text-inverse;
-    
+
     &:hover:not(:disabled) {
       background: $text-inverse;
       color: $color-primary;
@@ -474,35 +473,36 @@
     padding: $spacing-4;
     gap: $spacing-4;
   }
-  
+
   .help-header {
     flex-direction: column;
     align-items: flex-start;
     gap: $spacing-4;
-    
+
     &__actions {
       width: 100%;
       justify-content: flex-start;
     }
   }
-  
+
   .quick-links {
     gap: $spacing-3;
   }
-  
+
   .main-content {
     gap: $spacing-4;
   }
-  
+
   .documentation-section,
   .faq-section {
+
     .section-header,
     .articles-list,
     .faq-list {
       padding: $spacing-4;
     }
   }
-  
+
   .support-section {
     padding: $spacing-4;
   }
@@ -514,34 +514,34 @@
     background: $dark-bg-primary;
     color: $dark-text-primary;
   }
-  
+
   .search-section,
   .documentation-section,
   .faq-section {
     background: $dark-bg-secondary;
     border-color: $dark-border-primary;
   }
-  
+
   .quick-link {
     background: $dark-bg-secondary;
     border-color: $dark-border-primary;
-    
+
     &:hover {
       background: $dark-bg-tertiary;
     }
   }
-  
+
   .article-category {
     background: $dark-bg-tertiary;
     color: $dark-text-secondary;
   }
-  
+
   .faq-question {
     &:hover {
       background: $dark-bg-tertiary;
     }
   }
-  
+
   .faq-answer {
     background: $dark-bg-tertiary;
     border-color: $dark-border-primary;

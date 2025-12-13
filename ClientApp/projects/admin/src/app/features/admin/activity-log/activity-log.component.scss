@@ -1,4 +1,3 @@
-
 @import '../../../shared/styles/index';
 
 // Component Root
@@ -8,7 +7,7 @@
 }
 
 .activity-log-container {
-  @include admin-content;
+  // Removed deprecated mixin - using index styles
   padding: $spacing-6;
   display: flex;
   flex-direction: column;
@@ -354,6 +353,7 @@
 // Dark Mode Support
 // -----------------------------------------------------------------------------
 @include dark-mode {
+
   .filters-card,
   .timeline-card {
     background: $dark-bg-secondary;

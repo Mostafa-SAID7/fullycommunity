@@ -1,21 +1,23 @@
+@import '../../shared/styles/index';
 
-// Component Root
-// -----------------------------------------------------------------------------
+// Moderation Component - Clean Implementation
+// =============================================================================
+// Uses ONLY centralized styles from index.scss
+
 :host {
   display: block;
 }
 
+// Container
+// -----------------------------------------------------------------------------
 .moderation-container {
-  @include admin-content;
   padding: $spacing-6;
-  padding-top: 3rem;
   display: flex;
   flex-direction: column;
   gap: $spacing-6;
 
   @include respond-below('md') {
     padding: $spacing-4;
-    padding-top: 2rem;
   }
 }
 
@@ -32,7 +34,9 @@
 
   .header-content {
     h1 {
-      @include heading(2);
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
       margin-bottom: $spacing-1;
     }
 
@@ -60,14 +64,29 @@
   }
 }
 
-// Loading
+// Loading State
 // -----------------------------------------------------------------------------
 .loading-container {
   @include flex-center;
   padding: 3rem 0;
 
   .loading-spinner {
-    @include loading-spinner(3rem, $color-primary);
+    width: 3rem;
+    height: 3rem;
+    border: 3px solid rgba($color-primary, 0.2);
+    border-top-color: $color-primary;
+    border-radius: $border-radius-full;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -82,7 +101,10 @@
 // Empty State
 // -----------------------------------------------------------------------------
 .empty-state {
-  @include card-base;
+  background: $bg-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
   text-align: center;
   padding: 3rem $spacing-4;
 
@@ -92,7 +114,9 @@
   }
 
   .empty-title {
-    @include heading(5);
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
     margin-bottom: $spacing-2;
   }
 
@@ -103,28 +127,52 @@
   }
 }
 
-// Modal Styles
+// Modal
 // -----------------------------------------------------------------------------
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: $bg-overlay;
+  background: rgba(0, 0, 0, 0.5);
   z-index: $z-index-modal;
   @include flex-center;
   padding: $spacing-4;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-container {
-  @include card-base;
   background: $bg-primary;
+  border: 1px solid $border-primary;
   border-radius: $border-radius-xl;
-  box-shadow: $shadow-2xl;
+  box-shadow: $shadow-lg;
   max-width: 32rem;
   width: 100%;
   max-height: 90vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modal-header {
@@ -133,24 +181,32 @@
   border-bottom: 1px solid $border-primary;
 
   .modal-title {
-    @include heading(4);
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
     margin: 0;
   }
 
   .modal-close-btn {
-    @include button-base;
-    @include button-variant('ghost');
-    @include button-size('sm');
-    padding: $spacing-2;
+    @include flex-center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    background: transparent;
     color: $text-muted;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    transition: all $transition-fast;
 
     &:hover {
-      color: $text-secondary;
+      background: $bg-secondary;
+      color: $text-primary;
     }
 
     .close-icon {
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 24px;
+      height: 24px;
     }
   }
 }
@@ -201,9 +257,21 @@
     }
 
     .form-textarea {
-      @include input-base;
+      padding: $spacing-3;
+      border: 1px solid $border-primary;
+      border-radius: $border-radius-md;
+      background: $bg-primary;
+      color: $text-primary;
+      font-size: $font-size-sm;
       resize: none;
       min-height: 5rem;
+      transition: border-color $transition-fast;
+
+      &:focus {
+        outline: none;
+        border-color: $color-primary;
+        box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+      }
     }
   }
 }
@@ -216,24 +284,47 @@
   border-top: 1px solid $border-primary;
 
   .btn {
-    @include button-base;
-    @include button-size('md');
+    @include flex-center;
+    gap: $spacing-2;
+    padding: $spacing-3 $spacing-5;
+    border: none;
+    border-radius: $border-radius-md;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    cursor: pointer;
+    transition: all $transition-fast;
 
     &.btn-secondary {
-      @include button-variant('secondary');
+      background: $bg-secondary;
+      color: $text-primary;
+      border: 1px solid $border-primary;
+
+      &:hover {
+        background: $bg-tertiary;
+      }
     }
 
     &.btn-success {
-      @include button-variant('success');
+      background: $success-500;
+      color: white;
+
+      &:hover {
+        background: $success-600;
+      }
     }
 
     &.btn-danger {
-      @include button-variant('error');
+      background: $error-500;
+      color: white;
+
+      &:hover {
+        background: $error-600;
+      }
     }
   }
 }
 
-// Dark Mode Support
+// Dark Mode
 // -----------------------------------------------------------------------------
 @include dark-mode {
   .modal-container {
@@ -241,10 +332,7 @@
     border-color: $dark-border-primary;
   }
 
-  .modal-header {
-    border-color: $dark-border-primary;
-  }
-
+  .modal-header,
   .modal-footer {
     border-color: $dark-border-primary;
   }
@@ -252,12 +340,9 @@
   .item-details {
     background: $dark-bg-tertiary;
   }
-}
 
-// Reduced Motion Support
-// -----------------------------------------------------------------------------
-@include reduced-motion {
-  .modal-overlay {
-    animation: none;
+  .empty-state {
+    background: $dark-bg-secondary;
+    border-color: $dark-border-primary;
   }
 }

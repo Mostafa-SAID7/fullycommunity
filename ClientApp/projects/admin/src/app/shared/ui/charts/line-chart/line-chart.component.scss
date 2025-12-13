@@ -11,7 +11,7 @@
 .chart-container {
   position: relative;
   width: 100%;
-  
+
   .chart-canvas {
     width: 100%;
     height: 100%;
@@ -23,11 +23,17 @@
 // Empty State
 // -----------------------------------------------------------------------------
 .empty-state {
-  @extend .absolute, .inset-0, .flex, .items-center, .justify-center, .bg-secondary, .rounded-lg;
-  
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-secondary;
+  border-radius: $border-radius-lg;
+
   .empty-content {
     text-align: center;
-    
+
     .empty-icon-container {
       width: 3rem;
       height: 3rem;
@@ -35,14 +41,14 @@
       border-radius: $border-radius-full;
       @include flex-center;
       margin: 0 auto $spacing-3;
-      
+
       .empty-icon {
         width: 1.5rem;
         height: 1.5rem;
         color: $text-muted;
       }
     }
-    
+
     .empty-text {
       color: $text-muted;
       font-size: $font-size-sm;
@@ -55,15 +61,15 @@
 @include dark-mode {
   .empty-state {
     background: $dark-bg-tertiary;
-    
+
     .empty-icon-container {
       background: $dark-border-secondary;
-      
+
       .empty-icon {
         color: $dark-text-secondary;
       }
     }
-    
+
     .empty-text {
       color: $dark-text-secondary;
     }
@@ -73,6 +79,7 @@
 // High Contrast Mode
 // -----------------------------------------------------------------------------
 @include high-contrast {
+
   .chart-container,
   .empty-state {
     border: 2px solid currentColor;

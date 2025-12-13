@@ -1,3 +1,4 @@
+@import '../../../styles/_index';
 
 :host {
   display: inline-block;
@@ -13,21 +14,21 @@
   transition: all $transition-fast;
   cursor: pointer;
   border: none;
-  
+
   &:focus-visible {
     @include focus-visible;
   }
-  
+
   &:not(:disabled) {
     &:hover {
       transform: scale(1.05);
     }
-    
+
     &:active {
       transform: scale(0.95);
     }
   }
-  
+
   &:disabled {
     cursor: not-allowed;
     opacity: 0.6;
@@ -41,27 +42,27 @@
   &.size-sm {
     padding: $spacing-1 $spacing-2;
     font-size: $font-size-xs;
-    
+
     .refresh-icon {
       width: 1rem;
       height: 1rem;
     }
   }
-  
+
   &.size-md {
     padding: $spacing-2 $spacing-3;
     font-size: $font-size-sm;
-    
+
     .refresh-icon {
       width: 1rem;
       height: 1rem;
     }
   }
-  
+
   &.size-lg {
     padding: $spacing-2 $spacing-4;
     font-size: $font-size-base;
-    
+
     .refresh-icon {
       width: 1.25rem;
       height: 1.25rem;
@@ -76,72 +77,72 @@
     background: linear-gradient(135deg, $color-primary, $color-primary-hover);
     color: $text-inverse;
     box-shadow: $shadow-lg;
-    
+
     &:hover:not(:disabled) {
       box-shadow: $shadow-xl;
     }
-    
+
     &:disabled {
       background: linear-gradient(135deg, $neutral-400, $neutral-500);
     }
   }
-  
+
   &.variant-secondary {
     background: $bg-primary;
     border: 2px solid $border-secondary;
     color: $text-secondary;
     box-shadow: $shadow-md;
-    
+
     &:hover:not(:disabled) {
       border-color: $color-primary;
       color: $color-primary;
       box-shadow: $shadow-lg;
     }
-    
+
     &:disabled {
       background: $bg-secondary;
       border-color: $border-primary;
       color: $text-muted;
     }
   }
-  
+
   &.variant-ghost {
     background: transparent;
     color: $text-secondary;
-    
+
     &:hover:not(:disabled) {
       background: $bg-secondary;
       color: $text-primary;
     }
-    
+
     &:disabled {
       color: $text-muted;
     }
   }
-  
+
   &.variant-success {
     background: linear-gradient(135deg, $success-500, $success-600);
     color: $text-inverse;
     box-shadow: $shadow-lg;
-    
+
     &:hover:not(:disabled) {
       box-shadow: $shadow-xl;
     }
-    
+
     &:disabled {
       background: linear-gradient(135deg, $neutral-400, $neutral-500);
     }
   }
-  
+
   &.variant-warning {
     background: linear-gradient(135deg, $warning-500, $warning-600);
     color: $text-inverse;
     box-shadow: $shadow-lg;
-    
+
     &:hover:not(:disabled) {
       box-shadow: $shadow-xl;
     }
-    
+
     &:disabled {
       background: linear-gradient(135deg, $neutral-400, $neutral-500);
     }
@@ -152,11 +153,11 @@
 // -----------------------------------------------------------------------------
 .refresh-icon {
   transition: transform $transition-slow;
-  
+
   &.loading {
     animation: spin 1s linear infinite;
   }
-  
+
   &.rotate-effect {
     transform: rotate(180deg);
   }
@@ -178,15 +179,15 @@
   width: 0.75rem;
   height: 0.75rem;
   border-radius: $border-radius-full;
-  
+
   &.success {
     background: $success-400;
   }
-  
+
   &.error {
     background: $error-400;
   }
-  
+
   &.warning {
     background: $warning-400;
     animation: pulse 2s infinite;
@@ -199,15 +200,19 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
@@ -221,27 +226,27 @@
       background: $dark-bg-secondary;
       border-color: $dark-border-secondary;
       color: $dark-text-secondary;
-      
+
       &:hover:not(:disabled) {
         border-color: $color-primary;
         color: $color-primary;
       }
-      
+
       &:disabled {
         background: $dark-bg-tertiary;
         border-color: $dark-border-primary;
         color: $dark-text-secondary;
       }
     }
-    
+
     &.variant-ghost {
       color: $dark-text-secondary;
-      
+
       &:hover:not(:disabled) {
         background: $dark-bg-tertiary;
         color: $dark-text-primary;
       }
-      
+
       &:disabled {
         color: $dark-text-secondary;
       }
@@ -260,19 +265,20 @@
 // Reduced Motion
 // -----------------------------------------------------------------------------
 @include reduced-motion {
+
   .refresh-button,
   .refresh-icon {
     transition: none;
   }
-  
+
   .refresh-icon.loading {
     animation: none;
   }
-  
+
   .status-indicator.warning {
     animation: none;
   }
-  
+
   .refresh-button:hover,
   .refresh-button:active {
     transform: none;

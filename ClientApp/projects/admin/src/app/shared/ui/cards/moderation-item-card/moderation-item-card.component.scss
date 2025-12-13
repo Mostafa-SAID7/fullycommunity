@@ -1,3 +1,4 @@
+@import 'index';
 
 :host {
   display: block;
@@ -13,15 +14,15 @@
   border: 1px solid $border-primary;
   padding: $spacing-6;
   transition: box-shadow $transition-fast;
-  
+
   &:hover {
     box-shadow: $shadow-md;
   }
-  
+
   @include respond-below('md') {
     padding: $spacing-4;
   }
-  
+
   @include respond-below('sm') {
     padding: $spacing-3;
     border-radius: $border-radius-lg;
@@ -34,7 +35,7 @@
   @include flex-start;
   justify-content: space-between;
   margin-bottom: $spacing-4;
-  
+
   @include respond-below('md') {
     flex-direction: column;
     gap: $spacing-3;
@@ -46,29 +47,29 @@
 // -----------------------------------------------------------------------------
 .content-section {
   flex: 1;
-  
+
   .badge-row {
     @include flex-start;
     gap: $spacing-3;
     margin-bottom: $spacing-2;
     flex-wrap: wrap;
-    
+
     @include respond-below('sm') {
       gap: $spacing-2;
     }
   }
-  
+
   .content-title {
     font-weight: $font-weight-semibold;
     color: $text-primary;
     margin-bottom: $spacing-2;
     font-size: $font-size-base;
-    
+
     @include respond-below('sm') {
       font-size: $font-size-sm;
     }
   }
-  
+
   .content-preview {
     font-size: $font-size-sm;
     color: $text-secondary;
@@ -78,19 +79,19 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    
+
     @include respond-below('sm') {
       font-size: $font-size-xs;
       margin-bottom: $spacing-2;
     }
   }
-  
+
   .content-meta {
     @include flex-start;
     gap: $spacing-4;
     font-size: $font-size-xs;
     color: $text-muted;
-    
+
     @include respond-below('sm') {
       flex-direction: column;
       gap: $spacing-1;
@@ -105,7 +106,7 @@
   flex-direction: column;
   gap: $spacing-2;
   margin-left: $spacing-4;
-  
+
   @include respond-below('md') {
     flex-direction: row;
     margin-left: 0;
@@ -113,7 +114,7 @@
     justify-content: flex-end;
     flex-wrap: wrap;
   }
-  
+
   @include respond-below('sm') {
     justify-content: center;
   }
@@ -128,44 +129,44 @@
   transition: all $transition-fast;
   border: none;
   min-width: 4rem;
-  
+
   &.approve-button {
     background: $success-600;
     color: $text-inverse;
-    
+
     &:hover {
       background: $success-700;
     }
   }
-  
+
   &.reject-button {
     background: $error-600;
     color: $text-inverse;
-    
+
     &:hover {
       background: $error-700;
     }
   }
-  
+
   &.dismiss-button {
     background: $neutral-600;
     color: $text-inverse;
-    
+
     &:hover {
       background: $neutral-700;
     }
   }
-  
+
   &.more-button {
     background: none;
     color: $text-secondary;
     border: 1px solid $border-primary;
-    
+
     &:hover {
       background: $bg-secondary;
     }
   }
-  
+
   @include respond-below('sm') {
     padding: $spacing-1 $spacing-2;
     font-size: $font-size-xs;
@@ -181,49 +182,49 @@
   border-radius: $border-radius-full;
   font-size: $font-size-xs;
   font-weight: $font-weight-medium;
-  
+
   // Content Type Badges
   &.type-post {
     background: rgba($primary-100, 0.8);
     color: $primary-800;
   }
-  
+
   &.type-comment {
     background: rgba($success-100, 0.8);
     color: $success-800;
   }
-  
+
   &.type-review {
     background: rgba($purple-100, 0.8);
     color: $purple-800;
   }
-  
+
   &.type-video {
     background: rgba($error-100, 0.8);
     color: $error-800;
   }
-  
+
   &.type-guide {
     background: rgba($warning-100, 0.8);
     color: $warning-800;
   }
-  
+
   // Priority Badges
   &.priority-low {
     background: rgba($neutral-100, 0.8);
     color: $neutral-800;
   }
-  
+
   &.priority-normal {
     background: rgba($primary-100, 0.8);
     color: $primary-800;
   }
-  
+
   &.priority-high {
     background: rgba($warning-100, 0.8);
     color: $warning-800;
   }
-  
+
   &.priority-urgent {
     background: rgba($error-100, 0.8);
     color: $error-800;
@@ -237,26 +238,26 @@
   border: 1px solid $error-200;
   border-radius: $border-radius-lg;
   padding: $spacing-3;
-  
+
   .report-header {
     @include flex-start;
     gap: $spacing-2;
     margin-bottom: $spacing-1;
-    
+
     .report-icon {
       width: 1rem;
       height: 1rem;
       color: $error-600;
       flex-shrink: 0;
     }
-    
+
     .report-title {
       font-size: $font-size-sm;
       font-weight: $font-weight-medium;
       color: $error-800;
     }
   }
-  
+
   .report-reason {
     font-size: $font-size-sm;
     color: $error-700;
@@ -271,45 +272,45 @@
     background: $dark-bg-secondary;
     border-color: $dark-border-primary;
   }
-  
+
   .content-title {
     color: $dark-text-primary;
   }
-  
+
   .content-preview {
     color: $dark-text-secondary;
   }
-  
+
   .content-meta {
     color: $dark-text-secondary;
   }
-  
+
   .more-button {
     color: $dark-text-secondary;
     border-color: $dark-border-primary;
-    
+
     &:hover {
       background: $dark-bg-tertiary;
     }
   }
-  
+
   .report-section {
     background: rgba($error-900, 0.3);
     border-color: $error-700;
-    
+
     .report-title {
       color: $error-300;
     }
-    
+
     .report-reason {
       color: $error-200;
     }
-    
+
     .report-icon {
       color: $error-400;
     }
   }
-  
+
   // Dark mode badge colors
   .content-badge,
   .priority-badge {
@@ -317,42 +318,42 @@
       background: rgba($primary-900, 0.3);
       color: $primary-300;
     }
-    
+
     &.type-comment {
       background: rgba($success-900, 0.3);
       color: $success-300;
     }
-    
+
     &.type-review {
       background: rgba($purple-900, 0.3);
       color: $purple-300;
     }
-    
+
     &.type-video {
       background: rgba($error-900, 0.3);
       color: $error-300;
     }
-    
+
     &.type-guide {
       background: rgba($warning-900, 0.3);
       color: $warning-300;
     }
-    
+
     &.priority-low {
       background: rgba($neutral-800, 0.3);
       color: $neutral-300;
     }
-    
+
     &.priority-normal {
       background: rgba($primary-900, 0.3);
       color: $primary-300;
     }
-    
+
     &.priority-high {
       background: rgba($warning-900, 0.3);
       color: $warning-300;
     }
-    
+
     &.priority-urgent {
       background: rgba($error-900, 0.3);
       color: $error-300;
@@ -363,6 +364,7 @@
 // High Contrast Mode
 // -----------------------------------------------------------------------------
 @include high-contrast {
+
   .moderation-card,
   .action-button,
   .content-badge,
@@ -375,6 +377,7 @@
 // Reduced Motion
 // -----------------------------------------------------------------------------
 @include reduced-motion {
+
   .moderation-card,
   .action-button {
     transition: none;

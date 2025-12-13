@@ -257,6 +257,7 @@ $line-height-relaxed: 1.75;
 // Z-Index Scale
 $z-index-dropdown: 1000;
 $z-index-sticky: 1020;
+$z-index-sidebar: 1030;
 $z-index-modal: 1050;
 $z-index-toast: 1060;
 
@@ -274,3 +275,4 @@ $icon-3xl: 64px;
 $transition-fast: 0.15s ease-in-out;
 $transition-base: 0.2s ease-in-out;
 $transition-slow: 0.3s ease-in-out;
+$transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);

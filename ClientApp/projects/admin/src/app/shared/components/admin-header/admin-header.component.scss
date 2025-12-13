@@ -1,270 +1,138 @@
 @import '../../styles/index';
 
+// Admin Header - Clean, Minimal Implementation
 // =============================================================================
-// Admin Header Component Styles
-// =============================================================================
+// Uses ONLY centralized styles from index.scss
 
 :host {
   display: block;
-  width: 100%;
 }
 
-// Main Header Container
-// -----------------------------------------------------------------------------
-
 .admin-header {
-  @include flex-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   height: $nav-height;
-  padding: 0 $spacing-6;
-  background: rgba($bg-primary, 0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba($border-primary, 0.5);
-  position: sticky;
-  top: 0;
-  z-index: 1020;
-  
-  @include respond-below('md') {
-    padding: 0 $spacing-4;
+  background: $bg-primary;
+  border-bottom: 1px solid $border-primary;
+  padding: 0 $spacing-4;
+  gap: $spacing-4;
+  box-shadow: $shadow-sm;
+
+  @include respond-to('md') {
+    padding: 0 $spacing-6;
   }
 }
 
 // Header Sections
 // -----------------------------------------------------------------------------
-
-.header-left {
+.header-left,
+.header-center,
+.header-right {
   @include flex-start;
-  gap: $spacing-4;
-  flex: 0 0 auto;
-  
-  @include respond-below('md') {
-    gap: $spacing-3;
-  }
-  
-  @include respond-below('sm') {
-    gap: $spacing-2;
-    flex: 1; // Take more space on mobile to accommodate larger toggle button
-  }
+  gap: $spacing-3;
 }
 
-// Sidebar Toggle Button
-// -----------------------------------------------------------------------------
-
-.sidebar-toggle-btn {
-  @include flex-center;
-  width: 2.5rem;
-  height: 2.5rem;
-  background: none;
-  border: none;
-  color: $text-secondary;
-  cursor: pointer;
-  border-radius: $border-radius-md;
-  transition: all $transition-fast;
-  position: relative;
-  
-  &:hover {
-    background: rgba($color-primary, 0.1);
-    color: $color-primary;
-  }
-  
-  &:focus-visible {
-    @include focus-visible;
-  }
-  
-  // Enhanced mobile styling
-  @include respond-below('md') {
-    width: 2.75rem;
-    height: 2.75rem;
-    background: rgba($color-primary, 0.08);
-    border: 1px solid rgba($color-primary, 0.15);
-    color: $color-primary;
-    
-    &:hover {
-      background: rgba($color-primary, 0.15);
-      border-color: rgba($color-primary, 0.25);
-      transform: scale(1.05);
-    }
-    
-    &:active {
-      transform: scale(0.98);
-      background: rgba($color-primary, 0.2);
-    }
-  }
-  
-  @include respond-below('sm') {
-    width: 3rem;
-    height: 3rem;
-    background: rgba($color-primary, 0.1);
-    border: 1.5px solid rgba($color-primary, 0.2);
-    box-shadow: $shadow-sm;
-    
-    &:hover {
-      background: rgba($color-primary, 0.18);
-      border-color: rgba($color-primary, 0.3);
-      box-shadow: $shadow-md;
-      transform: scale(1.08);
-    }
-    
-    &:active {
-      transform: scale(0.95);
-      background: rgba($color-primary, 0.25);
-    }
-  }
-  
-  .toggle-icon {
-    width: $icon-md;
-    height: $icon-md;
-    
-    @include respond-below('md') {
-      width: $icon-lg;
-      height: $icon-lg;
-    }
-    
-    @include respond-below('sm') {
-      width: $icon-xl;
-      height: $icon-xl;
-    }
-  }
+.header-left {
+  flex-shrink: 0;
 }
 
 .header-center {
-  @include flex-center;
   flex: 1;
   max-width: 600px;
-  margin: 0 $spacing-6;
-  
-  @include respond-below('lg') {
+
+  @include respond-below('md') {
     display: none;
   }
 }
 
 .header-right {
-  @include flex-start;
-  gap: $spacing-3;
-  flex: 0 0 auto;
-  
-  @include respond-below('md') {
-    gap: $spacing-2;
+  flex-shrink: 0;
+}
+
+// Sidebar Toggle Button
+// -----------------------------------------------------------------------------
+.sidebar-toggle-btn {
+  @include flex-center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: $text-primary;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $bg-secondary;
+    color: $color-primary;
   }
-  
-  @include respond-below('sm') {
-    gap: $spacing-1;
-    flex-shrink: 1; // Allow shrinking on very small screens
+
+  .toggle-icon {
+    width: 24px;
+    height: 24px;
   }
 }
 
-
-
-// Brand Section
+// Search Bar
 // -----------------------------------------------------------------------------
-
-.header-brand {
-  .brand-link {
-    @include flex-start;
-    gap: $spacing-3;
-    text-decoration: none;
-    color: inherit;
-    transition: all $transition-fast;
-    
-    &:hover {
-      color: $color-primary;
-      text-decoration: none;
-    }
-  }
-  
-  .brand-logo {
-    @include flex-center;
-    width: 2.5rem;
-    height: 2.5rem;
-    background: linear-gradient(135deg, $color-primary, $color-primary-hover);
-    border-radius: $border-radius-lg;
-    
-    .logo-icon {
-      width: $icon-md;
-      height: $icon-md;
-      color: $text-inverse;
-    }
-  }
-  
-  .brand-text {
-    font-weight: $font-weight-bold;
-    font-size: $font-size-lg;
-    color: $text-primary;
-    
-    @include respond-below('sm') {
-      display: none;
-    }
-  }
-}
-
-// Search Section
-// -----------------------------------------------------------------------------
-
 .header-search {
   width: 100%;
-  max-width: 400px;
-  
-  .search-wrapper {
-    position: relative;
-    @include flex-center;
-    
-    .search-icon {
-      position: absolute;
-      left: $spacing-3;
-      width: $icon-sm;
-      height: $icon-sm;
-      color: $text-muted;
-      pointer-events: none;
-    }
-    
-    .search-input {
-      @include input-base;
-      width: 100%;
-      padding-left: $spacing-10;
-      padding-right: $spacing-10;
-      background: rgba($bg-secondary, 0.5);
-      border: 1px solid rgba($border-primary, 0.5);
-      font-size: $font-size-sm;
-      
-      &:focus {
-        background: $bg-primary;
-        border-color: $color-primary;
-        box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
-      }
-      
-      &::placeholder {
-        color: $text-muted;
-      }
-    }
-    
-    .search-clear {
-      position: absolute;
-      right: $spacing-3;
-      @include flex-center;
-      width: 1.5rem;
-      height: 1.5rem;
-      background: none;
-      border: none;
-      color: $text-muted;
-      cursor: pointer;
-      border-radius: $border-radius-base;
-      transition: all $transition-fast;
-      
-      &:hover {
-        background: rgba($error-500, 0.1);
-        color: $error-600;
-      }
-      
-      .clear-icon {
-        width: $icon-xs;
-        height: $icon-xs;
-      }
-    }
+}
+
+.search-wrapper {
+  position: relative;
+  @include flex-start;
+  gap: $spacing-2;
+  background: $bg-secondary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius-lg;
+  padding: $spacing-2 $spacing-3;
+  transition: all $transition-fast;
+
+  &:focus-within {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  color: $text-muted;
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: $text-primary;
+  font-size: $font-size-sm;
+  outline: none;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+.search-clear {
+  @include flex-center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  color: $text-muted;
+  cursor: pointer;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $text-primary;
   }
 }
 
 // Header Actions
 // -----------------------------------------------------------------------------
-
 .header-actions {
   @include flex-start;
   gap: $spacing-2;
@@ -273,814 +141,483 @@
 .action-btn {
   @include flex-center;
   position: relative;
-  width: 2.5rem;
-  height: 2.5rem;
-  background: none;
+  width: 40px;
+  height: 40px;
   border: none;
-  color: $text-secondary;
+  background: transparent;
+  color: $text-primary;
+  border-radius: $border-radius-md;
   cursor: pointer;
-  border-radius: $border-radius-lg;
   transition: all $transition-fast;
-  text-decoration: none;
-  
+
   &:hover {
-    background: rgba($color-primary, 0.1);
+    background: $bg-secondary;
     color: $color-primary;
-    transform: translateY(-1px);
   }
-  
-  &:focus-visible {
-    @include focus-visible;
-  }
-  
+
   .action-icon {
-    width: $icon-md;
-    height: $icon-md;
+    width: 20px;
+    height: 20px;
   }
 }
 
-// Role Switcher
+// Notifications
 // -----------------------------------------------------------------------------
-
-.role-switcher {
-  position: relative;
-  
-  .role-button {
-    @include flex-center;
-    gap: $spacing-2;
-    padding: $spacing-2 $spacing-3;
-    background: rgba($color-primary, 0.1);
-    border: 1px solid rgba($color-primary, 0.2);
-    color: $color-primary;
-    cursor: pointer;
-    border-radius: $border-radius-lg;
-    transition: all $transition-fast;
-    
-    &:hover {
-      background: rgba($color-primary, 0.15);
-      border-color: rgba($color-primary, 0.3);
-    }
-    
-    .role-icon {
-      font-size: $font-size-sm;
-    }
-    
-    .dropdown-icon {
-      width: $icon-sm;
-      height: $icon-sm;
-      transition: transform $transition-fast;
-      
-      &.rotated {
-        transform: rotate(180deg);
-      }
-    }
-  }
-  
-  .role-dropdown {
-    position: absolute;
-    top: calc(100% + 0.5rem);
-    right: 0;
-    min-width: 280px;
-    background: $bg-primary;
-    border: 1px solid $border-primary;
-    border-radius: $border-radius-lg;
-    box-shadow: $shadow-lg;
-    z-index: $z-index-dropdown;
-    overflow: hidden;
-    
-    .dropdown-header {
-      padding: $spacing-4;
-      background: rgba($color-primary, 0.05);
-      border-bottom: 1px solid $border-primary;
-      font-weight: $font-weight-medium;
-      font-size: $font-size-sm;
-      color: $text-primary;
-    }
-    
-    .dropdown-content {
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    
-    .role-option {
-      @include flex-start;
-      width: 100%;
-      gap: $spacing-3;
-      padding: $spacing-3 $spacing-4;
-      background: none;
-      border: none;
-      cursor: pointer;
-      transition: all $transition-fast;
-      text-align: left;
-      
-      &:hover {
-        background: rgba($color-primary, 0.05);
-      }
-      
-      &.active {
-        background: rgba($color-primary, 0.1);
-        color: $color-primary;
-      }
-      
-      .role-option-icon {
-        font-size: $font-size-lg;
-        flex-shrink: 0;
-      }
-      
-      .role-option-content {
-        flex: 1;
-        
-        .role-option-name {
-          font-weight: $font-weight-medium;
-          font-size: $font-size-sm;
-          color: $text-primary;
-          margin-bottom: 0.125rem;
-        }
-        
-        .role-option-description {
-          font-size: $font-size-xs;
-          color: $text-muted;
-        }
-      }
-      
-      .check-icon {
-        width: $icon-sm;
-        height: $icon-sm;
-        color: $color-primary;
-        flex-shrink: 0;
-      }
-    }
-  }
-}
-
-// Notification Button & Dropdown
-// -----------------------------------------------------------------------------
-
-.notifications {
-  position: relative;
-}
-
-.notification-btn {
-  &.has-notifications {
-    .action-icon {
-      animation: bellRing 2s ease-in-out infinite;
-    }
-  }
-  
-  .notification-badge {
-    position: absolute;
-    top: -0.25rem;
-    right: -0.25rem;
-    min-width: 1.25rem;
-    height: 1.25rem;
-    background: $error-500;
-    color: $text-inverse;
-    font-size: $font-size-xs;
-    font-weight: $font-weight-bold;
-    border-radius: $border-radius-full;
-    @include flex-center;
-    padding: 0 0.25rem;
-    box-shadow: 0 2px 4px rgba($error-500, 0.3);
-    animation: pulse 2s infinite;
-  }
-}
-
-.notification-dropdown {
+.notification-badge {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: 6px;
+  right: 6px;
+  @include flex-center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: $color-error;
+  color: white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  border-radius: $border-radius-full;
+  border: 2px solid $bg-primary;
+}
+
+// Dropdowns (Shared Styles)
+// -----------------------------------------------------------------------------
+@mixin dropdown-base {
+  position: absolute;
+  top: calc(100% + $spacing-2);
   right: 0;
-  width: 380px;
-  max-width: 90vw;
+  min-width: 280px;
   background: $bg-primary;
   border: 1px solid $border-primary;
   border-radius: $border-radius-lg;
   box-shadow: $shadow-lg;
   z-index: $z-index-dropdown;
-  overflow: hidden;
-  
-  .notification-header {
-    @include flex-between;
-    padding: $spacing-4;
-    background: rgba($color-primary, 0.05);
-    border-bottom: 1px solid $border-primary;
-    
-    .header-title {
-      font-weight: $font-weight-medium;
-      font-size: $font-size-sm;
-      color: $text-primary;
-    }
-    
-    .header-actions {
-      @include flex-start;
-      gap: $spacing-2;
-      
-      .header-action {
-        padding: $spacing-1 $spacing-2;
-        background: none;
-        border: 1px solid transparent;
-        color: $color-primary;
-        font-size: $font-size-xs;
-        cursor: pointer;
-        border-radius: $border-radius-base;
-        transition: all $transition-fast;
-        
-        &:hover {
-          background: rgba($color-primary, 0.1);
-          border-color: rgba($color-primary, 0.2);
-        }
-      }
-    }
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-  
-  .notification-content {
-    max-height: 400px;
-    overflow-y: auto;
-    
-    .loading-state {
-      @include flex-center;
-      padding: $spacing-8;
-      
-      .loading-spinner {
-        width: 2rem;
-        height: 2rem;
-        border: 2px solid rgba($color-primary, 0.2);
-        border-top: 2px solid $color-primary;
-        border-radius: $border-radius-full;
-        animation: spin 1s linear infinite;
-      }
-    }
-    
-    .empty-state {
-      @include flex-center;
-      flex-direction: column;
-      padding: $spacing-8;
-      color: $text-muted;
-      
-      .empty-icon {
-        width: 3rem;
-        height: 3rem;
-        margin-bottom: $spacing-4;
-        opacity: 0.5;
-      }
-      
-      .empty-text {
-        font-size: $font-size-sm;
-        margin: 0;
-      }
-    }
-    
-    .notification-list {
-      .notification-item {
-        @include flex-start;
-        gap: $spacing-3;
-        padding: $spacing-3 $spacing-4;
-        cursor: pointer;
-        transition: all $transition-fast;
-        border-bottom: 1px solid rgba($border-primary, 0.5);
-        
-        &:hover {
-          background: rgba($color-primary, 0.02);
-        }
-        
-        &.unread {
-          background: rgba($color-primary, 0.05);
-          border-left: 3px solid $color-primary;
-        }
-        
-        .notification-item-icon {
-          font-size: $font-size-lg;
-          flex-shrink: 0;
-          margin-top: 0.125rem;
-        }
-        
-        .notification-item-content {
-          flex: 1;
-          min-width: 0;
-          
-          .notification-title {
-            font-weight: $font-weight-medium;
-            font-size: $font-size-sm;
-            color: $text-primary;
-            margin: 0 0 0.25rem 0;
-            line-height: 1.4;
-          }
-          
-          .notification-message {
-            font-size: $font-size-xs;
-            color: $text-secondary;
-            margin: 0 0 0.5rem 0;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-          
-          .notification-time {
-            font-size: $font-size-xs;
-            color: $text-muted;
-          }
-        }
-        
-        .notification-delete {
-          @include flex-center;
-          width: 1.5rem;
-          height: 1.5rem;
-          background: none;
-          border: none;
-          color: $text-muted;
-          cursor: pointer;
-          border-radius: $border-radius-base;
-          transition: all $transition-fast;
-          flex-shrink: 0;
-          
-          &:hover {
-            background: rgba($error-500, 0.1);
-            color: $error-600;
-          }
-          
-          .delete-icon {
-            width: $icon-xs;
-            height: $icon-xs;
-          }
-        }
-      }
-    }
-  }
-  
-  .notification-footer {
-    padding: $spacing-3 $spacing-4;
-    background: rgba($bg-secondary, 0.5);
-    border-top: 1px solid $border-primary;
-    
-    .clear-all-button {
-      width: 100%;
-      padding: $spacing-2;
-      background: none;
-      border: 1px solid $border-primary;
-      color: $text-secondary;
-      font-size: $font-size-xs;
-      cursor: pointer;
-      border-radius: $border-radius-base;
-      transition: all $transition-fast;
-      
-      &:hover {
-        background: rgba($error-500, 0.05);
-        border-color: $error-500;
-        color: $error-600;
-      }
-    }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-// Profile Section
-// -----------------------------------------------------------------------------
-
+.role-switcher,
+.notifications,
 .header-profile {
   position: relative;
-  
-  .profile-btn {
-    @include flex-start;
-    gap: $spacing-3;
-    padding: $spacing-2;
-    background: none;
-    border: none;
-    cursor: pointer;
-    border-radius: $border-radius-lg;
-    transition: all $transition-fast;
-    
-    &:hover {
-      background: rgba($color-primary, 0.05);
-    }
-    
-    &:focus-visible {
-      @include focus-visible;
-    }
+}
+
+.role-dropdown,
+.notification-dropdown,
+.user-dropdown {
+  @include dropdown-base;
+}
+
+// Role Switcher Dropdown
+// -----------------------------------------------------------------------------
+.role-button {
+  @include flex-start;
+  gap: $spacing-2;
+  width: auto;
+  padding: 0 $spacing-3;
+
+  .role-icon {
+    font-size: $font-size-lg;
   }
-  
-  .profile-avatar {
-    width: 2rem;
-    height: 2rem;
-    border-radius: $border-radius-full;
-    object-fit: cover;
-    border: 2px solid rgba($border-primary, 0.5);
-    
-    &.placeholder {
-      @include flex-center;
-      background: linear-gradient(135deg, $color-primary, $color-primary-hover);
-      color: $text-inverse;
-      font-weight: $font-weight-bold;
-      font-size: $font-size-xs;
-    }
-  }
-  
-  .profile-info {
-    @include flex-start;
-    flex-direction: column;
-    text-align: left;
-    
-    @include respond-below('md') {
-      display: none;
-    }
-    
-    .profile-name {
-      font-weight: $font-weight-medium;
-      font-size: $font-size-sm;
-      color: $text-primary;
-      line-height: 1.2;
-    }
-    
-    .profile-role {
-      font-size: $font-size-xs;
-      color: $text-muted;
-      line-height: 1.2;
-    }
-  }
-  
-  .profile-arrow {
-    width: $icon-sm;
-    height: $icon-sm;
-    color: $text-muted;
+
+  .dropdown-icon {
+    width: 16px;
+    height: 16px;
     transition: transform $transition-fast;
-    
-    @include respond-below('md') {
-      display: none;
-    }
-  }
-  
-  .user-dropdown {
-    position: absolute;
-    top: calc(100% + 0.5rem);
-    right: 0;
-    min-width: 220px;
-    background: $bg-primary;
-    border: 1px solid $border-primary;
-    border-radius: $border-radius-lg;
-    box-shadow: $shadow-lg;
-    z-index: $z-index-dropdown;
-    overflow: hidden;
-    
-    .user-dropdown-header {
-      padding: $spacing-4;
-      background: rgba($color-primary, 0.05);
-      border-bottom: 1px solid $border-primary;
-      
-      .dropdown-user-name {
-        font-weight: $font-weight-medium;
-        font-size: $font-size-sm;
-        color: $text-primary;
-        margin-bottom: 0.125rem;
-      }
-      
-      .dropdown-user-role {
-        font-size: $font-size-xs;
-        color: $text-muted;
-      }
-    }
-    
-    .user-dropdown-content {
-      padding: $spacing-2 0;
-      
-      .dropdown-link {
-        @include flex-start;
-        gap: $spacing-3;
-        width: 100%;
-        padding: $spacing-3 $spacing-4;
-        color: $text-secondary;
-        text-decoration: none;
-        transition: all $transition-fast;
-        
-        &:hover {
-          background: rgba($color-primary, 0.05);
-          color: $color-primary;
-          text-decoration: none;
-        }
-        
-        .dropdown-link-icon {
-          width: $icon-sm;
-          height: $icon-sm;
-          flex-shrink: 0;
-        }
-        
-        span {
-          font-size: $font-size-sm;
-        }
-      }
-      
-      .logout-button {
-        @include flex-start;
-        gap: $spacing-3;
-        width: 100%;
-        padding: $spacing-3 $spacing-4;
-        background: none;
-        border: none;
-        color: $error-600;
-        cursor: pointer;
-        transition: all $transition-fast;
-        text-align: left;
-        
-        &:hover {
-          background: rgba($error-500, 0.05);
-          color: $error-700;
-        }
-        
-        .logout-icon {
-          width: $icon-sm;
-          height: $icon-sm;
-          flex-shrink: 0;
-        }
-        
-        span {
-          font-size: $font-size-sm;
-        }
-      }
+
+    &.rotated {
+      transform: rotate(180deg);
     }
   }
 }
 
-// Animations
-// -----------------------------------------------------------------------------
+.dropdown-header {
+  padding: $spacing-3 $spacing-4;
+  border-bottom: 1px solid $border-primary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $text-secondary;
+}
 
-@keyframes bellRing {
-  0%, 50%, 100% {
-    transform: rotate(0deg);
+.role-option {
+  @include flex-start;
+  gap: $spacing-3;
+  width: 100%;
+  padding: $spacing-3 $spacing-4;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $bg-secondary;
   }
-  10%, 30% {
-    transform: rotate(-10deg);
+
+  &.active {
+    background: rgba($color-primary, 0.1);
+    color: $color-primary;
   }
-  20%, 40% {
-    transform: rotate(10deg);
+
+  .role-option-icon {
+    font-size: $font-size-xl;
+  }
+
+  .role-option-content {
+    flex: 1;
+  }
+
+  .role-option-name {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+  }
+
+  .role-option-description {
+    font-size: $font-size-xs;
+    color: $text-muted;
+  }
+
+  .check-icon {
+    width: 20px;
+    height: 20px;
+    color: $color-primary;
+  }
+}
+
+// Notification Dropdown
+// -----------------------------------------------------------------------------
+.notification-header {
+  @include flex-between;
+  padding: $spacing-3 $spacing-4;
+  border-bottom: 1px solid $border-primary;
+
+  .header-title {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+  }
+
+  .header-actions {
+    @include flex-start;
+    gap: $spacing-2;
+  }
+
+  .header-action {
+    padding: $spacing-1 $spacing-2;
+    border: none;
+    background: transparent;
+    color: $color-primary;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    transition: background $transition-fast;
+
+    &:hover {
+      background: rgba($color-primary, 0.1);
+    }
+  }
+}
+
+.notification-content {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notification-list {
+  padding: $spacing-2;
+}
+
+.notification-item {
+  @include flex-start;
+  gap: $spacing-3;
+  padding: $spacing-3;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $bg-secondary;
+  }
+
+  &.unread {
+    background: rgba($color-primary, 0.05);
+  }
+
+  .notification-item-icon {
+    font-size: $font-size-xl;
+    flex-shrink: 0;
+  }
+
+  .notification-item-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .notification-title {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+    margin: 0 0 $spacing-1 0;
+  }
+
+  .notification-message {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    margin: 0 0 $spacing-1 0;
+  }
+
+  .notification-time {
+    font-size: $font-size-xs;
+    color: $text-muted;
+  }
+
+  .notification-delete {
+    @include flex-center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: $text-muted;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    transition: all $transition-fast;
+    flex-shrink: 0;
+
+    &:hover {
+      background: rgba($color-error, 0.1);
+      color: $color-error;
+    }
+
+    .delete-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.empty-state {
+  @include flex-center;
+  flex-direction: column;
+  gap: $spacing-3;
+  padding: $spacing-8;
+
+  .empty-icon {
+    width: 48px;
+    height: 48px;
+    color: $text-muted;
+  }
+
+  .empty-text {
+    font-size: $font-size-sm;
+    color: $text-muted;
+    margin: 0;
+  }
+}
+
+.notification-footer {
+  padding: $spacing-3 $spacing-4;
+  border-top: 1px solid $border-primary;
+
+  .clear-all-button {
+    width: 100%;
+    padding: $spacing-2;
+    border: none;
+    background: transparent;
+    color: $color-error;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    transition: background $transition-fast;
+
+    &:hover {
+      background: rgba($color-error, 0.1);
+    }
+  }
+}
+
+// User Profile
+// -----------------------------------------------------------------------------
+.profile-btn {
+  @include flex-start;
+  gap: $spacing-3;
+  padding: $spacing-2 $spacing-3;
+  border: none;
+  background: transparent;
+  border-radius: $border-radius-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $bg-secondary;
+  }
+
+  @include respond-below('md') {
+    .profile-info {
+      display: none;
+    }
+  }
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: $border-radius-full;
+  object-fit: cover;
+  flex-shrink: 0;
+
+  &.placeholder {
+    @include flex-center;
+    background: $color-primary;
+    color: white;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+  }
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.profile-name {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+}
+
+.profile-role {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.profile-arrow {
+  width: 16px;
+  height: 16px;
+  color: $text-muted;
+}
+
+// User Dropdown
+// -----------------------------------------------------------------------------
+.user-dropdown-header {
+  padding: $spacing-4;
+  border-bottom: 1px solid $border-primary;
+
+  .dropdown-user-name {
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+  }
+
+  .dropdown-user-role {
+    font-size: $font-size-sm;
+    color: $text-muted;
+  }
+}
+
+.user-dropdown-content {
+  padding: $spacing-2;
+}
+
+.dropdown-link {
+  @include flex-start;
+  gap: $spacing-3;
+  padding: $spacing-3;
+  color: $text-primary;
+  text-decoration: none;
+  border-radius: $border-radius-md;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $bg-secondary;
+    text-decoration: none;
+  }
+
+  .dropdown-link-icon {
+    width: 20px;
+    height: 20px;
+    color: $text-secondary;
+  }
+}
+
+.logout-button {
+  @include flex-start;
+  gap: $spacing-3;
+  width: 100%;
+  padding: $spacing-3;
+  border: none;
+  background: transparent;
+  color: $color-error;
+  font-size: $font-size-sm;
+  text-align: left;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: rgba($color-error, 0.1);
+  }
+
+  .logout-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// Loading State
+// -----------------------------------------------------------------------------
+.loading-state {
+  @include flex-center;
+  padding: $spacing-8;
+
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba($color-primary, 0.2);
+    border-top-color: $color-primary;
+    border-radius: $border-radius-full;
+    animation: spin 1s linear infinite;
   }
 }
 
 @keyframes spin {
-  0% {
+  from {
     transform: rotate(0deg);
   }
-  100% {
+
+  to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
-}
-
-// Dark Mode Support
+// Dark Mode
 // -----------------------------------------------------------------------------
-
 @include dark-mode {
   .admin-header {
-    background: rgba($dark-bg-secondary, 0.95);
-    border-color: rgba($dark-border-primary, 0.5);
-  }
-  
-  .brand-text {
-    color: $dark-text-primary;
-  }
-  
-  .sidebar-toggle-btn,
-  .action-btn {
-    color: $dark-text-secondary;
-    
-    &:hover {
-      background: rgba($color-primary, 0.15);
-      color: $color-primary;
-    }
-  }
-  
-  .search-input {
-    background: rgba($dark-bg-tertiary, 0.5);
-    border-color: rgba($dark-border-primary, 0.5);
-    color: $dark-text-primary;
-    
-    &:focus {
-      background: $dark-bg-secondary;
-    }
-    
-    &::placeholder {
-      color: rgba($dark-text-secondary, 0.7);
-    }
-  }
-  
-  .profile-info {
-    .profile-name {
-      color: $dark-text-primary;
-    }
-    
-    .profile-role {
-      color: rgba($dark-text-secondary, 0.8);
-    }
-  }
-  
-  .profile-arrow {
-    color: rgba($dark-text-secondary, 0.7);
-  }
-  
-  // Role Switcher Dark Mode
-  .role-dropdown,
-  .notification-dropdown,
-  .user-dropdown {
     background: $dark-bg-secondary;
-    border-color: rgba($dark-border-primary, 0.5);
-    
-    .dropdown-header,
-    .user-dropdown-header {
-      background: rgba($color-primary, 0.1);
-      border-color: rgba($dark-border-primary, 0.5);
-      color: $dark-text-primary;
-    }
-    
-    .role-option,
-    .dropdown-link {
-      color: $dark-text-secondary;
-      
-      &:hover {
-        background: rgba($color-primary, 0.1);
-        color: $color-primary;
-      }
-      
-      .role-option-name {
-        color: $dark-text-primary;
-      }
-    }
-    
-    .notification-item {
-      border-color: rgba($dark-border-primary, 0.3);
-      
-      .notification-title {
-        color: $dark-text-primary;
-      }
-      
-      .notification-message {
-        color: $dark-text-secondary;
-      }
-    }
-    
-    .dropdown-user-name {
-      color: $dark-text-primary;
-    }
-    
-    .dropdown-user-role {
-      color: rgba($dark-text-secondary, 0.8);
-    }
+    border-bottom-color: $dark-border-primary;
   }
-  
-  .notification-footer {
-    background: rgba($dark-bg-tertiary, 0.5);
-    border-color: rgba($dark-border-primary, 0.5);
-  }
-}
 
-// High Contrast Mode
-// -----------------------------------------------------------------------------
-
-@include high-contrast {
-  .admin-header {
-    border-bottom: 2px solid;
-  }
-  
-  .action-btn,
-  .profile-btn {
-    border: 1px solid transparent;
-    
-    &:focus-visible {
-      border-color: currentColor;
-      outline: 2px solid;
-      outline-offset: 2px;
-    }
-  }
-}
-
-// Reduced Motion
-// -----------------------------------------------------------------------------
-
-@include reduced-motion {
-  .sidebar-toggle-btn,
-  .action-btn,
-  .profile-btn,
-  .search-input,
-  .profile-arrow {
-    transition: none;
-  }
-  
-  .action-btn:hover {
-    transform: none;
-  }
-  
-  .notification-btn.has-notifications .action-icon {
-    animation: none;
-  }
-  
   .notification-badge {
-    animation: none;
+    border-color: $dark-bg-secondary;
   }
-}
 
-// Responsive Design
-// -----------------------------------------------------------------------------
-
-@include respond-below('lg') {
-  .admin-header {
-    padding: 0 $spacing-4;
-  }
-  
-  .header-actions {
-    gap: $spacing-2;
-  }
-  
-  // Hide some less critical actions on tablets
-  .role-switcher {
-    display: none;
-  }
-}
-
-@include respond-below('md') {
-  .admin-header {
-    padding: 0 $spacing-3;
-  }
-  
-  .header-actions {
-    gap: $spacing-1;
-  }
-  
-  .action-btn {
-    width: 2.25rem;
-    height: 2.25rem;
-    
-    .action-icon {
-      width: $icon-sm;
-      height: $icon-sm;
-    }
-  }
-  
-  // Hide notifications text/badges on medium screens
-  .notification-dropdown {
-    width: 320px;
-  }
-}
-
-@include respond-below('sm') {
-  .admin-header {
-    padding: 0 $spacing-2;
-    height: calc(#{$nav-height} + 0.5rem); // Slightly taller on mobile
-  }
-  
-  .header-left {
-    min-width: 0; // Allow shrinking
-  }
-  
-  .header-actions {
-    gap: 0.25rem;
-    
-    // Hide less critical actions on mobile
-    .notifications {
-      order: 1; // Keep notifications visible but reorder
-    }
-    
-    // Hide settings button on mobile (accessible via profile menu)
-    .action-btn[routerLink="/admin/settings"] {
-      display: none;
-    }
-  }
-  
-  .action-btn {
-    width: 2rem;
-    height: 2rem;
-    
-    .action-icon {
-      width: $icon-sm;
-      height: $icon-sm;
-    }
-  }
-  
-  // Make dropdowns full width on mobile
-  .notification-dropdown,
-  .user-dropdown {
-    left: 0;
-    right: 0;
-    width: calc(100vw - 2rem);
-    margin: 0 1rem;
-    max-width: none;
-  }
-  
-  // Optimize profile section for mobile
-  .header-profile {
-    .profile-btn {
-      padding: $spacing-1;
-      gap: $spacing-2;
-    }
-    
-    .profile-avatar {
-      width: 1.75rem;
-      height: 1.75rem;
-    }
+  .search-wrapper {
+    background: $dark-bg-primary;
+    border-color: $dark-border-primary;
   }
 }

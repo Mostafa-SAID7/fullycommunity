@@ -1,3 +1,4 @@
+@import '../../styles/_index';
 
 :host {
   pointer-events: none;
@@ -13,15 +14,15 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-2;
-  
+
   @include respond-below('sm') {
     top: $spacing-3;
     right: $spacing-3;
     left: $spacing-3;
   }
-  
+
   // Enable pointer events for child elements
-  > * {
+  >* {
     pointer-events: auto;
   }
 }
@@ -37,27 +38,27 @@
   min-width: 300px;
   max-width: 400px;
   animation: slideInRight $animation-duration-normal ease-out;
-  
+
   @include respond-below('sm') {
     min-width: auto;
     max-width: none;
   }
-  
+
   &.success {
     border-left: 4px solid $success-500;
     background: rgba($success-50, 0.9);
   }
-  
+
   &.error {
     border-left: 4px solid $error-500;
     background: rgba($error-50, 0.9);
   }
-  
+
   &.warning {
     border-left: 4px solid $warning-500;
     background: rgba($warning-50, 0.9);
   }
-  
+
   &.info {
     border-left: 4px solid $primary-500;
     background: rgba($primary-50, 0.9);
@@ -71,6 +72,7 @@
     opacity: 0;
     transform: translateX(100%);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -82,6 +84,7 @@
     opacity: 1;
     transform: translateX(0);
   }
+
   to {
     opacity: 0;
     transform: translateX(100%);
@@ -94,19 +97,19 @@
   .toast-item {
     background: $dark-bg-secondary;
     border-color: $dark-border-primary;
-    
+
     &.success {
       background: rgba($success-900, 0.3);
     }
-    
+
     &.error {
       background: rgba($error-900, 0.3);
     }
-    
+
     &.warning {
       background: rgba($warning-900, 0.3);
     }
-    
+
     &.info {
       background: rgba($primary-900, 0.3);
     }

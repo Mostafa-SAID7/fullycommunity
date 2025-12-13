@@ -1,18 +1,16 @@
 <div class="admin-layout">
   <!-- Mobile overlay - shows when sidebar is open on mobile -->
-  <div *ngIf="sidebarOpen() && isMobileScreen()" 
-       class="mobile-overlay" 
-       (click)="toggleSidebar()"
-       [@fadeIn]="sidebarOpen() && isMobileScreen()"></div>
-  
+  <div *ngIf="sidebarOpen() && isMobileScreen()" class="mobile-overlay" (click)="toggleSidebar()"
+    [@fadeIn]="sidebarOpen() && isMobileScreen()"></div>
+
   <app-admin-header (toggleSidebar)="toggleSidebar()"></app-admin-header>
 
   <!-- Sidebar - Fixed on left -->
   <app-admin-sidebar [sidebarClasses]="getSidebarClasses()" [isOpen]="sidebarOpen()"></app-admin-sidebar>
-  
+
   <!-- Main content area - Fills remaining space and allows page changes -->
-  <div class="main-content">
-    <main class="content-area" [class.with-sidebar-open]="sidebarOpen()" [class.with-sidebar-closed]="!sidebarOpen()">
+  <div class="main-content" [class.sidebar-closed]="!sidebarOpen()">
+    <main class="content-area">
       <router-outlet></router-outlet>
     </main>
   </div>

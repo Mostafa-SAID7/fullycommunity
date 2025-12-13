@@ -20,34 +20,61 @@
   justify-content: space-between;
 }
 
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
 // Responsive Mixins
 @mixin respond-to($breakpoint) {
-  @if $breakpoint == 'sm' {
-    @media (min-width: 576px) { @content; }
+  @if $breakpoint =='sm' {
+    @media (min-width: 576px) {
+      @content;
+    }
   }
-  @if $breakpoint == 'md' {
-    @media (min-width: 768px) { @content; }
+
+  @if $breakpoint =='md' {
+    @media (min-width: 768px) {
+      @content;
+    }
   }
-  @if $breakpoint == 'lg' {
-    @media (min-width: 992px) { @content; }
+
+  @if $breakpoint =='lg' {
+    @media (min-width: 992px) {
+      @content;
+    }
   }
-  @if $breakpoint == 'xl' {
-    @media (min-width: 1200px) { @content; }
+
+  @if $breakpoint =='xl' {
+    @media (min-width: 1200px) {
+      @content;
+    }
   }
 }
 
 @mixin respond-below($breakpoint) {
-  @if $breakpoint == 'sm' {
-    @media (max-width: 575.98px) { @content; }
+  @if $breakpoint =='sm' {
+    @media (max-width: 575.98px) {
+      @content;
+    }
   }
-  @if $breakpoint == 'md' {
-    @media (max-width: 767.98px) { @content; }
+
+  @if $breakpoint =='md' {
+    @media (max-width: 767.98px) {
+      @content;
+    }
   }
-  @if $breakpoint == 'lg' {
-    @media (max-width: 991.98px) { @content; }
+
+  @if $breakpoint =='lg' {
+    @media (max-width: 991.98px) {
+      @content;
+    }
   }
-  @if $breakpoint == 'xl' {
-    @media (max-width: 1199.98px) { @content; }
+
+  @if $breakpoint =='xl' {
+    @media (max-width: 1199.98px) {
+      @content;
+    }
   }
 }
 
@@ -77,27 +104,32 @@
 
 // Typography Mixins
 @mixin heading($level) {
-  @if $level == 1 {
+  @if $level ==1 {
     font-size: 2.5rem;
     font-weight: 700;
   }
-  @if $level == 2 {
+
+  @if $level ==2 {
     font-size: 2rem;
     font-weight: 600;
   }
-  @if $level == 3 {
+
+  @if $level ==3 {
     font-size: 1.75rem;
     font-weight: 600;
   }
-  @if $level == 4 {
+
+  @if $level ==4 {
     font-size: 1.5rem;
     font-weight: 500;
   }
-  @if $level == 5 {
+
+  @if $level ==5 {
     font-size: 1.25rem;
     font-weight: 500;
   }
-  @if $level == 6 {
+
+  @if $level ==6 {
     font-size: 1.125rem;
     font-weight: 500;
   }
@@ -122,8 +154,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 // Admin Content Mixin
@@ -155,19 +192,19 @@
   border: 1px solid $border-primary;
   border-radius: $border-radius-base;
   transition: border-color $transition-fast, box-shadow $transition-fast;
-  
+
   &:focus {
     outline: none;
     border-color: $color-primary;
     box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
   }
-  
+
   &:disabled {
     background-color: $bg-secondary;
     color: $text-muted;
     cursor: not-allowed;
   }
-  
+
   &::placeholder {
     color: $text-muted;
   }
@@ -188,12 +225,12 @@
   border-radius: $border-radius-base;
   cursor: pointer;
   transition: all $transition-fast;
-  
+
   &:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
   }
-  
+
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -236,14 +273,15 @@
 @mixin interactive-hover($lift: true) {
   cursor: pointer;
   transition: all $transition-fast;
-  
+
   &:hover {
     @if $lift {
       transform: translateY(-1px);
     }
+
     box-shadow: $shadow-md;
   }
-  
+
   &:active {
     transform: translateY(0);
     box-shadow: $shadow-sm;
@@ -254,20 +292,20 @@
 @mixin custom-scrollbar($width: 8px, $track-color: transparent, $thumb-color: $border-secondary) {
   scrollbar-width: thin;
   scrollbar-color: $thumb-color $track-color;
-  
+
   &::-webkit-scrollbar {
     width: $width;
     height: $width;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: $track-color;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: $thumb-color;
     border-radius: calc(#{$width} / 2);
-    
+
     &:hover {
       background: darken($thumb-color, 10%);
     }
@@ -277,18 +315,18 @@
 // Aspect Ratio Mixin
 @mixin aspect-ratio($width, $height) {
   aspect-ratio: $width / $height;
-  
+
   // Fallback for older browsers
   @supports not (aspect-ratio: 1) {
     position: relative;
-    
+
     &::before {
       content: '';
       display: block;
       padding-top: percentage($height / $width);
     }
-    
-    > * {
+
+    >* {
       position: absolute;
       top: 0;
       left: 0;
@@ -300,11 +338,13 @@
 
 // Truncate Text Mixin
 @mixin truncate($lines: 1) {
-  @if $lines == 1 {
+  @if $lines ==1 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  } @else {
+  }
+
+  @else {
     display: -webkit-box;
     -webkit-line-clamp: $lines;
     -webkit-box-orient: vertical;
@@ -335,7 +375,7 @@
 // Notification Badge Mixin
 @mixin notification-badge($size: 18px, $color: $error-500) {
   position: relative;
-  
+
   &::after {
     content: attr(data-count);
     position: absolute;
@@ -352,7 +392,7 @@
     padding: 0 calc(#{$size} * 0.2);
     box-shadow: 0 2px 4px rgba($color, 0.3);
   }
-  
+
   &[data-count="0"]::after {
     display: none;
   }
@@ -361,7 +401,7 @@
 // Status Indicator Mixin
 @mixin status-dot($color: $success-500, $size: 8px) {
   position: relative;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -388,12 +428,12 @@
   box-shadow: 0 4px 12px rgba($color, 0.4);
   cursor: pointer;
   transition: all $transition-fast;
-  
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba($color, 0.5);
   }
-  
+
   &:active {
     transform: translateY(0);
     box-shadow: 0 2px 8px rgba($color, 0.4);
@@ -422,15 +462,23 @@
 
 // Safe Area Insets (for mobile devices)
 @mixin safe-area-insets($property: padding, $sides: all) {
-  @if $sides == all {
+  @if $sides ==all {
     #{$property}: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-  } @else if $sides == top {
+  }
+
+  @else if $sides ==top {
     #{$property}-top: env(safe-area-inset-top);
-  } @else if $sides == right {
+  }
+
+  @else if $sides ==right {
     #{$property}-right: env(safe-area-inset-right);
-  } @else if $sides == bottom {
+  }
+
+  @else if $sides ==bottom {
     #{$property}-bottom: env(safe-area-inset-bottom);
-  } @else if $sides == left {
+  }
+
+  @else if $sides ==left {
     #{$property}-left: env(safe-area-inset-left);
   }
 }

@@ -1,3 +1,4 @@
+@import '../../../../styles/_index';
 
 :host {
   display: block;
@@ -11,11 +12,11 @@
   @include flex-start;
   flex-direction: column;
   gap: $spacing-4;
-  
+
   @include respond-below('lg') {
     display: flex;
   }
-  
+
   @include respond-below('sm') {
     gap: $spacing-3;
   }
@@ -29,7 +30,7 @@
   box-shadow: $shadow-sm;
   border: 1px solid $border-primary;
   padding: $spacing-4;
-  
+
   @include respond-below('sm') {
     padding: $spacing-3;
     border-radius: $border-radius-lg;
@@ -41,17 +42,17 @@
 .card-header {
   @include flex-between;
   margin-bottom: $spacing-4;
-  
+
   @include respond-below('sm') {
     flex-direction: column;
     gap: $spacing-3;
     align-items: flex-start;
   }
-  
+
   .user-info {
     @include flex-start;
     gap: $spacing-3;
-    
+
     .user-avatar {
       width: 3rem;
       height: 3rem;
@@ -62,14 +63,14 @@
       font-weight: $font-weight-semibold;
       font-size: $font-size-base;
       flex-shrink: 0;
-      
+
       @include respond-below('sm') {
         width: 2.5rem;
         height: 2.5rem;
         font-size: $font-size-sm;
       }
     }
-    
+
     .user-details {
       .user-name {
         font-size: $font-size-sm;
@@ -77,18 +78,18 @@
         color: $text-primary;
         margin-bottom: 0.125rem;
       }
-      
+
       .user-username {
         font-size: $font-size-xs;
         color: $text-muted;
       }
     }
   }
-  
+
   .card-actions {
     @include flex-start;
     gap: $spacing-2;
-    
+
     @include respond-below('sm') {
       width: 100%;
       justify-content: flex-end;
@@ -105,31 +106,31 @@
   border-radius: $border-radius-base;
   cursor: pointer;
   transition: all $transition-fast;
-  
+
   &.edit-button {
     color: $color-primary;
     background: none;
-    
+
     &:hover {
       color: $color-primary-hover;
       background: rgba($color-primary, 0.1);
     }
   }
-  
+
   &.activate-button {
     color: $success-600;
     background: none;
-    
+
     &:hover {
       color: $success-700;
       background: rgba($success-600, 0.1);
     }
   }
-  
+
   &.block-button {
     color: $error-600;
     background: none;
-    
+
     &:hover {
       color: $error-700;
       background: rgba($error-600, 0.1);
@@ -144,36 +145,36 @@
   flex-direction: column;
   gap: $spacing-2;
   font-size: $font-size-sm;
-  
+
   .info-row {
     @include flex-between;
-    
+
     @include respond-below('sm') {
       flex-direction: column;
       gap: $spacing-1;
       align-items: flex-start;
     }
-    
+
     .info-label {
       color: $text-muted;
       font-weight: $font-weight-medium;
     }
-    
+
     .info-value {
       color: $text-primary;
       text-align: right;
-      
+
       @include respond-below('sm') {
         text-align: left;
       }
     }
-    
+
     .roles-container {
       @include flex-start;
       flex-wrap: wrap;
       gap: 0.25rem;
       justify-content: flex-end;
-      
+
       @include respond-below('sm') {
         justify-content: flex-start;
       }
@@ -190,54 +191,54 @@
   border-radius: $border-radius-full;
   font-size: $font-size-xs;
   font-weight: $font-weight-medium;
-  
+
   // Role Badge Colors
   &.role-super-admin {
     background: rgba($purple-100, 0.8);
     color: $purple-800;
   }
-  
+
   &.role-user-admin {
     background: rgba($primary-100, 0.8);
     color: $primary-800;
   }
-  
+
   &.role-content-admin {
     background: rgba($indigo-100, 0.8);
     color: $indigo-800;
   }
-  
+
   &.role-expert {
     background: rgba($success-100, 0.8);
     color: $success-800;
   }
-  
+
   &.role-reviewer {
     background: rgba($warning-100, 0.8);
     color: $warning-800;
   }
-  
+
   &.role-user {
     background: rgba($neutral-100, 0.8);
     color: $neutral-800;
   }
-  
+
   // Status Badge Colors
   &.status-active {
     background: rgba($success-100, 0.8);
     color: $success-800;
   }
-  
+
   &.status-inactive {
     background: rgba($neutral-100, 0.8);
     color: $neutral-800;
   }
-  
+
   &.status-banned {
     background: rgba($error-100, 0.8);
     color: $error-800;
   }
-  
+
   &.status-pending {
     background: rgba($warning-100, 0.8);
     color: $warning-800;
@@ -253,37 +254,37 @@
   border: 1px solid $border-primary;
   padding: $spacing-12;
   text-align: center;
-  
+
   @include respond-below('sm') {
     padding: $spacing-8;
     border-radius: $border-radius-lg;
   }
-  
+
   .empty-icon {
     font-size: 4rem;
     margin-bottom: $spacing-4;
-    
+
     @include respond-below('sm') {
       font-size: 3rem;
       margin-bottom: $spacing-3;
     }
   }
-  
+
   .empty-title {
     font-size: $font-size-lg;
     font-weight: $font-weight-semibold;
     color: $text-primary;
     margin-bottom: $spacing-2;
-    
+
     @include respond-below('sm') {
       font-size: $font-size-base;
     }
   }
-  
+
   .empty-message {
     font-size: $font-size-sm;
     color: $text-muted;
-    
+
     @include respond-below('sm') {
       font-size: $font-size-xs;
     }
@@ -293,38 +294,39 @@
 // Dark Mode Support
 // -----------------------------------------------------------------------------
 @include dark-mode {
+
   .user-card,
   .empty-state {
     background: $dark-bg-secondary;
     border-color: $dark-border-primary;
   }
-  
+
   .user-details {
     .user-name {
       color: $dark-text-primary;
     }
-    
+
     .user-username {
       color: $dark-text-secondary;
     }
   }
-  
+
   .info-label {
     color: $dark-text-secondary;
   }
-  
+
   .info-value {
     color: $dark-text-primary;
   }
-  
+
   .empty-title {
     color: $dark-text-primary;
   }
-  
+
   .empty-message {
     color: $dark-text-secondary;
   }
-  
+
   // Dark mode badge colors
   .role-badge,
   .status-badge {
@@ -332,47 +334,47 @@
       background: rgba($purple-900, 0.3);
       color: $purple-300;
     }
-    
+
     &.role-user-admin {
       background: rgba($primary-900, 0.3);
       color: $primary-300;
     }
-    
+
     &.role-content-admin {
       background: rgba($indigo-900, 0.3);
       color: $indigo-300;
     }
-    
+
     &.role-expert {
       background: rgba($success-900, 0.3);
       color: $success-300;
     }
-    
+
     &.role-reviewer {
       background: rgba($warning-900, 0.3);
       color: $warning-300;
     }
-    
+
     &.role-user {
       background: rgba($neutral-800, 0.3);
       color: $neutral-300;
     }
-    
+
     &.status-active {
       background: rgba($success-900, 0.3);
       color: $success-300;
     }
-    
+
     &.status-inactive {
       background: rgba($neutral-800, 0.3);
       color: $neutral-300;
     }
-    
+
     &.status-banned {
       background: rgba($error-900, 0.3);
       color: $error-300;
     }
-    
+
     &.status-pending {
       background: rgba($warning-900, 0.3);
       color: $warning-300;
@@ -383,13 +385,14 @@
 // High Contrast Mode
 // -----------------------------------------------------------------------------
 @include high-contrast {
+
   .user-card,
   .empty-state,
   .role-badge,
   .status-badge {
     border: 2px solid currentColor;
   }
-  
+
   .action-button {
     border: 1px solid currentColor;
   }

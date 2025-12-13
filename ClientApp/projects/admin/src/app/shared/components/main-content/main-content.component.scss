@@ -1,22 +1,46 @@
-@import '../../styles/variables';
-@import '../../styles/mixins';
+@import '../../styles/index';
 
+// Main Content Wrapper
+// -----------------------------------------------------------------------------
 .main-content {
-  padding: $spacing-6;
-  background: $bg-primary;
+  padding: $spacing-4;
+  background: transparent;
   min-height: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+
+  @include respond-to('sm') {
+    padding: $spacing-5;
+  }
+
+  @include respond-to('md') {
+    padding: $spacing-6;
+  }
+
+  @include respond-to('lg') {
+    padding: $spacing-8;
+  }
 }
 
+// Content Header
+// -----------------------------------------------------------------------------
 .content-header {
   margin-bottom: $spacing-6;
+
+  @include respond-to('lg') {
+    margin-bottom: $spacing-8;
+  }
 }
 
+// Breadcrumb Navigation
+// -----------------------------------------------------------------------------
 .breadcrumb {
   margin-bottom: $spacing-4;
 }
 
 .breadcrumb-list {
   @include flex-start;
+  flex-wrap: wrap;
   gap: $spacing-2;
   list-style: none;
   margin: 0;
@@ -26,13 +50,15 @@
 .breadcrumb-item {
   @include flex-start;
   gap: $spacing-2;
+  align-items: center;
 }
 
 .breadcrumb-link {
   color: $text-secondary;
   text-decoration: none;
   font-size: $font-size-sm;
-  
+  transition: color $transition-fast;
+
   &:hover {
     color: $color-primary;
   }
@@ -46,19 +72,23 @@
 .breadcrumb-current {
   color: $text-primary;
   font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
+  font-weight: $font-weight-semibold;
 }
 
 .breadcrumb-separator {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   color: $text-muted;
+  flex-shrink: 0;
 }
 
+// Title Section
+// -----------------------------------------------------------------------------
 .title-section {
   @include flex-between;
   gap: $spacing-4;
-  
+  flex-wrap: wrap;
+
   @include respond-below('md') {
     flex-direction: column;
     align-items: flex-start;
@@ -67,104 +97,161 @@
 
 .title-content {
   flex: 1;
+  min-width: 0;
 }
 
 .page-title {
-  @include heading(1);
-  color: $text-primary;
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  background: linear-gradient(135deg, $color-primary, $color-primary-hover);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin: 0 0 $spacing-2 0;
-  
-  @include respond-below('md') {
+  line-height: 1.2;
+
+  @include respond-to('md') {
+    font-size: $font-size-4xl;
+  }
+
+  @include respond-below('sm') {
     font-size: $font-size-2xl;
   }
 }
 
 .page-subtitle {
   color: $text-secondary;
-  font-size: $font-size-lg;
+  font-size: $font-size-base;
   margin: 0;
+  line-height: 1.5;
+
+  @include respond-to('md') {
+    font-size: $font-size-lg;
+  }
 }
 
+// Action Buttons
+// -----------------------------------------------------------------------------
 .title-actions {
   @include flex-start;
   gap: $spacing-3;
-  
+  flex-wrap: wrap;
+
   @include respond-below('md') {
     width: 100%;
-    justify-content: flex-start;
   }
 }
 
 .btn {
   @include flex-center;
   gap: $spacing-2;
-  padding: $spacing-3 $spacing-4;
-  border-radius: $border-radius-md;
-  font-weight: $font-weight-medium;
+  padding: $spacing-3 $spacing-5;
+  border-radius: $border-radius-lg;
+  font-weight: $font-weight-semibold;
   font-size: $font-size-sm;
   border: none;
   cursor: pointer;
-  transition: $transition-base;
-  
+  transition: all $transition-base;
+  white-space: nowrap;
+  box-shadow: $shadow-sm;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 }
 
 .btn-primary {
-  background: $color-primary;
+  background: linear-gradient(135deg, $color-primary, $color-primary-hover);
   color: white;
-  
+
   &:hover:not(:disabled) {
-    background: $color-primary-hover;
+    background: linear-gradient(135deg, $color-primary-hover, $color-primary);
   }
 }
 
 .btn-secondary {
-  background: $bg-secondary;
+  background: $bg-primary;
   color: $text-primary;
   border: 1px solid $border-primary;
-  
+
   &:hover:not(:disabled) {
-    background: $bg-tertiary;
+    background: $bg-secondary;
+    border-color: $color-primary;
+  }
+}
+
+.btn-outline-primary {
+  background: transparent;
+  color: $color-primary;
+  border: 2px solid $color-primary;
+  box-shadow: none;
+
+  &:hover:not(:disabled) {
+    background: $color-primary;
+    color: white;
   }
 }
 
 .btn-icon {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
+// Loading State
+// -----------------------------------------------------------------------------
 .loading-state {
   @include flex-center;
   flex-direction: column;
   gap: $spacing-4;
   padding: $spacing-12;
   color: $text-secondary;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .loading-spinner {
-  @include loading-spinner(32px, $color-primary);
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba($color-primary, 0.2);
+  border-top-color: $color-primary;
+  border-radius: $border-radius-full;
+  animation: spin 0.8s linear infinite;
 }
 
 .loading-text {
-  font-size: $font-size-lg;
+  font-size: $font-size-base;
   margin: 0;
+  font-weight: $font-weight-medium;
 }
 
+// Error State
+// -----------------------------------------------------------------------------
 .error-state {
   @include flex-center;
   flex-direction: column;
   gap: $spacing-4;
   padding: $spacing-12;
   color: $color-error;
+  background: rgba($error-50, 0.5);
+  border: 1px solid rgba($color-error, 0.2);
+  border-radius: $border-radius-lg;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .error-icon {
   svg {
-    width: 48px;
-    height: 48px;
+    width: 56px;
+    height: 56px;
   }
 }
 
@@ -172,9 +259,51 @@
   font-size: $font-size-lg;
   text-align: center;
   margin: 0;
+  font-weight: $font-weight-medium;
+  max-width: 500px;
 }
 
+// Content Body
+// -----------------------------------------------------------------------------
 .content-body {
-  background: $bg-primary;
-  border-radius: $border-radius-lg;
+  animation: fadeIn 0.5s ease-out;
+}
+
+// Animations
+// -----------------------------------------------------------------------------
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Dark Mode Support
+// -----------------------------------------------------------------------------
+@include dark-mode {
+  .page-title {
+    background: linear-gradient(135deg, $color-primary, lighten($color-primary, 10%));
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+
+  .error-state {
+    background: rgba($error-900, 0.3);
+    border-color: rgba($error-700, 0.5);
+  }
 }

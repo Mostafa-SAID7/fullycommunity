@@ -92,10 +92,12 @@ interface RecentActivity {
   severity?: 'info' | 'warning' | 'error';
 }
 
+import { MainContentComponent } from '../../shared/components/main-content/main-content.component';
+
 @Component({
   selector: 'admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MainContentComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
 })
@@ -103,22 +105,22 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   private dashboardService = new MockDashboardService();
   private destroy$ = new Subject<void>();
   private refreshTimeouts: number[] = []; // Track timeouts for cleanup
-  
+
   overview = signal<AdminDashboardOverview | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
   recentActivity = signal<RecentActivity[]>([]);
   systemHealth = signal<'healthy' | 'warning' | 'critical'>('healthy');
-  
+
   // Refresh button state
   refreshStatus = signal<'success' | 'error' | 'warning' | null>(null);
   lastRefreshTime = signal<Date | null>(null);
-  
+
   // Computed stat cards
   get statCards(): StatCardConfig[] {
     const overview = this.overview();
     if (!overview) return [];
-    
+
     return [
       {
         title: 'Total Users',
@@ -158,7 +160,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       }
     ];
   }
-  
+
   quickActions: QuickAction[] = [
     {
       title: 'User Management',
@@ -200,7 +202,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     // Clear all pending timeouts
     this.refreshTimeouts.forEach(timeout => clearTimeout(timeout));
     this.refreshTimeouts = [];
-    
+
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -262,7 +264,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         user: 'System'
       }
     ];
-    
+
     this.recentActivity.set(mockActivity);
   }
 
@@ -280,7 +282,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     // Mock system health check
     const healthStates: ('healthy' | 'warning' | 'critical')[] = ['healthy', 'warning', 'critical'];
     const randomHealth = healthStates[Math.floor(Math.random() * 3)];
-    
+
     // Bias towards healthy state
     if (Math.random() > 0.8) {
       this.systemHealth.set(randomHealth);
@@ -319,7 +321,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   getActivityColor(type: string, severity?: string): string {
     if (severity === 'error') return 'text-red-600';
     if (severity === 'warning') return 'text-yellow-600';
-    
+
     switch (type) {
       case 'user_registered':
         return 'text-green-600';
@@ -337,20 +339,20 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   refreshDashboard() {
     this.loading.set(true);
     this.refreshStatus.set(null);
-    
+
     // Clear existing timeouts
     this.refreshTimeouts.forEach(timeout => clearTimeout(timeout));
     this.refreshTimeouts = [];
-    
+
     // Load dashboard data
     this.loadDashboard();
     this.loadRecentActivity();
-    
+
     // Set success status after a brief delay
     const timeout1 = window.setTimeout(() => {
       this.refreshStatus.set('success');
       this.lastRefreshTime.set(new Date());
-      
+
       // Clear success status after 3 seconds
       const timeout2 = window.setTimeout(() => {
         this.refreshStatus.set(null);

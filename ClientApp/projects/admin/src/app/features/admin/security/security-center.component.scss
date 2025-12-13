@@ -1,6 +1,7 @@
+@import '../../../shared/styles/_index';
 
 .security-center {
-  @include admin-content;
+  // Removed deprecated mixin - using index styles
   padding: $spacing-6;
   display: flex;
   flex-direction: column;
@@ -11,23 +12,23 @@
 .security-header {
   @include flex-between;
   align-items: flex-start;
-  
+
   &__content {
     flex: 1;
   }
-  
+
   &__title {
     @include heading(2);
     margin-bottom: $spacing-1;
     color: $text-primary;
   }
-  
+
   &__subtitle {
     color: $text-secondary;
     font-size: $font-size-base;
     margin: 0;
   }
-  
+
   &__actions {
     @include flex-start;
     gap: $spacing-3;
@@ -39,42 +40,42 @@
 .security-status {
   @include flex-start;
   gap: $spacing-2;
-  
+
   &__indicator {
     width: 0.75rem;
     height: 0.75rem;
     border-radius: 50%;
-    
+
     &.status-secure {
       background-color: $color-success;
       box-shadow: 0 0 8px rgba($color-success, 0.6);
     }
-    
+
     &.status-warning {
       background-color: $color-warning;
       box-shadow: 0 0 8px rgba($color-warning, 0.6);
       animation: pulse 2s infinite;
     }
-    
+
     &.status-critical {
       background-color: $color-error;
       box-shadow: 0 0 8px rgba($color-error, 0.6);
       animation: pulse 1s infinite;
     }
   }
-  
+
   &__text {
     font-size: $font-size-sm;
     font-weight: $font-weight-medium;
-    
+
     &.text-secure {
       color: $color-success;
     }
-    
+
     &.text-warning {
       color: $color-warning;
     }
-    
+
     &.text-critical {
       color: $color-error;
     }
@@ -86,7 +87,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: $spacing-6;
-  
+
   @include respond-below('md') {
     grid-template-columns: 1fr;
     gap: $spacing-4;
@@ -95,98 +96,98 @@
 
 .metric-card {
   @include card-base;
-  
+
   &__header {
     @include flex-between;
     align-items: flex-start;
   }
-  
+
   &__icon-wrapper {
     @include flex-start;
     gap: $spacing-3;
     flex: 1;
   }
-  
+
   &__icon {
     padding: $spacing-2;
     border-radius: $border-radius-lg;
     width: 2.5rem;
     height: 2.5rem;
     @include flex-center;
-    
+
     svg {
       width: 1.25rem;
       height: 1.25rem;
     }
-    
+
     &.metric-good {
       background-color: map-get($card-variants, green, bg);
-      
+
       svg {
         color: map-get($card-variants, green, icon);
       }
     }
-    
+
     &.metric-warning {
       background-color: map-get($card-variants, orange, bg);
-      
+
       svg {
         color: map-get($card-variants, orange, icon);
       }
     }
-    
+
     &.metric-critical {
       background-color: map-get($card-variants, red, bg);
-      
+
       svg {
         color: map-get($card-variants, red, icon);
       }
     }
   }
-  
+
   &__content {
     flex: 1;
   }
-  
+
   &__label {
     font-size: $font-size-sm;
     color: $text-secondary;
     margin: 0 0 $spacing-1 0;
   }
-  
+
   &__value {
     font-size: $font-size-2xl;
     font-weight: $font-weight-bold;
     margin: 0;
-    
+
     &.value-good {
       color: map-get($card-variants, green, text);
     }
-    
+
     &.value-warning {
       color: map-get($card-variants, orange, text);
     }
-    
+
     &.value-critical {
       color: map-get($card-variants, red, text);
     }
   }
-  
+
   &__trend {
     @include flex-center;
-    
+
     .trend-icon {
       width: 1rem;
       height: 1rem;
-      
+
       &.trend-up {
         color: $color-error;
       }
-      
+
       &.trend-down {
         color: $color-success;
       }
-      
+
       &.trend-stable {
         color: $text-muted;
       }
@@ -204,19 +205,19 @@
   padding: $spacing-4 $spacing-6;
   border-bottom: 1px solid $border-primary;
   background: $bg-secondary;
-  
+
   &__content {
     @include flex-between;
     align-items: center;
   }
-  
+
   &__title {
     font-size: $font-size-lg;
     font-weight: $font-weight-semibold;
     color: $text-primary;
     margin: 0;
   }
-  
+
   &__controls {
     @include flex-start;
     gap: $spacing-3;
@@ -238,20 +239,20 @@
 .alerts-empty {
   text-align: center;
   padding: $spacing-8 $spacing-4;
-  
+
   &__icon {
     width: 3rem;
     height: 3rem;
     margin: 0 auto $spacing-4 auto;
     color: $text-muted;
   }
-  
+
   &__title {
     font-size: $font-size-lg;
     color: $text-secondary;
     margin: 0 0 $spacing-1 0;
   }
-  
+
   &__subtitle {
     font-size: $font-size-sm;
     color: $text-muted;
@@ -273,109 +274,109 @@
   align-items: flex-start;
   gap: $spacing-4;
   transition: all $transition-base;
-  
+
   &:hover {
     box-shadow: $shadow-md;
   }
-  
+
   &.alert-critical {
     border-color: $error-300;
     background-color: $error-50;
   }
-  
+
   &.alert-high {
     border-color: $warning-300;
     background-color: $warning-50;
   }
-  
+
   &.alert-medium {
     border-color: $warning-200;
     background-color: $warning-50;
   }
-  
+
   &.alert-low {
     border-color: $primary-200;
     background-color: $primary-50;
   }
-  
+
   &__content {
     flex: 1;
   }
-  
+
   &__header {
     @include flex-start;
     gap: $spacing-3;
     margin-bottom: $spacing-2;
     flex-wrap: wrap;
   }
-  
+
   &__icon {
     padding: $spacing-1;
     border-radius: $border-radius-base;
     @include flex-center;
-    
+
     svg {
       width: 1rem;
       height: 1rem;
     }
-    
+
     &.icon-critical {
       background-color: $error-100;
-      
+
       svg {
         color: $error-600;
       }
     }
-    
+
     &.icon-high {
       background-color: $warning-100;
-      
+
       svg {
         color: $warning-600;
       }
     }
-    
+
     &.icon-medium {
       background-color: $warning-100;
-      
+
       svg {
         color: $warning-600;
       }
     }
-    
+
     &.icon-low {
       background-color: $primary-100;
-      
+
       svg {
         color: $primary-600;
       }
     }
   }
-  
+
   &__title {
     font-weight: $font-weight-semibold;
     color: $text-primary;
     margin: 0;
     font-size: $font-size-base;
   }
-  
+
   &__description {
     color: $text-secondary;
     margin: 0 0 $spacing-3 0;
     line-height: $line-height-relaxed;
   }
-  
+
   &__details {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: $spacing-4;
-    
+
     @include respond-below('md') {
       grid-template-columns: 1fr;
       gap: $spacing-2;
     }
   }
-  
+
   &__actions {
     @include flex-start;
     gap: $spacing-2;
@@ -385,12 +386,12 @@
 
 .detail-item {
   font-size: $font-size-sm;
-  
+
   &__label {
     font-weight: $font-weight-medium;
     color: $text-primary;
   }
-  
+
   &__value {
     color: $text-secondary;
     margin-left: $spacing-1;
@@ -402,45 +403,45 @@
   font-size: $font-size-xs;
   font-weight: $font-weight-medium;
   border-radius: $border-radius-full;
-  
+
   &--severity {
     &.severity-critical {
       background-color: $error-100;
       color: $error-800;
     }
-    
+
     &.severity-high {
       background-color: $warning-100;
       color: $warning-800;
     }
-    
+
     &.severity-medium {
       background-color: $warning-100;
       color: $warning-800;
     }
-    
+
     &.severity-low {
       background-color: $primary-100;
       color: $primary-800;
     }
   }
-  
+
   &--status {
     &.status-active {
       background-color: $error-100;
       color: $error-800;
     }
-    
+
     &.status-investigating {
       background-color: $warning-100;
       color: $warning-800;
     }
-    
+
     &.status-resolved {
       background-color: $success-100;
       color: $success-800;
     }
-    
+
     &.status-false-positive {
       background-color: $neutral-100;
       color: $neutral-800;
@@ -455,33 +456,33 @@
   border-radius: $border-radius-base;
   background: transparent;
   transition: all $transition-base;
-  
+
   svg {
     width: 1rem;
     height: 1rem;
   }
-  
+
   &--investigate {
     color: $primary-500;
-    
+
     &:hover {
       color: $primary-600;
       background-color: $primary-50;
     }
   }
-  
+
   &--resolve {
     color: $success-500;
-    
+
     &:hover {
       color: $success-600;
       background-color: $success-50;
     }
   }
-  
+
   &--dismiss {
     color: $text-muted;
-    
+
     &:hover {
       color: $text-secondary;
       background-color: $bg-secondary;
@@ -494,7 +495,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: $spacing-6;
-  
+
   @include respond-below('lg') {
     grid-template-columns: 1fr;
     gap: $spacing-4;
@@ -503,14 +504,14 @@
 
 .settings-card {
   @include card-base;
-  
+
   &__title {
     font-size: $font-size-lg;
     font-weight: $font-weight-semibold;
     color: $text-primary;
     margin: 0 0 $spacing-4 0;
   }
-  
+
   &__content {
     display: flex;
     flex-direction: column;
@@ -522,7 +523,7 @@
   @include flex-between;
   align-items: center;
   gap: $spacing-3;
-  
+
   &__label {
     font-size: $font-size-sm;
     font-weight: $font-weight-medium;
@@ -537,25 +538,25 @@
   display: inline-block;
   width: 3rem;
   height: 1.5rem;
-  
+
   input {
     opacity: 0;
     width: 0;
     height: 0;
-    
-    &:checked + .toggle-switch__slider {
+
+    &:checked+.toggle-switch__slider {
       background-color: $color-primary;
-      
+
       &:before {
         transform: translateX(1.5rem);
       }
     }
-    
-    &:focus + .toggle-switch__slider {
+
+    &:focus+.toggle-switch__slider {
       box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
     }
   }
-  
+
   &__slider {
     position: absolute;
     cursor: pointer;
@@ -566,7 +567,7 @@
     background-color: $neutral-300;
     transition: $transition-base;
     border-radius: 1.5rem;
-    
+
     &:before {
       position: absolute;
       content: "";
@@ -594,28 +595,28 @@
 .btn {
   @include button-base;
   @include button-size('md');
-  
+
   &__icon {
     width: 1rem;
     height: 1rem;
-    
+
     &--spinning {
       animation: spin 1s linear infinite;
     }
   }
-  
+
   &--primary {
     @include button-variant('primary');
   }
-  
+
   &--secondary {
     @include button-variant('secondary');
   }
-  
+
   &--small {
     @include button-size('sm');
   }
-  
+
   &--scan {
     min-width: 140px;
   }
@@ -627,28 +628,28 @@
     padding: $spacing-4;
     gap: $spacing-4;
   }
-  
+
   .security-header {
     flex-direction: column;
     align-items: flex-start;
     gap: $spacing-4;
-    
+
     &__actions {
       width: 100%;
       justify-content: space-between;
     }
   }
-  
+
   .alert-card {
     flex-direction: column;
     align-items: stretch;
-    
+
     &__actions {
       justify-content: flex-end;
       margin-top: $spacing-3;
     }
   }
-  
+
   .settings-grid {
     grid-template-columns: 1fr;
   }
@@ -656,9 +657,12 @@
 
 // Animations
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
@@ -668,6 +672,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -679,27 +684,27 @@
     background: $dark-bg-primary;
     color: $dark-text-primary;
   }
-  
+
   .alerts-section,
   .settings-card,
   .metric-card {
     background: $dark-bg-secondary;
     border-color: $dark-border-primary;
   }
-  
+
   .alerts-header {
     background: $dark-bg-tertiary;
     border-color: $dark-border-primary;
   }
-  
+
   .alert-card {
     border-color: $dark-border-primary;
-    
+
     &:hover {
       background: $dark-bg-tertiary;
     }
   }
-  
+
   .toggle-switch__slider {
     background-color: $dark-border-secondary;
   }
