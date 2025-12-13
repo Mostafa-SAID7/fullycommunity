@@ -123,6 +123,18 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     // Moderation
     public DbSet<CommunityCar.Domain.Entities.Moderation.ContentReport> ContentReports => Set<CommunityCar.Domain.Entities.Moderation.ContentReport>();
 
+    // Services - Maintenance
+    public DbSet<CommunityCar.Domain.Entities.Services.Common.ServiceProvider> ServiceProviders => Set<CommunityCar.Domain.Entities.Services.Common.ServiceProvider>();
+    public DbSet<CommunityCar.Domain.Entities.Services.Maintenance.Workshop> Workshops => Set<CommunityCar.Domain.Entities.Services.Maintenance.Workshop>();
+    public DbSet<CommunityCar.Domain.Entities.Services.Maintenance.WorkshopService> WorkshopServices => Set<CommunityCar.Domain.Entities.Services.Maintenance.WorkshopService>();
+    public DbSet<CommunityCar.Domain.Entities.Services.Maintenance.Mechanic> Mechanics => Set<CommunityCar.Domain.Entities.Services.Maintenance.Mechanic>();
+    
+    // Services - Fuel & Charging
+    public DbSet<CommunityCar.Domain.Entities.Services.FuelCharging.FuelStation> FuelStations => Set<CommunityCar.Domain.Entities.Services.FuelCharging.FuelStation>();
+    
+    // Services - Expert
+    public DbSet<CommunityCar.Domain.Entities.Services.Expert.Expert> Experts => Set<CommunityCar.Domain.Entities.Services.Expert.Expert>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
