@@ -73,7 +73,7 @@ public class MarketplaceSeeder : BaseSeeder
             });
         }
         await Context.Set<Seller>().AddRangeAsync(sellers);
-
+        await Context.SaveChangesAsync(); // Save sellers first to satisfy FK constraint
 
         // Create products
         var products = new List<Product>();
@@ -169,7 +169,7 @@ public class MarketplaceSeeder : BaseSeeder
         }
         await Context.Set<Product>().AddRangeAsync(products);
         Context.Set<Seller>().UpdateRange(sellers);
-
+        await Context.SaveChangesAsync(); // Save products before adding images to satisfy FK constraint
 
         // Create product images
         var images = new List<ProductImage>();

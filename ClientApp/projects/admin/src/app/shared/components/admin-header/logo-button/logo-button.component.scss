@@ -107,7 +107,7 @@
 // -----------------------------------------------------------------------------
 .brand-text {
   display: flex;
-  flexctionn;
+  flex-direction: column;
   gap: 0.125rem;
 
   .brand-name {
@@ -119,7 +119,7 @@
   }
 
   .brand-subtitle {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: $font-weight-medium;
     color: $text-secondary;
     line-height: 1.2;

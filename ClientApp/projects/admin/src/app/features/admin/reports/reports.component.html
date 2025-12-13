@@ -11,7 +11,7 @@
       </app-refresh-button>
 
       <label class="sr-only" for="periodSelect">Period</label>
-      <select id="periodSelect" [(ngModel)]="selectedPeriod" (change)="onPeriodChange()"
+      <select id="periodSelect" [ngModel]="selectedPeriod()" (ngModelChange)="onPeriodChange($event)"
         aria-label="Select report period" class="period-select">
         <option value="day">Today</option>
         <option value="week">This Week</option>
@@ -22,13 +22,9 @@
 
       <div class="export-buttons">
         <button (click)="exportReport('users', 'csv')" aria-label="Export users report" title="Export users report"
-          class="export-btn users-btn">
-          Users CSV
-        </button>
+          class="export-btn users-btn">Users CSV</button>
         <button (click)="exportReport('content', 'xlsx')" aria-label="Export content report"
-          title="Export content report" class="export-btn content-btn">
-          Content Excel
-        </button>
+          title="Export content report" class="export-btn content-btn">Content Excel</button>
         <button (click)="exportReport('engagement', 'pdf')" aria-label="Export engagement report"
           title="Export engagement report" class="export-btn primary-btn">
           <svg class="export-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -42,9 +38,7 @@
   </div>
 
   <!-- Error / Loading -->
-  <div *ngIf="error()" role="alert" class="error-alert">
-    {{ error() }}
-  </div>
+  <div *ngIf="error()" role="alert" class="error-alert">{{ error() }}</div>
 
   <!-- Realtime Stats Banner -->
   <div *ngIf="realtimeStats() as rt" class="realtime-banner" role="region" aria-label="Realtime statistics">
@@ -91,8 +85,7 @@
 
   <!-- Overview Cards -->
   <div *ngIf="overview()" class="overview-stats-grid">
-    <app-stat-card *ngFor="let card of overviewStatCards" [config]="card">
-    </app-stat-card>
+    <app-stat-card *ngFor="let card of overviewStatCards()" [config]="card"></app-stat-card>
   </div>
 
   <!-- Platform Summary -->
@@ -138,7 +131,8 @@
     <div class="skeleton-item chart"></div>
   </div>
 
-  <!-- Enhanced Charts Section -->
+
+  <!-- Charts Section -->
   <div *ngIf="!loading()" class="charts-grid">
     <!-- User Growth Chart -->
     <div class="chart-card">
@@ -158,8 +152,7 @@
           </div>
         </div>
       </div>
-      <app-bar-chart [config]="userGrowthChartConfig()" class="chart-full-width">
-      </app-bar-chart>
+      <app-bar-chart [config]="userGrowthChartConfig()" class="w-full"></app-bar-chart>
     </div>
 
     <!-- Content Distribution Pie Chart -->
@@ -170,8 +163,7 @@
           <p>Content types breakdown</p>
         </div>
       </div>
-      <app-pie-chart [config]="contentDistributionConfig()" class="chart-full-width">
-      </app-pie-chart>
+      <app-pie-chart [config]="contentDistributionConfig()" class="w-full"></app-pie-chart>
     </div>
   </div>
 
@@ -197,11 +189,10 @@
         </div>
       </div>
     </div>
-    <app-line-chart [config]="engagementChartConfig()" class="chart-full-width">
-    </app-line-chart>
+    <app-line-chart [config]="engagementChartConfig()" class="w-full"></app-line-chart>
   </div>
 
-  <!-- Enhanced Top Content Section -->
+  <!-- Top Content Section -->
   <div *ngIf="!loading()" class="content-card top-content-section">
     <div class="card-header">
       <div class="header-text">
@@ -210,15 +201,13 @@
       </div>
       <div class="header-filters">
         <label class="sr-only" for="contentType">Filter content type</label>
-        <select id="contentType" [(ngModel)]="contentType" (change)="loadTopContent()" class="filter-select">
+        <select id="contentType" [ngModel]="contentType()" (ngModelChange)="onContentTypeChange($event)" class="filter-select">
           <option value="">All Types</option>
           <option value="post">Posts</option>
           <option value="review">Reviews</option>
           <option value="guide">Guides</option>
         </select>
-        <button class="view-all-btn">
-          View All
-        </button>
+        <button class="view-all-btn">View All</button>
       </div>
     </div>
 
@@ -226,9 +215,7 @@
       <div *ngFor="let item of topContent(); trackBy: trackByTitle; let i = index" role="listitem" tabindex="0"
         (keydown)="onKeyActivate($event, item)" (click)="openTopContent(item)" class="content-item">
         <div class="item-rank">
-          <div class="rank-badge">
-            #{{ i + 1 }}
-          </div>
+          <div class="rank-badge">#{{ i + 1 }}</div>
         </div>
         <div class="item-details">
           <div class="item-main-info">
@@ -248,34 +235,26 @@
             </div>
           </div>
         </div>
-        <div class="item-arrow">
-          <i class="fas fa-chevron-right"></i>
-        </div>
+        <div class="item-arrow"><i class="fas fa-chevron-right"></i></div>
       </div>
     </div>
 
     <ng-template #noTopContent>
       <div class="empty-state">
-        <div class="empty-icon-wrapper">
-          <i class="fas fa-inbox empty-icon"></i>
-        </div>
+        <div class="empty-icon-wrapper"><i class="fas fa-inbox empty-icon"></i></div>
         <h4 class="empty-title">No Content Data Available</h4>
-        <p class="empty-description">
-          There is no content data available for the selected period. Try adjusting your filters or check back later.
-        </p>
+        <p class="empty-description">There is no content data available for the selected period.</p>
       </div>
     </ng-template>
   </div>
 
-  <!-- Enhanced Analytics Tabs -->
+  <!-- Analytics Tabs Section -->
   <div class="analytics-section">
-    <!-- Tab Navigation -->
-    <app-tab-navigation [tabs]="analyticsTabItems" [activeTabId]="activeAnalyticsTab"
-      (tabChange)="onAnalyticsTabChange($event)">
-    </app-tab-navigation>
+    <app-tab-navigation [tabs]="analyticsTabItems" [activeTabId]="activeAnalyticsTab()"
+      (tabChange)="onAnalyticsTabChange($event)"></app-tab-navigation>
 
-    <!-- Overview Tab (Default) -->
-    <div *ngIf="activeAnalyticsTab === 'overview'" class="tab-content overview-tab">
+    <!-- Overview Tab -->
+    <div *ngIf="activeAnalyticsTab() === 'overview'" class="tab-content overview-tab">
       <div class="tab-placeholder">
         <h3 class="placeholder-title">Analytics Overview</h3>
         <p class="placeholder-text">Select a specific analytics tab above to view detailed insights</p>
@@ -283,8 +262,7 @@
     </div>
 
     <!-- User Growth Trends Tab -->
-    <div *ngIf="activeAnalyticsTab === 'user-growth' && detailedUserGrowth()" class="tab-content user-growth-tab">
-      <!-- User Growth Chart -->
+    <div *ngIf="activeAnalyticsTab() === 'user-growth' && detailedUserGrowth()" class="tab-content user-growth-tab">
       <div class="content-card">
         <div class="card-header">
           <div class="header-text">
@@ -292,13 +270,10 @@
             <p class="card-subtitle">New users, active users, and retention metrics over time</p>
           </div>
         </div>
-        <app-line-chart [config]="detailedUserGrowthConfig()" class="chart-full-width">
-        </app-line-chart>
+        <app-line-chart [config]="detailedUserGrowthConfig()" class="chart-full-width"></app-line-chart>
       </div>
 
-      <!-- User Demographics -->
       <div *ngIf="detailedUserGrowth()?.demographics" class="demographics-grid">
-        <!-- Age Groups -->
         <div class="content-card">
           <h4 class="card-subtitle-lg">Age Distribution</h4>
           <div class="age-distribution-list">
@@ -313,76 +288,60 @@
             </div>
           </div>
         </div>
-
-        <!-- Acquisition Channels -->
         <div class="content-card">
           <h4 class="card-subtitle-lg">Acquisition Channels</h4>
-          <app-pie-chart [config]="acquisitionChannelsConfig()" class="chart-full-width">
-          </app-pie-chart>
+          <app-pie-chart [config]="acquisitionChannelsConfig()" class="chart-full-width"></app-pie-chart>
         </div>
       </div>
 
-      <!-- Retention Metrics -->
       <div *ngIf="detailedUserGrowth()?.retentionMetrics" class="content-card retention-card">
         <h4 class="card-subtitle-lg">User Retention Metrics</h4>
         <div class="retention-grid">
           <div class="retention-item">
             <div class="retention-value" [ngClass]="getRetentionColor(detailedUserGrowth()!.retentionMetrics.day1)">
-              {{ detailedUserGrowth()!.retentionMetrics.day1 }}%
-            </div>
+              {{ detailedUserGrowth()!.retentionMetrics.day1 }}%</div>
             <div class="retention-label">Day 1 Retention</div>
           </div>
           <div class="retention-item">
             <div class="retention-value" [ngClass]="getRetentionColor(detailedUserGrowth()!.retentionMetrics.day7)">
-              {{ detailedUserGrowth()!.retentionMetrics.day7 }}%
-            </div>
+              {{ detailedUserGrowth()!.retentionMetrics.day7 }}%</div>
             <div class="retention-label">Day 7 Retention</div>
           </div>
           <div class="retention-item">
             <div class="retention-value" [ngClass]="getRetentionColor(detailedUserGrowth()!.retentionMetrics.day30)">
-              {{ detailedUserGrowth()!.retentionMetrics.day30 }}%
-            </div>
+              {{ detailedUserGrowth()!.retentionMetrics.day30 }}%</div>
             <div class="retention-label">Day 30 Retention</div>
           </div>
           <div class="retention-item">
             <div class="retention-value" [ngClass]="getRetentionColor(detailedUserGrowth()!.retentionMetrics.day90)">
-              {{ detailedUserGrowth()!.retentionMetrics.day90 }}%
-            </div>
+              {{ detailedUserGrowth()!.retentionMetrics.day90 }}%</div>
             <div class="retention-label">Day 90 Retention</div>
           </div>
         </div>
       </div>
 
-      <!-- Growth Prediction -->
       <div *ngIf="detailedUserGrowth()?.growthPrediction" class="content-card prediction-card">
         <h4 class="card-subtitle-lg">Growth Predictions</h4>
         <div class="prediction-grid">
           <div class="prediction-item blue-theme">
-            <div class="prediction-value">
-              {{ formatNumber(detailedUserGrowth()!.growthPrediction.nextMonth) }}
-            </div>
+            <div class="prediction-value">{{ formatNumber(detailedUserGrowth()!.growthPrediction.nextMonth) }}</div>
             <div class="prediction-label">Predicted Next Month</div>
           </div>
           <div class="prediction-item green-theme">
-            <div class="prediction-value">
-              {{ formatNumber(detailedUserGrowth()!.growthPrediction.nextQuarter) }}
-            </div>
+            <div class="prediction-value">{{ formatNumber(detailedUserGrowth()!.growthPrediction.nextQuarter) }}</div>
             <div class="prediction-label">Predicted Next Quarter</div>
           </div>
           <div class="prediction-item purple-theme">
-            <div class="prediction-value">
-              {{ detailedUserGrowth()!.growthPrediction.confidence }}%
-            </div>
+            <div class="prediction-value">{{ detailedUserGrowth()!.growthPrediction.confidence }}%</div>
             <div class="prediction-label">Confidence Level</div>
           </div>
         </div>
       </div>
     </div>
 
+
     <!-- Content Engagement Analytics Tab -->
-    <div *ngIf="activeAnalyticsTab === 'content-engagement' && detailedContentEngagement()"
-      class="tab-content engagement-tab">
-      <!-- Enhanced Engagement Chart -->
+    <div *ngIf="activeAnalyticsTab() === 'content-engagement' && detailedContentEngagement()" class="tab-content engagement-tab">
       <div class="content-card">
         <div class="card-header">
           <div class="header-text">
@@ -390,18 +349,14 @@
             <p class="card-subtitle">Comprehensive engagement metrics including saves and advanced analytics</p>
           </div>
         </div>
-        <app-line-chart [config]="enhancedEngagementConfig()" class="chart-full-width">
-        </app-line-chart>
+        <app-line-chart [config]="enhancedEngagementConfig()" class="chart-full-width"></app-line-chart>
       </div>
 
-      <!-- Content Type Performance -->
       <div class="content-card">
         <h4 class="card-subtitle-lg">Content Type Performance</h4>
-        <app-bar-chart [config]="contentTypePerformanceConfig()" class="chart-full-width">
-        </app-bar-chart>
+        <app-bar-chart [config]="contentTypePerformanceConfig()" class="chart-full-width"></app-bar-chart>
       </div>
 
-      <!-- Engagement Trends -->
       <div *ngIf="detailedContentEngagement()?.engagementTrends" class="content-card">
         <h4 class="card-subtitle-lg">Engagement Trends</h4>
         <div class="trends-grid">
@@ -420,7 +375,6 @@
         </div>
       </div>
 
-      <!-- Audience Insights -->
       <div *ngIf="detailedContentEngagement()?.audienceInsights" class="content-card">
         <h4 class="card-subtitle-lg">Audience Insights</h4>
         <div class="insights-list">
@@ -439,9 +393,7 @@
             <div class="insight-preferences">
               <span class="detail-label">Preferred Content: </span>
               <div class="preference-tags">
-                <span *ngFor="let content of insight.preferredContent" class="preference-tag">
-                  {{ content }}
-                </span>
+                <span *ngFor="let content of insight.preferredContent" class="preference-tag">{{ content }}</span>
               </div>
             </div>
           </div>
@@ -450,7 +402,7 @@
     </div>
 
     <!-- Localization Tab -->
-    <div *ngIf="activeAnalyticsTab === 'localization'" class="tab-content localization-tab">
+    <div *ngIf="activeAnalyticsTab() === 'localization'" class="tab-content localization-tab">
       <div class="content-card">
         <div class="card-header">
           <div class="header-text">
@@ -464,9 +416,7 @@
         </div>
 
         <div class="localization-promo">
-          <div class="promo-icon-wrapper">
-            <i class="fas fa-language promo-icon"></i>
-          </div>
+          <div class="promo-icon-wrapper"><i class="fas fa-language promo-icon"></i></div>
           <h4 class="promo-title">Multilingual Content Management</h4>
           <p class="promo-description">
             Manage translations, add new languages, and monitor localization progress across your platform.
